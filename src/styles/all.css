@@ -1,1 +1,80 @@
-/* No CSS *//*# sourceMappingURL=all.css.map */
+#header {
+  z-index: 3;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: transform 0.2s linear;
+}
+#header.hide {
+  transform: translateY(-100px);
+}
+#header .navbar .nav_head {
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  width: 100%;
+  background-color: black;
+  padding: 0 1rem;
+}
+#header .navbar .nav_head .navbar-brand {
+  margin-top: 5px;
+  height: 70px;
+}
+#header .navbar .nav_head .navbar-brand img {
+  height: 100%;
+}
+#header .navbar .nav_head .nav_btn_cus {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+#header .navbar .nav_head .nav_btn_cus span {
+  width: 100%;
+  height: 3px;
+  background-color: rgb(255, 255, 255);
+  transition: all 0.2s linear;
+}
+#header .navbar .nav_head .nav_btn_cus span:nth-child(2) {
+  transition: all 0.1s linear;
+}
+#header .navbar .nav_head .nav_btn_cus[aria-expanded=true] span:nth-child(2) {
+  transform: scale(0.1);
+  transition: all 0.1 linear;
+}
+#header .navbar .nav_head .nav_btn_cus[aria-expanded=true] span:first-child {
+  transform-origin: center left;
+  transform: rotate(45deg);
+}
+#header .navbar .nav_head .nav_btn_cus[aria-expanded=true] span:last-child {
+  transform-origin: center left;
+  transform: rotate(-45deg);
+}
+#header .navbar .nav_body {
+  padding: 0 1rem;
+  background: linear-gradient(180deg, #000000 30%, rgba(209, 209, 209, 0) 100%);
+}
+#header .navbar .nav_body .slide_selects_nav {
+  display: flex;
+  flex-direction: column;
+}
+#header .navbar .nav_body .slide_selects_nav div {
+  margin: 0.2rem 0;
+}
+#header .navbar .nav-item .nav-link {
+  color: white;
+}
+#header .navbar .nav-item .nav-link:hover {
+  color: yellow;
+}
+@media (min-width: 992px) {
+  #header .navbar .nav_head {
+    background: linear-gradient(180deg, #000000 30%, rgba(209, 209, 209, 0) 100%);
+    height: 100px;
+  }
+}/*# sourceMappingURL=all.css.map */
