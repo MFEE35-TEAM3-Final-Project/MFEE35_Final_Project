@@ -9,9 +9,11 @@ function App() {
   return (
     <div className="App">
       <Nav />
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-      </Routes>
+      <div style={{ marginTop: "200px" }}>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+        </Routes>
+      </div>
       {/* <Footer /> */}
     </div>
   );

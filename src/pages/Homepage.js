@@ -1,11 +1,9 @@
 import React from "react";
 
-
 const Homepage = () => {
   return (
-    <div>
-      <div className="fs-1 text-white  ">Homepage</div>
-   
+    <div className="bg-dark">
+      <div className="fs-1 text-white mt-5">this is fucking Homepage</div>
     </div>
   );
 };
