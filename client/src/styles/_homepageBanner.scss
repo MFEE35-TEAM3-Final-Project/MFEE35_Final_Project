@@ -1,0 +1,89 @@
+.banner {
+  width: 100%;
+  position: relative;
+
+  & .banner_background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    opacity: 0.7;
+    background-image: url("../../public/img/album1.jpg");
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-position: 90% 20%;
+  }
+  & .backfiliter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+    z-index: -1;
+  }
+  #banner_cover img {
+    transition: opacity 0.4s ease-in-out;
+  }
+  #banner_thumbnails {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    padding-bottom: 5px;
+    .thumbnail {
+      box-sizing: border-box;
+      position: relative;
+      cursor: pointer;
+      img {
+        box-sizing: border-box;
+        height: 18vw;
+        width: 18vw;
+        object-fit: cover;
+        transition: all 0.3s ease-in-out;
+      }
+      &.active::before {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        height: 3px;
+        width: 100%;
+        background-color: rgb(255, 255, 255);
+      }
+    }
+  }
+}
+@media (min-width: 992px) {
+  .banner {
+    padding-left: 6vw;
+    display: flex;
+    justify-content: left;
+
+    #banner_cover {
+      width: 40vw;
+    }
+    #banner_thumbnails {
+      flex-direction: column;
+      justify-content: end;
+      flex-wrap: wrap;
+      overflow: visible;
+      .thumbnail {
+        &.active::before {
+          content: "";
+          position: absolute;
+          left: -5px;
+          bottom: 0;
+          height: 100%;
+          width: 5px;
+          background-color: rgb(255, 255, 255);
+        }
+        img {
+          height: 4vw;
+          width: 4vw;
+        }
+      }
+    }
+  }
+}
