@@ -6,13 +6,13 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
-const port = 3333 || 5000;
+const port = 8080;
 
 //跨域設定
 app.use(cors());
 //解析POST請求的JSON主機
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 //connect to mysql server
 
 const connection = mysql.createConnection({
@@ -20,10 +20,10 @@ const connection = mysql.createConnection({
   user: process.env.RDS_USERNAME,
   password: process.env.RDS_PASSWORD,
   port: process.env.RDS_PORT,
-  database: process.env.RDS_DB_NAME
+  database: process.env.RDS_DB_NAME,
 });
 
-connection.connect(err => {
+connection.connect((err) => {
   if (err) {
     console.error("Database connection failed: " + err.stack);
     return;

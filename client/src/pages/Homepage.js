@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Banner from "../components/Banner";
-import Upload from "../components/Upload";
+
 import axios from "axios";
 
 const Homepage = () => {
-  const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
   useEffect(() => {
     axios
-      .get("http://localhost:3333/api/users")
+      .get(`${process.env.REACT_APP_API_URL}/api/users`)
       .then((res) => {
         console.log(res);
       })
@@ -19,9 +19,7 @@ const Homepage = () => {
   return (
     <div>
       <Banner />
-      <div>
-        <Upload />
-      </div>
+      <div></div>
     </div>
   );
 };
