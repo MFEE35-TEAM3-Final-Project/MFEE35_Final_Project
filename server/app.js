@@ -1,29 +1,30 @@
 const express = require("express");
+const app = express();
 const mysql = require("mysql");
 const cors = require("cors");
 const dotenv = require("dotenv");
-
 dotenv.config();
-
-const app = express();
-const port = 8080;
+const authRoute = require("./routes").auth;
 
 //跨域設定
 app.use(cors());
+
+// middlewares
 //解析POST請求的JSON主機
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//connect to mysql server
+app.use("/api/user", authRoute);
 
+//connect to mysql server
 const connection = mysql.createConnection({
   host: process.env.RDS_HOSTNAME,
   user: process.env.RDS_USERNAME,
   password: process.env.RDS_PASSWORD,
   port: process.env.RDS_PORT,
-  database: process.env.RDS_DB_NAME,
+  database: process.env.RDS_DB_NAME
 });
 
-connection.connect((err) => {
+connection.connect(err => {
   if (err) {
     console.error("Database connection failed: " + err.stack);
     return;
@@ -46,6 +47,6 @@ app.get("/api/users", (req, res) => {
 });
 
 // 開始監聽
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.listen(8080, () => {
+  console.log("Server running on port 8080");
 });
