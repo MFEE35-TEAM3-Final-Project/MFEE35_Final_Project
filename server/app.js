@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
-const routes = require("./routes");
+const userRoutes = require("./routes/userRoutes");
 
 //跨域設定
 app.use(cors());
@@ -18,10 +18,10 @@ const connection = mysql.createConnection({
   user: process.env.RDS_USERNAME,
   password: process.env.RDS_PASSWORD,
   port: process.env.RDS_PORT,
-  database: process.env.RDS_DB_NAME,
+  database: process.env.RDS_DB_NAME
 });
 
-connection.connect((err) => {
+connection.connect(err => {
   if (err) {
     console.error("Database connection failed: " + err.stack);
     return;
@@ -30,20 +30,20 @@ connection.connect((err) => {
 });
 
 //路由
-app.use("/api", routes);
+app.use("/api/user", userRoutes);
 
-app.get("/api/users", (req, res) => {
-  const sql = "SELECT * FROM users";
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-      return;
-    }
+// app.get("/api/users", (req, res) => {
+//   const sql = "SELECT * FROM users";
+//   connection.query(sql, (err, results) => {
+//     if (err) {
+//       console.error(err);
+//       res.status(500).json({ error: "Database error" });
+//       return;
+//     }
 
-    res.json(results);
-  });
-});
+//     res.json(results);
+//   });
+// });
 
 // 開始監聽
 app.listen(8080, () => {
