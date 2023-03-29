@@ -1,10 +1,16 @@
-const mysql = require("mysql");
-const connection = mysql.createConnection({
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT,
-  database: process.env.RDS_DB_NAME,
-});
+const userRegister = (user, connection) => {
+  connection.query(
+    "INSERT INTO users (username, email, password, isAdmin) VALUES (?,?, ?, ?, ?)",
+    [user.username, user.email, user.password, user.isAdmin],
+    (error, results, fields) => {
+      if (error) {
+        console.error("Error inserting record:", error);
+      } else {
+        console.log("Inserted a new record with ID:", results.insertId);
+      }
+    }
+  );
+  connection.end();
+};
 
-function userLogin(user) {}
+module.exports.userRegister = userRegister;

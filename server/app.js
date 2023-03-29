@@ -13,21 +13,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //connect to mysql server
 
-const connection = mysql.createConnection({
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT,
-  database: process.env.RDS_DB_NAME
-});
+// const connection = mysql.createConnection({
+//   host: process.env.RDS_HOSTNAME,
+//   user: process.env.RDS_USERNAME,
+//   password: process.env.RDS_PASSWORD,
+//   port: process.env.RDS_PORT,
+//   database: process.env.RDS_DB_NAME,
+// });
 
-connection.connect(err => {
-  if (err) {
-    console.error("Database connection failed: " + err.stack);
-    return;
-  }
-  console.log("connect to database");
-});
+// connection.connect((err) => {
+//   if (err) {
+//     console.error("Database connection failed: " + err.stack);
+//     return;
+//   }
+//   console.log("connect to database");
+// });
 
 //路由
 app.use("/api/user", userRoutes);

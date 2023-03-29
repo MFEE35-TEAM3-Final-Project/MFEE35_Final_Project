@@ -4,6 +4,7 @@ import Nav from "./components/Nav";
 // import Footer from "./components/Footer";
 import Homepage from "./pages/Homepage";
 import Aboutpage from "./pages/Aboutpage";
+import UserRegister from "./pages/UserRegister";
 import "./styles/all.css";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/about" element={<Aboutpage />} />
+          <Route path="/user/register" element={<UserRegister />} />
         </Routes>
       </div>
       {/* <Footer /> */}
