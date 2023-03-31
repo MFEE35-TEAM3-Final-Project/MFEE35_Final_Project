@@ -6,7 +6,6 @@ const registerValidation = (data) => {
     email: Joi.string().min(6).max(50).required().email(),
     password: Joi.string().min(6).max(255).required(),
     repeat_password: Joi.ref("password"),
-    isAdmin: Joi.boolean().required(),
   });
 
   return userSchema.validate(data);

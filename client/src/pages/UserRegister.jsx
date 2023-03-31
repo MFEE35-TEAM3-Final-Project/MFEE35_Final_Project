@@ -4,45 +4,24 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 const UserRegister = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeat_password, setRepeat_password] = useState("");
-  const [email, setEmail] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [userData, setUserData] = useState({
+    username: "",
+    password: "",
+    repeat_password: "",
+    email: "",
+  });
+
   const [errorMessage, setErrorMessage] = useState("");
 
   //functions
-  function handleUsernameChange(event) {
-    setUsername(event.target.value);
-  }
-
-  function handlePasswordChange(event) {
-    setPassword(event.target.value);
-  }
-  function handleR_PasswordChange(event) {
-    setRepeat_password(event.target.value);
-  }
-
-  function handleEmailChange(event) {
-    setEmail(event.target.value);
-  }
-
-  function handleIsAdminChange(event) {
-    setIsAdmin(event.target.checked);
-  }
-
+  const inputHandler = (e) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+  };
   function handleSubmit(event) {
     event.preventDefault();
-    let formData = {
-      username: username,
-      email: email,
-      password: password,
-      repeat_password: repeat_password,
-      isAdmin: isAdmin,
-    };
-    console.log("eve", formData);
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/user/register`, formData)
+      .post(`${process.env.REACT_APP_API_URL}/api/user/register`, userData)
       .then((res) => {
         console.log(res);
       })
@@ -65,10 +44,10 @@ const UserRegister = () => {
             type="text"
             id="username"
             name="username"
-            value={username}
+            value={userData.username}
             minLength={6}
             maxLength={30}
-            onChange={handleUsernameChange}
+            onChange={inputHandler}
             required
           />
         </Form.Group>
@@ -79,11 +58,11 @@ const UserRegister = () => {
             type="password"
             id="password"
             name="password"
-            value={password}
+            value={userData.password}
             minLength={6}
             maxLength={50}
             pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
-            onChange={handlePasswordChange}
+            onChange={inputHandler}
             required
           />
           <small className="text-warning fw-bold">
@@ -94,13 +73,13 @@ const UserRegister = () => {
           <Form.Label htmlFor="password">確認密碼：</Form.Label>
           <Form.Control
             type="password"
-            id="r_password"
-            name="r_password"
-            value={repeat_password}
+            id="repeat_password"
+            name="repeat_password"
+            value={userData.repeat_password}
             minLength={6}
             maxLength={50}
             pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$"
-            onChange={handleR_PasswordChange}
+            onChange={inputHandler}
             required
           />
         </Form.Group>
@@ -111,24 +90,12 @@ const UserRegister = () => {
             type="email"
             id="email"
             name="email"
-            value={email}
+            value={userData.email}
             minLength={6}
             maxLength={50}
-            onChange={handleEmailChange}
+            onChange={inputHandler}
             required
           />
-        </Form.Group>
-
-        <Form.Group className="mb-3 d-flex">
-          <Form.Check
-            className="me-2"
-            type="checkbox"
-            id="isAdmin"
-            name="isAdmin"
-            checked={isAdmin}
-            onChange={handleIsAdminChange}
-          />
-          <Form.Label htmlFor="isAdmin">是否為管理員</Form.Label>
         </Form.Group>
 
         <div className="mb-3">
