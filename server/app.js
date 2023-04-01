@@ -13,25 +13,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //connect to mysql server
 
-const connection = mysql.createConnection({
-  host: process.env.LOCAL_HOSTNAME,
-  port: process.env.LOCAL_PORT,
-  user: process.env.LOCAL_USERNAME,
-  password: process.env.LOCAL_PASSWORD,
-  database: process.env.LOCAL_DB_NAME,
-});
+// const connection = mysql.createConnection({
+//   host: process.env.LOCAL_HOSTNAME,
+//   port: process.env.LOCAL_PORT,
+//   user: process.env.LOCAL_USERNAME,
+//   password: process.env.LOCAL_PASSWORD,
+//   database: process.env.LOCAL_DB_NAME,
+// });
 
-connection.connect((err) => {
-  if (err) {
-    console.log("Database connection failed: " + err.stack);
-    return;
-  }
-  console.log("connect to database");
-});
-app.use((req, res, next) => {
-  req.app.set("connection", connection);
-  next();
-});
+// connection.connect((err) => {
+//   if (err) {
+//     console.log("Database connection failed: " + err.stack);
+//     return;
+//   }
+//   console.log("connect to database");
+// });
+// app.use((req, res, next) => {
+//   req.app.set("connection", connection);
+//   next();
+// });
 
 //路由
 app.use("/api/user", userRoutes);
