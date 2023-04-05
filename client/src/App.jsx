@@ -6,6 +6,7 @@ import Homepage from "./pages/Homepage";
 import Aboutpage from "./pages/Aboutpage";
 import UserRegister from "./pages/UserRegister";
 import "./styles/all.css";
+import UserLogin from "./pages/UserLogin";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/about" element={<Aboutpage />} />
           <Route path="/user/register" element={<UserRegister />} />
+          <Route path="/user/login" element={<UserLogin />} />
         </Routes>
       </div>
       {/* <Footer /> */}
