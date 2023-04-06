@@ -4,20 +4,20 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 
 let opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
 opts.secretOrKey = process.env.PASSPORT_SECRET;
 
 passport.use(
-  new JwtStrategy(opts, (jwt_payload, done) => {
+  new JwtStrategy(opts, function(jwt_payload, done) {
     connectPool.query(
-      "SELECT * FROM users WHERE id = ? AND email = ?",
+      "SELECT * FROM users WHERE userId = ? AND email = ?",
       [jwt_payload._id, jwt_payload.email],
-      (error, result, fields) => {
+      (error, user) => {
         if (error) {
           return done(error, false);
-        } else if (results.length > 0) {
+        } else if (user) {
           // 回傳使用者資料
-          return done(null, results[0]);
+          return done(null, user);
         } else {
           // 找不到使用者
           return done(null, false);
@@ -26,5 +26,4 @@ passport.use(
     );
   })
 );
-
 module.exports = passport;

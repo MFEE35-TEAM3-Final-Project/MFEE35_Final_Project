@@ -7,7 +7,7 @@ const UserLogin = () => {
   // DATA
   const [userData, setUserData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
   const [backData, setBackData] = useState({});
   const [jwtData, setJwtData] = useState("");
@@ -24,9 +24,9 @@ const UserLogin = () => {
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         setBackData(res.data);
-        console.log(res.data.token);
       })
       .catch((err) => {
+        localStorage.removeItem("token");
         setBackData(err.response.data);
       });
   };
@@ -34,14 +34,14 @@ const UserLogin = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/user/check`, {
         headers: {
-          Authorization: `${localStorage.getItem("token")}`,
-        },
+          Authorization: `${localStorage.getItem("token")}`
+        }
       })
       .then((res) => {
-        console.log(res);
+        setJwtData(res.data.message);
       })
       .catch((err) => {
-        console.log(err);
+        setJwtData(err.response.data);
       });
   };
   return (
@@ -91,28 +91,30 @@ const UserLogin = () => {
           </div>
         </Form>
       </div>
-      <div className="m-5 p-3 bg-white rounded">
-        <h1 className="">回傳結果</h1>
+      <div className="col-10 mx-auto mt-5">
+        <div className="p-2 bg-white rounded">
+          <h1 className="">回傳結果</h1>
 
-        <p
-          className={`text-wrap w-100 ${
-            backData.success === true ? "" : "text-danger"
-          }`}
-        >
-          {JSON.stringify(backData)}
-        </p>
-      </div>
-      <div className="m-5 p-3 bg-info-subtle rounded">
-        <h2>CHECK</h2>
-        <button
-          className="btn btn-warning"
-          onClick={() => {
-            checkJwt();
-          }}
-        >
-          Check API
-        </button>
-        {jwtData && <p className="fs-3">{JSON.stringify(jwtData)}</p>}
+          <p
+            className={`text-break w-100 ${
+              backData.success === true ? "" : "text-danger"
+            }`}
+          >
+            {JSON.stringify(backData)}
+          </p>
+        </div>
+        <div className="mt-5 p-2 bg-info-subtle rounded">
+          <h1>CHECK</h1>
+          <button
+            className="btn btn-warning"
+            onClick={() => {
+              checkJwt();
+            }}
+          >
+            Check API
+          </button>
+          {jwtData && <p className="mt-3  text-danger">{jwtData}</p>}
+        </div>
       </div>
     </div>
   );

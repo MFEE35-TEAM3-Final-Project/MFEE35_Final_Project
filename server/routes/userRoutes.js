@@ -9,7 +9,7 @@ const { json } = require("express");
 const registerValidation = require("../models/validation").registerValidation;
 const loginValidation = require("../models/validation").loginValidation;
 const userRegister = require("../models/user").userRegister;
-const passport = require("../config/passport");
+const cusPassport = require("../config/passport");
 
 // middleware
 router.use((req, res, next) => {
@@ -27,7 +27,7 @@ router.post("/register", async (req, res) => {
     if (validError)
       return res.status(400).json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
 
     const { username, password, email } = req.body;
@@ -56,7 +56,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `會員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          userId,
+          userId
         });
       } else {
         res.status(500).json({ message: "無法新增會員資料" });
@@ -76,7 +76,7 @@ router.post("/login", async (req, res) => {
     if (validError) {
       return res.status(400).json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
     }
 
@@ -96,22 +96,21 @@ router.post("/login", async (req, res) => {
         // 密碼正確
         const tokenObj = {
           _id: matchUser.userId,
-          email: matchUser.email,
+          email: matchUser.email
         };
-        const token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET, {
-          expiresIn: "7d",
+        let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET, {
+          expiresIn: "7d"
         });
         return res.status(200).send({
           success: true,
-          message: `會員登入成功 ${matchUser.userId}`,
-          token: token,
-          matchUser,
+          message: `會員登入成功 ID:${matchUser.userId}`,
+          token: "JWT " + token
         });
       } else {
         // 密碼錯誤
         return res.status(401).json({
           success: false,
-          message: `密碼錯誤 ${matchUser.userId}`,
+          message: `密碼錯誤 ${matchUser.userId}`
         });
       }
     }
@@ -119,7 +118,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
@@ -127,10 +126,11 @@ router.post("/login", async (req, res) => {
 // check
 router.get(
   "/check",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res, next) => {
-    console.log("check coming");
-    return res.json({ user: req.user });
+  cusPassport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    return res
+      .status(200)
+      .json({ success: true, message: "已認證 Token", user: req.user });
   }
 );
 
