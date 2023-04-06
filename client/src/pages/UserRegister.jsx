@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -10,8 +10,8 @@ const UserRegister = () => {
     repeat_password: "",
     email: "",
   });
-
   const [errorMessage, setErrorMessage] = useState("");
+  const [backUserMeg, setBackUserMeg] = useState({});
 
   //functions
   const inputHandler = (e) => {
@@ -24,6 +24,7 @@ const UserRegister = () => {
       .post(`${process.env.REACT_APP_API_URL}/api/user/register`, userData)
       .then((res) => {
         console.log(res);
+        setBackUserMeg(res.data);
       })
       .catch((err) => {
         setErrorMessage(err.message);
@@ -47,6 +48,20 @@ const UserRegister = () => {
             value={userData.username}
             minLength={6}
             maxLength={30}
+            onChange={inputHandler}
+            required
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="email">電子郵件：</Form.Label>
+          <Form.Control
+            type="email"
+            id="email"
+            name="email"
+            value={userData.email}
+            minLength={6}
+            maxLength={50}
             onChange={inputHandler}
             required
           />
@@ -84,20 +99,6 @@ const UserRegister = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label htmlFor="email">電子郵件：</Form.Label>
-          <Form.Control
-            type="email"
-            id="email"
-            name="email"
-            value={userData.email}
-            minLength={6}
-            maxLength={50}
-            onChange={inputHandler}
-            required
-          />
-        </Form.Group>
-
         <div className="mb-3">
           <button className="btn btn-outline-danger" type="submit">
             註冊
@@ -106,6 +107,7 @@ const UserRegister = () => {
 
         {errorMessage && <div>{errorMessage}</div>}
       </Form>
+      {<div className="fs-5  text-danger">{JSON.stringify(backUserMeg)}</div>}
     </div>
   );
 };

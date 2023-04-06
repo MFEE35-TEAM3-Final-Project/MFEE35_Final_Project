@@ -27,7 +27,7 @@ router.post("/register", async (req, res) => {
     if (validError)
       return res.status(400).json({
         success: false,
-        message: validError.details[0].message
+        message: validError.details[0].message,
       });
 
     const { username, password, email } = req.body;
@@ -56,7 +56,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `會員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          userId
+          userId,
         });
       } else {
         res.status(500).json({ message: "無法新增會員資料" });
@@ -76,7 +76,7 @@ router.post("/login", async (req, res) => {
     if (validError) {
       return res.status(400).json({
         success: false,
-        message: validError.details[0].message
+        message: validError.details[0].message,
       });
     }
 
@@ -87,27 +87,31 @@ router.post("/login", async (req, res) => {
     console.log("result", checkResults);
     if (checkResults.length === 0) {
       // email不存在
-      return res.status(400).json({ success: false, message: "email 不存在" });
+      return res.status(401).json({ success: false, message: "email 不存在" });
     } else {
       const matchUser = checkResults[0];
       // 驗證密碼
       const isMatch = await bcrypt.compare(password, matchUser.password);
       if (isMatch) {
         // 密碼正確
-        const tokenObj = { _id: matchUser.userId, email: matchUser.email };
-        const token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
+        const tokenObj = {
+          _id: matchUser.userId,
+          email: matchUser.email,
+        };
+        const token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET, {
+          expiresIn: "7d",
+        });
         return res.status(200).send({
           success: true,
           message: `會員登入成功 ${matchUser.userId}`,
-          token: "JWT " + token,
-          expired: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60,
-          matchUser
+          token: token,
+          matchUser,
         });
       } else {
         // 密碼錯誤
         return res.status(401).json({
           success: false,
-          message: `密碼錯誤 ${matchUser.userId}`
+          message: `密碼錯誤 ${matchUser.userId}`,
         });
       }
     }
@@ -115,17 +119,18 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤"
+      message: "伺服器錯誤",
     });
   }
 });
 
-// edit
-router.post(
-  "/editProfile",
+// check
+router.get(
+  "/check",
   passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    console.log(req);
+  async (req, res, next) => {
+    console.log("check coming");
+    return res.json({ user: req.user });
   }
 );
 
