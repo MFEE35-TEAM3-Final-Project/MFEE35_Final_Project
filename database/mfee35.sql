@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: mfee35
+-- Host: 127.0.0.1    Database: betadays
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.31
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,7 +31,7 @@ CREATE TABLE `users` (
   `createAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `userId_UNIQUE` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,5590613616,'sldkfjsl645454','lsdkfj2313','lskfsl@lkfjl','2023-04-01 13:11:54'),(2,5624963453,'sldkfjsl645454','lsdkfj2313','lskfsdsfsl@lkfjl','2023-04-01 13:13:33'),(3,3162557974,'sldkfjsl645454','lsdkfj2313','lskfsdddsfsl@lkfjl','2023-04-01 13:14:26'),(4,3262222356,'noraisin','Ab123456','noraisin@toko.com','2023-04-01 16:25:59');
+INSERT INTO `users` VALUES (1,5590613616,'sldkfjsl645454','lsdkfj2313','lskfsl@lkfjl','2023-04-01 13:11:54'),(2,5624963453,'sldkfjsl645454','lsdkfj2313','lskfsdsfsl@lkfjl','2023-04-01 13:13:33'),(3,3162557974,'sldkfjsl645454','lsdkfj2313','lskfsdddsfsl@lkfjl','2023-04-01 13:14:26'),(4,3262222356,'noraisin','Ab123456','noraisin@toko.com','2023-04-01 16:25:59'),(5,9960669470,'Urururuu','$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m','banana0583@fruitz.com','2023-04-06 03:32:16'),(6,7400633609,'Oooouuuu','$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK','watermelon3325@furuz.com','2023-04-06 03:52:28');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-02  1:45:25
+-- Dump completed on 2023-04-06 16:35:15
