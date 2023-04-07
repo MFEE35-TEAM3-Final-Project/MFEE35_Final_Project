@@ -7,7 +7,7 @@ const UserLogin = () => {
   // DATA
   const [userData, setUserData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [backData, setBackData] = useState({});
   const [jwtData, setJwtData] = useState("");
@@ -34,14 +34,16 @@ const UserLogin = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/user/check`, {
         headers: {
-          Authorization: `${localStorage.getItem("token")}`
-        }
+          Authorization: `${localStorage.getItem("token")}`,
+        },
       })
       .then((res) => {
-        setJwtData(res.data.message);
+        console.log(res);
+        setJwtData(res.status + "  " + res.data.message);
       })
       .catch((err) => {
-        setJwtData(err.response.data);
+        console.log(err);
+        setJwtData(err.response.status + err.response.data.message);
       });
   };
   return (

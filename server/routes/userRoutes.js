@@ -8,8 +8,7 @@ const jwt = require("jsonwebtoken");
 const { json } = require("express");
 const registerValidation = require("../models/validation").registerValidation;
 const loginValidation = require("../models/validation").loginValidation;
-const userRegister = require("../models/user").userRegister;
-const cusPassport = require("../config/passport");
+const userPassport = require("../config/userPassport");
 
 // middleware
 router.use((req, res, next) => {
@@ -22,12 +21,11 @@ router.use((req, res, next) => {
 router.post("/register", async (req, res) => {
   try {
     // 檢查傳入格式
-    console.log(registerValidation(req.body));
     const { error: validError } = registerValidation(req.body);
     if (validError)
       return res.status(400).json({
         success: false,
-        message: validError.details[0].message
+        message: validError.details[0].message,
       });
 
     const { username, password, email } = req.body;
@@ -56,7 +54,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `會員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          userId
+          userId,
         });
       } else {
         res.status(500).json({ message: "無法新增會員資料" });
@@ -76,7 +74,7 @@ router.post("/login", async (req, res) => {
     if (validError) {
       return res.status(400).json({
         success: false,
-        message: validError.details[0].message
+        message: validError.details[0].message,
       });
     }
 
@@ -96,21 +94,20 @@ router.post("/login", async (req, res) => {
         // 密碼正確
         const tokenObj = {
           _id: matchUser.userId,
-          email: matchUser.email
+          email: matchUser.email,
+          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
         };
-        let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET, {
-          expiresIn: "7d"
-        });
+        let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
         return res.status(200).send({
           success: true,
           message: `會員登入成功 ID:${matchUser.userId}`,
-          token: "JWT " + token
+          token: "JWT " + token,
         });
       } else {
         // 密碼錯誤
         return res.status(401).json({
           success: false,
-          message: `密碼錯誤 ${matchUser.userId}`
+          message: `密碼錯誤 ${matchUser.userId}`,
         });
       }
     }
@@ -118,7 +115,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤"
+      message: "伺服器錯誤",
     });
   }
 });
@@ -126,11 +123,22 @@ router.post("/login", async (req, res) => {
 // check
 router.get(
   "/check",
-  cusPassport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    return res
-      .status(200)
-      .json({ success: true, message: "已認證 Token", user: req.user });
+  userPassport.authenticate("jwt", { session: false, failWithError: true }),
+  (req, res) => {
+    console.log("anything come this OK fn");
+    return res.status(200).json({
+      success: true,
+      message: "已認證 Token",
+      user: req.user,
+    });
+  },
+  (err, req, res, next) => {
+    if (err) {
+      return res.status(401).json({
+        success: false,
+        message: "Token 錯誤，請重新登入",
+      });
+    }
   }
 );
 
