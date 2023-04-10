@@ -16,6 +16,61 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `admins`
+--
+
+DROP TABLE IF EXISTS `admins`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `admins` (
+  `sid` int NOT NULL AUTO_INCREMENT,
+  `adminId` bigint unsigned NOT NULL,
+  `adminname` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `createAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sid`),
+  UNIQUE KEY `adminId_UNIQUE` (`adminId`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admins`
+--
+
+LOCK TABLES `admins` WRITE;
+/*!40000 ALTER TABLE `admins` DISABLE KEYS */;
+INSERT INTO `admins` VALUES (1,3450349941,'Uikdiiioek','$2a$10$fXFZncA9bAE4JlxnaAr5sOOWfWx7hztOVjEhAfgL4Mkyb2Uj0aiKu','sssssss@glkajl.com','2023-04-10 06:18:00'),(2,1606116619,'Uikdiiioek','$2a$10$OtcEZSpSyeziXNf3TXgxYers74E74dhex.sbHWBod5FgKdYqFaJya','sssss545ss@glkajl.com','2023-04-10 06:18:26'),(3,7606591757,'CommonUse','$2a$10$U6iYfrrmnLbAQXg0Pjxyre9d1Zn5svaLssspNHfGdtR9pBnVNorqa','banana0583@fruitz.com','2023-04-10 07:26:33'),(4,4500310002,'CommonUse','$2a$10$AuGNxUbFN6Bi2Ra5lCOd5eBYdxLYURu6OaKQoJjZOQNo1pCzFD83K','banana058343@fruitz.com','2023-04-10 07:43:25');
+/*!40000 ALTER TABLE `admins` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `body_detail`
+--
+
+DROP TABLE IF EXISTS `body_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `body_detail` (
+  `sid` int unsigned NOT NULL AUTO_INCREMENT,
+  `userId` varchar(10) NOT NULL,
+  `height` decimal(4,1) DEFAULT NULL,
+  `weight` decimal(4,1) DEFAULT NULL,
+  `updateAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `body_detail`
+--
+
+LOCK TABLES `body_detail` WRITE;
+/*!40000 ALTER TABLE `body_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `body_detail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -25,13 +80,16 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `sid` int NOT NULL AUTO_INCREMENT,
   `userId` bigint unsigned NOT NULL,
-  `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(50) NOT NULL,
   `createAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `username` varchar(30) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `phone` varchar(10) DEFAULT NULL,
+  `address` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `userId_UNIQUE` (`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +98,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,5590613616,'sldkfjsl645454','lsdkfj2313','lskfsl@lkfjl','2023-04-01 13:11:54'),(2,5624963453,'sldkfjsl645454','lsdkfj2313','lskfsdsfsl@lkfjl','2023-04-01 13:13:33'),(3,3162557974,'sldkfjsl645454','lsdkfj2313','lskfsdddsfsl@lkfjl','2023-04-01 13:14:26'),(4,3262222356,'noraisin','Ab123456','noraisin@toko.com','2023-04-01 16:25:59'),(5,9960669470,'Urururuu','$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m','banana0583@fruitz.com','2023-04-06 03:32:16'),(6,7400633609,'Oooouuuu','$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK','watermelon3325@furuz.com','2023-04-06 03:52:28');
+INSERT INTO `users` VALUES (1,5590613616,'lsdkfj2313','lskfsl@lkfjl','2023-04-01 13:11:54',NULL,NULL,NULL,NULL),(2,5624963453,'lsdkfj2313','lskfsdsfsl@lkfjl','2023-04-01 13:13:33',NULL,NULL,NULL,NULL),(3,3162557974,'lsdkfj2313','lskfsdddsfsl@lkfjl','2023-04-01 13:14:26',NULL,NULL,NULL,NULL),(4,3262222356,'Ab123456','noraisin@toko.com','2023-04-01 16:25:59',NULL,NULL,NULL,NULL),(5,9960669470,'$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m','banana0583@fruitz.com','2023-04-06 03:32:16',NULL,NULL,NULL,NULL),(6,7400633609,'$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK','watermelon3325@furuz.com','2023-04-06 03:52:28',NULL,NULL,NULL,NULL),(7,5453336177,'$2a$10$ydNBGUsdd6xgT4w8o7WiFeUzls2fTXExtBxNXyX6juJGo.yvAf0Y.','Alon1131@guik.com','2023-04-10 06:20:24',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +111,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-06 16:35:15
+-- Dump completed on 2023-04-10 16:38:50

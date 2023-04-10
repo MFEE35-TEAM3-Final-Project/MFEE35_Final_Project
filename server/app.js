@@ -13,8 +13,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //路由
-app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/user", userRoutes);
 
 app.get("/api/users/all", (req, res) => {
   const sql = "SELECT * FROM users";

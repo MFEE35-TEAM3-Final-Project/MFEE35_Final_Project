@@ -27,7 +27,7 @@ const UserRegister = () => {
         setBackUserMeg(res.data);
       })
       .catch((err) => {
-        setErrorMessage(err.message);
+        setErrorMessage(err.response.data.message);
       });
   }
 
