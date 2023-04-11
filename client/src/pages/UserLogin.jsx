@@ -7,7 +7,7 @@ const UserLogin = () => {
   // DATA
   const [userData, setUserData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
   const [backData, setBackData] = useState({});
   const [jwtData, setJwtData] = useState("");
@@ -22,7 +22,11 @@ const UserLogin = () => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/user/login`, data)
       .then((res) => {
-        localStorage.setItem("token", res.data.token);
+        console.log("res", res);
+        // localStorage.setItem("token", res.data.token);
+        const { token, exp } = res.data;
+        const expDate = new Date(exp);
+        document.cookie = `jwtToken=${token}; expires=${expDate.toUTCString()}`;
         setBackData(res.data);
       })
       .catch((err) => {
@@ -34,8 +38,8 @@ const UserLogin = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/user/check`, {
         headers: {
-          Authorization: `${localStorage.getItem("token")}`,
-        },
+          Authorization: `${localStorage.getItem("token")}`
+        }
       })
       .then((res) => {
         console.log(res);

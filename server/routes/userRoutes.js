@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
     if (validError)
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
 
     const { username, password, email } = req.body;
@@ -54,7 +54,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `會員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          userId,
+          userId
         });
       } else {
         res.json({ success: false, message: "無法新增會員資料" });
@@ -74,7 +74,7 @@ router.post("/login", async (req, res) => {
     if (validError) {
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
     }
 
@@ -94,20 +94,22 @@ router.post("/login", async (req, res) => {
         // 密碼正確
         const tokenObj = {
           _id: matchUser.userId,
-          email: matchUser.email,
-          exp: Math.floor(Date.now() / 1000) + 5,
+          email: matchUser.email
         };
         let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
+
         return res.status(200).send({
           success: true,
-          message: `會員登入成功 ID:${matchUser.userId}`,
+          message: `會員登入成功`,
+          userId: matchUser.userId,
           token: "JWT " + token,
+          exp: Date.now() + 5000
         });
       } else {
         // 密碼錯誤
         return res.json({
           success: false,
-          message: `密碼錯誤 ${matchUser.userId}`,
+          message: `密碼錯誤 ${matchUser.userId}`
         });
       }
     }
@@ -115,7 +117,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
@@ -129,14 +131,14 @@ router.get(
     return res.status(200).json({
       success: true,
       message: "已認證 Token",
-      user: req.user,
+      user: req.user
     });
   },
   (err, req, res, next) => {
     if (err) {
       return res.status(401).json({
         success: false,
-        message: "Token 錯誤，請重新登入",
+        message: "Token 錯誤，請重新登入"
       });
     }
   }
