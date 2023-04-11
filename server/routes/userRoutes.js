@@ -28,7 +28,7 @@ router.post("/register", async (req, res) => {
         message: validError.details[0].message,
       });
 
-    const { username, password, email } = req.body;
+    const { email, password, username, phone, birthday, address } = req.body;
 
     // 檢查email是否已經存在
     const checkEmailSql = "SELECT COUNT(*) AS count FROM users WHERE email = ?";
@@ -46,7 +46,15 @@ router.post("/register", async (req, res) => {
       // console.log(hashedPassword);
       // 新增使用者
       let userId = Math.floor(1000000000 + Math.random() * 9000000000);
-      const userData = { userId, username, password: hashedPassword, email };
+      const userData = {
+        userId,
+        email,
+        password: hashedPassword,
+        username,
+        phone,
+        birthday,
+        address,
+      };
       let insertSql = "INSERT INTO users SET ?";
       const result = await query(insertSql, userData);
       const affectedRows = result.affectedRows;
@@ -100,7 +108,8 @@ router.post("/login", async (req, res) => {
         let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
         return res.status(200).send({
           success: true,
-          message: `會員登入成功 ID:${matchUser.userId}`,
+          message: `會員登入成功`,
+          userId: matchUser.userId,
           token: "JWT " + token,
         });
       } else {
