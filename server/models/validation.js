@@ -4,9 +4,15 @@ const Joi = require("joi");
 // general users
 const registerValidation = data => {
   const userSchema = Joi.object({
+    username: Joi.string().min(6).max(30).required(),
     email: Joi.string().min(6).max(50).required().email(),
     password: Joi.string().min(6).max(255).required(),
     repeat_password: Joi.ref("password")
+    repeat_password: Joi.ref("password"),
+    username: Joi.string().max(30),
+    phone: Joi.string().pattern(/^\d{9,10}$/),
+    address: Joi.string().max(100, "utf8"),
+    birthday: Joi.date().max("now"),
   });
 
   return userSchema.validate(data);
