@@ -11,7 +11,7 @@ const opts = {
 passport.use(
   "user",
   new JwtStrategy(opts, function (jwt_payload, done) {
-    if (Date.now() > jwt_payload.exp * 1000) {
+    if (Date.now() > jwt_payload.exp) {
       return done(null, false, { message: "Token 已經過期" });
     }
     connectPool.query(

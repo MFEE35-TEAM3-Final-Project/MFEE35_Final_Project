@@ -2,12 +2,13 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Nav from "./components/Nav";
 // import Footer from "./components/Footer";
-import Homepage from "./pages/Homepage";
-import Aboutpage from "./pages/Aboutpage";
-import UserRegister from "./pages/UserRegister";
+import Homepage from "./pages/HomePage";
+import Aboutpage from "./pages/AboutPage";
+import RegisterPage from "./pages/RegisterPage";
 import "./styles/all.css";
-import UserLogin from "./pages/UserLogin";
-import AdminProfile from "./pages/admin/AdminProfile";
+import LoginPage from "./pages/LoginPage";
+import UserProfiles from "./pages/user/UserProfiles";
+// import UserDashboard from "./pages/user/UserDashboard";
 
 function App() {
   return (
@@ -17,10 +18,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/about" element={<Aboutpage />} />
-          <Route path="/user/register" element={<UserRegister />} />
-          <Route path="/user/login" element={<UserLogin />} />
-
-          <Route path="/admin/profile" element={<AdminProfile />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/user/profile" element={<UserProfiles />} />
+          </Route>
           {/* <Route path="/user/*" element={<Dashboard />}>
             <Route path="register" element={<UserRegister />} />
             <Route path="login" element={<UserLogin />} />

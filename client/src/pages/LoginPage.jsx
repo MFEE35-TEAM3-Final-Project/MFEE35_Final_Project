@@ -7,10 +7,11 @@ const UserLogin = () => {
   // DATA
   const [userData, setUserData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [backData, setBackData] = useState({});
   const [jwtData, setJwtData] = useState("");
+  const [nowTime, setNowTime] = useState({ now: "", tokenTime: "" });
   // FUNCTION
   const inputHandler = (e) => {
     const { name, value } = e.target;
@@ -18,15 +19,13 @@ const UserLogin = () => {
   };
   const loginFn = (e, data) => {
     e.preventDefault();
-    // console.log(data);
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/user/login`, data)
       .then((res) => {
-        console.log("res", res);
-        // localStorage.setItem("token", res.data.token);
         const { token, exp } = res.data;
         const expDate = new Date(exp);
         document.cookie = `jwtToken=${token}; expires=${expDate.toUTCString()}`;
+        setNowTime({ now: new Date(), tokenTime: expDate });
         setBackData(res.data);
       })
       .catch((err) => {
@@ -35,12 +34,14 @@ const UserLogin = () => {
       });
   };
   const checkJwt = () => {
+    const jwtToken = document.cookie.replace(
+      /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+
+    axios.defaults.headers.common["Authorization"] = jwtToken;
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/user/check`, {
-        headers: {
-          Authorization: `${localStorage.getItem("token")}`
-        }
-      })
+      .get(`${process.env.REACT_APP_API_URL}/api/user/check`)
       .then((res) => {
         console.log(res);
         setJwtData(res.status + "  " + res.data.message);
@@ -108,6 +109,8 @@ const UserLogin = () => {
           >
             {JSON.stringify(backData)}
           </p>
+          <p>TOKEN TIME→ {JSON.stringify(nowTime.tokenTime)}</p>
+          <p>NOW TIME→ {JSON.stringify(nowTime.now)}</p>
         </div>
         <div className="mt-5 p-2 bg-info-subtle rounded">
           <h1>CHECK</h1>
