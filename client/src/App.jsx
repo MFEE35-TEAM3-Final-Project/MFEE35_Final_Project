@@ -2,13 +2,13 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Nav from "./components/Nav";
 // import Footer from "./components/Footer";
-import Homepage from "./pages/HomePage";
-import Aboutpage from "./pages/AboutPage";
+import Homepage from "./pages/Homepage";
+import Aboutpage from "./pages/Aboutpage";
 import RegisterPage from "./pages/RegisterPage";
 import "./styles/all.css";
 import LoginPage from "./pages/LoginPage";
 import UserProfiles from "./pages/user/UserProfiles";
-// import UserDashboard from "./pages/user/UserDashboard";
+import UserDashboard from "./pages/user/UserDashboard";
 
 function App() {
   return (
@@ -20,13 +20,10 @@ function App() {
           <Route path="/about" element={<Aboutpage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route element={<ProtectedRoutes />}>
+
+          <Route element={<UserDashboard />}>
             <Route path="/user/profile" element={<UserProfiles />} />
           </Route>
-          {/* <Route path="/user/*" element={<Dashboard />}>
-            <Route path="register" element={<UserRegister />} />
-            <Route path="login" element={<UserLogin />} />
-          </Route> */}
         </Routes>
       </div>
       {/* <Footer /> */}
