@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
     if (validError)
       return res.json({
         success: false,
-        message: validError.details[0].message
+        message: validError.details[0].message,
       });
 
     const { email, password, username, phone, birthday, address } = req.body;
@@ -53,7 +53,7 @@ router.post("/register", async (req, res) => {
         username,
         phone,
         birthday,
-        address
+        address,
       };
       let insertSql = "INSERT INTO users SET ?";
       const result = await query(insertSql, userData);
@@ -62,7 +62,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `會員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          userId
+          userId,
         });
       } else {
         res.json({ success: false, message: "無法新增會員資料" });
@@ -82,7 +82,7 @@ router.post("/login", async (req, res) => {
     if (validError) {
       return res.json({
         success: false,
-        message: validError.details[0].message
+        message: validError.details[0].message,
       });
     }
 
@@ -100,11 +100,11 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, matchUser.password);
       if (isMatch) {
         // 密碼正確
-        let expDate = Date.now() + 60000;
+        let expDate = Date.now() + 1000 * 60 * 60;
         const tokenObj = {
           _id: matchUser.userId,
           email: matchUser.email,
-          exp: expDate
+          exp: expDate,
         };
         let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
 
@@ -113,13 +113,13 @@ router.post("/login", async (req, res) => {
           message: `會員登入成功`,
           userId: matchUser.userId,
           token: "JWT " + token,
-          exp: expDate
+          exp: expDate,
         });
       } else {
         // 密碼錯誤
         return res.json({
           success: false,
-          message: `密碼錯誤 ${matchUser.userId}`
+          message: `密碼錯誤 ${matchUser.userId}`,
         });
       }
     }
@@ -127,7 +127,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤"
+      message: "伺服器錯誤",
     });
   }
 });
@@ -141,14 +141,14 @@ router.get(
     return res.status(200).json({
       success: true,
       message: "已認證 Token",
-      user: req.user
+      user: req.user,
     });
   },
   (err, req, res, next) => {
     if (err) {
       return res.status(401).json({
         success: false,
-        message: "Token 錯誤，請重新登入"
+        message: "Token 錯誤，請重新登入",
       });
     }
   }
