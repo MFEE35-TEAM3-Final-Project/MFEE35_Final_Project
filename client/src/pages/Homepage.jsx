@@ -19,7 +19,9 @@ const Homepage = () => {
   return (
     <div>
       <Banner />
-      <div><form action="submit"></form></div>
+      <div>
+        <form action="submit"></form>
+      </div>
     </div>
   );
 };

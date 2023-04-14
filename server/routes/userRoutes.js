@@ -100,7 +100,7 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, matchUser.password);
       if (isMatch) {
         // 密碼正確
-        let expDate = Date.now() + 30000;
+        let expDate = Date.now() + 60000;
         const tokenObj = {
           _id: matchUser.userId,
           email: matchUser.email,

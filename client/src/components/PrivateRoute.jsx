@@ -1,25 +1,32 @@
-import React from "react";
-import { Routes, Route, redirect } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Navigate, Outlet, Route } from "react-router-dom";
+import axios from "axios";
 
-export const PrivateRoute = ({
-  component: Component,
-  authenticated,
-  ...rest
-}) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        authenticated ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{ pathname: "/login", state: { from: props.location } }}
-          />
-        )
-      }
-    />
-  );
+const PrivateRoute = ({ ...rest }) => {
+  console.log("come private");
+  const [user, setUser] = useState("");
+  useEffect(() => {
+    const jwtToken = document.cookie.replace(
+      /(?:(?:^|.*;\s*)jwtToken\s*=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+
+    axios.defaults.headers.common["Authorization"] = jwtToken;
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/user/check`)
+      .then((res) => {
+        console.log(res);
+        console.log(res.data);
+        setUser(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(err.response.data);
+      });
+  }, []);
+
+  // 依照「是否授權」來判定使用者是否能前往該頁面
+  return <>{!user ? <Navigate to="/login" replace /> : <Route {...rest} />}</>;
 };
 
 export default PrivateRoute;

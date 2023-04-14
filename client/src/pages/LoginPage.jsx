@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { Link } from "react-router-dom";
 
 const UserLogin = () => {
   // DATA
@@ -35,7 +36,7 @@ const UserLogin = () => {
   };
   const checkJwt = () => {
     const jwtToken = document.cookie.replace(
-      /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
+      /(?:(?:^|.*;\s*)jwtToken\s*=\s*([^;]*).*$)|^.*$/,
       "$1"
     );
 
@@ -51,6 +52,7 @@ const UserLogin = () => {
         setJwtData(err.response.status + err.response.data.message);
       });
   };
+
   return (
     <div>
       <div
@@ -124,6 +126,10 @@ const UserLogin = () => {
           </button>
           {jwtData && <p className="mt-3  text-danger">{jwtData}</p>}
         </div>
+        <hr />
+        <Link className="my-5 mx-2 btn btn-danger" to="/user/profile2">
+          LETS GOOOOOOOOOOOO!
+        </Link>
       </div>
     </div>
   );
