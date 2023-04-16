@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: betadays
+-- Host: 127.0.0.1    Database: mfee35
 -- ------------------------------------------------------
--- Server version	8.0.31
+-- Server version	8.0.32
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -45,30 +45,30 @@ INSERT INTO `admins` VALUES (1,3450349941,'Uikdiiioek','$2a$10$fXFZncA9bAE4Jlxna
 UNLOCK TABLES;
 
 --
--- Table structure for table `body_detail`
+-- Table structure for table `tdee`
 --
 
-DROP TABLE IF EXISTS `body_detail`;
+DROP TABLE IF EXISTS `tdee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `body_detail` (
+CREATE TABLE `tdee` (
   `sid` int unsigned NOT NULL AUTO_INCREMENT,
   `userId` varchar(10) NOT NULL,
   `height` decimal(4,1) DEFAULT NULL,
   `weight` decimal(4,1) DEFAULT NULL,
-  `updateAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `activity_level` decimal(2,1) DEFAULT NULL,
+  `updateAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `body_detail`
+-- Dumping data for table `tdee`
 --
 
-LOCK TABLES `body_detail` WRITE;
-/*!40000 ALTER TABLE `body_detail` DISABLE KEYS */;
-/*!40000 ALTER TABLE `body_detail` ENABLE KEYS */;
+LOCK TABLES `tdee` WRITE;
+/*!40000 ALTER TABLE `tdee` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tdee` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -113,4 +113,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-14 16:31:11
+-- Dump completed on 2023-04-17  0:54:14
