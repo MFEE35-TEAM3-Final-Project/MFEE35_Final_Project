@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Collapse from "react-bootstrap/Collapse";
+import { Link } from "react-router-dom";
 
 function HomepageNav() {
   const [openSlide, setOpenSlide] = useState(false);
@@ -20,28 +21,24 @@ function HomepageNav() {
             </a>
             <div className="d-none d-lg-flex justify-content-lg-around col-lg-11">
               <div className="nav-item">
-                <a href="#intro_selection" className="nav-link">
-                  INTRODUCTION
-                </a>
+                <Link to="/register" className="nav-link">
+                  REGISTER
+                </Link>
               </div>
               <div className="nav-item">
-                <a href="#live_section" className="nav-link">
-                  LIVE
-                </a>
+                <Link to="/login" className="nav-link">
+                  LOGIN
+                </Link>
               </div>
               <div className="nav-item">
-                <a href="#picture_section" className="nav-link">
-                  PICTURE
-                </a>
+                <Link to="/user/profile" className="nav-link">
+                  PROFILE
+                </Link>
               </div>
-              <div className="nav-item">
-                <a href="#sns_section" className="nav-link">
-                  SNS~
-                </a>
-              </div>
+
               <div className="nav-item">
                 <a href="https://bocchi.rocks/" className="nav-link">
-                  OFFICIAL
+                  BOCCHI OFFICIAL
                 </a>
               </div>
             </div>
@@ -62,28 +59,24 @@ function HomepageNav() {
           <Collapse in={openSlide} className="nav_body " id="slide_selects">
             <div className="slide_selects_nav">
               <div className="nav-item">
-                <a href="#intro_selection" className="nav-link">
-                  INTRODUCTION
-                </a>
+                <Link to="/register" className="nav-link">
+                  REGISTER
+                </Link>
               </div>
               <div className="nav-item">
-                <a href="#live_section" className="nav-link">
-                  LIVE
-                </a>
+                <Link to="/login" className="nav-link">
+                  LOGIN
+                </Link>
               </div>
               <div className="nav-item">
-                <a href="#picture_section" className="nav-link">
-                  PICTURE
-                </a>
+                <Link to="/user/profile" className="nav-link">
+                  PROFILE
+                </Link>
               </div>
-              <div className="nav-item">
-                <a href="#sns_section" className="nav-link">
-                  SNS~
-                </a>
-              </div>
+
               <div className="nav-item">
                 <a href="https://bocchi.rocks/" className="nav-link">
-                  OFFICIAL
+                  BOCCHI OFFICIAL
                 </a>
               </div>
             </div>

@@ -9,21 +9,27 @@ const UserProfiles = () => {
     { value: 1.375, label: "輕度運動" },
     { value: 1.55, label: "中度運動" },
     { value: 1.725, label: "高度運動" },
-    { value: 1.9, label: "激烈運動" }
+    { value: 1.9, label: "激烈運動" },
   ];
   const [bodyData, setBodyData] = useState({
+    gender: "",
+    birthday: "",
     weight: "",
     height: "",
-    activityLevel: ""
+    activityLevel: "",
   });
 
   const dataHandler = (e) => {
     const { name, value } = e.target;
-    setBodyData({ ...bodyData, [name]: parseFloat(value) });
+    setBodyData({ ...bodyData, [name]: value });
   };
   const submitBodyData = (bodyData) => {
+    const sendData = {
+      ...bodyData,
+    };
+    console.log("send", sendData);
     tokenApi
-      .get(`/api/user/check`)
+      .post(`/api/user/exercise_records`, sendData)
       .then((res) => {
         console.log(res);
       })
@@ -42,6 +48,7 @@ const UserProfiles = () => {
                 <th className="text-white col-3 ">體重</th>
                 <th className="text-white col-3">身高</th>
                 <th className="text-white col-3">運動頻率</th>
+                <th className="text-white col-3">生日</th>
               </tr>
             </thead>
             <tbody>
@@ -80,6 +87,16 @@ const UserProfiles = () => {
                       </option>
                     ))}
                   </Form.Control>
+                </td>
+                <td>
+                  <Form.Control
+                    type="date"
+                    id="birthday"
+                    name="birthday"
+                    max={new Date().toISOString().substr(0, 10)}
+                    value={bodyData.birthday}
+                    onChange={dataHandler}
+                  />
                 </td>
               </tr>
             </tbody>

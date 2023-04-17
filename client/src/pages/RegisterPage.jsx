@@ -9,7 +9,7 @@ const UserRegister = () => {
     password: "",
     repeat_password: "",
     username: "",
-    birthday: "",
+    // birthday: "",
     phone: "",
     address: "",
   });
@@ -97,7 +97,7 @@ const UserRegister = () => {
             onChange={inputHandler}
           />
         </Form.Group>
-        <Form.Group className="mb-3">
+        {/* <Form.Group className="mb-3">
           <Form.Label htmlFor="birthday">生日(選填)：</Form.Label>
           <Form.Control
             type="date"
@@ -107,7 +107,7 @@ const UserRegister = () => {
             value={userData.birthday}
             onChange={inputHandler}
           />
-        </Form.Group>
+        </Form.Group> */}
         <Form.Group className="mb-3">
           <Form.Label htmlFor="phone">連絡電話(選填)：</Form.Label>
           <Form.Control

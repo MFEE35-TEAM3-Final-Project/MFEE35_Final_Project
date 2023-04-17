@@ -28,7 +28,7 @@ router.post("/register", async (req, res) => {
         message: validError.details[0].message,
       });
 
-    const { email, password, username, phone, birthday, address } = req.body;
+    const { email, password, username, phone, address } = req.body;
 
     // 檢查email是否已經存在
     const checkEmailSql = "SELECT COUNT(*) AS count FROM users WHERE email = ?";
@@ -153,5 +153,33 @@ router.get(
     }
   }
 );
+
+//body_specific
+router.post("/exercise_records", userPassport, async (req, res) => {
+  try {
+    const userId = req.user[0].userId;
+    const { gender, birthday, weight, height, exercise_level, record_date } =
+      req.body;
+    const bodyData = {
+      user_id: userId,
+      gender: gender,
+      birthday: birthday,
+      weight: weight,
+      height: height,
+      exercise_level: exercise_level,
+      record_date: record_date,
+    };
+
+    console.log(bodyData);
+
+    return res.json({
+      meg: "wowoowowowoo",
+      req: req.body,
+      userId: req.user,
+    });
+  } catch {
+    return res.send("WEEEEEE");
+  }
+});
 
 module.exports = router;
