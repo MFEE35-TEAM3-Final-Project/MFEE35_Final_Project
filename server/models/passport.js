@@ -5,12 +5,12 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt"),
-  secretOrKey: process.env.PASSPORT_SECRET,
+  secretOrKey: process.env.PASSPORT_SECRET
 };
 
 passport.use(
   "user",
-  new JwtStrategy(opts, function (jwt_payload, done) {
+  new JwtStrategy(opts, function(jwt_payload, done) {
     if (Date.now() > jwt_payload.exp) {
       return done(null, false, { message: "Token 已經過期" });
     }
@@ -32,7 +32,7 @@ passport.use(
 
 passport.use(
   "admin",
-  new JwtStrategy(opts, function (jwt_payload, done) {
+  new JwtStrategy(opts, function(jwt_payload, done) {
     if (Date.now() > jwt_payload.exp * 1000) {
       return done(null, false, { message: "Token 已經過期" });
     }
@@ -55,10 +55,10 @@ passport.use(
 module.exports = {
   userPassport: passport.authenticate("user", {
     session: false,
-    failWithError: true,
+    failWithError: true
   }),
   adminPassport: passport.authenticate("admin", {
     session: false,
-    failWithError: true,
-  }),
+    failWithError: true
+  })
 };

@@ -6,8 +6,7 @@ const query = promisify(connectPool.query).bind(connectPool);
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { json } = require("express");
-const registerValidation = require("../models/validation").registerValidation;
-const loginValidation = require("../models/validation").loginValidation;
+const {registerValidation,loginValidation} = require("../models/validation");
 const { userPassport, adminPassport } = require("../models/passport");
 
 // middleware
@@ -160,6 +159,14 @@ router.post("/exercise_records", userPassport, async (req, res) => {
     const userId = req.user[0].userId;
     const { gender, birthday, weight, height, exercise_level, record_date } =
       req.body;
+        // 檢查輸入資料的格式
+    // const { error: validError } = loginValidation(req.body);
+    if (validError) {
+      return res.json({
+        success: false,
+        message: validError.details[0].message,
+      });
+    }
     const bodyData = {
       user_id: userId,
       gender: gender,

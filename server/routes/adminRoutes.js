@@ -6,9 +6,10 @@ const query = promisify(connectPool.query).bind(connectPool);
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { json } = require("express");
-const adminRegValidation = require("../models/validation").adminRegValidation;
-const adminloginValidation =
-  require("../models/validation").adminloginValidation;
+const {
+  adminRegValidation,
+  adminLoginValidation
+} = require("../models/validation");
 const { adminPassport } = require("../models/passport");
 
 // middleware
@@ -26,7 +27,7 @@ router.post("/register", async (req, res) => {
     if (validError)
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
 
     const { adminname, password, email } = req.body;
@@ -56,7 +57,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `管理員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          adminId,
+          adminId
         });
       } else {
         res.json({ success: false, message: "無法新增管理員資料" });
@@ -72,11 +73,11 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     // 檢查輸入參數的格式
-    const { error: validError } = adminloginValidation(req.body);
+    const { error: validError } = adminLoginValidation(req.body);
     if (validError) {
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
     }
 
@@ -97,19 +98,19 @@ router.post("/login", async (req, res) => {
         const tokenObj = {
           _id: matchAdmin.adminId,
           email: matchAdmin.email,
-          exp: Math.floor(Date.now() / 1000) + 5,
+          exp: Math.floor(Date.now() / 1000) + 5
         };
         let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
         return res.status(200).send({
           success: true,
           message: `管理員登入成功 ID:${matchAdmin.adminId}`,
-          token: "JWT " + token,
+          token: "JWT " + token
         });
       } else {
         // 密碼錯誤
         return res.json({
           success: false,
-          message: `密碼錯誤 ${matchAdmin.adminId}`,
+          message: `密碼錯誤 ${matchAdmin.adminId}`
         });
       }
     }
@@ -117,7 +118,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
@@ -131,14 +132,14 @@ router.get(
     return res.status(200).json({
       success: true,
       message: "已認證 Token",
-      user: req.user,
+      user: req.user
     });
   },
   (err, req, res, next) => {
     if (err) {
       return res.json({
         success: false,
-        message: "Token 錯誤，請重新登入",
+        message: "Token 錯誤，請重新登入"
       });
     }
   }
