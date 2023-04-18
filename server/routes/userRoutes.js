@@ -3,10 +3,15 @@ const router = express.Router();
 const connectPool = require("../models/dbConnect");
 const { promisify } = require("util");
 const query = promisify(connectPool.query).bind(connectPool);
+const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { json } = require("express");
-const {registerValidation,loginValidation} = require("../models/validation");
+const {
+  registerValidation,
+  loginValidation,
+  exerciseRecordsValidation,
+} = require("../models/validation");
 const { userPassport, adminPassport } = require("../models/passport");
 
 // middleware
@@ -159,15 +164,17 @@ router.post("/exercise_records", userPassport, async (req, res) => {
     const userId = req.user[0].userId;
     const { gender, birthday, weight, height, exercise_level, record_date } =
       req.body;
-        // 檢查輸入資料的格式
-    // const { error: validError } = loginValidation(req.body);
+    // // 檢查輸入資料的格式
+    const { error: validError } = exerciseRecordsValidation(req.body);
     if (validError) {
       return res.json({
         success: false,
         message: validError.details[0].message,
       });
     }
+    let recordId = uuidv4();
     const bodyData = {
+      exercise_records_id: recordId,
       user_id: userId,
       gender: gender,
       birthday: birthday,
@@ -176,14 +183,19 @@ router.post("/exercise_records", userPassport, async (req, res) => {
       exercise_level: exercise_level,
       record_date: record_date,
     };
-
-    console.log(bodyData);
-
-    return res.json({
-      meg: "wowoowowowoo",
-      req: req.body,
-      userId: req.user,
-    });
+    let insertSql = "INSERT INTO exercise_records SET ?";
+    const result = await query(insertSql, bodyData);
+    const affectedRows = result.affectedRows;
+    console.log(result);
+    if (affectedRows === 1) {
+      return res.status(201).json({
+        success: true,
+        message: `會員體態追蹤新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
+        userId,
+      });
+    } else {
+      return res.json({ success: false, message: "無法新增會員體態追蹤" });
+    }
   } catch {
     return res.send("WEEEEEE");
   }

@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS `exercise_records`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `exercise_records` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `exercise_records_id` varchar(36) NOT NULL,
   `user_id` varchar(10) NOT NULL,
   `gender` enum('male','female') NOT NULL,
   `birthday` date NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE `exercise_records` (
   `record_date` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`exercise_records_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -72,6 +72,7 @@ CREATE TABLE `exercise_records` (
 
 LOCK TABLES `exercise_records` WRITE;
 /*!40000 ALTER TABLE `exercise_records` DISABLE KEYS */;
+INSERT INTO `exercise_records` VALUES ('1','9960669470','female','2023-03-30',172.5,75,1.5,'2023-04-16','2023-04-18 03:34:19','2023-04-18 03:34:19'),('2','9960669470','female','2023-03-30',155.5,45,1.5,'2023-04-16','2023-04-18 03:35:05','2023-04-18 03:35:05'),('49ac8f35-d9bd-4f0d-b09d-dc609978c536','9960669470','female','2023-03-30',145,37,1.5,'2023-04-16','2023-04-18 05:43:59','2023-04-18 05:43:59'),('4f1dddcb-662c-43a0-b56e-7f0c94e05f54','9960669470','female','2023-03-30',145,37,1.5,'2023-04-16','2023-04-18 05:43:57','2023-04-18 05:43:57'),('5d8222e2-0c7c-43dc-a440-f54f251bf53e','9960669470','female','2023-03-30',145,37,1.5,'2023-04-16','2023-04-18 05:41:49','2023-04-18 05:41:49'),('6c7ec546-e51f-47ff-8c1a-eee31c47b082','9960669470','female','2023-03-30',165.5,55,1.5,'2023-04-16','2023-04-18 04:08:37','2023-04-18 05:46:08'),('9d32ee93-0e98-4234-840a-b8609e5861cc','9960669470','female','2023-03-30',145,37,1.5,'2023-04-16','2023-04-18 05:41:18','2023-04-18 05:41:18'),('ce9bbb15-4f01-436a-995b-9627a147afeb','9960669470','female','2023-03-30',145,37,1.5,'2023-04-16','2023-04-18 05:37:44','2023-04-18 05:37:44'),('d73eb02e-c8c1-428d-80e1-e88ad41d53c8','9960669470','female','2023-03-30',155.5,45,1.5,'2023-04-16','2023-04-18 05:33:37','2023-04-18 05:33:37');
 /*!40000 ALTER TABLE `exercise_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,4 +143,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-17 16:32:06
+-- Dump completed on 2023-04-18 15:22:15
