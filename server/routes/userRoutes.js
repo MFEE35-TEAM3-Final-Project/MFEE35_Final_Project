@@ -56,7 +56,6 @@ router.post("/register", async (req, res) => {
         password: hashedPassword,
         username,
         phone,
-        birthday,
         address,
       };
       let insertSql = "INSERT INTO users SET ?";
@@ -104,7 +103,7 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, matchUser.password);
       if (isMatch) {
         // 密碼正確
-        let expDate = Date.now() + 1000 * 60 * 60;
+        let expDate = Date.now() + 1000 * 60 * 60 * 24;
         const tokenObj = {
           _id: matchUser.userId,
           email: matchUser.email,
@@ -172,9 +171,7 @@ router.post("/exercise_records", userPassport, async (req, res) => {
         message: validError.details[0].message,
       });
     }
-    let recordId = uuidv4();
-    const bodyData = {
-      exercise_records_id: recordId,
+    let bodyData = {
       user_id: userId,
       gender: gender,
       birthday: birthday,
@@ -183,21 +180,48 @@ router.post("/exercise_records", userPassport, async (req, res) => {
       exercise_level: exercise_level,
       record_date: record_date,
     };
-    let insertSql = "INSERT INTO exercise_records SET ?";
-    const result = await query(insertSql, bodyData);
-    const affectedRows = result.affectedRows;
-    console.log(result);
-    if (affectedRows === 1) {
-      return res.status(201).json({
-        success: true,
-        message: `會員體態追蹤新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-        userId,
+    // 檢查紀錄天是否已經有紀錄
+    const checkdateSql =
+      "SELECT * FROM exercise_records WHERE user_id = ? AND DATE(record_date) = ?";
+    const checkResults = await query(checkdateSql, [userId, record_date]);
+    console.log(checkResults);
+    if (checkResults.length < 1) {
+      // 新增
+      let recordId = uuidv4();
+      const insertSql = "INSERT INTO exercise_records SET ?";
+      const result = await query(insertSql, {
+        ...bodyData,
+        exercise_records_id: recordId,
       });
+      const affectedRows = result.affectedRows;
+      console.log(result);
+      if (affectedRows === 1) {
+        return res.status(201).json({
+          success: true,
+          message: `會員體態追蹤新增 ${result.affectedRows}筆 成功`,
+          recordId,
+        });
+      } else {
+        return res.json({ success: false, message: "無法新增會員體態追蹤" });
+      }
     } else {
-      return res.json({ success: false, message: "無法新增會員體態追蹤" });
+      const alterSql =
+        "UPDATE exercise_records SET ? WHERE exercise_records_id = ?";
+      const recordId = checkResults[0].exercise_records_id;
+      const result = await query(alterSql, [bodyData, recordId]);
+      console.log(result);
+      return res.json({
+        success: true,
+        message: "該日期資料更新完成",
+        recordId,
+      });
     }
-  } catch {
-    return res.send("WEEEEEE");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "伺服器錯誤",
+    });
   }
 });
 
