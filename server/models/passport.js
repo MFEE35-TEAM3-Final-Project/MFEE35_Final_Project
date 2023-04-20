@@ -15,7 +15,7 @@ passport.use(
       return done(null, false, { message: "Token 已經過期" });
     }
     connectPool.query(
-      "SELECT * FROM users WHERE userId = ? AND email = ?",
+      "SELECT * FROM users WHERE user_id = ? AND email = ?",
       [jwt_payload._id, jwt_payload.email],
       (error, user) => {
         if (error) {

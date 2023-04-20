@@ -10,7 +10,7 @@ const { json } = require("express");
 const {
   registerValidation,
   loginValidation,
-  exerciseRecordsValidation,
+  exerciseRecordsValidation
 } = require("../models/validation");
 const { userPassport, adminPassport } = require("../models/passport");
 
@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
     if (validError)
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
 
     const { email, password, username, phone, address } = req.body;
@@ -56,7 +56,7 @@ router.post("/register", async (req, res) => {
         password: hashedPassword,
         username,
         phone,
-        address,
+        address
       };
       let insertSql = "INSERT INTO users SET ?";
       const result = await query(insertSql, userData);
@@ -65,7 +65,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `會員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          userId,
+          userId
         });
       } else {
         res.json({ success: false, message: "無法新增會員資料" });
@@ -85,7 +85,7 @@ router.post("/login", async (req, res) => {
     if (validError) {
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
     }
 
@@ -107,7 +107,7 @@ router.post("/login", async (req, res) => {
         const tokenObj = {
           _id: matchUser.userId,
           email: matchUser.email,
-          exp: expDate,
+          exp: expDate
         };
         let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
 
@@ -116,13 +116,13 @@ router.post("/login", async (req, res) => {
           message: `會員登入成功`,
           userId: matchUser.userId,
           token: "JWT " + token,
-          exp: expDate,
+          exp: expDate
         });
       } else {
         // 密碼錯誤
         return res.json({
           success: false,
-          message: `密碼錯誤 ${matchUser.userId}`,
+          message: `密碼錯誤 ${matchUser.userId}`
         });
       }
     }
@@ -130,7 +130,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
@@ -144,31 +144,48 @@ router.get(
     return res.status(200).json({
       success: true,
       message: "已認證 Token",
-      user: req.user,
+      user: req.user
     });
   },
   (err, req, res, next) => {
     if (err) {
       return res.status(401).json({
         success: false,
-        message: "Token 錯誤，請重新登入",
+        message: "Token 錯誤，請重新登入"
       });
     }
   }
 );
 
+router.get("/exercise_records", userPassport, async (req, res) => {
+  try {
+    const userId = req.user[0].user_id;
+    const getSql = "SELECT * FROM exercise_records WHERE user_id = ?";
+    const getResults = await query(getSql, [userId]);
+    console.log("gggg", getResults);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 //body_specific
 router.post("/exercise_records", userPassport, async (req, res) => {
   try {
-    const userId = req.user[0].userId;
-    const { gender, birthday, weight, height, exercise_level, record_date } =
-      req.body;
+    const userId = req.user[0].user_id;
+    const {
+      gender,
+      birthday,
+      weight,
+      height,
+      exercise_level,
+      record_date
+    } = req.body;
     // // 檢查輸入資料的格式
     const { error: validError } = exerciseRecordsValidation(req.body);
     if (validError) {
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
     }
     let bodyData = {
@@ -178,7 +195,7 @@ router.post("/exercise_records", userPassport, async (req, res) => {
       weight: weight,
       height: height,
       exercise_level: exercise_level,
-      record_date: record_date,
+      record_date: record_date
     };
     // 檢查紀錄天是否已經有紀錄
     const checkdateSql =
@@ -191,7 +208,7 @@ router.post("/exercise_records", userPassport, async (req, res) => {
       const insertSql = "INSERT INTO exercise_records SET ?";
       const result = await query(insertSql, {
         ...bodyData,
-        exercise_records_id: recordId,
+        exercise_records_id: recordId
       });
       const affectedRows = result.affectedRows;
       console.log(result);
@@ -199,7 +216,7 @@ router.post("/exercise_records", userPassport, async (req, res) => {
         return res.status(201).json({
           success: true,
           message: `會員體態追蹤新增 ${result.affectedRows}筆 成功`,
-          recordId,
+          recordId
         });
       } else {
         return res.json({ success: false, message: "無法新增會員體態追蹤" });
@@ -208,19 +225,20 @@ router.post("/exercise_records", userPassport, async (req, res) => {
       const alterSql =
         "UPDATE exercise_records SET ? WHERE exercise_records_id = ?";
       const recordId = checkResults[0].exercise_records_id;
+      console.log(recordId);
       const result = await query(alterSql, [bodyData, recordId]);
-      console.log(result);
+      // console.log(result);
       return res.json({
         success: true,
         message: "該日期資料更新完成",
-        recordId,
+        recordId
       });
     }
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
