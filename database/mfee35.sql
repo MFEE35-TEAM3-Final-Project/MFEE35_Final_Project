@@ -62,7 +62,9 @@ CREATE TABLE `exercise_records` (
   `record_date` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`exercise_records_id`)
+  PRIMARY KEY (`exercise_records_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `exercise_records_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -72,7 +74,7 @@ CREATE TABLE `exercise_records` (
 
 LOCK TABLES `exercise_records` WRITE;
 /*!40000 ALTER TABLE `exercise_records` DISABLE KEYS */;
-INSERT INTO `exercise_records` VALUES ('67657795-03b2-4360-bdc5-b9883c17ac12','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-17','2023-04-19 08:04:04','2023-04-19 08:04:04'),('93bc4b8c-3b28-435a-9bb8-b2559e01b4fd','6076469144','female','2023-03-30',172.5,80,1.5,'2023-03-15','2023-04-19 08:16:32','2023-04-19 08:16:32'),('95e97985-10c9-46f0-ade5-a2e7591a71fb','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-15','2023-04-19 08:07:23','2023-04-19 08:07:23'),('cd64b5aa-8449-4f62-b7de-7018bb817f38','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-16','2023-04-19 03:31:54','2023-04-19 08:02:29');
+INSERT INTO `exercise_records` VALUES ('67657795-03b2-4360-bdc5-b9883c17ac12','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-17','2023-04-19 08:04:04','2023-04-19 08:04:04'),('93bc4b8c-3b28-435a-9bb8-b2559e01b4fd','6076469144','female','2023-03-30',172.5,80,1.5,'2023-03-15','2023-04-19 08:16:32','2023-04-19 08:16:32'),('95e97985-10c9-46f0-ade5-a2e7591a71fb','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-15','2023-04-19 08:07:23','2023-04-19 08:07:23'),('b00ae99c-a0f7-4426-a3f9-3d26586a0c06','9960669470','female','2023-03-30',172.5,75,1.5,'2023-04-14','2023-04-20 04:08:36','2023-04-20 04:08:36'),('cd64b5aa-8449-4f62-b7de-7018bb817f38','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-16','2023-04-19 03:31:54','2023-04-19 08:02:29');
 /*!40000 ALTER TABLE `exercise_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +114,7 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `sid` int NOT NULL AUTO_INCREMENT,
-  `userId` bigint unsigned NOT NULL,
+  `user_id` varchar(10) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `username` varchar(30) DEFAULT NULL,
@@ -120,7 +122,7 @@ CREATE TABLE `users` (
   `address` varchar(100) DEFAULT NULL,
   `createAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
-  UNIQUE KEY `userId_UNIQUE` (`userId`)
+  UNIQUE KEY `userId_UNIQUE` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -130,7 +132,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,5590613616,'lskfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:11:54'),(2,5624963453,'lskfsdsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:13:33'),(3,3162557974,'lskfsdddsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:14:26'),(4,3262222356,'noraisin@toko.com','Ab123456',NULL,NULL,NULL,'2023-04-01 16:25:59'),(5,9960669470,'banana0583@fruitz.com','$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m',NULL,NULL,NULL,'2023-04-06 03:32:16'),(6,7400633609,'watermelon3325@furuz.com','$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK',NULL,NULL,NULL,'2023-04-06 03:52:28'),(7,5453336177,'Alon1131@guik.com','$2a$10$ydNBGUsdd6xgT4w8o7WiFeUzls2fTXExtBxNXyX6juJGo.yvAf0Y.',NULL,NULL,NULL,'2023-04-10 06:20:24'),(8,6076469144,'uuid12333@llakke.com','$2a$10$UaHI92cuz925g3Secvypreg/EbC4nhvYWA32cXTiP7DL17KiKXINC','uejj558',NULL,NULL,'2023-04-19 03:28:45');
+INSERT INTO `users` VALUES (1,'5590613616','lskfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:11:54'),(2,'5624963453','lskfsdsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:13:33'),(3,'3162557974','lskfsdddsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:14:26'),(4,'3262222356','noraisin@toko.com','Ab123456',NULL,NULL,NULL,'2023-04-01 16:25:59'),(5,'9960669470','banana0583@fruitz.com','$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m',NULL,NULL,NULL,'2023-04-06 03:32:16'),(6,'7400633609','watermelon3325@furuz.com','$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK',NULL,NULL,NULL,'2023-04-06 03:52:28'),(7,'5453336177','Alon1131@guik.com','$2a$10$ydNBGUsdd6xgT4w8o7WiFeUzls2fTXExtBxNXyX6juJGo.yvAf0Y.',NULL,NULL,NULL,'2023-04-10 06:20:24'),(8,'6076469144','uuid12333@llakke.com','$2a$10$UaHI92cuz925g3Secvypreg/EbC4nhvYWA32cXTiP7DL17KiKXINC','uejj558',NULL,NULL,'2023-04-19 03:28:45');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -143,4 +145,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-19 16:31:35
+-- Dump completed on 2023-04-20 16:32:41

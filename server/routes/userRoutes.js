@@ -13,6 +13,7 @@ const {
   exerciseRecordsValidation,
 } = require("../models/validation");
 const { userPassport, adminPassport } = require("../models/passport");
+const { error } = require("console");
 
 // middleware
 router.use((req, res, next) => {
@@ -51,7 +52,7 @@ router.post("/register", async (req, res) => {
       // 新增使用者
       let userId = Math.floor(1000000000 + Math.random() * 9000000000);
       const userData = {
-        userId,
+        user_id: userId,
         email,
         password: hashedPassword,
         username,
@@ -65,7 +66,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `會員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          userId,
+          user_id: userId,
         });
       } else {
         res.json({ success: false, message: "無法新增會員資料" });
@@ -105,7 +106,7 @@ router.post("/login", async (req, res) => {
         // 密碼正確
         let expDate = Date.now() + 1000 * 60 * 60 * 24;
         const tokenObj = {
-          _id: matchUser.userId,
+          _id: matchUser.user_id,
           email: matchUser.email,
           exp: expDate,
         };
@@ -114,7 +115,7 @@ router.post("/login", async (req, res) => {
         return res.status(200).send({
           success: true,
           message: `會員登入成功`,
-          userId: matchUser.userId,
+          user_id: matchUser.user_id,
           token: "JWT " + token,
           exp: expDate,
         });
@@ -122,7 +123,7 @@ router.post("/login", async (req, res) => {
         // 密碼錯誤
         return res.json({
           success: false,
-          message: `密碼錯誤 ${matchUser.userId}`,
+          message: `密碼錯誤 ${matchUser.user_id}`,
         });
       }
     }
@@ -160,7 +161,7 @@ router.get(
 //body_specific
 router.post("/exercise_records", userPassport, async (req, res) => {
   try {
-    const userId = req.user[0].userId;
+    const userId = req.user[0].user_id;
     const { gender, birthday, weight, height, exercise_level, record_date } =
       req.body;
     // // 檢查輸入資料的格式
@@ -209,7 +210,6 @@ router.post("/exercise_records", userPassport, async (req, res) => {
         "UPDATE exercise_records SET ? WHERE exercise_records_id = ?";
       const recordId = checkResults[0].exercise_records_id;
       const result = await query(alterSql, [bodyData, recordId]);
-      console.log(result);
       return res.json({
         success: true,
         message: "該日期資料更新完成",
@@ -224,5 +224,67 @@ router.post("/exercise_records", userPassport, async (req, res) => {
     });
   }
 });
+
+router.get("/exercise_records", userPassport, async (req, res) => {
+  try {
+    const userId = req.user[0].user_id;
+    const startDate = req.query.start_date;
+    const endDate = req.query.end_date;
+    let getSql =
+      "SELECT exercise_records_id, gender, birthday, weight, height, exercise_level, record_date FROM exercise_records WHERE user_id = ? ORDER BY record_date";
+    let queryParams = [userId];
+    // 指定日期
+    if (startDate && endDate) {
+      getSql =
+        "SELECT exercise_records_id, gender, birthday, weight, height, exercise_level, record_date FROM exercise_records WHERE user_id = ? AND record_date BETWEEN ? AND ? ORDER BY record_date";
+      queryParams.push(startDate, endDate);
+    }
+    const getResults = await query(getSql, queryParams);
+    return res.status(200).json({
+      success: true,
+      user_id: userId,
+      records: getResults,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      message: "伺服器錯誤",
+    });
+  }
+});
+
+router.delete(
+  "/exercise_record/:exercise_records_id",
+  userPassport,
+  async (req, res) => {
+    try {
+      const userId = req.user[0].user_id;
+      const recordId = req.params.exercise_records_id;
+      const deleteSql =
+        "DELETE FROM exercise_records WHERE user_id = ? AND exercise_records_id = ?";
+      const deleteResult = await query(deleteSql, [userId, recordId]);
+      const affectedRows = deleteResult.affectedRows;
+      if (!affectedRows) {
+        return res.status(404).json({
+          success: false,
+          message: "找不到紀錄",
+          recordId,
+        });
+      } else {
+        return res.status(200).json({
+          success: true,
+          message: "已刪除紀錄",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        message: "伺服器錯誤",
+      });
+    }
+  }
+);
 
 module.exports = router;
