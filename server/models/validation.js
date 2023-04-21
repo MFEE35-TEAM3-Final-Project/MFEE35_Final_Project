@@ -1,4 +1,3 @@
-const bcrypt = require("bcryptjs");
 const Joi = require("joi");
 
 // general users
