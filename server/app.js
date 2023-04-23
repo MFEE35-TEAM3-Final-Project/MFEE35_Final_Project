@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: ".env.local" });
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const foodRoutes = require("./routes/foodRoutes");
 
 //跨域設定
 app.use(cors());
@@ -15,19 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 //路由
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
-
-app.get("/api/users/all", (req, res) => {
-  const sql = "SELECT * FROM users";
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: "Database error" });
-      return;
-    }
-
-    res.json(results);
-  });
-});
+app.use("/api/food", foodRoutes);
 
 // 開始監聽
 app.listen(8080, () => {

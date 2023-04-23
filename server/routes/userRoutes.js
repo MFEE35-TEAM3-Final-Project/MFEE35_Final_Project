@@ -13,7 +13,6 @@ const {
   exerciseRecordsValidation
 } = require("../models/validation");
 const { userPassport, adminPassport } = require("../models/passport");
-const { error } = require("console");
 
 // middleware
 router.use((req, res, next) => {
