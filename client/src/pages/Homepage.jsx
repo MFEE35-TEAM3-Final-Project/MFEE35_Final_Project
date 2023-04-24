@@ -20,7 +20,7 @@ const Homepage = () => {
     <div>
       <Banner />
       <div>
-        <form action="submit"></form>
+        <form action="submit">sdfsdf</form>
       </div>
     </div>
   );

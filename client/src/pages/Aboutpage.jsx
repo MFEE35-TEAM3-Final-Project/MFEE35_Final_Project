@@ -5,7 +5,7 @@ const Aboutpage = () => {
     <div
       style={{
         height: "300px",
-        backgroundColor: "lightcoral",
+        backgroundColor: "lightcoral"
       }}
     >
       Aboutpage
@@ -13,7 +13,7 @@ const Aboutpage = () => {
         <h2>AAAAAAAAAAA</h2>
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, odit
-          labore rerum at eius dolorum, optio nemo maxime esse, suscipit rem
+          labore rerum atss eius dolorum, optio nemo maxime esse, suscipit rem
           officiis debitis aperiam cupiditate pariatur consequatur commodi hic
           illo.
         </p>

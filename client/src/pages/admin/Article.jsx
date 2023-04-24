@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const Articles = () => {
@@ -15,12 +16,12 @@ const Articles = () => {
       const articleData = {
         title: "test word",
         content: content,
-        is_published: 0,
+        is_published: 0
       };
       console.log(articleData);
-      //   axios.post("/api/admin/articles", articleData).then((res) => {
-      //     console.log(res);
-      //   });
+      axios.post("/api/admin/articles", articleData).then((res) => {
+        console.log(res);
+      });
     } catch (error) {
       console.error(error);
     }
@@ -28,12 +29,17 @@ const Articles = () => {
   return (
     <div
       style={{
-        backgroundColor: "lightpink",
+        backgroundColor: "lightpink"
       }}
     >
       <h1 className="text-white">TEST ARTICLE PAGE</h1>
       <div id="content">
-        <ClassicEditor data={content} onChange={handleEditorChange} />
+        <h2>Using CKEditor 5 build in React</h2>
+        <CKEditor
+          editor={ClassicEditor}
+          data={content}
+          onChange={handleEditorChange}
+        />
       </div>
       <button
         className="btn btn-primary"
