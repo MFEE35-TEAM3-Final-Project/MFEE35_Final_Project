@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import Nav from "./components/Nav";
 // import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
-import AboutPage from "./pages/AboutPage";
 import RegisterPage from "./pages/RegisterPage";
 import "./styles/all.css";
 import LoginPage from "./pages/LoginPage";
@@ -19,7 +18,6 @@ function App() {
       <div style={{ paddingTop: "90px" }}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           {/* user page */}

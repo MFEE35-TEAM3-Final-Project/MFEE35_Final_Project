@@ -10,7 +10,7 @@ const { json } = require("express");
 const {
   adminRegValidation,
   adminLoginValidation,
-  articleValid,
+  articleValid
 } = require("../models/validation");
 const { adminPassport } = require("../models/passport");
 
@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
     if (validError)
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
 
     const { adminname, password, email } = req.body;
@@ -55,7 +55,7 @@ router.post("/register", async (req, res) => {
         admin_id: adminId,
         adminname,
         password: hashedPassword,
-        email,
+        email
       };
       let insertSql = "INSERT INTO admins SET ?";
       const result = await query(insertSql, adminData);
@@ -64,7 +64,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `管理員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          admin_id: adminId,
+          admin_id: adminId
         });
       } else {
         res.json({ success: false, message: "無法新增管理員資料" });
@@ -84,7 +84,7 @@ router.post("/login", async (req, res) => {
     if (validError) {
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
     }
 
@@ -105,7 +105,7 @@ router.post("/login", async (req, res) => {
         const tokenObj = {
           _id: matchAdmin.admin_id,
           email: matchAdmin.email,
-          exp: expDate,
+          exp: expDate
         };
         let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
         return res.status(200).send({
@@ -113,13 +113,13 @@ router.post("/login", async (req, res) => {
           message: `管理員登入成功 `,
           admin_id: matchAdmin.admin_id,
           token: "JWT " + token,
-          exp: expDate,
+          exp: expDate
         });
       } else {
         // 密碼錯誤
         return res.json({
           success: false,
-          message: `密碼錯誤 ${matchAdmin.adminId}`,
+          message: `密碼錯誤 ${matchAdmin.adminId}`
         });
       }
     }
@@ -127,7 +127,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
@@ -141,14 +141,14 @@ router.get(
     return res.status(200).json({
       success: true,
       message: "已認證 Token",
-      admin: req.user[0],
+      admin: req.user[0]
     });
   },
   (err, req, res, next) => {
     if (err) {
       return res.json({
         success: false,
-        message: "Token 錯誤，請重新登入",
+        message: "Token 錯誤，請重新登入"
       });
     }
   }
@@ -161,7 +161,7 @@ router.post("/articles", adminPassport, async (req, res) => {
     if (validError)
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
 
     const adminId = req.user[0].admin_id;
@@ -172,7 +172,7 @@ router.post("/articles", adminPassport, async (req, res) => {
       admin_id: adminId,
       title: title,
       content: content,
-      is_published: is_published,
+      is_published: is_published
     };
     const postArticleSql = "INSERT INTO articles SET ?";
     const postResult = await query(postArticleSql, articleData);
@@ -181,7 +181,7 @@ router.post("/articles", adminPassport, async (req, res) => {
       return res.status(200).json({
         success: true,
         message: "成功送出文章",
-        admin_id: adminId,
+        admin_id: adminId
       });
     } else {
       res.json({ success: false, message: "無法新增文章" });
@@ -194,13 +194,14 @@ router.post("/articles", adminPassport, async (req, res) => {
 router.get("/articles", adminPassport, async (req, res) => {
   try {
     const adminId = req.user[0].admin_id;
-    const getArticlesSql = "SELECT * FROM articles WHERE admin_id = ?";
+    const getArticlesSql =
+      "SELECT article_id, title, is_published, created_at FROM articles WHERE admin_id = ? ORDER BY created_at DESC";
     const getResult = await query(getArticlesSql, [adminId]);
 
     return res.status(200).json({
       success: true,
       admin_id: adminId,
-      message: getResult,
+      message: getResult
     });
   } catch (err) {
     console.log(err);
