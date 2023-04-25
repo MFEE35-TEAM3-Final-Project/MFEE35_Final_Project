@@ -191,4 +191,20 @@ router.post("/articles", adminPassport, async (req, res) => {
   }
 });
 
+router.get("/articles", adminPassport, async (req, res) => {
+  try {
+    const adminId = req.user[0].admin_id;
+    const getArticlesSql = "SELECT * FROM articles WHERE admin_id = ?";
+    const getResult = await query(getArticlesSql, [adminId]);
+
+    return res.status(200).json({
+      success: true,
+      admin_id: adminId,
+      message: getResult,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 module.exports = router;

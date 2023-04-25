@@ -5,7 +5,7 @@ const Aboutpage = () => {
     <div
       style={{
         height: "300px",
-        backgroundColor: "lightcoral"
+        backgroundColor: "lightcoral",
       }}
     >
       Aboutpage
