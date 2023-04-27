@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: betadays
+-- Host: 127.0.0.1    Database: mfee35
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.0.32
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,9 +25,9 @@ DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
   `sid` int NOT NULL AUTO_INCREMENT,
   `admin_id` bigint unsigned NOT NULL,
-  `adminname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `adminname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `adminId_UNIQUE` (`admin_id`)
@@ -52,10 +52,10 @@ DROP TABLE IF EXISTS `articles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `articles` (
-  `article_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `admin_id` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci,
+  `article_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `admin_id` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `is_published` tinyint NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -69,7 +69,7 @@ CREATE TABLE `articles` (
 
 LOCK TABLES `articles` WRITE;
 /*!40000 ALTER TABLE `articles` DISABLE KEYS */;
-INSERT INTO `articles` VALUES ('048a772a-3bfe-4155-b622-1054d22ba75b','7427953964','test word','<p>I ate banana today</p>',0,'2023-04-25 04:00:13','2023-04-25 04:00:13'),('382f73e0-0e06-42ed-8490-96b0a1062efb','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;\n</p><p><br>&nbsp;</p>',0,'2023-04-25 03:40:03','2023-04-25 03:40:03'),('3c898775-2b22-46aa-9054-00650b916e5f','7427953964','test word','<p>;lskdfj;salfkja;sfdasfsdf</p>',0,'2023-04-25 03:50:29','2023-04-25 03:50:29'),('42b3b3cb-1c1d-4a07-a01a-e744e6690987','7427953964','test word','<p>I ate banana today</p>',0,'2023-04-25 04:02:42','2023-04-25 04:02:42'),('52abda83-f635-4738-a876-0e39b1da5fcf','7427953964','test word','<p>lakfjslakjlakj;sdsd</p>',0,'2023-04-25 03:39:15','2023-04-25 03:39:15'),('6c8e6d5a-3063-4086-96a5-eaefc2344949','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;\n</p><p><br>&nbsp;</p>',0,'2023-04-25 03:40:48','2023-04-25 03:40:48'),('74792914-8abe-4a80-b638-6ddb1ac54e6b','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;</p>',0,'2023-04-25 02:56:24','2023-04-25 02:56:24'),('80385683-2b51-43bf-9ced-cfadc87cf44d','7427953964','test word','<p>AAAABBBdsfCC</p>',0,'2023-04-24 07:29:55','2023-04-24 07:29:55'),('80662a00-0ab6-47d1-b45b-12d489e75e89','7427953964','test word','<p>&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;</p>',0,'2023-04-25 02:56:34','2023-04-25 02:56:34'),('849bdd6f-692c-446f-affc-be6819c0e34d','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;</p>',0,'2023-04-25 02:57:14','2023-04-25 02:57:14'),('c95128a7-8e13-47a1-8405-d36fd59c459c','7427953964','test word','<p>&lt;<strong>form</strong>&gt; &lt;<strong>math</strong>&gt;&lt;<strong>mtext</strong>&gt; &lt;/<strong>form</strong>&gt;&lt;<strong>form</strong>&gt; &lt;<strong>mglyph</strong>&gt; &lt;<strong>style</strong>&gt;&lt;/<strong>math</strong>&gt;&lt;<strong>img</strong> src onerror=alert(1)&gt;</p>',0,'2023-04-25 02:54:19','2023-04-25 02:54:19'),('d56d168c-ce6a-4a10-b80e-54be72f23271','7427953964','test word','<p>sadfdadadad</p>',0,'2023-04-25 01:43:07','2023-04-25 01:43:07'),('e459441c-cc1c-4e41-98bd-071cce81a49c','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p><p><strong>&lt;script&gt;console.log(\"hello idiot\") &lt;script/&gt;</strong></p>',0,'2023-04-25 02:54:08','2023-04-25 02:54:08'),('e83df9ba-ee7c-440a-b027-819223ce6497','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p>',0,'2023-04-25 02:18:40','2023-04-25 02:18:40'),('feaed32e-4a72-48d6-963a-d96869ddba15','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p><p><strong>&lt;script&gt;console.log(\"hello idiot\") &lt;script/&gt;</strong></p>',0,'2023-04-25 02:25:33','2023-04-25 02:25:33');
+INSERT INTO `articles` VALUES ('048a772a-3bfe-4155-b622-1054d22ba75b','7427953964','WAHWAHWAHWAHWAH','<p>It\'s tako time</p>',0,'2023-04-25 04:00:13','2023-04-27 14:51:55'),('42b3b3cb-1c1d-4a07-a01a-e744e6690987','7427953964','test word','<p>I ate banana today</p>',0,'2023-04-25 04:02:42','2023-04-25 04:02:42'),('52abda83-f635-4738-a876-0e39b1da5fcf','7427953964','test word','<p>lakfjslakjlakj;sdsd</p>',0,'2023-04-25 03:39:15','2023-04-25 03:39:15'),('6c8e6d5a-3063-4086-96a5-eaefc2344949','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;\n</p><p><br>&nbsp;</p>',0,'2023-04-25 03:40:48','2023-04-25 03:40:48'),('74792914-8abe-4a80-b638-6ddb1ac54e6b','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;</p>',0,'2023-04-25 02:56:24','2023-04-25 02:56:24'),('80385683-2b51-43bf-9ced-cfadc87cf44d','7427953964','test word','<p>AAAABBBdsfCC</p>',0,'2023-04-24 07:29:55','2023-04-24 07:29:55'),('80662a00-0ab6-47d1-b45b-12d489e75e89','7427953964','test word','<p>&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;</p>',0,'2023-04-25 02:56:34','2023-04-25 02:56:34'),('849bdd6f-692c-446f-affc-be6819c0e34d','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;</p>',0,'2023-04-25 02:57:14','2023-04-25 02:57:14'),('c95128a7-8e13-47a1-8405-d36fd59c459c','7427953964','test word','<p>&lt;<strong>form</strong>&gt; &lt;<strong>math</strong>&gt;&lt;<strong>mtext</strong>&gt; &lt;/<strong>form</strong>&gt;&lt;<strong>form</strong>&gt; &lt;<strong>mglyph</strong>&gt; &lt;<strong>style</strong>&gt;&lt;/<strong>math</strong>&gt;&lt;<strong>img</strong> src onerror=alert(1)&gt;</p>',0,'2023-04-25 02:54:19','2023-04-25 02:54:19'),('d56d168c-ce6a-4a10-b80e-54be72f23271','7427953964','test word','<p>sadfdadadad</p>',0,'2023-04-25 01:43:07','2023-04-25 01:43:07'),('e459441c-cc1c-4e41-98bd-071cce81a49c','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p><p><strong>&lt;script&gt;console.log(\"hello idiot\") &lt;script/&gt;</strong></p>',0,'2023-04-25 02:54:08','2023-04-25 02:54:08'),('e83df9ba-ee7c-440a-b027-819223ce6497','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p>',0,'2023-04-25 02:18:40','2023-04-25 02:18:40'),('feaed32e-4a72-48d6-963a-d96869ddba15','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p><p><strong>&lt;script&gt;console.log(\"hello idiot\") &lt;script/&gt;</strong></p>',0,'2023-04-25 02:25:33','2023-04-25 02:25:33');
 /*!40000 ALTER TABLE `articles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,9 +81,9 @@ DROP TABLE IF EXISTS `exercise_records`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `exercise_records` (
-  `exercise_records_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gender` enum('male','female') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exercise_records_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gender` enum('male','female') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `birthday` date NOT NULL,
   `height` float NOT NULL,
   `weight` float NOT NULL,
@@ -115,20 +115,20 @@ DROP TABLE IF EXISTS `food`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `food` (
-  `Number` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Category` text COLLATE utf8mb4_unicode_ci,
-  `Sample_name` text COLLATE utf8mb4_unicode_ci,
-  `Content_des` text COLLATE utf8mb4_unicode_ci,
-  `Common_name` text COLLATE utf8mb4_unicode_ci,
+  `Number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Category` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `Sample_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `Content_des` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `Common_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `Calories` int DEFAULT NULL,
   `Calories_adjusted` int DEFAULT NULL,
   `Water` double DEFAULT NULL,
-  `Crude_protein` text COLLATE utf8mb4_unicode_ci,
-  `Crude_fat` text COLLATE utf8mb4_unicode_ci,
-  `Saturated_fat` text COLLATE utf8mb4_unicode_ci,
+  `Crude_protein` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `Crude_fat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `Saturated_fat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `Total_carb` double DEFAULT NULL,
-  `Dietary_fiber` text COLLATE utf8mb4_unicode_ci,
-  `Trans_fat` text COLLATE utf8mb4_unicode_ci,
+  `Dietary_fiber` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `Trans_fat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`Number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -152,7 +152,7 @@ DROP TABLE IF EXISTS `tdee`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tdee` (
   `sid` int unsigned NOT NULL AUTO_INCREMENT,
-  `userId` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `userId` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `height` decimal(4,1) DEFAULT NULL,
   `weight` decimal(4,1) DEFAULT NULL,
   `activity_level` decimal(2,1) DEFAULT NULL,
@@ -179,12 +179,12 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `sid` int NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `username` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `phone` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `userId_UNIQUE` (`user_id`)
@@ -210,4 +210,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-27 16:38:29
+-- Dump completed on 2023-04-28  0:27:33
