@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: betadays
 -- ------------------------------------------------------
--- Server version	8.0.31
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,13 +25,13 @@ DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
   `sid` int NOT NULL AUTO_INCREMENT,
   `admin_id` bigint unsigned NOT NULL,
-  `adminname` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `adminname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `adminId_UNIQUE` (`admin_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,15 +52,15 @@ DROP TABLE IF EXISTS `articles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `articles` (
-  `article_id` varchar(50) NOT NULL,
-  `admin_id` varchar(45) NOT NULL,
-  `title` varchar(45) DEFAULT NULL,
-  `content` text,
+  `article_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `admin_id` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` text COLLATE utf8mb4_unicode_ci,
   `is_published` tinyint NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`article_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,9 +81,9 @@ DROP TABLE IF EXISTS `exercise_records`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `exercise_records` (
-  `exercise_records_id` varchar(36) NOT NULL,
-  `user_id` varchar(10) NOT NULL,
-  `gender` enum('male','female') NOT NULL,
+  `exercise_records_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gender` enum('male','female') COLLATE utf8mb4_unicode_ci NOT NULL,
   `birthday` date NOT NULL,
   `height` float NOT NULL,
   `weight` float NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE `exercise_records` (
   PRIMARY KEY (`exercise_records_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `exercise_records_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,22 +115,22 @@ DROP TABLE IF EXISTS `food`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `food` (
-  `Number` varchar(50) NOT NULL,
-  `Category` text,
-  `Sample_name` text,
-  `Content_des` text,
-  `Common_name` text,
+  `Number` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Category` text COLLATE utf8mb4_unicode_ci,
+  `Sample_name` text COLLATE utf8mb4_unicode_ci,
+  `Content_des` text COLLATE utf8mb4_unicode_ci,
+  `Common_name` text COLLATE utf8mb4_unicode_ci,
   `Calories` int DEFAULT NULL,
   `Calories_adjusted` int DEFAULT NULL,
   `Water` double DEFAULT NULL,
-  `Crude_protein` text,
-  `Crude_fat` text,
-  `Saturated_fat` text,
+  `Crude_protein` text COLLATE utf8mb4_unicode_ci,
+  `Crude_fat` text COLLATE utf8mb4_unicode_ci,
+  `Saturated_fat` text COLLATE utf8mb4_unicode_ci,
   `Total_carb` double DEFAULT NULL,
-  `Dietary_fiber` text,
-  `Trans_fat` text,
+  `Dietary_fiber` text COLLATE utf8mb4_unicode_ci,
+  `Trans_fat` text COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`Number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,13 +152,13 @@ DROP TABLE IF EXISTS `tdee`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tdee` (
   `sid` int unsigned NOT NULL AUTO_INCREMENT,
-  `userId` varchar(10) NOT NULL,
+  `userId` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `height` decimal(4,1) DEFAULT NULL,
   `weight` decimal(4,1) DEFAULT NULL,
   `activity_level` decimal(2,1) DEFAULT NULL,
   `updateAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,16 +179,16 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `sid` int NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(10) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `username` varchar(30) DEFAULT NULL,
-  `phone` varchar(10) DEFAULT NULL,
-  `address` varchar(100) DEFAULT NULL,
+  `user_id` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `userId_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,4 +210,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-25 16:36:19
+-- Dump completed on 2023-04-27 16:38:29
