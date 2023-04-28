@@ -62,6 +62,12 @@ const articleValid = (data) => {
   return schema.validate(data);
 };
 
+const articleMegValid = (data) => {
+  const schema = Joi.object({
+    comment: Joi.string().max(200).required(),
+  });
+  return schema.validate(data);
+};
 module.exports = {
   registerValidation,
   loginValidation,
@@ -69,4 +75,5 @@ module.exports = {
   adminLoginValidation,
   exerciseRecordsValidation,
   articleValid,
+  articleMegValid,
 };

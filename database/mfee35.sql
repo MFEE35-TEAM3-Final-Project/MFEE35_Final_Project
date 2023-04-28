@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: mfee35
+-- Host: 127.0.0.1    Database: betadays
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,7 +31,7 @@ CREATE TABLE `admins` (
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `adminId_UNIQUE` (`admin_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,8 +40,36 @@ CREATE TABLE `admins` (
 
 LOCK TABLES `admins` WRITE;
 /*!40000 ALTER TABLE `admins` DISABLE KEYS */;
-INSERT INTO `admins` VALUES (1,3450349941,'Uikdiiioek','$2a$10$fXFZncA9bAE4JlxnaAr5sOOWfWx7hztOVjEhAfgL4Mkyb2Uj0aiKu','sssssss@glkajl.com','2023-04-10 06:18:00'),(2,1606116619,'Uikdiiioek','$2a$10$OtcEZSpSyeziXNf3TXgxYers74E74dhex.sbHWBod5FgKdYqFaJya','sssss545ss@glkajl.com','2023-04-10 06:18:26'),(3,7606591757,'CommonUse','$2a$10$U6iYfrrmnLbAQXg0Pjxyre9d1Zn5svaLssspNHfGdtR9pBnVNorqa','banana0583@fruitz.com','2023-04-10 07:26:33'),(4,4500310002,'CommonUse','$2a$10$AuGNxUbFN6Bi2Ra5lCOd5eBYdxLYURu6OaKQoJjZOQNo1pCzFD83K','banana058343@fruitz.com','2023-04-10 07:43:25'),(5,7427953964,'arimakana','$2a$10$0Vy5k88wPcwKZLzNnBMxY.o.xOHuUyQXM5u4HuSuGO5jMIChEYule','arimakana17@oshi.com','2023-04-23 05:01:56');
+INSERT INTO `admins` VALUES (1,3450349941,'Uikdiiioek','$2a$10$fXFZncA9bAE4JlxnaAr5sOOWfWx7hztOVjEhAfgL4Mkyb2Uj0aiKu','sssssss@glkajl.com','2023-04-10 06:18:00'),(2,1606116619,'Uikdiiioek','$2a$10$OtcEZSpSyeziXNf3TXgxYers74E74dhex.sbHWBod5FgKdYqFaJya','sssss545ss@glkajl.com','2023-04-10 06:18:26'),(3,7606591757,'CommonUse','$2a$10$U6iYfrrmnLbAQXg0Pjxyre9d1Zn5svaLssspNHfGdtR9pBnVNorqa','banana0583@fruitz.com','2023-04-10 07:26:33'),(4,4500310002,'CommonUse','$2a$10$AuGNxUbFN6Bi2Ra5lCOd5eBYdxLYURu6OaKQoJjZOQNo1pCzFD83K','banana058343@fruitz.com','2023-04-10 07:43:25'),(5,7427953964,'arimakana','$2a$10$0Vy5k88wPcwKZLzNnBMxY.o.xOHuUyQXM5u4HuSuGO5jMIChEYule','arimakana17@oshi.com','2023-04-23 05:01:56'),(6,6691530706,'hoshinoruby','$2a$10$QFiDv5amiH0z9NFeJpK2t.6Y0S87aj2TQQBS.d0kSctAc9FvAiSAC','hoshinoai556@oshi.com','2023-04-28 06:33:16');
 /*!40000 ALTER TABLE `admins` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `article_meg`
+--
+
+DROP TABLE IF EXISTS `article_meg`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `article_meg` (
+  `sid` int NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `article_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `comment` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `article_meg`
+--
+
+LOCK TABLES `article_meg` WRITE;
+/*!40000 ALTER TABLE `article_meg` DISABLE KEYS */;
+INSERT INTO `article_meg` VALUES (1,'9731103331','048a772a-3bfe-4155-b622-1054d22ba75b','When I feel lonely I would buy some shares. It\'s nice to have a bit of company. :-|&lt;&gt;','2023-04-28 08:11:34','2023-04-28 08:11:34'),(2,'9731103331','048a772a-3bfe-4155-b622-1054d22ba75b','When I feel lonely I would buy some shares. It\'s nice to have a bit of company. :-|&lt;&gt;','2023-04-28 08:20:40','2023-04-28 08:20:40');
+/*!40000 ALTER TABLE `article_meg` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -69,7 +97,7 @@ CREATE TABLE `articles` (
 
 LOCK TABLES `articles` WRITE;
 /*!40000 ALTER TABLE `articles` DISABLE KEYS */;
-INSERT INTO `articles` VALUES ('048a772a-3bfe-4155-b622-1054d22ba75b','7427953964','WAHWAHWAHWAHWAH','<p>It\'s tako time</p>',0,'2023-04-25 04:00:13','2023-04-27 14:51:55'),('42b3b3cb-1c1d-4a07-a01a-e744e6690987','7427953964','test word','<p>I ate banana today</p>',0,'2023-04-25 04:02:42','2023-04-25 04:02:42'),('52abda83-f635-4738-a876-0e39b1da5fcf','7427953964','test word','<p>lakfjslakjlakj;sdsd</p>',0,'2023-04-25 03:39:15','2023-04-25 03:39:15'),('6c8e6d5a-3063-4086-96a5-eaefc2344949','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;\n</p><p><br>&nbsp;</p>',0,'2023-04-25 03:40:48','2023-04-25 03:40:48'),('74792914-8abe-4a80-b638-6ddb1ac54e6b','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;</p>',0,'2023-04-25 02:56:24','2023-04-25 02:56:24'),('80385683-2b51-43bf-9ced-cfadc87cf44d','7427953964','test word','<p>AAAABBBdsfCC</p>',0,'2023-04-24 07:29:55','2023-04-24 07:29:55'),('80662a00-0ab6-47d1-b45b-12d489e75e89','7427953964','test word','<p>&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;</p>',0,'2023-04-25 02:56:34','2023-04-25 02:56:34'),('849bdd6f-692c-446f-affc-be6819c0e34d','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;</p>',0,'2023-04-25 02:57:14','2023-04-25 02:57:14'),('c95128a7-8e13-47a1-8405-d36fd59c459c','7427953964','test word','<p>&lt;<strong>form</strong>&gt; &lt;<strong>math</strong>&gt;&lt;<strong>mtext</strong>&gt; &lt;/<strong>form</strong>&gt;&lt;<strong>form</strong>&gt; &lt;<strong>mglyph</strong>&gt; &lt;<strong>style</strong>&gt;&lt;/<strong>math</strong>&gt;&lt;<strong>img</strong> src onerror=alert(1)&gt;</p>',0,'2023-04-25 02:54:19','2023-04-25 02:54:19'),('d56d168c-ce6a-4a10-b80e-54be72f23271','7427953964','test word','<p>sadfdadadad</p>',0,'2023-04-25 01:43:07','2023-04-25 01:43:07'),('e459441c-cc1c-4e41-98bd-071cce81a49c','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p><p><strong>&lt;script&gt;console.log(\"hello idiot\") &lt;script/&gt;</strong></p>',0,'2023-04-25 02:54:08','2023-04-25 02:54:08'),('e83df9ba-ee7c-440a-b027-819223ce6497','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p>',0,'2023-04-25 02:18:40','2023-04-25 02:18:40'),('feaed32e-4a72-48d6-963a-d96869ddba15','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p><p><strong>&lt;script&gt;console.log(\"hello idiot\") &lt;script/&gt;</strong></p>',0,'2023-04-25 02:25:33','2023-04-25 02:25:33');
+INSERT INTO `articles` VALUES ('048a772a-3bfe-4155-b622-1054d22ba75b','7427953964','WHA 0428','<p>InAFFFFFFF</p>',0,'2023-04-25 04:00:13','2023-04-28 06:42:36'),('42b3b3cb-1c1d-4a07-a01a-e744e6690987','7427953964','test word','<p>I ate banana today</p>',0,'2023-04-25 04:02:42','2023-04-25 04:02:42'),('52abda83-f635-4738-a876-0e39b1da5fcf','7427953964','test word','<p>lakfjslakjlakj;sdsd</p>',0,'2023-04-25 03:39:15','2023-04-25 03:39:15'),('80385683-2b51-43bf-9ced-cfadc87cf44d','7427953964','test word','<p>AAAABBBdsfCC</p>',0,'2023-04-24 07:29:55','2023-04-24 07:29:55'),('80662a00-0ab6-47d1-b45b-12d489e75e89','7427953964','test word','<p>&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;</p>',0,'2023-04-25 02:56:34','2023-04-25 02:56:34'),('849bdd6f-692c-446f-affc-be6819c0e34d','7427953964','test word','<p>&lt;p&gt;&lt;a href=\"javascript:(alert(document.domain))\"&gt;XSS&lt;/a&gt;&lt;/p&gt;</p>',0,'2023-04-25 02:57:14','2023-04-25 02:57:14'),('9ac0e00a-b0f5-4b1a-b28a-9f44eb5d3a9c','6691530706','test word 0426','<p>It\'s a banana~</p>',0,'2023-04-28 06:38:07','2023-04-28 06:38:07'),('afe19d79-5ccb-4414-a943-efb124086ff6','6691530706','test word 0426','<p>It\'s a banana~</p>',0,'2023-04-28 06:33:48','2023-04-28 06:33:48'),('c95128a7-8e13-47a1-8405-d36fd59c459c','7427953964','test word','<p>&lt;<strong>form</strong>&gt; &lt;<strong>math</strong>&gt;&lt;<strong>mtext</strong>&gt; &lt;/<strong>form</strong>&gt;&lt;<strong>form</strong>&gt; &lt;<strong>mglyph</strong>&gt; &lt;<strong>style</strong>&gt;&lt;/<strong>math</strong>&gt;&lt;<strong>img</strong> src onerror=alert(1)&gt;</p>',0,'2023-04-25 02:54:19','2023-04-25 02:54:19'),('d56d168c-ce6a-4a10-b80e-54be72f23271','7427953964','test word','<p>sadfdadadad</p>',0,'2023-04-25 01:43:07','2023-04-25 01:43:07'),('e459441c-cc1c-4e41-98bd-071cce81a49c','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p><p><strong>&lt;script&gt;console.log(\"hello idiot\") &lt;script/&gt;</strong></p>',0,'2023-04-25 02:54:08','2023-04-25 02:54:08'),('e83df9ba-ee7c-440a-b027-819223ce6497','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p>',0,'2023-04-25 02:18:40','2023-04-25 02:18:40'),('feaed32e-4a72-48d6-963a-d96869ddba15','7427953964','test word','<h2>AAAlia</h2><p>你好</p><blockquote><p>sdfsdsfsf</p><p>sdfsfs</p></blockquote><p>&nbsp;</p><figure class=\"media\"><oembed url=\"https://youtu.be/gX9m-rCtSqc\"></oembed></figure><p>&nbsp;</p><p>sadfdada<strong>dad</strong></p><p><strong>&lt;script&gt;console.log(\"hello idiot\") &lt;script/&gt;</strong></p>',0,'2023-04-25 02:25:33','2023-04-25 02:25:33');
 /*!40000 ALTER TABLE `articles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,7 +131,7 @@ CREATE TABLE `exercise_records` (
 
 LOCK TABLES `exercise_records` WRITE;
 /*!40000 ALTER TABLE `exercise_records` DISABLE KEYS */;
-INSERT INTO `exercise_records` VALUES ('67657795-03b2-4360-bdc5-b9883c17ac12','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-17','2023-04-19 08:04:04','2023-04-19 08:04:04'),('93bc4b8c-3b28-435a-9bb8-b2559e01b4fd','6076469144','female','2023-03-30',172.5,80,1.5,'2023-03-15','2023-04-19 08:16:32','2023-04-19 08:16:32'),('95e97985-10c9-46f0-ade5-a2e7591a71fb','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-15','2023-04-19 08:07:23','2023-04-19 08:07:23'),('b00ae99c-a0f7-4426-a3f9-3d26586a0c06','9960669470','female','2023-03-30',172.5,75,1.5,'2023-04-14','2023-04-20 04:08:36','2023-04-20 04:08:36'),('cd64b5aa-8449-4f62-b7de-7018bb817f38','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-16','2023-04-19 03:31:54','2023-04-19 08:02:29');
+INSERT INTO `exercise_records` VALUES ('2a82ac0b-10f1-4936-b62e-ef16bd26d530','9731103331','female','2023-03-30',172.5,75,1.5,'2023-04-16','2023-04-28 03:30:56','2023-04-28 03:30:56'),('67657795-03b2-4360-bdc5-b9883c17ac12','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-17','2023-04-19 08:04:04','2023-04-19 08:04:04'),('93bc4b8c-3b28-435a-9bb8-b2559e01b4fd','6076469144','female','2023-03-30',172.5,80,1.5,'2023-03-15','2023-04-19 08:16:32','2023-04-19 08:16:32'),('95e97985-10c9-46f0-ade5-a2e7591a71fb','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-15','2023-04-19 08:07:23','2023-04-19 08:07:23'),('b00ae99c-a0f7-4426-a3f9-3d26586a0c06','9960669470','female','2023-03-30',172.5,75,1.5,'2023-04-14','2023-04-20 04:08:36','2023-04-20 04:08:36'),('cd64b5aa-8449-4f62-b7de-7018bb817f38','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-16','2023-04-19 03:31:54','2023-04-19 08:02:29'),('cf24bacf-346e-4d5c-9bff-129e03f3fb24','9960669470','female','2023-03-30',172.5,75,1.5,'2023-04-16','2023-04-28 03:35:24','2023-04-28 03:35:24');
 /*!40000 ALTER TABLE `exercise_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -126,7 +154,7 @@ CREATE TABLE `food` (
   `Crude_protein` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `Crude_fat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `Saturated_fat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `Total_carb` double DEFAULT NULL,
+  `Carbohydrate` double DEFAULT NULL,
   `Dietary_fiber` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `Trans_fat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`Number`)
@@ -188,7 +216,7 @@ CREATE TABLE `users` (
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `userId_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -197,7 +225,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'5590613616','lskfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:11:54'),(2,'5624963453','lskfsdsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:13:33'),(3,'3162557974','lskfsdddsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:14:26'),(4,'3262222356','noraisin@toko.com','Ab123456',NULL,NULL,NULL,'2023-04-01 16:25:59'),(5,'9960669470','banana0583@fruitz.com','$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m',NULL,NULL,NULL,'2023-04-06 03:32:16'),(6,'7400633609','watermelon3325@furuz.com','$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK',NULL,NULL,NULL,'2023-04-06 03:52:28'),(7,'5453336177','Alon1131@guik.com','$2a$10$ydNBGUsdd6xgT4w8o7WiFeUzls2fTXExtBxNXyX6juJGo.yvAf0Y.',NULL,NULL,NULL,'2023-04-10 06:20:24'),(8,'6076469144','uuid12333@llakke.com','$2a$10$UaHI92cuz925g3Secvypreg/EbC4nhvYWA32cXTiP7DL17KiKXINC','uejj558',NULL,NULL,'2023-04-19 03:28:45');
+INSERT INTO `users` VALUES (1,'5590613616','lskfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:11:54'),(2,'5624963453','lskfsdsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:13:33'),(3,'3162557974','lskfsdddsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:14:26'),(4,'3262222356','noraisin@toko.com','Ab123456',NULL,NULL,NULL,'2023-04-01 16:25:59'),(5,'9960669470','banana0583@fruitz.com','$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m',NULL,NULL,NULL,'2023-04-06 03:32:16'),(6,'7400633609','watermelon3325@furuz.com','$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK',NULL,NULL,NULL,'2023-04-06 03:52:28'),(7,'5453336177','Alon1131@guik.com','$2a$10$ydNBGUsdd6xgT4w8o7WiFeUzls2fTXExtBxNXyX6juJGo.yvAf0Y.',NULL,NULL,NULL,'2023-04-10 06:20:24'),(8,'6076469144','uuid12333@llakke.com','$2a$10$UaHI92cuz925g3Secvypreg/EbC4nhvYWA32cXTiP7DL17KiKXINC','uejj558',NULL,NULL,'2023-04-19 03:28:45'),(9,'9731103331','AAAAABBB@gmail.com','$2a$10$rwKg160ycTIyD/LlqqL3DOK0i0cAJXwa7tQQ0s.ZmdDxuq6E0OSqy','sldkfjsl645454',NULL,NULL,'2023-04-28 03:29:56');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -210,4 +238,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-28  0:27:33
+-- Dump completed on 2023-04-28 16:35:41

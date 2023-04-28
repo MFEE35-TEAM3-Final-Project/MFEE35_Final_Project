@@ -6,6 +6,7 @@ dotenv.config({ path: ".env.local" });
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const foodRoutes = require("./routes/foodRoutes");
+const articleRoutes = require("./routes/articleRoutes");
 
 //跨域設定
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/food", foodRoutes);
+app.use("/api/articles", articleRoutes);
 
 // 開始監聽
 app.listen(8080, () => {
