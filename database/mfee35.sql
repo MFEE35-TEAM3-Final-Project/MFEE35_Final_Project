@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: betadays
+-- Host: 127.0.0.1    Database: mfee35
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.0.32
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -45,31 +45,32 @@ INSERT INTO `admins` VALUES (1,3450349941,'Uikdiiioek','$2a$10$fXFZncA9bAE4Jlxna
 UNLOCK TABLES;
 
 --
--- Table structure for table `article_meg`
+-- Table structure for table `article_comments`
 --
 
-DROP TABLE IF EXISTS `article_meg`;
+DROP TABLE IF EXISTS `article_comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `article_meg` (
-  `sid` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `article_comments` (
+  `comment_id` int NOT NULL AUTO_INCREMENT,
   `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `article_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `article_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`sid`)
+  PRIMARY KEY (`comment_id`),
+  KEY `article_id_idx` (`article_id`),
+  CONSTRAINT `fk_article_comment` FOREIGN KEY (`article_id`) REFERENCES `articles` (`article_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `article_meg`
+-- Dumping data for table `article_comments`
 --
 
-LOCK TABLES `article_meg` WRITE;
-/*!40000 ALTER TABLE `article_meg` DISABLE KEYS */;
-INSERT INTO `article_meg` VALUES (1,'9731103331','048a772a-3bfe-4155-b622-1054d22ba75b','When I feel lonely I would buy some shares. It\'s nice to have a bit of company. :-|&lt;&gt;','2023-04-28 08:11:34','2023-04-28 08:11:34'),(2,'9731103331','048a772a-3bfe-4155-b622-1054d22ba75b','When I feel lonely I would buy some shares. It\'s nice to have a bit of company. :-|&lt;&gt;','2023-04-28 08:20:40','2023-04-28 08:20:40');
-/*!40000 ALTER TABLE `article_meg` ENABLE KEYS */;
+LOCK TABLES `article_comments` WRITE;
+/*!40000 ALTER TABLE `article_comments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `article_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -121,7 +122,7 @@ CREATE TABLE `exercise_records` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`exercise_records_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `exercise_records_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+  CONSTRAINT `fk_exerRecord_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -131,7 +132,6 @@ CREATE TABLE `exercise_records` (
 
 LOCK TABLES `exercise_records` WRITE;
 /*!40000 ALTER TABLE `exercise_records` DISABLE KEYS */;
-INSERT INTO `exercise_records` VALUES ('2a82ac0b-10f1-4936-b62e-ef16bd26d530','9731103331','female','2023-03-30',172.5,75,1.5,'2023-04-16','2023-04-28 03:30:56','2023-04-28 03:30:56'),('67657795-03b2-4360-bdc5-b9883c17ac12','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-17','2023-04-19 08:04:04','2023-04-19 08:04:04'),('93bc4b8c-3b28-435a-9bb8-b2559e01b4fd','6076469144','female','2023-03-30',172.5,80,1.5,'2023-03-15','2023-04-19 08:16:32','2023-04-19 08:16:32'),('95e97985-10c9-46f0-ade5-a2e7591a71fb','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-15','2023-04-19 08:07:23','2023-04-19 08:07:23'),('b00ae99c-a0f7-4426-a3f9-3d26586a0c06','9960669470','female','2023-03-30',172.5,75,1.5,'2023-04-14','2023-04-20 04:08:36','2023-04-20 04:08:36'),('cd64b5aa-8449-4f62-b7de-7018bb817f38','6076469144','female','2023-03-30',172.5,80,1.5,'2023-04-16','2023-04-19 03:31:54','2023-04-19 08:02:29'),('cf24bacf-346e-4d5c-9bff-129e03f3fb24','9960669470','female','2023-03-30',172.5,75,1.5,'2023-04-16','2023-04-28 03:35:24','2023-04-28 03:35:24');
 /*!40000 ALTER TABLE `exercise_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,7 +216,7 @@ CREATE TABLE `users` (
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`sid`),
   UNIQUE KEY `userId_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -225,7 +225,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'5590613616','lskfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:11:54'),(2,'5624963453','lskfsdsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:13:33'),(3,'3162557974','lskfsdddsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:14:26'),(4,'3262222356','noraisin@toko.com','Ab123456',NULL,NULL,NULL,'2023-04-01 16:25:59'),(5,'9960669470','banana0583@fruitz.com','$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m',NULL,NULL,NULL,'2023-04-06 03:32:16'),(6,'7400633609','watermelon3325@furuz.com','$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK',NULL,NULL,NULL,'2023-04-06 03:52:28'),(7,'5453336177','Alon1131@guik.com','$2a$10$ydNBGUsdd6xgT4w8o7WiFeUzls2fTXExtBxNXyX6juJGo.yvAf0Y.',NULL,NULL,NULL,'2023-04-10 06:20:24'),(8,'6076469144','uuid12333@llakke.com','$2a$10$UaHI92cuz925g3Secvypreg/EbC4nhvYWA32cXTiP7DL17KiKXINC','uejj558',NULL,NULL,'2023-04-19 03:28:45'),(9,'9731103331','AAAAABBB@gmail.com','$2a$10$rwKg160ycTIyD/LlqqL3DOK0i0cAJXwa7tQQ0s.ZmdDxuq6E0OSqy','sldkfjsl645454',NULL,NULL,'2023-04-28 03:29:56');
+INSERT INTO `users` VALUES (1,'5590613616','lskfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:11:54'),(2,'5624963453','lskfsdsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:13:33'),(3,'3162557974','lskfsdddsfsl@lkfjl','lsdkfj2313',NULL,NULL,NULL,'2023-04-01 13:14:26'),(4,'3262222356','noraisin@toko.com','Ab123456',NULL,NULL,NULL,'2023-04-01 16:25:59'),(5,'9960669470','banana0583@fruitz.com','$2a$10$nm9ukuCK87l/lTfThxjZwO6dc5N6qMr2zMOEFX4mQEDzrecEYNE.m',NULL,NULL,NULL,'2023-04-06 03:32:16'),(6,'7400633609','watermelon3325@furuz.com','$2a$10$5uErJ8X7mDAj6kgkDQMCPOq8n/9e/MNICg3eijyeLLXVvONARMHHK',NULL,NULL,NULL,'2023-04-06 03:52:28'),(7,'5453336177','Alon1131@guik.com','$2a$10$ydNBGUsdd6xgT4w8o7WiFeUzls2fTXExtBxNXyX6juJGo.yvAf0Y.',NULL,NULL,NULL,'2023-04-10 06:20:24'),(8,'6076469144','uuid12333@llakke.com','$2a$10$UaHI92cuz925g3Secvypreg/EbC4nhvYWA32cXTiP7DL17KiKXINC','uejj558',NULL,NULL,'2023-04-19 03:28:45'),(9,'9731103331','AAAAABBB@gmail.com','$2a$10$rwKg160ycTIyD/LlqqL3DOK0i0cAJXwa7tQQ0s.ZmdDxuq6E0OSqy','sldkfjsl645454',NULL,NULL,'2023-04-28 03:29:56'),(10,'6818255871','AAAAAAAeeeel@gmail.com','$2a$10$J1aGBYqcJlHO0pBvA/KXsOZm6/aTLq.bulQ/jVRYvnbTfT1pULuX6','test2',NULL,NULL,'2023-04-29 07:36:36');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -238,4 +238,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-04-28 16:35:41
+-- Dump completed on 2023-04-29 15:45:52

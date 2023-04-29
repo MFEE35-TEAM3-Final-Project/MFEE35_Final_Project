@@ -11,7 +11,7 @@ const {
   registerValidation,
   loginValidation,
   exerciseRecordsValidation,
-  articleMegValid,
+  articleMegValid
 } = require("../models/validation");
 const { userPassport } = require("../models/passport");
 const xss = require("xss");
@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
     if (validError)
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
 
     const { email, password, username, phone, address } = req.body;
@@ -58,7 +58,7 @@ router.post("/register", async (req, res) => {
         password: hashedPassword,
         username,
         phone,
-        address,
+        address
       };
       let insertSql = "INSERT INTO users SET ?";
       const result = await query(insertSql, userData);
@@ -67,7 +67,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({
           success: true,
           message: `會員資料新增 ${result.affectedRows}筆 成功 ${result.insertId}`,
-          user_id: userId,
+          user_id: userId
         });
       } else {
         res.json({ success: false, message: "無法新增會員資料" });
@@ -87,7 +87,7 @@ router.post("/login", async (req, res) => {
     if (validError) {
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
     }
 
@@ -109,7 +109,7 @@ router.post("/login", async (req, res) => {
         const tokenObj = {
           _id: matchUser.user_id,
           email: matchUser.email,
-          exp: expDate,
+          exp: expDate
         };
         let token = jwt.sign(tokenObj, process.env.PASSPORT_SECRET);
 
@@ -118,13 +118,13 @@ router.post("/login", async (req, res) => {
           message: `會員登入成功`,
           user_id: matchUser.user_id,
           token: "JWT " + token,
-          exp: expDate,
+          exp: expDate
         });
       } else {
         // 密碼錯誤
         return res.json({
           success: false,
-          message: `密碼錯誤 ${matchUser.user_id}`,
+          message: `密碼錯誤 ${matchUser.user_id}`
         });
       }
     }
@@ -132,7 +132,7 @@ router.post("/login", async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
@@ -146,14 +146,14 @@ router.get(
     return res.status(200).json({
       success: true,
       message: "已認證 Token",
-      user: req.user,
+      user: req.user
     });
   },
   (err, req, res, next) => {
     if (err) {
       return res.status(401).json({
         success: false,
-        message: "Token 錯誤，請重新登入",
+        message: "Token 錯誤，請重新登入"
       });
     }
   }
@@ -170,7 +170,7 @@ router.post("/exercise_records", userPassport, async (req, res) => {
     if (validError) {
       return res.json({
         success: false,
-        message: validError.details[0].message,
+        message: validError.details[0].message
       });
     }
     let bodyData = {
@@ -180,7 +180,7 @@ router.post("/exercise_records", userPassport, async (req, res) => {
       weight: weight,
       height: height,
       exercise_level: exercise_level,
-      record_date: record_date,
+      record_date: record_date
     };
     // 檢查紀錄天是否已經有紀錄
     const checkdateSql =
@@ -193,7 +193,7 @@ router.post("/exercise_records", userPassport, async (req, res) => {
       const insertSql = "INSERT INTO exercise_records SET ?";
       const result = await query(insertSql, {
         ...bodyData,
-        exercise_records_id: recordId,
+        exercise_records_id: recordId
       });
       const affectedRows = result.affectedRows;
       console.log(result);
@@ -201,7 +201,7 @@ router.post("/exercise_records", userPassport, async (req, res) => {
         return res.status(201).json({
           success: true,
           message: `會員體態追蹤新增 ${result.affectedRows}筆 成功`,
-          recordId,
+          recordId
         });
       } else {
         return res.json({ success: false, message: "無法新增會員體態追蹤" });
@@ -215,14 +215,14 @@ router.post("/exercise_records", userPassport, async (req, res) => {
       return res.json({
         success: true,
         message: "該日期資料更新完成",
-        recordId,
+        recordId
       });
     }
   } catch (error) {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
@@ -245,13 +245,13 @@ router.get("/exercise_records", userPassport, async (req, res) => {
     return res.status(200).json({
       success: true,
       user_id: userId,
-      records: getResults,
+      records: getResults
     });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
       success: false,
-      message: "伺服器錯誤",
+      message: "伺服器錯誤"
     });
   }
 });
@@ -271,64 +271,100 @@ router.delete(
         return res.status(404).json({
           success: false,
           message: "找不到紀錄",
-          recordId,
+          recordId
         });
       } else {
         return res.status(200).json({
           success: true,
-          message: "已刪除紀錄",
+          message: "已刪除紀錄"
         });
       }
     } catch (error) {
       console.error(error);
       return res.status(500).json({
         success: false,
-        message: "伺服器錯誤",
+        message: "伺服器錯誤"
       });
     }
   }
 );
 
 //article_meg
-router.post("/article_meg/:article_id", userPassport, async (req, res) => {
-  try {
-    const userId = req.user[0].user_id;
-    const articleId = req.params.article_id;
-    const { comment } = req.body;
-    const { error: validError } = articleMegValid(req.body);
-    if (validError) {
-      return res.json({
-        success: false,
-        message: validError.details[0].message,
-      });
-    }
-    const filteredComment = xss(comment);
-    const megDate = {
-      article_id: articleId,
-      user_id: userId,
-      comment: filteredComment,
-    };
-    const postSql = "INSERT INTO article_meg SET ? ";
-    const postResult = await query(postSql, megDate);
-    const affectedRows = postResult.affectedRows;
-    if (affectedRows >= 1) {
-      return res.status(201).json({
-        success: true,
-        message: "新增留言成功",
+router.post(
+  "/article_comments/article_id=:article_id",
+  userPassport,
+  async (req, res) => {
+    try {
+      const userId = req.user[0].user_id;
+      const articleId = req.params.article_id;
+      const { comment } = req.body;
+      const { error: validError } = articleMegValid(req.body);
+      if (validError) {
+        return res.json({
+          success: false,
+          message: validError.details[0].message
+        });
+      }
+      const filteredComment = xss(comment);
+      const commentDate = {
         article_id: articleId,
-      });
-    } else {
-      return res.json({
+        user_id: userId,
+        comment: filteredComment
+      };
+      const postSql = "INSERT INTO article_comments SET ? ";
+      const postResult = await query(postSql, commentDate);
+      const affectedRows = postResult.affectedRows;
+      if (affectedRows >= 1) {
+        return res.status(201).json({
+          success: true,
+          message: "新增留言成功",
+          article_id: articleId
+        });
+      } else {
+        return res.json({
+          success: false,
+          message: "留言失敗"
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
         success: false,
-        message: "留言失敗",
+        message: "伺服器錯誤"
       });
     }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "伺服器錯誤",
-    });
   }
-});
+);
+
+router.delete(
+  "/article_comments/comment_id=:comment_id",
+  userPassport,
+  async (req, res) => {
+    try {
+      const userId = req.user[0].user_id;
+      const cmtId = req.params.comment_id;
+      const delSql =
+        "DELETE FROM article_comments WHERE user_id = ? AND comment_id = ?";
+      const { affectedRows } = await query(delSql, [userId, cmtId]);
+      if (affectedRows >= 1) {
+        return res.status(200).json({
+          success: true,
+          message: "已刪除留言"
+        });
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: "找不到留言"
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: "伺服器錯誤"
+      });
+    }
+  }
+);
+
 module.exports = router;
