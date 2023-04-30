@@ -3,6 +3,8 @@ const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config({ path: ".env.local" });
+
+// Routes
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const foodRoutes = require("./routes/foodRoutes");
