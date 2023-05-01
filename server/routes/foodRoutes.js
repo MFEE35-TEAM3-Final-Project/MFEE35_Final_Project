@@ -12,11 +12,11 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get("", async (req, res) => {
+router.get("/category=:category", async (req, res) => {
   try {
-    const Category = req.query.Category;
+    const category = req.params.category;
     let getResults;
-    if (Category === "all") {
+    if (category === "all") {
       let getAllCategorySql =
         "SELECT GROUP_CONCAT(DISTINCT Category ORDER BY Category) as categories FROM food";
       getResults = await query(getAllCategorySql);
@@ -25,9 +25,9 @@ router.get("", async (req, res) => {
         success: true,
         categories: allCategories
       });
-    } else if (Category !== "") {
+    } else if (category !== "") {
       let getAllCategorySql = "SELECT * FROM food WHERE Category= ?";
-      getResults = await query(getAllCategorySql, [Category]);
+      getResults = await query(getAllCategorySql, [category]);
       return res.status(200).json({
         success: true,
         results: getResults
@@ -41,6 +41,30 @@ router.get("", async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+});
+
+router.get("/search", async (req, res) => {
+  const searchKeyword = req.query.keyword;
+  const searchCategory = req.query.category;
+  const resultQty = parseInt(req.query.qty) || 20;
+
+  let searchSql =
+    "SELECT food_id, category, sample_name as name FROM food WHERE ";
+  let searchParams = [];
+  if (searchCategory && searchCategory !== "all") {
+    searchSql += "category = ? AND ";
+    searchParams.push(searchCategory);
+  }
+  searchSql += `sample_name LIKE '%${searchKeyword}%' ORDER BY popularity DESC LIMIT ?`;
+  searchParams.push(resultQty);
+  getResults = await query(searchSql, searchParams);
+  return res.json({
+    message: "search~~",
+    category: searchCategory,
+    keyword: searchKeyword,
+    suggestions: getResults,
+    hits: {}
+  });
 });
 
 module.exports = router;

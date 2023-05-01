@@ -10,6 +10,7 @@ import UserProfiles from "./pages/user/UserProfile";
 import UserSelfies from "./pages/user/UserSelfies";
 import UserDashboard from "./pages/user/UserDashboard";
 import Articles from "./pages/admin/Article";
+import Food from "./pages/user/Food";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/user/selfies" element={<UserSelfies />} />
           </Route>
           <Route path="/articles" element={<Articles />} />
+          <Route path="/food" element={<Food />} />
         </Routes>
       </div>
       {/* <Footer /> */}

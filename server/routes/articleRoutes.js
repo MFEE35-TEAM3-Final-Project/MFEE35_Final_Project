@@ -16,9 +16,9 @@ router.get("/", async (req, res) => {
     let perPage = parseInt(per_page) || 20;
     let nowPage = parseInt(page) || 1;
     let countSql = "SELECT COUNT(*) AS total_count FROM articles ";
-    let countPrams = [];
+    let countParams = [];
 
-    const [{ total_count: totalCount }] = await query(countSql, countPrams);
+    const [{ total_count: totalCount }] = await query(countSql, countParams);
     let totalPages = Math.ceil(totalCount / perPage);
     totalPages = totalPages === 0 ? 1 : totalPages;
     nowPage = nowPage > totalPages ? totalPages : nowPage;
@@ -26,16 +26,16 @@ router.get("/", async (req, res) => {
     // 取得文章
     let getArticlesSql =
       "SELECT article_id, admin_id, title, is_published, created_at, updated_at FROM articles ";
-    let getPrams = [];
+    let getParams = [];
 
     getArticlesSql += "ORDER BY created_at DESC ";
 
     if (!isNaN(nowPage) && nowPage > 0) {
       getArticlesSql += "LIMIT ? OFFSET ? ";
-      getPrams.push(perPage);
-      getPrams.push((nowPage - 1) * perPage);
+      getParams.push(perPage);
+      getParams.push((nowPage - 1) * perPage);
     }
-    const getResults = await query(getArticlesSql, getPrams);
+    const getResults = await query(getArticlesSql, getParams);
 
     const pagination = {
       total_pages: totalPages,
