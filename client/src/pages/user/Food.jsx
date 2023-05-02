@@ -8,6 +8,7 @@ const Food = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showcase, setShowcase] = useState(false);
   const [selected, setSelected] = useState("選擇的食物");
+
   const searchFood = (category, keyword, qty) => {
     axios
       .get(
@@ -19,6 +20,8 @@ const Food = () => {
       })
       .catch((err) => {
         console.log(err);
+        setSuggestions([]);
+        setSelected(err.response.data.message);
       });
   };
 
@@ -40,7 +43,7 @@ const Food = () => {
     if (keyword.trim().length > 0) {
       inputTimer = setTimeout(() => {
         // console.log("query", query);
-        searchFood(tempCategory, keyword);
+        searchFood(tempCategory, keyword, 9999);
         setShowcase(true);
       }, delay);
     }

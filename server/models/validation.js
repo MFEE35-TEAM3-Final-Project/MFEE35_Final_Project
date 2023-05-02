@@ -68,6 +68,18 @@ const articleMegValid = (data) => {
   });
   return schema.validate(data);
 };
+
+const mealRecordValid = (data) => {
+  const schema = Joi.object({
+    meal_date: Joi.date().required(),
+    meal_type: Joi.string()
+      .valid("breakfast", "lunch", "dinner", "snack")
+      .required(),
+    food_id: Joi.string().required(),
+    food_qty: Joi.number().min(0).default(1).required(),
+  });
+  return schema.validate(data);
+};
 module.exports = {
   registerValidation,
   loginValidation,
@@ -76,4 +88,5 @@ module.exports = {
   exerciseRecordsValidation,
   articleValid,
   articleMegValid,
+  mealRecordValid,
 };

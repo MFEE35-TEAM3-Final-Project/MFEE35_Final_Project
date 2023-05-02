@@ -23,19 +23,19 @@ router.get("/category=:category", async (req, res) => {
       const allCategories = getResults[0].categories.split(",");
       return res.status(200).json({
         success: true,
-        categories: allCategories
+        categories: allCategories,
       });
     } else if (category !== "") {
       let getAllCategorySql = "SELECT * FROM food WHERE Category= ?";
       getResults = await query(getAllCategorySql, [category]);
       return res.status(200).json({
         success: true,
-        results: getResults
+        results: getResults,
       });
     } else {
       return res.status(404).json({
         success: false,
-        message: "Nothing"
+        message: "Nothing",
       });
     }
   } catch (err) {
@@ -48,8 +48,9 @@ router.get("/search", async (req, res) => {
   const searchCategory = req.query.category;
   const resultQty = parseInt(req.query.qty) || 20;
 
-  let searchSql =
-    "SELECT food_id, category, sample_name as name FROM food WHERE ";
+  // let searchSql =
+  //   "SELECT food_id, category, sample_name as name FROM food WHERE ";
+  let searchSql = "SELECT *, sample_name as name FROM food WHERE ";
   let searchParams = [];
   if (searchCategory && searchCategory !== "all") {
     searchSql += "category = ? AND ";
@@ -58,13 +59,20 @@ router.get("/search", async (req, res) => {
   searchSql += `sample_name LIKE '%${searchKeyword}%' ORDER BY popularity DESC LIMIT ?`;
   searchParams.push(resultQty);
   getResults = await query(searchSql, searchParams);
-  return res.json({
-    message: "search~~",
-    category: searchCategory,
-    keyword: searchKeyword,
-    suggestions: getResults,
-    hits: {}
-  });
+  if (getResults.length > 0) {
+    return res.json({
+      success: true,
+      message: "search~~",
+      category: searchCategory,
+      keyword: searchKeyword,
+      suggestions: getResults,
+    });
+  } else {
+    return res.status(404).json({
+      success: false,
+      message: "Nothing",
+    });
+  }
 });
 
 module.exports = router;

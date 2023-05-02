@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: mfee35
+-- Host: 127.0.0.1    Database: betadays
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -71,6 +71,34 @@ CREATE TABLE `article_comments` (
 LOCK TABLES `article_comments` WRITE;
 /*!40000 ALTER TABLE `article_comments` DISABLE KEYS */;
 /*!40000 ALTER TABLE `article_comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `article_meg`
+--
+
+DROP TABLE IF EXISTS `article_meg`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `article_meg` (
+  `sid` int NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `article_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `comment` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `article_meg`
+--
+
+LOCK TABLES `article_meg` WRITE;
+/*!40000 ALTER TABLE `article_meg` DISABLE KEYS */;
+INSERT INTO `article_meg` VALUES (1,'9731103331','048a772a-3bfe-4155-b622-1054d22ba75b','When I feel lonely I would buy some shares. It\'s nice to have a bit of company. :-|&lt;&gt;','2023-04-28 08:11:34','2023-04-28 08:11:34'),(2,'9731103331','048a772a-3bfe-4155-b622-1054d22ba75b','When I feel lonely I would buy some shares. It\'s nice to have a bit of company. :-|&lt;&gt;','2023-04-28 08:20:40','2023-04-28 08:20:40');
+/*!40000 ALTER TABLE `article_meg` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -173,30 +201,35 @@ INSERT INTO `food` VALUES ('A0100101','穀物類','大麥仁','生,已去殼,混
 UNLOCK TABLES;
 
 --
--- Table structure for table `tdee`
+-- Table structure for table `meal_records`
 --
 
-DROP TABLE IF EXISTS `tdee`;
+DROP TABLE IF EXISTS `meal_records`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tdee` (
-  `sid` int unsigned NOT NULL AUTO_INCREMENT,
-  `userId` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `height` decimal(4,1) DEFAULT NULL,
-  `weight` decimal(4,1) DEFAULT NULL,
-  `activity_level` decimal(2,1) DEFAULT NULL,
-  `updateAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `meal_records` (
+  `record_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `meal_date` datetime NOT NULL,
+  `meal_type` enum('breakfast','lunch','dinner','snack') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `food_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `food_qty` decimal(10,2) unsigned NOT NULL DEFAULT '1.00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`record_id`),
+  KEY `fk_user_id_idx` (`user_id`),
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tdee`
+-- Dumping data for table `meal_records`
 --
 
-LOCK TABLES `tdee` WRITE;
-/*!40000 ALTER TABLE `tdee` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tdee` ENABLE KEYS */;
+LOCK TABLES `meal_records` WRITE;
+/*!40000 ALTER TABLE `meal_records` DISABLE KEYS */;
+INSERT INTO `meal_records` VALUES (1,'6818255871','2023-05-02 00:00:00','lunch','R2100401',4.50,'2023-05-02 08:11:54','2023-05-02 08:11:54'),(2,'6818255871','2023-05-02 00:00:00','dinner','R2100401',4.50,'2023-05-02 08:24:35','2023-05-02 08:24:35'),(3,'6818255871','2023-05-02 00:00:00','dinner','R2100401',4.50,'2023-05-02 08:35:11','2023-05-02 08:35:11');
+/*!40000 ALTER TABLE `meal_records` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -212,7 +245,7 @@ CREATE TABLE `users` (
   `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -241,4 +274,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-01 21:31:04
+-- Dump completed on 2023-05-02 16:40:18
