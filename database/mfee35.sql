@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: betadays
+-- Host: 127.0.0.1    Database: mfee35
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.0.32
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -83,7 +83,7 @@ DROP TABLE IF EXISTS `article_meg`;
 CREATE TABLE `article_meg` (
   `sid` int NOT NULL AUTO_INCREMENT,
   `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `article_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `article_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -219,7 +219,7 @@ CREATE TABLE `meal_records` (
   PRIMARY KEY (`record_id`),
   KEY `fk_user_id_idx` (`user_id`),
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,8 +228,35 @@ CREATE TABLE `meal_records` (
 
 LOCK TABLES `meal_records` WRITE;
 /*!40000 ALTER TABLE `meal_records` DISABLE KEYS */;
-INSERT INTO `meal_records` VALUES (1,'6818255871','2023-05-02 00:00:00','lunch','R2100401',4.50,'2023-05-02 08:11:54','2023-05-02 08:11:54'),(2,'6818255871','2023-05-02 00:00:00','dinner','R2100401',4.50,'2023-05-02 08:24:35','2023-05-02 08:24:35'),(3,'6818255871','2023-05-02 00:00:00','dinner','R2100401',4.50,'2023-05-02 08:35:11','2023-05-02 08:35:11');
+INSERT INTO `meal_records` VALUES (1,'6818255871','2023-05-02 00:00:00','lunch','R2100401',4.50,'2023-05-02 08:11:54','2023-05-02 08:11:54'),(2,'6818255871','2023-05-02 00:00:00','dinner','R2100401',4.50,'2023-05-02 08:24:35','2023-05-02 08:24:35'),(3,'6818255871','2023-05-02 00:00:00','dinner','R2100401',4.50,'2023-05-02 08:35:11','2023-05-02 08:35:11'),(4,'9731103331','2023-05-01 00:00:00','snack','A0420101',2.00,'2023-05-02 15:15:20','2023-05-02 15:15:20'),(5,'9731103331','2023-05-01 00:00:00','snack','A0420101',2.00,'2023-05-02 16:03:25','2023-05-02 16:03:25');
 /*!40000 ALTER TABLE `meal_records` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tdee`
+--
+
+DROP TABLE IF EXISTS `tdee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tdee` (
+  `sid` int unsigned NOT NULL AUTO_INCREMENT,
+  `userId` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `height` decimal(4,1) DEFAULT NULL,
+  `weight` decimal(4,1) DEFAULT NULL,
+  `activity_level` decimal(2,1) DEFAULT NULL,
+  `updateAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tdee`
+--
+
+LOCK TABLES `tdee` WRITE;
+/*!40000 ALTER TABLE `tdee` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tdee` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -274,4 +301,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-02 16:40:18
+-- Dump completed on 2023-05-03  1:00:11
