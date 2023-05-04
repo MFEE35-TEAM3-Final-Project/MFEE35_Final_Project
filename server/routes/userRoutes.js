@@ -106,7 +106,7 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, matchUser.password);
       if (isMatch) {
         // 密碼正確
-        let expDate = Date.now() + 1000 * 60 * 60 * 24;
+        let expDate = Date.now() + 1000 * 60 * 60 * 24 * 100;
         const tokenObj = {
           _id: matchUser.user_id,
           email: matchUser.email,
@@ -417,24 +417,50 @@ router.get("/meal_records", userPassport, async (req, res) => {
     const startDate = req.query.start_date;
     const endDate = req.query.end_date;
     let getSql =
-      "SELECT record_id, user_id, CONVERT_TZ(meal_date, '+0:00', '+8:00') as meal_date, meal_type, food_id, food_qty FROM meal_records WHERE user_id = ? ";
+      "SELECT record_id, user_id, CONVERT_TZ(meal_date, '+0:00', '+8:00') as meal_date, meal_type, food.food_id, food_qty, sample_name AS name, content_des, unit, Calories_adjusted AS calories, carbohydrate, crude_protein AS portein, saturated_fat, sodium FROM meal_records AS mr INNER JOIN food ON food.food_id = mr.food_id WHERE mr.user_id = ? ";
     let getParams = [userId];
     if (startDate && endDate) {
       getSql += " AND meal_date BETWEEN ? AND ? ORDER BY meal_date";
       getParams.push(startDate, endDate);
     }
-    const getResults = await query(getSql, getParams);
+    const results = await query(getSql, getParams);
 
-    if (getResults.length > 0) {
+    const formattedResults = results.map((result) => ({
+      record_id: result.record_id,
+      user_id: result.user_id,
+      meal_date: result.meal_date,
+      meal_type: result.meal_type,
+      food_info: {
+        food_id: result.food_id,
+        food_qty: result.food_qty,
+        name: result.name,
+        content_des: result.content_des,
+        unit: result.unit,
+        calories: result.calories,
+        carbohydrate: result.carbohydrate,
+        protein: result.portein,
+        saturated_fat: result.saturated_fat,
+        sodium: result.sodium,
+      },
+      total_weight: result.unit * result.food_qty,
+      total_calories: result.calories * result.food_qty,
+      total_carbohydrate: result.carbohydrate * result.food_qty,
+      total_protein: result.portein * result.food_qty,
+      total_saturated_fat: result.saturated_fat * result.food_qty,
+      total_sodium: result.sodium * result.food_qty,
+    }));
+
+    if (results.length > 0) {
       return res.status(200).json({
         success: true,
         message: "取得紀錄成功",
-        records: getResults,
+        user_id: userId,
+        records: formattedResults,
       });
     } else {
       return res.status(404).json({
         success: false,
-        message: "沒有紀錄",
+        message: "該時間段沒有紀錄",
       });
     }
   } catch (error) {
