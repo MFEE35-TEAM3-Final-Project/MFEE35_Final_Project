@@ -1,0 +1,37 @@
+
+orders資料表欄位有:
+order_id ,user_id,phone,name ,coupon_id, total_quantity,total_price,payment_method,shipping_address,ship_store,status
+
+order_details 資料表欄位有
+detail_id,order_id,product_id,quantity,price 
+order_detail中的order_id 跟orders資料表的order_id關聯
+
+我需要製作出訂單的API 可以post新訂單到orders資料庫 、 並且把商品細節寫入 order_detail 並且修改 producty 資料表的庫存數量
+
+
+訂單 post insert orders order_details  put product
+put orders  order_details product 
+
+
+
+
+get 加上會員驗證
+get 會員驗證 非會員 cookies 
+好的，如果你已經製作好了訂單 API 的 CRUD 功能，那麼現在可以開始加入身份驗證和非會員訂單查詢的功能了。以下是實現這些功能的一些建議：
+
+在身份驗證中間件中對用戶身份進行驗證，以確保只有具有有效 JWT 的用戶才能夠訪問訂單 API。可以使用 Node.js 的 JSON Web Token 庫來實現 JWT 驗證功能。
+
+如果你希望非會員也能夠查詢訂單，可以在身份驗證中間件中添加一個可選的身份驗證機制，允許未提供 JWT 的使用者訪問 API。這樣做的好處是，讓所有人都能夠使用訂單 API，同時還可以提供更安全的功能，讓登入使用者可以獲得更多的權限和特殊功能。
+
+如果你希望將訂單信息寫入資料庫以便後續查詢，可以在用戶提交訂單時將訂單信息寫入資料庫中，然後通過用戶 ID 從資料庫中查詢相關的訂單信息。在設計資料庫時，可以使用關聯表將訂單和用戶 ID 進行關聯。
+
+如果你希望將訂單信息存儲在 cookies 中，可以在訂單 API 中使用 cookies 存儲訂單信息。可以使用 Node.js 的 cookie-parser 庫來解析 cookies。
+
+如果你希望將訂單信息與用戶 ID 關聯起來，可以在訂單表中添加一個用戶 ID 的欄位，然後在用戶提交訂單時將該欄位填入用戶 ID。這樣，在後續查詢訂單信息時，你可以通過用戶 ID 從資料庫中查詢相關的訂單信息。
+
+以上是一些建議，你可以根據你的實際情況和需求進行調整和實現。
+
+
+
+優惠券 優惠算式 過期 選取
+
