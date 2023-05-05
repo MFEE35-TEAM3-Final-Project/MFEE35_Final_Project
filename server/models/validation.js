@@ -80,6 +80,28 @@ const mealRecordValid = (data) => {
   });
   return schema.validate(data);
 };
+
+const foodValid = (data) => {
+  const schema = Joi.object({
+    category: Joi.string().required(),
+    sample_name: Joi.string().required(),
+    content_des: Joi.string(),
+    common_name: Joi.string(),
+    unit: Joi.number().min(0).default(100).required(),
+    calories: Joi.number().min(0).default(0).required(),
+    calories_adjusted: Joi.number().min(0).default(0).required(),
+    water: Joi.number().min(0).default(0),
+    crude_protein: Joi.number().min(0).default(0).required(),
+    crude_fat: Joi.number().min(0).default(0),
+    saturated_fat: Joi.number().min(0).default(0).required(),
+    carbohydrate: Joi.number().min(0).default(0).required(),
+    sodium: Joi.number().min(0).default(0).required(),
+    dietary_fiber: Joi.number().min(0).default(0),
+    trans_fat: Joi.number().min(0).default(0),
+    popularity: Joi.number().min(0).default(0),
+  });
+  return schema.validate(data);
+};
 module.exports = {
   registerValidation,
   loginValidation,
@@ -89,4 +111,5 @@ module.exports = {
   articleValid,
   articleMegValid,
   mealRecordValid,
+  foodValid,
 };
