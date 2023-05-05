@@ -21,7 +21,7 @@ const Homepage = () => {
       <Banner />
       <div>
         <form action="submit">sdfsdf</form>
-        <h1>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam molestiae laudantium velit cumque illum, consectetur expedita in rerum soluta id aut distinctio quidem debitis enim dignissimos sint ducimus aliquid nam.
+        <h1>Lorem ipsum, dolor sit amet consectetur adipisicing sdfsbbgbgsdffdsfelit. Aliquam molestiae laudantium velit cumque illum, consectetur expedita in rerum soluta id aut distinctio quidem debitis enim dignissimos sint ducimus aliquid nam.
           
         </h1>
       </div>
