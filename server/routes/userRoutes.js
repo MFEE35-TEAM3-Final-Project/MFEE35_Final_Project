@@ -554,4 +554,244 @@ router.delete(
   }
 );
 
+
+//user orders
+router.post('/orders', (req, res) => {
+  // 從請求中取得訂單資料
+  const { user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, order_details } = req.body;
+  const status = 'created';
+
+  // 產生UUID作為order_id
+  const order_id = uuidv4();
+
+  // 將訂單資料插入到orders資料表中
+  const add_order_sql = "INSERT INTO orders (order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  const order_values = [order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status];
+  db.connection.query(add_order_sql, order_values, (err, result) => {
+    if (err) throw err;
+
+    // 將訂單商品細節插入到order_detail資料表中
+    order_details.forEach(detail => {
+      const { product_id, quantity, price } = detail;
+      const add_detail_sql = "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+      const detail_values = [order_id, product_id, quantity, price];
+      db.connection.query(add_detail_sql, detail_values, (err, result) => {
+        if (err) throw err;
+
+        // 更新product資料表中的庫存數量
+        const update_product_sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+        const update_values = [quantity, product_id];
+        db.connection.query(update_product_sql, update_values, (err, result) => {
+          if (err) throw err;
+        });
+      });
+    });
+
+    // 回傳新增訂單的order_id
+    res.status(201).json({ order_id });
+  });
+});
+
+
+
+
+//會員查詢訂單 
+router.get("/users/:user_id/orders", (req, res) => {
+  const user_id = req.params.user_id;
+  const query = `SELECT * FROM orders WHERE user_id = ?`;
+  db.connection.query(query, [user_id], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+      return;
+    }
+
+    const orders = [];
+
+    results.forEach((order) => {
+      const detailQuery = `SELECT * FROM order_details WHERE order_id = ?`;
+      db.connection.query(detailQuery, [order.order_id], (error, results) => {
+        if (error) {
+          console.error(error);
+          res.status(500).json({
+            success: false,
+            message: "Server error",
+          });
+          return;
+        }
+
+        const orderWithDetails = {
+          order_id: order.order_id,
+          user_id: order.user_id,
+          phone: order.phone,
+          name: order.name,
+          coupon_id: order.coupon_id,
+          total_quantity: order.total_quantity,
+          total_price: order.total_price,
+          payment_method: order.payment_method,
+          shipping_address: order.shipping_address,
+          ship_store: order.ship_store,
+          status: order.status,
+          order_details: results,
+        };
+
+        orders.push(orderWithDetails);
+
+        if (orders.length === results.length) {
+          res.status(200).json({
+            success: true,
+            data: orders,
+          });
+        }
+      });
+    });
+  });
+});
+
+
+// 根據訂單編號查詢單個訂單 
+router.get("/users/:user_id/orders", (req, res) => {
+  const user_id = req.params.user_id;
+  const query = `SELECT * FROM orders WHERE user_id = ?`;
+  db.connection.query(query, [user_id], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+      return;
+    }
+
+    const orders = [];
+
+    results.forEach((order) => {
+      const detailQuery = `SELECT * FROM order_details WHERE order_id = ?`;
+      db.connection.query(detailQuery, [order.order_id], (error, results) => {
+        if (error) {
+          console.error(error);
+          res.status(500).json({
+            success: false,
+            message: "Server error",
+          });
+          return;
+        }
+
+        const orderWithDetails = {
+          order_id: order.order_id,
+          user_id: order.user_id,
+          phone: order.phone,
+          name: order.name,
+          coupon_id: order.coupon_id,
+          total_quantity: order.total_quantity,
+          total_price: order.total_price,
+          payment_method: order.payment_method,
+          shipping_address: order.shipping_address,
+          ship_store: order.ship_store,
+          status: order.status,
+          order_details: results,
+        };
+
+        orders.push(orderWithDetails);
+
+        if (orders.length === results.length) {
+          res.status(200).json({
+            success: true,
+            data: orders,
+          });
+        }
+      });
+    });
+  });
+});
+
+//根據email查詢訂單(非會員)
+router.get("/orders/order/:email", (req, res) => {
+  const email = req.params.email;
+  const query = `SELECT * FROM orders WHERE email = ?`;
+  db.connection.query(query, [email], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Order not found1",
+      });
+      return;
+    }
+
+    const order = results[0];
+
+    const detailQuery = `SELECT * FROM order_details WHERE order_id IN ( SELECT order_id FROM orders WHERE email = ? )`;
+    db.connection.query(detailQuery, [email], (error, results) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({
+          success: false,
+          message: "Server error2",
+        });
+        return;
+      }
+
+      const orderWithDetails = {
+        order_id: order.order_id,
+        user_id: order.user_id,
+        phone: order.phone,
+        name: order.name,
+        coupon_id: order.coupon_id,
+        total_quantity: order.total_quantity,
+        total_price: order.total_price,
+        payment_method: order.payment_method,
+        shipping_address: order.shipping_address,
+        ship_store: order.ship_store,
+        status: order.status,
+        order_details: results,
+      };
+
+      res.status(200).json({
+        success: true,
+        data: orderWithDetails,
+      });
+    });
+  });
+});
+
+
+
+
+//
+//user shopping_cart
+
+//user favorite
+
+//user coupon 
+
+
+
 module.exports = router;

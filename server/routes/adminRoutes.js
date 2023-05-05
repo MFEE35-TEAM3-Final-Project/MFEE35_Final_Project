@@ -435,4 +435,146 @@ router.delete("/food/food_id=:food_id", adminPassport, async (req, res) => {
   }
 });
 
+//查詢全部訂單 須加上 會員驗證/管理員驗證
+router.get('/orders', async (req, res) => {
+  try {
+    const queryt = `SELECT * FROM orders`;
+    const results = await query(queryt);
+    res.status(200).json({
+      success: true,
+      data: results,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+});
+//根據狀態來查詢訂單(管理員)
+router.get("/orders/status/:status", (req, res) => {
+  const status = req.params.status;
+  const queryt = `SELECT * FROM orders WHERE status = ?`;
+  query(queryt, [status], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      data: results,
+    });
+  });
+});
+
+
+//根據訂單時間來查詢 (管理員)
+router.get("/orders/date/:start/:end", (req, res) => {
+  const start = req.params.start;
+  const end = req.params.end;
+  const query = `SELECT * FROM orders WHERE order_time BETWEEN ? AND ?`;
+  db.connection.query(query, [start, end], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      data: results,
+    });
+  });
+});
+
+//根據產品來查詢訂單(管理員)
+router.get("/orders/product/:product_id", (req, res) => {
+  const product_id = req.params.product_id;
+  const query = `
+    SELECT orders.*, order_details.* 
+    FROM orders 
+    INNER JOIN order_details ON orders.order_id = order_details.order_id 
+    WHERE order_details.product_id = ?`;
+  db.connection.query(query, [product_id], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+      });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+      return;
+    }
+
+    const orders = {};
+
+    results.forEach((row) => {
+      const order_id = row.order_id;
+
+      if (!orders[order_id]) {
+        orders[order_id] = {
+          order_id: order_id,
+          user_id: row.user_id,
+          phone: row.phone,
+          name: row.name,
+          coupon_id: row.coupon_id,
+          total_quantity: row.total_quantity,
+          total_price: row.total_price,
+          payment_method: row.payment_method,
+          shipping_address: row.shipping_address,
+          ship_store: row.ship_store,
+          status: row.status,
+          order_details: [],
+        };
+      }
+
+      const order_detail = {
+        order_detail_id: row.order_detail_id,
+        product_id: row.product_id,
+        quantity: row.quantity,
+        price: row.price,
+      };
+
+      orders[order_id].order_details.push(order_detail);
+    });
+
+    res.status(200).json({
+      success: true,
+      data: Object.values(orders),
+    });
+  });
+});
+
 module.exports = router;
