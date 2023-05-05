@@ -5,7 +5,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const Articles = () => {
   const [content, setContent] = useState("");
-
+  const [articles, setArticles] = useState([]);
   const handleEditorChange = (event, editor) => {
     const editorContent = editor.getData();
     setContent(editorContent);
@@ -37,6 +37,18 @@ const Articles = () => {
       console.error(error);
     }
   };
+
+  const getArticles = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/articles`)
+      .then((res) => {
+        console.log(res);
+        setArticles(res.data.articles);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   return (
     <div
       style={{
@@ -60,6 +72,20 @@ const Articles = () => {
       >
         SUBmit
       </button>
+
+      <div>
+        <button
+          className="btn btn-danger mt-5"
+          onClick={() => {
+            getArticles();
+          }}
+        >
+          test
+        </button>
+        {articles.map((article) => (
+          <p className="text-white fs-1">{article.title}</p>
+        ))}
+      </div>
     </div>
   );
 };
