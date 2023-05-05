@@ -1,0 +1,55 @@
+.footer {
+    background-color: #DCDBD7;
+    color: black;
+    padding: 100px;
+    text-align: center;
+    display: flex;
+    font-size: 20px;
+}
+
+.iconGroup {
+    width: 40%;
+}
+
+.socialSite {
+    text-decoration: none;
+    color: #000;
+}
+
+.siteMap {
+    width: 80%;
+}
+
+.siteSmalltitle {
+    text-align: start;
+    padding: 10px 0px;
+}
+
+.siteText {
+    text-decoration: none;
+    color: #000;
+    padding: 0px 20px;
+}
+
+.sitePic {
+    width: 40px;
+    height: 40px;
+}
+
+.sitepicGroup {
+    text-decoration: none;
+    color: #000;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.footerSelection {
+    text-align: center;
+    padding-top: 15px;
+}
+
+.logoPic {
+    width: 100px;
+    height: 100px;
+    padding-bottom: 20px;
+}
