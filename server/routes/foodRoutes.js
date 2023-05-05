@@ -47,11 +47,29 @@ router.get("/search", async (req, res) => {
   const searchKeyword = req.query.keyword;
   const searchCategory = req.query.category;
   const resultQty = parseInt(req.query.qty) || 20;
-
-  // let searchSql =
-  //   "SELECT food_id, category, sample_name as name FROM food WHERE ";
+  const foodId = req.query.food_id;
   let searchSql = "SELECT *, sample_name as name FROM food WHERE ";
   let searchParams = [];
+
+  // 特定食物
+  if (foodId && foodId !== "") {
+    searchSql += "food_id = ?";
+    getResults = await query(searchSql, [foodId]);
+
+    if (getResults.length > 0) {
+      return res.json({
+        success: true,
+        message: "已取得特定食物",
+        food_info: getResults[0],
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "找不到該食物",
+      });
+    }
+  }
+
   if (searchCategory && searchCategory !== "all") {
     searchSql += "category = ? AND ";
     searchParams.push(searchCategory);
