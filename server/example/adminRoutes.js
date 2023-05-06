@@ -435,4 +435,41 @@ router.delete("/food/food_id=:food_id", adminPassport, async (req, res) => {
   }
 });
 
+// 新增產品的API
+
+router.post("/addProducts", async (req, res) => {
+  try {
+    const productID = uuidv4();
+    const { name, description, price, stock, category, image } = req.body;
+    const productData = {
+      productid: productID,
+      name,
+      description,
+      price,
+      stock,
+      category,
+      image,
+    };
+    const sql = "INSERT INTO onlineProducts SET ?";
+    const { affectedRows } = await query(sql, productData);
+    if (affectedRows >= 1) {
+      res.status(201).json({
+        success: true,
+        message: "產品新增成功！",
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "產品新增失敗。",
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: "伺服器錯誤。",
+    });
+  }
+});
+
 module.exports = router;
