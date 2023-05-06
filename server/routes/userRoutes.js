@@ -139,7 +139,7 @@ router.post("/login", async (req, res) => {
 });
 
 // check
-router.get(
+router.post(
   "/check",
   userPassport,
   (req, res) => {
