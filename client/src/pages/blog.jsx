@@ -46,7 +46,7 @@ function Blog() {
                 </div>
                 <div className="classify row g-0 nav nav-tabs" role="tablist" >
                     <div className="classify-img col-md-4 col-12">
-                        <a className="" data-bs-toggle="tab"href="#HEALTHY" role="tab" aria-controls="HEALTHY" aria-selected="true" tabIndex="0">
+                        <a className="active" data-bs-toggle="tab"href="#HEALTHY" role="tab" aria-controls="HEALTHY" aria-selected="true" tabIndex="0">
                             <img src="/image/blog/healthy.png" className="img-fluid" alt="" />
                             <div >HEALTHY</div>
                         </a>
@@ -175,7 +175,7 @@ function Blog() {
                                 </a>
                             </div>
                         </div>
-                        <div className="col-lg-8 col-md-12 flex-column fade tab-pane show" id='FITNESS'>
+                        <div className="col-lg-8 col-md-12 flex-column fade tab-pane " id='FITNESS'>
                             <div className="article  d-flex align-items-center row" >
                                 <a href="/">
                                     <div className=" col-md-6 col-12 article-img">
@@ -185,7 +185,7 @@ function Blog() {
                                     </div>
                                     <div className="article-text col-6 ms-5">
                                         <span>19 jan 2023</span>
-                                        <h1>HEALTHY</h1>
+                                        <h1>FITNESS</h1>
                                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
                                             has been the industry's standard dummy text ever since the 1500s, when an u
                                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
@@ -294,7 +294,7 @@ function Blog() {
                                     </div>
                                     <div className="article-text col-6 ms-5">
                                         <span>19 jan 2023</span>
-                                        <h1>HEALTHY</h1>
+                                        <h1>NUTRITION</h1>
                                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
                                             has been the industry's standard dummy text ever since the 1500s, when an u
                                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum

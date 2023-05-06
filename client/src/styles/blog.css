@@ -141,7 +141,7 @@
     left: 30px;
 }
 .articlelist {
-
+    transition-duration: 1s;
     margin-bottom: 100px ;
     
 }

@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AOS from 'aos';
 import Slider from 'react-slick';
 import DoughnutChart from '../components/DoughnutChart';
@@ -42,11 +42,29 @@ export default function HomePage() {
             },
         ],
     };
+    const [topImgWidth, setTopImgWidth] = useState(0);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            // 計算出當前滾動位置對應的top-img的寬度值
+            const windowHeight = window.innerHeight;
+            const topImgOffset = document.querySelector('.top-img').getBoundingClientRect().top;
+            const scrollDistance = windowHeight - topImgOffset;
+            const maxScrollDistance = windowHeight / 1;
+            const width = Math.min(scrollDistance / maxScrollDistance * 100, 100);
+
+            // 更新state變量
+            setTopImgWidth(width);
+        };
+
+        // 監聽視窗的滾動事件
+        window.addEventListener('scroll', handleScroll);
+    })
 
     return (
         <div>
             <div className="Banner">
-                
+
 
                 <div className="decoration">
                     <div className="Dtext">
@@ -117,7 +135,7 @@ export default function HomePage() {
                             </div>
                         </div>
                         <div className="recommend-img" style={{ position: 'relative' }}>
-                            <div className="top-img"><img src="/image/top-img.png" alt="" /></div>
+                            <div className="top-imgbox"><div className="top-img" style={{ width: `${topImgWidth}%` }}><img src="/image/top-img.png" alt=""  /></div></div>
                             <div className="bottom-img"><img className="img-fluid" src="/image/bottom.png" alt="" /></div>
                         </div>
                     </div>

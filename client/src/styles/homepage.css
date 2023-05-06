@@ -272,26 +272,36 @@ footer {
     
 }
 
-.top-img {
-    width: 525px;
+.top-imgbox {
+    width: 480px;
     height: 325px;
     /* background-color: black; */
-    position: absolute;
+    position: relative;
     left:61%;
     top: 50%;
     transform: translate(-80%, -55%);
     z-index: 1;
     overflow: hidden;
-    transition: width 1s ease-out;
+    
 }
+.top-img{
+    transition: width .2s ease-out;
+    /* width: 15px; */
+    top:0;
+    left:0;
+    position: absolute;
+    overflow: hidden;
+}
+.top-img img{
 
+}
 .bottom-img {
-    width: 380px;
+    width: 400px;
     height: 280px;
     /* background-color: rgb(87, 52, 52); */
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 45%;
     transform: translate(-50%, -50%);
 }
 

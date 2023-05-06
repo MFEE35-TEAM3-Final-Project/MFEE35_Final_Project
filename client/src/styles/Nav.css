@@ -1,5 +1,7 @@
-.navdiv{
-    overflow: hidden;
+
+body{
+    overflow-x: hidden;
+
 }
 #menuToggle {
     display: block;
@@ -105,10 +107,10 @@
 #menu {
     position: absolute;
     width: 300px;
-    margin: -100px 0 0 -200px;
+    margin: -100px 0 0 -220px;
     padding: 50px;
     padding-top: 125px;
-
+    
     background: #2e2e2e;
     list-style-type: none;
     -webkit-font-smoothing: antialiased;
