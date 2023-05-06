@@ -1,90 +1,103 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { FaUser, FaShoppingCart, FaCaretRight, } from 'react-icons/fa';
+import axios from 'axios';
+function Nav() {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import Collapse from "react-bootstrap/Collapse";
-import { Link } from "react-router-dom";
+  React.useEffect(() => {
+    checkToken();
+  }, []);
 
-function HomepageNav() {
-  const [openSlide, setOpenSlide] = useState(false);
+  const checkToken = () => {
+    const jwtToken = document.cookie.replace(
+      /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/user/check`, {
+        headers: {
+          Authorization: jwtToken,
+        },
+      })
+      .then((res) => {
+        setIsAuthenticated(true);
+      })
+      .catch((err) => {
+        setIsAuthenticated(false);
+      });
+  };
+
+  const handleLogout = () => {
+    document.cookie = "jwtToken=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+    setIsAuthenticated(false);
+  };
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
-    <header id="header">
-      <Nav className="navbar navbar-expand-lg  p-0">
-        <div className="w-100">
-          <div className="nav_head">
-            <a
-              className="navbar-brand me-auto me-lg-0 col-lg-1 ps-lg-4"
-              href="/"
-            >
-              <img src={"/img/Kessoku_Band_Logo.svg"} alt="" />
-            </a>
-            <div className="d-none d-lg-flex justify-content-lg-around col-lg-11">
-              <div className="nav-item">
-                <Link to="/register" className="nav-link">
-                  REGISTER
-                </Link>
-              </div>
-              <div className="nav-item">
-                <Link to="/login" className="nav-link">
-                  LOGIN
-                </Link>
-              </div>
-              <div className="nav-item">
-                <Link to="/user/profile" className="nav-link">
-                  PROFILE
-                </Link>
-              </div>
+    <nav role="navigation">
+      <div id="menuToggle" onClick={handleMenuToggle}>
+        <input type="checkbox" checked={isMenuOpen} readOnly />
+        <span></span>
+        <span></span>
+        <span></span>
+        <ul id="menu" className={isMenuOpen ? 'open' : ''}>
+          <li id='home-logo'><a href="/">LOGO</a></li>
 
-              <div className="nav-item">
-                <a href="https://bocchi.rocks/" className="nav-link">
-                  BOCCHI OFFICIAL
-                </a>
-              </div>
-            </div>
+          
+            {isAuthenticated ? 
+            (<li>
+              <FaUser className="me-2" onClick={handleLogout}/>登出
+            </li>) 
+            :(<a href='/login'><li>
+              <FaUser className="me-2"  />登入
+            </li></a>)}
 
-            <button
-              onClick={() => setOpenSlide(!openSlide)}
-              className="nav_btn_cus d-lg-none"
-              id="select_btn"
-              type="button"
-              aria-expanded={openSlide}
-            >
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-          </div>
+          
 
-          <Collapse in={openSlide} className="nav_body " id="slide_selects">
-            <div className="slide_selects_nav">
-              <div className="nav-item">
-                <Link to="/register" className="nav-link">
-                  REGISTER
-                </Link>
-              </div>
-              <div className="nav-item">
-                <Link to="/login" className="nav-link">
-                  LOGIN
-                </Link>
-              </div>
-              <div className="nav-item">
-                <Link to="/user/profile" className="nav-link">
-                  PROFILE
-                </Link>
-              </div>
 
-              <div className="nav-item">
-                <a href="https://bocchi.rocks/" className="nav-link">
-                  BOCCHI OFFICIAL
-                </a>
-              </div>
-            </div>
-          </Collapse>
-        </div>
-      </Nav>
-    </header>
+          <a href="#">
+            <li>
+              <FaShoppingCart className="me-2" />購物車
+            </li>
+          </a>
+
+          <a href="/calculator">
+            <li className="me-auto" style={{ position: 'relative' }}>
+              計算機
+              <FaCaretRight
+                aria-hidden="true"
+                style={{ position: 'absolute', right: 0, top: '50%' }}
+              />
+            </li>
+          </a>
+          <a href="/Blog">
+            <li className="me-auto" style={{ position: 'relative' }}>
+              部落格
+              <FaCaretRight
+                aria-hidden="true"
+                style={{ position: 'absolute', right: 0, top: '50%' }}
+              />
+            </li>
+          </a>
+          <a href="#">
+            <li className="me-auto" style={{ position: 'relative' }}>
+              商城
+              <FaCaretRight
+                aria-hidden="true"
+                style={{ position: 'absolute', right: 0, top: '50%' }}
+              />
+            </li>
+          </a>
+          <li></li>
+        </ul>
+      </div>
+    </nav>
   );
 }
 
-export default HomepageNav;
+export default Nav;

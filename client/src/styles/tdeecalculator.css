@@ -1,0 +1,275 @@
+.calculator{
+  overflow: hidden;
+}
+.tdee-Banner{
+    background-image: url(../assets/tdeec.png);
+    height: 400px;
+    
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+}
+.cal-title{
+    /* display: block; */
+    /* padding-top: 50px; */
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 100px;
+    border-bottom: 2px solid #707D90;
+    color: #707D90;
+}
+
+.BMR-cal{
+    text-align: center;
+    padding-top: 50px;
+    line-height: 40px;
+}
+.UserText{
+    text-align: left;
+    width: 60%;
+    margin:0px auto
+}
+.annotation{
+    color: #646464;
+    font-size: 12px;
+    display: block;
+    padding-top: 30px;
+}
+
+.TDEE-cal{
+    text-align: center;
+    /* padding: 30px; */
+    line-height: 40px;
+}
+
+.sportList{
+    display: inline-block;
+    width: 150px;
+    /* height: 195px; */
+    /* background-color: #707D90; */
+    margin: 30px;
+}
+.sportList-img input:focus{
+    filter: invert(51%) sepia(12%) saturate(530%) hue-rotate(176deg) brightness(93%) contrast(95%);
+    /* border: 1px solid black; */
+    transition: all 0.5s ease;
+}
+
+.sportList-text{
+    margin-top: 40px;
+    /* text-align: center; */
+    /* height: 25px; */
+    line-height: 30px;
+    
+}
+.s-title{
+    font-weight: 700;
+}
+.s-text{
+    color: #777776;
+}
+
+.calculate{
+    width: 500px;
+}
+.result{
+    padding-top: 10px;
+    text-align: center;
+    margin: 50px;
+    border-bottom: 1px solid #F2EBEB;
+}
+.result-title{
+    font-size: 40px;
+    font-weight: 700;
+}
+.custom-btn {
+    width: 250px;
+    height: 60px;
+    padding: 10px 25px;
+    border: 2px solid #000;
+    font-weight: 500;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    color: #000000;
+    
+  }
+  .btn-3 {
+    line-height: 56px;
+    padding: 0;
+  }
+  .btn-3:hover{
+    background: #707D90;
+    color: #ffffff;
+  }
+  .btn-3 span {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .btn-3:before,
+  .btn-3:after {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 0;
+    background: #000000;
+    transition: all 0.3s ease;
+  }
+  .btn-3:before {
+    height: 0%;
+    width: 2px;
+  }
+  .btn-3:after {
+    width: 0%;
+    height: 2px;
+  }
+  .btn-3:hover:before {
+    height: 100%;
+  }
+  .btn-3:hover:after {
+    width: 100%;
+  }
+  .btn-3 span:before,
+  .btn-3 span:after {
+    position: absolute;
+    content: "";
+    right: 0;
+    bottom: 0;
+    background: #000;
+    transition: all 0.3s ease;
+  }
+  .btn-3 span:before {
+    width: 2px;
+    height: 0%;
+  }
+  .btn-3 span:after {
+    width: 0%;
+    height: 2px;
+  }
+  .btn-3 span:hover:before {
+    height: 100%;
+  }
+  .btn-3 span:hover:after {
+    width: 100%;
+  }
+.BMR{
+    display: inline-block;
+    width: 200px;
+    text-align: center;
+    /* border: 3px solid black; */
+}
+.BMR span{
+  color: #707D90;
+  font-size: 30px;
+  display: inline-block;
+  width: 200px;
+  text-align: center;
+  font-weight: bolder;
+}
+.TDEE{
+    display: inline-block;
+    width: 200px;
+    /* border: 3px solid black; */
+}
+.TDEE span{
+  color: #707D90;
+  font-size: 30px;
+  display: inline-block;
+  width: 200px;
+  text-align: center;
+  font-weight: bolder;
+}
+.aboutfood{
+    margin: 100px 0;
+    border-radius: 10px;
+    border: 2px solid #666666;
+    text-align: center;
+}
+.sixfood{
+    width: 100%;
+    /* height: 500px; */
+    /* background-color: #646464; */
+}
+.foodlist{
+    height: 350px;
+    /* width: 240px; */
+    /* background-color: #afafaf; */
+}
+.foodlist-img{
+    padding-top: 50px;
+    height: 200px;
+}
+.foodlist-text{
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.foodlist-text span{
+  color: #f3980f;
+  font-size: 32px
+}
+
+
+.footer {
+  background-color: #DCDBD7;
+  color: black;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  font-size: 20px;
+}
+
+.iconGroup{
+  width: 40%;
+}
+
+.socialSite{
+  text-decoration: none;
+  color: #000;
+}
+
+.siteMap{
+  width: 80%;
+}
+
+.siteSmalltitle{
+  text-align: start;
+  padding: 10px 0px;
+}
+
+.siteText{
+  text-decoration: none;
+  color: #000;
+  padding: 0px 20px;
+}
+
+.sitePic{
+  width: 40px;
+  height: 40px;
+}
+
+.sitepicGroup{
+  text-decoration: none;
+  color: #000;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.footerSelection{
+  text-align: center;
+  padding-top: 15px;
+}
+
+.logoPic{
+  width: 100px;
+  height: 100px;
+  padding-bottom: 20px;
+}
+.radioBG{
+  line-height: 24px;
+  
+}
