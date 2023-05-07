@@ -556,40 +556,55 @@ router.delete(
 
 
 //user orders
-router.post('/orders', (req, res) => {
-  // 從請求中取得訂單資料
-  const { user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, order_details } = req.body;
-  const status = 'created';
+router.post('/orders', userPassport, async (req, res) => {
+  try {
+    const status = 'created';
+    const order_id = uuidv4();
+    const {
+      user_id,
+      phone,
+      name,
+      coupon_id,
+      total_quantity,
+      total_price,
+      payment_method,
+      shipping_address,
+      ship_store,
+      order_details
+    } = req.body;
+    const postsql = "INSERT INTO orders (order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const order_values = [order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status];
+    const result = await query(postsql, order_values, (err, result) => {
+      if (err) throw err;
 
-  // 產生UUID作為order_id
-  const order_id = uuidv4();
-
-  // 將訂單資料插入到orders資料表中
-  const add_order_sql = "INSERT INTO orders (order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  const order_values = [order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status];
-  db.connection.query(add_order_sql, order_values, (err, result) => {
-    if (err) throw err;
-
-    // 將訂單商品細節插入到order_detail資料表中
-    order_details.forEach(detail => {
-      const { product_id, quantity, price } = detail;
-      const add_detail_sql = "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
-      const detail_values = [order_id, product_id, quantity, price];
-      db.connection.query(add_detail_sql, detail_values, (err, result) => {
-        if (err) throw err;
-
-        // 更新product資料表中的庫存數量
-        const update_product_sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
-        const update_values = [quantity, product_id];
-        db.connection.query(update_product_sql, update_values, (err, result) => {
+      // 將訂單商品細節插入到order_detail資料表中
+      order_details.forEach(detail => {
+        const { product_id, quantity, price } = detail;
+        const add_detail_sql = "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+        const detail_values = [order_id, product_id, quantity, price];
+        query(add_detail_sql, detail_values, (err, result) => {
           if (err) throw err;
+
+          const update_product_sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+          const update_values = [quantity, product_id];
+          query(update_product_sql, update_values, (err, result) => {
+            if (err) throw err;
+          });
         });
       });
-    });
 
-    // 回傳新增訂單的order_id
-    res.status(201).json({ order_id });
-  });
+      res.status(201).json({
+        success: true,
+        message: `訂單新增 ${result.affectedRows}筆 成功`order_id,
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "伺服器錯誤",
+    });
+  }
 });
 
 

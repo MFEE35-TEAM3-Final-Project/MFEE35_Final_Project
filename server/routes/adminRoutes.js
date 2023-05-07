@@ -102,7 +102,7 @@ router.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, matchAdmin.password);
       if (isMatch) {
         // 密碼正確
-        let expDate = Date.now() + 1000 * 60 * 60 * 24;
+        let expDate = Date.now() + 10000 * 60 * 60 * 24;
         const tokenObj = {
           _id: matchAdmin.admin_id,
           email: matchAdmin.email,
@@ -134,7 +134,7 @@ router.post("/login", async (req, res) => {
 });
 
 // check
-router.get(
+router.post(
   "/check",
   adminPassport,
   (req, res) => {
@@ -436,14 +436,88 @@ router.delete("/food/food_id=:food_id", adminPassport, async (req, res) => {
 });
 
 //查詢全部訂單 須加上 會員驗證/管理員驗證
-router.get('/orders', async (req, res) => {
+// router.get('/orders', adminPassport, async (req, res) => {
+//   try {
+//     const getOrdersSql = `SELECT * FROM orders`;
+//     const getOrdersResults = await query(getOrdersSql);
+//     if (getOrdersResults.length > 0) {
+//       const orderIds = getOrdersResults.map(orders => `'${orders.order_id}'`).join(',');
+//       const getOrderDetailsSql = `SELECT * FROM order_details WHERE order_id IN (${orderIds})`;
+//       const getOrderDetailsResults = await query(getOrderDetailsSql);
+//       const orders = getOrdersResults.map(orders => {
+//         orders.order_details = getOrderDetailsResults.filter(detail => detail.order_id === orders.order_id);
+//         return orders;
+//       });
+//       res.status(200).json({
+//         success: true,
+//         data: orders,
+//       });
+//     } else {
+//       return res.status(404).json({
+//         success: false,
+//         message: "沒有任何紀錄"
+//       });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Server error',
+//     });
+//   }
+// });
+
+
+//根據狀態來查詢訂單(管理員)
+
+router.get('/orders', adminPassport, async (req, res) => {
   try {
-    const queryt = `SELECT * FROM orders`;
-    const results = await query(queryt);
-    res.status(200).json({
-      success: true,
-      data: results,
-    });
+    let getquery = 'SELECT * FROM orders WHERE 1=1';
+    const params = [];
+
+    // 如果有產品ID參數，則加上產品ID條件
+    if (req.query.product_id) {
+      const productId = req.query.product_id;
+      getquery += ' AND order_id IN (SELECT order_id FROM order_details WHERE product_id = ?)';
+      params.push(productId);
+    }
+
+    // 如果有狀態參數，則加上狀態條件
+    if (req.query.status) {
+      const status = req.query.status;
+      getquery += ' AND status = ?';
+      params.push(status);
+    }
+
+    // 如果有時間範圍參數，則加上時間範圍條件
+    if (req.query.start_date && req.query.end_date) {
+      const startDate = req.query.start_date;
+      const endDate = req.query.end_date;
+      getquery += ' AND order_time BETWEEN ? AND ?';
+      params.push(startDate, endDate);
+    }
+
+    // 執行查詢
+    const getOrdersResults = await query(getquery, params);
+
+    if (getOrdersResults.length > 0) {
+      const orderIds = getOrdersResults.map(orders => `'${orders.order_id}'`).join(',');
+      const getOrderDetailsSql = `SELECT * FROM order_details WHERE order_id IN (${orderIds})`;
+      const getOrderDetailsResults = await query(getOrderDetailsSql);
+      const orders = getOrdersResults.map(orders => {
+        orders.order_details = getOrderDetailsResults.filter(detail => detail.order_id === orders.order_id);
+        return orders;
+      });
+      res.status(200).json({
+        success: true,
+        data: orders,
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "沒有任何符合條件的紀錄"
+      });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -452,129 +526,87 @@ router.get('/orders', async (req, res) => {
     });
   }
 });
-//根據狀態來查詢訂單(管理員)
-router.get("/orders/status/:status", (req, res) => {
-  const status = req.params.status;
-  const queryt = `SELECT * FROM orders WHERE status = ?`;
-  query(queryt, [status], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "Server error",
-      });
-      return;
-    }
 
-    if (results.length === 0) {
-      res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-      return;
-    }
 
-    res.status(200).json({
-      success: true,
-      data: results,
+router.put('/orders/:order_id', adminPassport, async (req, res) => {
+  try {
+    const orderId = req.params.order_id;
+    const {
+      user_id,
+      phone,
+      name,
+      coupon_id,
+      total_quantity,
+      total_price,
+      payment_method,
+      shipping_method,
+      shipping_address,
+      ship_store,
+      status
+    } = req.body;
+
+    const updateSql = "UPDATE orders SET user_id = ?, phone = ?, name = ?, coupon_id = ?, total_quantity = ?, total_price = ?, payment_method = ?, shipping_method = ?, shipping_address = ?, ship_store = ?, status = ? WHERE order_id = ?";
+    const params = [
+      user_id,
+      phone,
+      name,
+      coupon_id,
+      total_quantity,
+      total_price,
+      payment_method,
+      shipping_method,
+      shipping_address,
+      ship_store,
+      status,
+      orderId
+    ];
+    const { affectedRows } = await query(updateSql, params);
+
+    if (affectedRows > 0) {
+      res.status(200).json({
+        success: true,
+        message: "已更新訂單",
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "更新訂單失敗",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      message: "伺服器錯誤",
     });
-  });
+  }
 });
 
+router.delete('/orders/:order_id', adminPassport, async (req, res) => {
+  try {
+    const orderId = req.params.order_id;
+    const deleteSql = 'DELETE FROM orders WHERE order_id = ?';
+    const { affectedRows } = await query(deleteSql, [orderId]);
 
-//根據訂單時間來查詢 (管理員)
-router.get("/orders/date/:start/:end", (req, res) => {
-  const start = req.params.start;
-  const end = req.params.end;
-  const query = `SELECT * FROM orders WHERE order_time BETWEEN ? AND ?`;
-  db.connection.query(query, [start, end], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "Server error",
+    if (affectedRows > 0) {
+      res.status(200).json({
+        success: true,
+        message: '已刪除訂單',
       });
-      return;
-    }
-
-    if (results.length === 0) {
-      res.status(404).json({
+    } else {
+      res.json({
         success: false,
-        message: "Order not found",
+        message: '刪除訂單失敗',
       });
-      return;
     }
-
-    res.status(200).json({
-      success: true,
-      data: results,
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      message: '伺服器錯誤',
     });
-  });
+  }
 });
 
-//根據產品來查詢訂單(管理員)
-router.get("/orders/product/:product_id", (req, res) => {
-  const product_id = req.params.product_id;
-  const query = `
-    SELECT orders.*, order_details.* 
-    FROM orders 
-    INNER JOIN order_details ON orders.order_id = order_details.order_id 
-    WHERE order_details.product_id = ?`;
-  db.connection.query(query, [product_id], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "Server error",
-      });
-      return;
-    }
-
-    if (results.length === 0) {
-      res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-      return;
-    }
-
-    const orders = {};
-
-    results.forEach((row) => {
-      const order_id = row.order_id;
-
-      if (!orders[order_id]) {
-        orders[order_id] = {
-          order_id: order_id,
-          user_id: row.user_id,
-          phone: row.phone,
-          name: row.name,
-          coupon_id: row.coupon_id,
-          total_quantity: row.total_quantity,
-          total_price: row.total_price,
-          payment_method: row.payment_method,
-          shipping_address: row.shipping_address,
-          ship_store: row.ship_store,
-          status: row.status,
-          order_details: [],
-        };
-      }
-
-      const order_detail = {
-        order_detail_id: row.order_detail_id,
-        product_id: row.product_id,
-        quantity: row.quantity,
-        price: row.price,
-      };
-
-      orders[order_id].order_details.push(order_detail);
-    });
-
-    res.status(200).json({
-      success: true,
-      data: Object.values(orders),
-    });
-  });
-});
 
 module.exports = router;
