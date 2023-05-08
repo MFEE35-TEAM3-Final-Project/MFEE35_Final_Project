@@ -1,36 +1,35 @@
-import React, { useState } from 'react';
-import { FaUser, FaShoppingCart, FaCaretRight, } from 'react-icons/fa';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { FaUser, FaShoppingCart, FaCaretRight } from "react-icons/fa";
+import axios from "axios";
+
 function Nav() {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  React.useEffect(() => {
-    checkToken();
-  }, []);
+  // useEffect(() => {
+  //   checkToken();
+  // }, []);
 
-  const checkToken = () => {
-    const jwtToken = document.cookie.replace(
-      /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    );
+  // const checkToken = () => {
+  //   const jwtToken = document.cookie.replace(
+  //     /(?:(?:^|.*;\s*)jwtToken\s*=\s*([^;]*).*$)|^.*$/,
+  //     "$1"
+  //   );
 
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/user/check`, {
-        headers: {
-          Authorization: jwtToken,
-        },
-      })
-      .then((res) => {
-        setIsAuthenticated(true);
-      })
-      .catch((err) => {
-        setIsAuthenticated(false);
-      });
-  };
-
+  //   // axios.defaults.headers.common["Authorization"] = jwtToken;
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/api/user/check`)
+  //     .then((res) => {
+  //       setIsAuthenticated(true);
+  //     })
+  //     .catch((err) => {
+  //       setIsAuthenticated(false);
+  //     });
+  // };
+  const isAuthenticated = localStorage.getItem("token") !== null;
   const handleLogout = () => {
-    document.cookie = "jwtToken=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
-    setIsAuthenticated(false);
+    localStorage.removeItem("token");
+    document.cookie = "jwtToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    window.location.reload();
   };
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -45,51 +44,58 @@ function Nav() {
         <span></span>
         <span></span>
         <span></span>
-        <ul id="menu" className={isMenuOpen ? 'open' : ''}>
-          <li id='home-logo'><a href="/">LOGO</a></li>
+        <ul id="menu" className={isMenuOpen ? "open" : ""}>
+          <li id="home-logo">
+            <a href="/">LOGO</a>
+          </li>
 
-          
-            {isAuthenticated ? 
-            (<li>
-              <FaUser className="me-2" onClick={handleLogout}/>登出
-            </li>) 
-            :(<a href='/login'><li>
-              <FaUser className="me-2"  />登入
-            </li></a>)}
-
-          
-
+          {isAuthenticated ? (
+            <li>
+              <a href="#" onClick={handleLogout}>
+                <FaUser className="me-2" />
+                登出
+              </a>
+            </li>
+          ) : (
+            <li>
+              <a href="/login">
+                <FaUser className="me-2" />
+                登入
+              </a>
+            </li>
+          )}
 
           <a href="#">
             <li>
-              <FaShoppingCart className="me-2" />購物車
+              <FaShoppingCart className="me-2" />
+              購物車
             </li>
           </a>
 
           <a href="/calculator">
-            <li className="me-auto" style={{ position: 'relative' }}>
+            <li className="me-auto" style={{ position: "relative" }}>
               計算機
               <FaCaretRight
                 aria-hidden="true"
-                style={{ position: 'absolute', right: 0, top: '50%' }}
+                style={{ position: "absolute", right: 0, top: "50%" }}
               />
             </li>
           </a>
           <a href="/Blog">
-            <li className="me-auto" style={{ position: 'relative' }}>
+            <li className="me-auto" style={{ position: "relative" }}>
               部落格
               <FaCaretRight
                 aria-hidden="true"
-                style={{ position: 'absolute', right: 0, top: '50%' }}
+                style={{ position: "absolute", right: 0, top: "50%" }}
               />
             </li>
           </a>
           <a href="#">
-            <li className="me-auto" style={{ position: 'relative' }}>
+            <li className="me-auto" style={{ position: "relative" }}>
               商城
               <FaCaretRight
                 aria-hidden="true"
-                style={{ position: 'absolute', right: 0, top: '50%' }}
+                style={{ position: "absolute", right: 0, top: "50%" }}
               />
             </li>
           </a>

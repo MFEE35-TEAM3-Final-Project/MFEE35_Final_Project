@@ -8,7 +8,7 @@ const UserLogin = () => {
   // DATA
   const [userData, setUserData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [backData, setBackData] = useState({});
   const [jwtData, setJwtData] = useState("");
@@ -28,6 +28,7 @@ const UserLogin = () => {
         document.cookie = `jwtToken=${token}; expires=${expDate.toUTCString()}`;
         setNowTime({ now: new Date(), tokenTime: expDate });
         setBackData(res.data);
+        localStorage.setItem("token", res.data.token);
       })
       .catch((err) => {
         localStorage.removeItem("token");
