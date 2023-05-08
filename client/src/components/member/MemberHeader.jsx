@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 /* Set the width of the side navigation to 250px */
 function openNav() {
@@ -25,33 +26,33 @@ function MemberHeader() {
           <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>
             &times;
           </a>
-          <a href="#">
-            <li>首頁</li>
-          </a>
-          <a href="#">
+          <Link to="/MemberHomePage">
+            <li>會員首頁</li>
+          </Link>
+          <Link to="/member-data">
             <li>會員資料</li>
-          </a>
-          <a href="#">
+          </Link>
+          <Link to="/calculator">
             <li>計算機</li>
-          </a>
-          <a href="#">
+          </Link>
+          <Link to="/diet-record">
             <li>飲食紀錄</li>
-          </a>
-          <a href="#">
+          </Link>
+          <Link to="/data-charts">
             <li>數據圖表</li>
-          </a>
-          <a href="#">
+          </Link>
+          <Link to="/tracking-list">
             <li>追蹤清單</li>
-          </a>
-          <a href="#">
+          </Link>
+          <Link to="/order-history">
             <li>訂單查詢</li>
-          </a>
-          <a href="#">
+          </Link>
+          <Link to="/blog">
             <li>部落格</li>
-          </a>
-          <a href="#">
+          </Link>
+          <Link to="/shop">
             <li>商城</li>
-          </a>
+          </Link>
         </div>
         <div className="logout">
           <button id="signoutBtn">登出</button>

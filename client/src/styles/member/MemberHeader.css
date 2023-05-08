@@ -78,6 +78,7 @@
     display: block;
     transition: 0.3s;
     white-space: nowrap;
+    text-align: left;
 }
 
 /* When you mouse over the navigation links, change their color */

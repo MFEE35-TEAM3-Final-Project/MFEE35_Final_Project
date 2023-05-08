@@ -1,29 +1,31 @@
 import React from "react";
 import MemberHeader from "../../components/member/MemberHeader";
-// import MemberArea from "./components/MemberArea";
 import Footer from "../../components/member/Footer";
 import BarChart from "../../components/member/BarChart.jsx";
 
 import "bootstrap/dist/css/bootstrap.css";
+import "../../styles/member/memberHome.css";
+import "../../styles/member/user_foodRecord.css";
 
 import target from "../../../src/images/memberrecrod/target.png";
 import fork from "../../../src/images/memberrecrod/fork.png";
 import logo from "../../../src/images/logo/logo.png";
 
-function memberHome() {
+function MemberHomePage() {
   return (
-    <div>
+    <div style={{ backgroundColor: "#F7F4E9" }}>
       <MemberHeader />
+
       <div className="wrapper">
         {/* 其他 member area 內容 */}
         <div className="memberTitle">
-          <h3>會員專區</h3>
+          <h3 id="titleH3">會員專區</h3>
         </div>
 
         <div className="container">
           {/* 會員資訊 */}
           <div className="row memberInfo">
-            <form className="col-12" action="">
+            <form id="memberHomeForm" className="col-12" action="">
               <div className="row">
                 <div className="col-4">
                   <p style={{ minWidth: "80px" }} htmlFor="userNumber">
@@ -139,9 +141,10 @@ function memberHome() {
           </div>
         </div>
       </div>
+
       <Footer />
     </div>
   );
 }
 
-export default memberHome;
+export default MemberHomePage;
