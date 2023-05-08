@@ -7,53 +7,42 @@ import Footer from "../components/footer";
 import { Helmet } from "react-helmet";
 
 const StorePage = () => {
-  // const images = [
-  //   "./image/store/change1.png",
-  //   "./image/store/change2.jpg",
-  //   "./image/store/change3.jpg",
-  //   "./image/store/change4.jpg",
-  //   "./image/store/change5.jpg",
-  // ];
-  // const text = ["Text 1", "Text 2"];
-
   // 設定秒數
   const [second, setSecond] = useState("1");
-  // 設定輪播圖事件 已寫好axios尚未寫進return裡
-  const [caroesel, setCarousel] = useState(images[0]);
-  // 設定輪播圖圖片 已寫好axios尚未寫進return裡
+  const [numIds, setNumIds] = useState();
+  const [caroesel, setCarousel] = useState("");
   const [images, setImages] = useState("");
-  // 設定活動標題 已寫好axios尚未寫進return裡
-  const [eventTitle, setEventTitle] = useState(text[0]);
-  // 設定活動文字 已寫好axios尚未寫進return裡
-  const [text, setText] = useState("");
+  const [eventTitles, setEventTitle] = useState("");
+  const [texts, setText] = useState("");
 
-  // 試用哲銓的api,setCarousel需要帶入回傳的資料項
-  const getCarousel = () => {
+  // 試用哲銓的api(活動)需要帶入回傳的資料項
+  useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/activity/getActivity`)
       .then((res) => {
         console.log(res);
-        setImages(res.data.activityUrl);
-        setText(res.data.activityName);
+        setImages(res.data.map((image) => image.activityUrl));
+        setEventTitle(res.data.map((eventTitle) => eventTitle.activityName));
+        const ids = res.data.map((numId) => numId.activityId);
+        setNumIds(ids.length);
       })
       .catch((err) => {
         console.error(err);
       });
-  };
+  }, []);
 
   // 環境重新渲染的function
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setSecond((prevCount) => (prevCount % 5) + 1);
+      setSecond((prevCount) => (prevCount % numIds) + 1);
     }, 2000);
 
     setCarousel(images[second - 1]);
-    setEventTitle(text[second - 2]);
+    setText(eventTitles[second - 1]);
 
     return () => clearInterval(intervalId);
-  }, [second, images, text]);
+  }, [second, numIds]);
 
-  // 初始渲染到DOM的東西
   return (
     <div>
       <Helmet>
@@ -64,14 +53,6 @@ const StorePage = () => {
       </Helmet>
 
       <div className="firstP">
-        <button
-          className="btn btn-danger mt-5"
-          onClick={() => {
-            getCarousel();
-          }}
-        >
-          test
-        </button>
         <div>
           <p className="topicText">PRODUCT</p>
         </div>
@@ -81,13 +62,7 @@ const StorePage = () => {
           </div>
           <a href="http://localhost:3000/goods" rel="noreferrer">
             <div className="changingImg">
-              <img
-                className="chPic"
-                src={caroesel}
-                // src={"./image/store/change1.png"}
-                alt="輪播圖"
-                // ref={(ref) => (this.chPic = ref)}
-              />
+              <img className="chPic" src={caroesel} alt="輪播圖" />
             </div>
           </a>
           <a
@@ -96,7 +71,7 @@ const StorePage = () => {
             rel="noreferrer"
             target="_blank"
           >
-            {eventTitle}
+            {texts}
           </a>
         </div>
       </div>
