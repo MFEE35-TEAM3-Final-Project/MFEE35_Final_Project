@@ -15,7 +15,7 @@ import Articles from "./pages/admin/Article";
 import Food from "./pages/user/Food";
 import Blog from "./pages/blog";
 import Calculator from "./pages/Calculator"
-
+import Article from "./pages/Article";
 function App() {
   return (
     <div className="App">
@@ -25,6 +25,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/article" element={<Article />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           {/* user page */}
@@ -32,6 +33,7 @@ function App() {
             <Route path="/user/profile" element={<UserProfiles />} />
             <Route path="/user/selfies" element={<UserSelfies />} />
           </Route>
+          <Route path="/article" element={<Article />} />
           <Route path="/articles" element={<Articles />} />
           <Route path="/food" element={<Food />} />
         </Routes>
