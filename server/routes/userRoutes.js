@@ -139,7 +139,7 @@ router.post("/login", async (req, res) => {
 });
 
 // check
-router.get(
+router.post(
   "/check",
   userPassport,
   (req, res) => {
@@ -572,31 +572,74 @@ router.post('/orders', userPassport, async (req, res) => {
       ship_store,
       order_details
     } = req.body;
-    const postsql = "INSERT INTO orders (order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    const order_values = [order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status];
-    const result = await query(postsql, order_values, (err, result) => {
-      if (err) throw err;
 
-      // 將訂單商品細節插入到order_detail資料表中
-      order_details.forEach(detail => {
-        const { product_id, quantity, price } = detail;
-        const add_detail_sql = "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
-        const detail_values = [order_id, product_id, quantity, price];
-        query(add_detail_sql, detail_values, (err, result) => {
-          if (err) throw err;
-
-          const update_product_sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
-          const update_values = [quantity, product_id];
-          query(update_product_sql, update_values, (err, result) => {
-            if (err) throw err;
-          });
-        });
+    if (!order_details || order_details.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "訂單詳情為空",
       });
+    }
 
-      res.status(201).json({
-        success: true,
-        message: `訂單新增 ${result.affectedRows}筆 成功`order_id,
+    // 驗證商品庫存
+    const invalidDetails = await Promise.all(
+      order_details.map(async (detail) => {
+        const { product_id, quantity } = detail;
+        const [product] = await query(
+          "SELECT stock_quantity FROM products WHERE product_id = ?",
+          [product_id]
+        );
+        if (product.stock_quantity < quantity) {
+          return product_id;
+        }
+        return null;
+      })
+    ).then((productIds) => productIds.filter((id) => id !== null));
+
+    if (invalidDetails.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `商品 ${invalidDetails.join(", ")} 庫存不足`,
       });
+    }
+
+    const postSql =
+      "INSERT INTO orders (order_id, user_id, phone, name, coupon_id, total_quantity, total_price, payment_method, shipping_address, ship_store, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const orderValues = [
+      order_id,
+      user_id,
+      phone,
+      name,
+      coupon_id,
+      total_quantity,
+      total_price,
+      payment_method,
+      shipping_address,
+      ship_store,
+      status,
+    ];
+    const result = await query(postSql, orderValues);
+
+    const detailInsertPromises = order_details.map((detail) => {
+      const { product_id, quantity, price } = detail;
+      const addDetailSql =
+        "INSERT INTO order_details (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
+      const detailValues = [order_id, product_id, quantity, price];
+      return query(addDetailSql, detailValues);
+    });
+
+    const detailUpdatePromises = order_details.map((detail) => {
+      const { product_id, quantity } = detail;
+      const updateProductSql =
+        "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ?";
+      const updateValues = [quantity, product_id];
+      return query(updateProductSql, updateValues);
+    });
+
+    await Promise.all([...detailInsertPromises, ...detailUpdatePromises]);
+
+    res.status(201).json({
+      success: true,
+      message: `訂單新增成功，訂單ID為 ${order_id}`,
     });
   } catch (err) {
     console.log(err);
@@ -608,194 +651,288 @@ router.post('/orders', userPassport, async (req, res) => {
 });
 
 
-
-
 //會員查詢訂單 
-router.get("/users/:user_id/orders", (req, res) => {
-  const user_id = req.params.user_id;
-  const query = `SELECT * FROM orders WHERE user_id = ?`;
-  db.connection.query(query, [user_id], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
+router.get('/orders', userPassport, async (req, res) => {
+  try {
+    const user_id = req.body.user_id;
+    const getOrdersSql = "SELECT * FROM orders WHERE user_id = ?";
+    const orders = await query(getOrdersSql, [user_id]);
+
+    if (!orders.length) {
+      return res.status(404).json({
         success: false,
-        message: "Server error",
+        message: "找不到任何訂單",
       });
-      return;
     }
 
-    if (results.length === 0) {
-      res.status(404).json({
+    const orderDetailsPromises = orders.map(async order => {
+      const { order_id } = order;
+      const getOrderDetailsSql = "SELECT order_details.quantity, order_details.price, products.* FROM order_details JOIN products ON order_details.product_id = products.product_id WHERE order_id = ?";
+      const orderDetails = await query(getOrderDetailsSql, [order_id]);
+      return {
+        ...order,
+        order_details: orderDetails,
+      };
+    });
+
+    const ordersWithDetails = await Promise.all(orderDetailsPromises);
+
+    res.status(200).json({
+      success: true,
+      data: ordersWithDetails,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "伺服器錯誤",
+    });
+  }
+});
+
+//刪除
+router.delete('/orders/:order_id', userPassport, async (req, res) => {
+  try {
+    const user_id = req.body.user_id;
+    const order_id = req.params.order_id;
+
+    // 確認訂單存在且屬於該會員
+    const [order] = await query("SELECT * FROM orders WHERE order_id = ? AND user_id = ?", [order_id, user_id]);
+    if (!order) {
+      return res.status(404).json({
         success: false,
-        message: "Order not found",
+        message: "找不到該訂單",
       });
-      return;
     }
 
-    const orders = [];
-
-    results.forEach((order) => {
-      const detailQuery = `SELECT * FROM order_details WHERE order_id = ?`;
-      db.connection.query(detailQuery, [order.order_id], (error, results) => {
-        if (error) {
-          console.error(error);
-          res.status(500).json({
-            success: false,
-            message: "Server error",
-          });
-          return;
-        }
-
-        const orderWithDetails = {
-          order_id: order.order_id,
-          user_id: order.user_id,
-          phone: order.phone,
-          name: order.name,
-          coupon_id: order.coupon_id,
-          total_quantity: order.total_quantity,
-          total_price: order.total_price,
-          payment_method: order.payment_method,
-          shipping_address: order.shipping_address,
-          ship_store: order.ship_store,
-          status: order.status,
-          order_details: results,
-        };
-
-        orders.push(orderWithDetails);
-
-        if (orders.length === results.length) {
-          res.status(200).json({
-            success: true,
-            data: orders,
-          });
-        }
+    // 刪除訂單詳情並還原產品庫存
+    const orderDetails = await query("SELECT * FROM order_details WHERE order_id = ?", [order_id]);
+    const detailDeletePromises = orderDetails.map((detail) => {
+      const { product_id, quantity } = detail;
+      const updateProductSql = "UPDATE products SET stock_quantity = stock_quantity + ? WHERE product_id = ?";
+      const updateValues = [quantity, product_id];
+      return query(updateProductSql, updateValues).then(() => {
+        const deleteDetailSql = "DELETE FROM order_details WHERE order_id = ? AND product_id = ?";
+        const deleteValues = [order_id, product_id];
+        return query(deleteDetailSql, deleteValues);
       });
     });
-  });
+
+    await Promise.all(detailDeletePromises);
+
+    // 刪除訂單主檔
+    const deleteOrderSql = "DELETE FROM orders WHERE order_id = ?";
+    await query(deleteOrderSql, [order_id]);
+
+    res.status(200).json({
+      success: true,
+      message: `訂單已刪除，訂單ID為 ${order_id}`,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "伺服器錯誤",
+    });
+  }
 });
 
 
-// 根據訂單編號查詢單個訂單 
-router.get("/users/:user_id/orders", (req, res) => {
-  const user_id = req.params.user_id;
-  const query = `SELECT * FROM orders WHERE user_id = ?`;
-  db.connection.query(query, [user_id], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "Server error",
-      });
-      return;
-    }
+app.post('/cart/add', async (req, res) => {
+  const { productId, quantity } = req.body;
+  const userId = req.user ? req.user.id : null;
 
-    if (results.length === 0) {
-      res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-      return;
-    }
-
-    const orders = [];
-
-    results.forEach((order) => {
-      const detailQuery = `SELECT * FROM order_details WHERE order_id = ?`;
-      db.connection.query(detailQuery, [order.order_id], (error, results) => {
-        if (error) {
-          console.error(error);
-          res.status(500).json({
-            success: false,
-            message: "Server error",
-          });
-          return;
-        }
-
-        const orderWithDetails = {
-          order_id: order.order_id,
-          user_id: order.user_id,
-          phone: order.phone,
-          name: order.name,
-          coupon_id: order.coupon_id,
-          total_quantity: order.total_quantity,
-          total_price: order.total_price,
-          payment_method: order.payment_method,
-          shipping_address: order.shipping_address,
-          ship_store: order.ship_store,
-          status: order.status,
-          order_details: results,
-        };
-
-        orders.push(orderWithDetails);
-
-        if (orders.length === results.length) {
-          res.status(200).json({
-            success: true,
-            data: orders,
-          });
-        }
-      });
+  if (!userId) {
+    // 如果用戶未登陸，將購物車資訊寫入 cookies 中
+    const cartItems = getCartItemsFromCookies(req.cookies);
+    addCartItemToCookies(cartItems, productId, quantity);
+    res.status(200).json({ success: true });
+  } else {
+    // 如果用戶已登陸，將購物車資訊寫入資料庫中
+    userPassport(req, res, async () => {
+      await addCartItemToDatabase(req.user.id, productId, quantity);
+      res.status(200).json({ success: true });
     });
-  });
+  }
 });
 
-//根據email查詢訂單(非會員)
-router.get("/orders/order/:email", (req, res) => {
-  const email = req.params.email;
-  const query = `SELECT * FROM orders WHERE email = ?`;
-  db.connection.query(query, [email], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
+app.post('/cart/add', userPassport, async (req, res) => {
+  try {
+    const user_id = req.body.user_id;
+    const product_id = req.body.product_id;
+    const quantity = req.body.quantity;
+
+    // 檢查用戶ID和商品ID是否存在
+    if (!user_id || !product_id) {
+      res.status(400).json({
         success: false,
-        message: "Server error",
+        message: "product ID are required"
       });
       return;
     }
 
-    if (results.length === 0) {
-      res.status(404).json({
+    // 檢查數量是否大於0
+    if (quantity <= 0) {
+      res.status(400).json({
         success: false,
-        message: "Order not found1",
+        message: "數量必須大於0"
       });
       return;
     }
 
-    const order = results[0];
-
-    const detailQuery = `SELECT * FROM order_details WHERE order_id IN ( SELECT order_id FROM orders WHERE email = ? )`;
-    db.connection.query(detailQuery, [email], (error, results) => {
+    // 檢查是否已經存在相同的記錄
+    const query = `SELECT * FROM shopping_cart WHERE user_id = ? AND product_id = ?`;
+    query(query, [user_id, product_id], (error, results) => {
       if (error) {
         console.error(error);
         res.status(500).json({
           success: false,
-          message: "Server error2",
+          message: "Server error "
         });
         return;
       }
 
-      const orderWithDetails = {
-        order_id: order.order_id,
-        user_id: order.user_id,
-        phone: order.phone,
-        name: order.name,
-        coupon_id: order.coupon_id,
-        total_quantity: order.total_quantity,
-        total_price: order.total_price,
-        payment_method: order.payment_method,
-        shipping_address: order.shipping_address,
-        ship_store: order.ship_store,
-        status: order.status,
-        order_details: results,
-      };
+      if (results.length > 0) {
+        // 如果存在相同的記錄，更新數量
+        const updateQuery = `UPDATE shopping_cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?`;
+        db.connection.query(updateQuery, [quantity, user_id, product_id], (error, results) => {
+          if (error) {
+            console.error(error);
+            res.status(500).json({
+              success: false,
+              message: "Server error "
+            });
+            return;
+          }
 
-      res.status(200).json({
-        success: true,
-        data: orderWithDetails,
+          res.status(200).json({
+            success: true,
+            message: "商品數量更新成功"
+          });
+        });
+      } else {
+        // 如果不存在相同的記錄，插入新的購物車記錄
+        const insertQuery = `INSERT INTO shopping_cart (user_id, product_id, quantity) VALUES (?, ?, ?)`;
+        db.connection.query(insertQuery, [user_id, product_id, quantity], (error, results) => {
+          if (error) {
+            console.error(error);
+            res.status(500).json({
+              success: false,
+              message: "Server error "
+            });
+            return;
+          }
+
+          res.status(200).json({
+            success: true,
+            message: "商品已成功加入購物車"
+          });
+        });
+      }
+    })
+
+  };
+});
+
+app.put('/cart/change', (req, res) => {
+  const user_id = req.body.user_id;
+  const product_id = req.body.product_id;
+  const quantity = req.body.quantity;
+
+
+  // 檢查數量是否大於0
+  if (quantity <= 0) {
+    res.status(400).json({
+      success: false,
+      message: "數量必須大於0"
+    });
+    return;
+  }
+
+  // 檢查是否已經存在相同的記錄
+  const query = `SELECT * FROM shopping_cart WHERE user_id = ? AND product_id = ?`;
+  db.connection.query(query, [user_id, product_id], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error "
       });
+      return;
+    }
+
+    if (results.length > 0) {
+      // 如果存在相同的記錄，更新數量
+      const updateQuery = `UPDATE shopping_cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?`;
+      db.connection.query(updateQuery, [quantity, user_id, product_id], (error, results) => {
+        if (error) {
+          console.error(error);
+          res.status(500).json({
+            success: false,
+            message: "Server error "
+          });
+          return;
+        }
+
+        res.status(200).json({
+          success: true,
+          message: "商品數量更新成功"
+        });
+      });
+    } else {
+      // 如果不存在相同的記錄，插入新的購物車記錄
+      const insertQuery = `INSERT INTO shopping_cart (user_id, product_id, quantity) VALUES (?, ?, ?)`;
+      db.connection.query(insertQuery, [user_id, product_id, quantity], (error, results) => {
+        if (error) {
+          console.error(error);
+          res.status(500).json({
+            success: false,
+            message: "Server error "
+          });
+          return;
+        }
+
+        res.status(200).json({
+          success: true,
+          message: "商品已成功加入購物車"
+        });
+      });
+    }
+  });
+});
+
+app.delete("/cart/delete/:product_id", (req, res) => {
+  const user_id = req.body.user_id;
+  const product_id = req.params.product_id;
+
+  // 刪除購物車記錄
+  const query = `DELETE FROM shopping_cart WHERE product_id = ? AND user_id = ?`;
+  db.connection.query(query, [product_id, user_id], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error"
+      });
+      return;
+    }
+    if (results.affectedRows === 0) {
+      // 購物車記錄不存在
+      res.status(404).json({
+        success: false,
+        message: "Product not found in cart"
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted from cart successfully"
     });
   });
 });
+
+
 
 
 

@@ -2,15 +2,19 @@
 orders
 管理員專屬
 GET /admin/orders：查詢所有訂單 V 差驗證
-GET /admin/orders/:order_id：查詢單一訂單 這部分代定 可能需要
+
 GET /orders/product/:product_id：根據產品查詢訂單 V 驗證
 GET /orders/status/:status：根據訂單狀態查詢訂單 V 驗證
-PATCH /admin/orders/:order_id：更新訂單狀態 X
-DELETE /users/:user_id/orders/:order_id：刪除訂單 X
+PATCH /admin/orders/:order_id：更新訂單狀態 V
+DELETE /users/:user_id/orders/:order_id：刪除訂單 V
+
+POSTAPI 內插入寄送MAIL的功能
+訂單的資訊要驗證
 
 會員專屬
-GET /users/:user_id/orders：查詢會員所有訂單 V 差驗證
-POST /users/:user_id/orders：新增訂單 V 差驗證
+GET /users//orders：查詢會員所有訂單 V
+POST /users/:user_id/orders：新增訂單 V 
+DELETE /users/:user_id/orders/:order_id：刪除訂單 V
 
 共用
 GET /orders/search：查詢訂單 要合併
@@ -20,14 +24,19 @@ GET /orders/email/:email：根據 email 查詢訂單 合併
 cart
 會員專屬
 GET /users/:user_id/carts：查詢會員購物車
-GET /users/:user_id/carts/:cart_id：查詢會員單一購物車
+
 POST /users/:user_id/carts：新增購物車
+
+put
+先運行產品庫存驗證檢查庫存 才可以增加
+每次調整數量、增加數量都要送一次API
+
+
 DELETE /users/:user_id/carts/:cart_id：刪除購物車
-共用 加到 cookies
-POST /carts/:product_id：新增商品到購物車
-PATCH /users/:user_id/carts/:cart_id：更新購物車狀態
-DELETE /carts/:product_id：從購物車刪除商品
+
+
 //////////////////////
+
 favorite
 會員專屬
 GET /users/:user_id/favorites：查詢會員收藏

@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "38109a38-a99f-4c1a-b608-343acafd4d10",
+		"name": "order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:8080/api/admin/orders",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{admin}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/api/admin/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/api/admin/orders/狀態",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{admin}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/api/admin/orders?status=shipping&product_id=23",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"orders"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "shipping"
+						},
+						{
+							"key": "start",
+							"value": "2023-04-01",
+							"disabled": true
+						},
+						{
+							"key": "end",
+							"value": "2023-05-05",
+							"disabled": true
+						},
+						{
+							"key": "product_id",
+							"value": "23"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/api/admin/orders/:order_id",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "admintoken",
+						"value": "{{admin}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user_id\": \"user123\",\r\n  \"phone\": \"0912345678\",\r\n  \"name\": \"王大明\",\r\n  \"coupon_id\": \"coupon123\",\r\n  \"total_quantity\": 5,\r\n  \"total_price\": 1000,\r\n  \"payment_method\": \"credit card\",\r\n  \"shipping_method\": \"home delivery\",\r\n  \"shipping_address\": \"台北市中正區\",\r\n  \"ship_store\": \"711\",\r\n  \"status\": \"shipped\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/admin/orders/:order_id",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"orders",
+						":order_id"
+					],
+					"variable": [
+						{
+							"key": "order_id",
+							"value": "51edb84f-87c1-4010-a928-13d022879689"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/api/admin/orders/:order_id Copy",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{admin}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/admin/orders/:order_id",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"admin",
+						"orders",
+						":order_id"
+					],
+					"variable": [
+						{
+							"key": "order_id",
+							"value": "51edb84f-87c1-4010-a928-13d022879689"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user post order",
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user_id\": \"4152607872\",\r\n  \"phone\": \"0987654321\",\r\n  \"name\": \"John Doe\",\r\n  \"coupon_id\": null,\r\n  \"total_quantity\": 3,\r\n  \"total_price\": 1500,\r\n  \"payment_method\": \"credit_card\",\r\n  \"shipping_address\": \"No. 123, Main Street, Taipei City\",\r\n  \"ship_store\": \"My Store\",\r\n  \"order_details\": [\r\n    {\r\n      \"product_id\": 1,\r\n      \"quantity\": 2,\r\n      \"price\": 500\r\n    },\r\n    {\r\n      \"product_id\": 2,\r\n      \"quantity\": 1,\r\n      \"price\": 500\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/user/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user post order Copy",
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\":\"4152607872\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/user/orders/:order_id",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"orders",
+						":order_id"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "order_id",
+							"value": "5904f474-a1ae-4074-9ad1-4dd6abf19aea"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user get order",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{user}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\":\"4152607872\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/user/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "admin",
+			"value": ""
+		}
+	]
+}
