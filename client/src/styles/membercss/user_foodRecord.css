@@ -1,0 +1,259 @@
+.oneAndTwoAreaBg{
+  height: 300px;
+}
+
+.oneAreaTarget {
+  position: absolute;
+  top: 70px;
+  left: 70px;
+}
+
+.oneAreaTarget>div>img{
+  width: 50px;
+}
+
+
+/* 目標值的卡路里 */
+.oneAreaTargetValue{
+  position: absolute;
+  top:70px;
+  left: 150px;
+}
+
+.oneAreaTargetValue div:nth-child(1){
+  font-size: 50px;
+  position: absolute;
+  /* background-color: aqua; */
+  top: -15px;
+  text-align: right;
+  width: 120px;
+  font-weight: bolder;
+}
+
+.oneAreaTargetValue div:nth-child(2){
+  font-size: 20px;
+  /* position: absolute; */
+  /* background-color: aqua; */
+  padding-top: 44px;
+  width: 120px;
+  text-align: right;
+  font-weight: bolder;
+}
+/* 目標值的卡路里 */
+
+
+
+
+/* 已攝取的卡路里 */
+.oneAreaAlreadyEat {
+  position: absolute;
+  top: 170px;
+  left: 70px;
+}
+
+.oneAreaAlreadyEat>div>img{
+  width: 50px;
+}
+
+.oneAreaAlreadyEatValue{
+  position: absolute;
+  top:170px;
+  left: 150px;
+}
+
+.oneAreaAlreadyEatValue div:nth-child(1){
+  font-size: 50px;
+  position: absolute;
+  /* background-color: aqua; */
+  top: -15px;
+  text-align: right;
+  width: 130px;
+  font-weight: bolder;
+  /* background-color: bisque; */
+}
+
+.oneAreaAlreadyEatValue div:nth-child(2){
+  font-size: 20px;
+  /* position: absolute; */
+  /* background-color: aqua; */
+  padding-top: 44px;
+  width: 120px;
+  text-align: right;
+  font-weight: bolder;
+}
+/* 已攝取的卡路里 */
+
+
+/* 還有多少量可以吃 */
+.howMuchLeftBgDiv{ 
+  position: relative;
+}
+
+.howMuchLeftBgDiv img{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width:300px;
+}
+
+.howMuchLeftValue{
+  text-align: center;
+  font-weight: bolder;
+}
+
+.howMuchLeftValue div:nth-child(1){
+  font-size: 28px;
+  padding-top: 70px;
+}
+
+.howMuchLeftValue div:nth-child(2){
+  font-size: 80px;
+  position: absolute;
+  top: 100px;
+  left: 70px;
+}
+
+.howMuchLeftValue div:nth-child(3){
+  font-size: 28px;
+  padding-top: 100px;
+}
+/* 還有多少量可以吃 */
+
+
+/* 攝取營養量專區 */
+
+.ThreeAreaBg{
+  height: 150px;
+  font-size: 28px;
+  padding-top: 40px;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0px;
+  text-align: center;
+}
+
+.ThreeAreaBg>div>hr{
+  /* position: absolute; */
+  /* bottom: 10; */
+  /* width: 100px; */
+  margin: 3px 0 0;
+  border: 5px solid #3279e5;
+  border-radius: 5px 5px 5px 5px;
+}
+
+.ThreeAreaBg>div>div {
+  font-size: 35px;
+}
+
+/* 攝取營養量專區 */
+
+.editDetailsTable {
+  width: 100%;
+  height: 100%;
+  table-layout: fixed;
+  /* border-collapse: separate; */
+  /* border-spacing: 1px; */
+}
+
+.editDetailsTable {
+  width: 100%;
+  height: 100%;
+}
+
+.editDetailsBg {
+  display: flex;
+  justify-content: center;
+}
+
+.editDetails {
+  width: 700px;
+  border-radius: 3px;
+  height: 50px;
+  align-items: center;
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+.foodRecordBgDiv {
+  /* border: 5px solid #e93838; */
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.foodRecordBg {
+  display: flex;
+  background-color: rgb(245, 195, 195);
+  /* 寬度需要調整 */
+  width: 700px;
+  height: 100%;
+}
+
+.optionBreakfirstTitleBg{
+  display: flex;
+  align-items: center;
+}
+
+.optionBreakfirstTitle {
+  padding-left: 10px;
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+
+.optionTitleIcon {
+  object-fit: contain;
+  width: 40px;
+}
+
+
+.optionBreakfirstPlus {
+  text-align: right;
+}
+
+.optionBreakfirstPlus>img {
+  width: 20px;
+}
+
+/* 早餐的 */
+.addBrOptionIcon {
+  width: 20px;
+  transform: rotate(270deg);
+}
+
+/* 午餐的 */
+.addOptionIcon {
+  width: 20px;
+  transform: rotate(90deg);
+}
+
+th,td {
+  border: none;
+  padding: 5px 10px 5px 10px;
+  /* 可以添加 padding 讓內容與邊框有間距 */
+}
+
+th {
+  min-width: 50px;
+}
+/* td {
+  word-wrap: break-word;
+  white-space: nowrap;
+} */
+
+tr:first-child {
+  background-color: lightgray;
+}
+
+
+.optionLunchPlus {
+  text-align: right;
+}
+
+.optionLunchPlus>img {
+  width: 20px;
+}
+
+.foodName {
+  font-weight: bolder;
+}
