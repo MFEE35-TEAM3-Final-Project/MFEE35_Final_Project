@@ -30,68 +30,7 @@ GET / orders / email /: email：根據 email 查詢訂單 合併
 /////////////////////
 
 // 根據訂單編號查詢單個訂單 
-router.get("/orders", (req, res) => {
-  const user_id = req.params.user_id;
-  const query = `SELECT * FROM orders WHERE user_id = ?`;
-  db.connection.query(query, [user_id], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "Server error",
-      });
-      return;
-    }
 
-    if (results.length === 0) {
-      res.status(404).json({
-        success: false,
-        message: "Order not found",
-      });
-      return;
-    }
-
-    const orders = [];
-
-    results.forEach((order) => {
-      const detailQuery = `SELECT * FROM order_details WHERE order_id = ?`;
-      db.connection.query(detailQuery, [order.order_id], (error, results) => {
-        if (error) {
-          console.error(error);
-          res.status(500).json({
-            success: false,
-            message: "Server error",
-          });
-          return;
-        }
-
-        const orderWithDetails = {
-          order_id: order.order_id,
-          user_id: order.user_id,
-          phone: order.phone,
-          name: order.name,
-          coupon_id: order.coupon_id,
-          total_quantity: order.total_quantity,
-          total_price: order.total_price,
-          payment_method: order.payment_method,
-          shipping_address: order.shipping_address,
-          ship_store: order.ship_store,
-          status: order.status,
-          order_details: results,
-        };
-
-        orders.push(orderWithDetails);
-
-        if (orders.length === results.length) {
-          res.status(200).json({
-            success: true,
-            data: orders,
-          });
-        }
-      });
-    });
-  });
-});
 
 //根據email查詢訂單(非會員)
 router.get("/orders/:email", (req, res) => {
