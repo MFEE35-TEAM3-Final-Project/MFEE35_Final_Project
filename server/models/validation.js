@@ -53,7 +53,8 @@ const exerciseRecordsValidation = (data) => {
 
 const articleValid = (data) => {
   const schema = Joi.object({
-    title: Joi.string().max(200).empty(""),
+    title: Joi.string().max(45).empty(""),
+    sub_title: Joi.string().max(100).empty(""),
     content: Joi.string()
       .pattern(/<("[^"]*"|'[^']*'|[^'">])*>/)
       .empty(""),

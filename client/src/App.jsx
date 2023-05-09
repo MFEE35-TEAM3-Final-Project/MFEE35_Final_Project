@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import "./styles/all.css";
@@ -16,6 +16,12 @@ import AdminBoard from "./pages/admin/AdminBoard";
 import AdminLogin from "./pages/admin/AdminLogin";
 
 function App() {
+  const [isBack, setIsBack] = useState(false);
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    setIsBack(currentPath.startsWith("/admin"));
+  }, []);
+
   return (
     <div className="App">
       <div>
@@ -36,7 +42,7 @@ function App() {
           </Route>
         </Routes>
       </div>
-      <Footer />
+      {isBack ? "" : <Footer />}
     </div>
   );
 }
