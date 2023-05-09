@@ -55,8 +55,9 @@ function MyBarChart() {
             position: "bottom",
             labels: {
               font: {
-                size: 18,
+                size: 22,
               },
+              padding: 50, // 調整標籤與圖表之間的距離
             },
           },
         },

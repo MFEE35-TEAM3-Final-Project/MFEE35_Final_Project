@@ -38,7 +38,7 @@ function MemberHeader() {
           <Link to="/diet-record">
             <li>飲食紀錄</li>
           </Link>
-          <Link to="/data-charts">
+          <Link to="/MemberChartList">
             <li>數據圖表</li>
           </Link>
           <Link to="/tracking-list">
