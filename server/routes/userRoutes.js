@@ -654,7 +654,8 @@ router.post('/orders', userPassport, async (req, res) => {
 //會員查詢訂單 
 router.get('/orders', userPassport, async (req, res) => {
   try {
-    const user_id = req.body.user_id;
+    // const user_id = req.body.user_id;
+    const user_id = req.user[0].user_id;
     const getOrdersSql = "SELECT * FROM orders WHERE user_id = ?";
     const orders = await query(getOrdersSql, [user_id]);
 
@@ -680,6 +681,7 @@ router.get('/orders', userPassport, async (req, res) => {
     res.status(200).json({
       success: true,
       data: ordersWithDetails,
+      user_id: user_id
     });
   } catch (err) {
     console.log(err);
@@ -737,210 +739,309 @@ router.delete('/orders/:order_id', userPassport, async (req, res) => {
   }
 });
 
-
-app.post('/cart/add', async (req, res) => {
-  const { productId, quantity } = req.body;
-  const userId = req.user ? req.user.id : null;
-
-  if (!userId) {
-    // 如果用戶未登陸，將購物車資訊寫入 cookies 中
-    const cartItems = getCartItemsFromCookies(req.cookies);
-    addCartItemToCookies(cartItems, productId, quantity);
-    res.status(200).json({ success: true });
-  } else {
-    // 如果用戶已登陸，將購物車資訊寫入資料庫中
-    userPassport(req, res, async () => {
-      await addCartItemToDatabase(req.user.id, productId, quantity);
-      res.status(200).json({ success: true });
-    });
-  }
-});
-
-app.post('/cart/add', userPassport, async (req, res) => {
+router.get('/cart/list/:user_id', userPassport, async (req, res) => {
   try {
-    const user_id = req.body.user_id;
-    const product_id = req.body.product_id;
-    const quantity = req.body.quantity;
+    const { user_id } = req.params;
 
-    // 檢查用戶ID和商品ID是否存在
-    if (!user_id || !product_id) {
-      res.status(400).json({
-        success: false,
-        message: "product ID are required"
-      });
-      return;
-    }
+    // 查询购物车列表
+    const cart_list = await query(
+      "SELECT * FROM shopping_cart WHERE user_id = ?",
+      [user_id]
+    );
 
-    // 檢查數量是否大於0
-    if (quantity <= 0) {
-      res.status(400).json({
-        success: false,
-        message: "數量必須大於0"
-      });
-      return;
-    }
-
-    // 檢查是否已經存在相同的記錄
-    const query = `SELECT * FROM shopping_cart WHERE user_id = ? AND product_id = ?`;
-    query(query, [user_id, product_id], (error, results) => {
-      if (error) {
-        console.error(error);
-        res.status(500).json({
-          success: false,
-          message: "Server error "
-        });
-        return;
-      }
-
-      if (results.length > 0) {
-        // 如果存在相同的記錄，更新數量
-        const updateQuery = `UPDATE shopping_cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?`;
-        db.connection.query(updateQuery, [quantity, user_id, product_id], (error, results) => {
-          if (error) {
-            console.error(error);
-            res.status(500).json({
-              success: false,
-              message: "Server error "
-            });
-            return;
-          }
-
-          res.status(200).json({
-            success: true,
-            message: "商品數量更新成功"
-          });
-        });
-      } else {
-        // 如果不存在相同的記錄，插入新的購物車記錄
-        const insertQuery = `INSERT INTO shopping_cart (user_id, product_id, quantity) VALUES (?, ?, ?)`;
-        db.connection.query(insertQuery, [user_id, product_id, quantity], (error, results) => {
-          if (error) {
-            console.error(error);
-            res.status(500).json({
-              success: false,
-              message: "Server error "
-            });
-            return;
-          }
-
-          res.status(200).json({
-            success: true,
-            message: "商品已成功加入購物車"
-          });
-        });
-      }
-    })
-
-  };
-});
-
-app.put('/cart/change', (req, res) => {
-  const user_id = req.body.user_id;
-  const product_id = req.body.product_id;
-  const quantity = req.body.quantity;
-
-
-  // 檢查數量是否大於0
-  if (quantity <= 0) {
-    res.status(400).json({
-      success: false,
-      message: "數量必須大於0"
-    });
-    return;
-  }
-
-  // 檢查是否已經存在相同的記錄
-  const query = `SELECT * FROM shopping_cart WHERE user_id = ? AND product_id = ?`;
-  db.connection.query(query, [user_id, product_id], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "Server error "
-      });
-      return;
-    }
-
-    if (results.length > 0) {
-      // 如果存在相同的記錄，更新數量
-      const updateQuery = `UPDATE shopping_cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?`;
-      db.connection.query(updateQuery, [quantity, user_id, product_id], (error, results) => {
-        if (error) {
-          console.error(error);
-          res.status(500).json({
-            success: false,
-            message: "Server error "
-          });
-          return;
-        }
-
-        res.status(200).json({
-          success: true,
-          message: "商品數量更新成功"
-        });
-      });
-    } else {
-      // 如果不存在相同的記錄，插入新的購物車記錄
-      const insertQuery = `INSERT INTO shopping_cart (user_id, product_id, quantity) VALUES (?, ?, ?)`;
-      db.connection.query(insertQuery, [user_id, product_id, quantity], (error, results) => {
-        if (error) {
-          console.error(error);
-          res.status(500).json({
-            success: false,
-            message: "Server error "
-          });
-          return;
-        }
-
-        res.status(200).json({
-          success: true,
-          message: "商品已成功加入購物車"
-        });
-      });
-    }
-  });
-});
-
-app.delete("/cart/delete/:product_id", (req, res) => {
-  const user_id = req.body.user_id;
-  const product_id = req.params.product_id;
-
-  // 刪除購物車記錄
-  const query = `DELETE FROM shopping_cart WHERE product_id = ? AND user_id = ?`;
-  db.connection.query(query, [product_id, user_id], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({
-        success: false,
-        message: "Server error"
-      });
-      return;
-    }
-    if (results.affectedRows === 0) {
-      // 購物車記錄不存在
-      res.status(404).json({
-        success: false,
-        message: "Product not found in cart"
-      });
-      return;
-    }
-
-    res.status(200).json({
+    res.json({
       success: true,
-      message: "Product deleted from cart successfully"
+      data: cart_list
     });
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '发生错误，请稍后再试'
+    });
+  }
 });
 
+//會員購物車
+router.post('/cart/add', userPassport, async (req, res) => {
+  try {
+    const { product_id, quantity, user_id } = req.body;
 
+    // 查询用户是否已经有购物车
+    let [cart] = await query(
+      'SELECT * FROM shopping_cart WHERE user_id = ?',
+      [user_id]
+    );
 
+    if (cart) {
+      // 查询购物车内是否已有此商品
+      const [cart_product] = await query(
+        "SELECT quantity FROM shopping_cart WHERE cart_id = ? and product_id = ?",
+        [cart.cart_id, product_id]
+      );
 
+      // 查询商品库存是否足够
+      const [product] = await query(
+        "SELECT stock_quantity FROM products WHERE product_id = ?",
+        [product_id]
+      );
 
+      const total_quantity = parseInt(quantity) + (cart_product ? parseInt(cart_product.quantity) : 0);
 
-//
-//user shopping_cart
+      if (product.stock_quantity < total_quantity) {
+        return res.status(400).json({
+          success: false,
+          message: '該商品庫存不足'
+        });
+      }
+
+      if (cart_product) {
+        // 如果已有此商品，增加数量
+        await query(
+          'UPDATE shopping_cart SET quantity = quantity + ? WHERE cart_id = ? AND product_id = ?',
+          [quantity, cart.cart_id, product_id]
+        );
+      } else {
+        // 如果没有此商品，插入新记录
+        const new_cart_id = 100000 + Math.floor(Math.random() * 90000);
+        await query(
+          'INSERT INTO shopping_cart (cart_id, product_id, quantity,user_id) VALUES (?, ?, ?,?)',
+          [new_cart_id, product_id, quantity, user_id]
+        );
+      }
+    } else {
+      // 没有购物车，创建新购物车
+      const new_cart_id = 100000 + Math.floor(Math.random() * 90000);
+
+      // 查询商品库存是否足够
+      const [product] = await query(
+        "SELECT stock_quantity FROM products WHERE product_id = ?",
+        [product_id]
+      );
+
+      if (product.stock_quantity < parseInt(quantity)) {
+        return res.status(400).json({
+          success: false,
+          message: '該商品庫存不足'
+        });
+      }
+
+      await query(
+        'INSERT INTO shopping_cart (user_id, cart_id, product_id, quantity) VALUES (?, ?, ?, ?)',
+        [user_id, new_cart_id, product_id, quantity]
+      );
+    }
+
+    // 返回成功响应
+    res.json({
+      success: true,
+      message: '商品已添加到購物車'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '發生錯誤，請稍後再試'
+    });
+  }
+});
+
+router.put('/cart/update', userPassport, async (req, res) => {
+  try {
+    const { cart_id, product_id, quantity } = req.body;
+
+    // 檢查購物車是否存在
+    const [cart] = await query(
+      'SELECT * FROM shopping_cart WHERE cart_id = ? ',
+      [cart_id]
+    );
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: '該購物車不存在'
+      });
+    }
+
+    // 檢查商品庫存是否足夠
+    const [product] = await query(
+      "SELECT stock_quantity FROM products WHERE product_id = ?",
+      [cart.product_id]
+    );
+    if (product.stock_quantity < quantity) {
+      return res.status(400).json({
+        success: false,
+        message: '該商品庫存不足'
+      });
+    }
+
+    // 更新購物車商品數量
+    await query(
+      'UPDATE shopping_cart SET quantity = ?  WHERE cart_id = ?',
+      [quantity, cart_id]
+    );
+
+    // 返回成功響應
+    res.json({
+      success: true,
+      message: '購物車更新成功'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '發生錯誤，請稍後再試'
+    });
+  }
+});
+
+// 
+router.delete('/cart/:cart_id', userPassport, async (req, res) => {
+  try {
+    const { cart_id } = req.params;
+    const { user_id } = req.body;
+
+    const [cart] = await query(
+      'SELECT * FROM shopping_cart WHERE cart_id = ? AND user_id = ?',
+      [cart_id, user_id]
+    );
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: '找不到該購物車'
+      });
+    }
+
+    await query(
+      'DELETE FROM shopping_cart WHERE cart_id = ?',
+      [cart_id]
+    );
+
+    res.json({
+      success: true,
+      message: '已刪除'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '發生錯誤，請稍後在試'
+    });
+  }
+});
 
 //user favorite
+router.get('/favorite/:user_id', userPassport, async (req, res) => {
+  try {
+    const user_id = req.params.user_id; // 修改这里
+    const favorites = await query(
+      "SELECT * FROM favorite WHERE user_id = ? ",
+      [user_id]
+    );
+    if (favorites.length === 0) { // 判断数组长度是否为 0
+      return res.status(404).json({
+        success: false,
+        message: '没有追踪清单'
+      });
+    }
+    // 返回成功响应
+    res.json({
+      success: true,
+      message: favorites
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '查询出错'
+    });
+  }
+});
+
+router.post('/favorite/add', userPassport, async (req, res) => {
+  try {
+    const { product_id, user_id } = req.body;
+
+    // 检查商品是否存在
+    const [product] = await query(
+      "SELECT * FROM products WHERE product_id = ?",
+      [product_id]
+    );
+
+    if (!product) {
+      return res.status(400).json({
+        success: false,
+        message: '該商品不存在'
+      });
+    }
+
+    const [favorite] = await query(
+      "SELECT * FROM favorite WHERE user_id = ? and product_id = ?",
+      [user_id, product_id]
+    );
+
+    if (favorite) {
+      return res.status(400).json({
+        success: false,
+        message: '已經加入該商品'
+      });
+    }
+
+    // 添加到我的最爱
+    await query(
+      'INSERT INTO favorite (user_id, product_id) VALUES (?, ?)',
+      [user_id, product_id]
+    );
+
+    // 返回成功响应
+    res.json({
+      success: true,
+      message: '商品已添加到我的最愛'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '發生錯誤，請稍後在試'
+    });
+  }
+});
+
+router.delete('/favorite/:product_id', userPassport, async (req, res) => {
+  try {
+    const { product_id } = req.params;
+    const { user_id } = req.body;
+    const [favorite] = await query(
+      'SELECT * FROM favorite WHERE product_id = ? AND user_id = ?',
+      [product_id, user_id]
+    );
+
+    if (!favorite) {
+      return res.status(404).json({
+        success: false,
+        message: '该收藏不存在'
+      });
+    }
+
+    // 删除该收藏
+    await query(
+      'DELETE FROM favorite WHERE product_id = ? AND user_id = ?',
+      [product_id, user_id]
+    );
+
+    // 返回成功响应
+    res.json({
+      success: true,
+      message: '已删除该收藏'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: '发生错误，请稍后再试'
+    });
+  }
+});
 
 //user coupon 
 

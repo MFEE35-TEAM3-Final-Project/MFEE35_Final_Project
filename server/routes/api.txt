@@ -17,22 +17,18 @@ POST /users/:user_id/orders：新增訂單 V
 DELETE /users/:user_id/orders/:order_id：刪除訂單 V
 
 共用
-GET /orders/search：查詢訂單 要合併
-GET /orders/phone/:phone：根據電話查詢訂單 V 
-GET /orders/email/:email：根據 email 查詢訂單 合併
+GET /orders/search：查詢訂單 要合併 X
+GET /orders/phone/:phone：根據電話查詢訂單  X
+GET /orders/email/:email：根據 email 查詢訂單 合併 X
 /////////////////////
 cart
 會員專屬
-GET /users/:user_id/carts：查詢會員購物車
-
-POST /users/:user_id/carts：新增購物車
-
+GET /users/:user_id/carts：查詢會員購物車V
+POST /users/:user_id/carts：新增購物車 V
 put
-先運行產品庫存驗證檢查庫存 才可以增加
+先運行產品庫存驗證檢查庫存 才可以增加 V
 每次調整數量、增加數量都要送一次API
-
-
-DELETE /users/:user_id/carts/:cart_id：刪除購物車
+DELETE /users/:user_id/carts/:cart_id：刪除購物車 V
 
 
 //////////////////////

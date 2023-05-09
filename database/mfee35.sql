@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3370
--- Generation Time: May 08, 2023 at 08:27 AM
+-- Generation Time: May 09, 2023 at 08:27 AM
 -- Server version: 5.7.24
 -- PHP Version: 8.0.1
 
@@ -71,7 +71,8 @@ INSERT INTO `admins` (`sid`, `admin_id`, `adminname`, `password`, `email`, `crea
 (5, 7427953964, 'arimakana', '$2a$10$0Vy5k88wPcwKZLzNnBMxY.o.xOHuUyQXM5u4HuSuGO5jMIChEYule', 'arimakana17@oshi.com', '2023-04-23 05:01:56'),
 (6, 6691530706, 'hoshinoruby', '$2a$10$QFiDv5amiH0z9NFeJpK2t.6Y0S87aj2TQQBS.d0kSctAc9FvAiSAC', 'hoshinoai556@oshi.com', '2023-04-28 06:33:16'),
 (7, 8060787268, 'AAAAAAAAAAAAAA', '$2a$10$esSi9HpLIiXUqvRMyZgMpewSeQi63t9/bMU06ksK/AYZUF6pdDVCy', 'AAAAAA123@test.com', '2023-05-06 13:37:10'),
-(8, 6705431010, 'AAAAAA', '$2a$10$szea268yJfs9QYDj/o9XFeKjK.kbMvXsH54C5.Fwngz/C1x6cSnma', 'AAAAAAA@test.com', '2023-05-06 13:40:59');
+(8, 6705431010, 'AAAAAA', '$2a$10$szea268yJfs9QYDj/o9XFeKjK.kbMvXsH54C5.Fwngz/C1x6cSnma', 'AAAAAAA@test.com', '2023-05-06 13:40:59'),
+(9, 7608668637, 'ssdsdsdsd', '$2a$10$MXC.JCbOESNbXxZBWFniu.eQax51sxgdgM98JSOJozHgAAFOTHX9m', 'AAAAAAkakaaaaaaa@test.com', '2023-05-09 08:04:07');
 
 -- --------------------------------------------------------
 
@@ -194,6 +195,28 @@ CREATE TABLE `exercise_records` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `favorite`
+--
+
+CREATE TABLE `favorite` (
+  `id` int(11) NOT NULL,
+  `user_id` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `favorite`
+--
+
+INSERT INTO `favorite` (`id`, `user_id`, `product_id`, `created_at`) VALUES
+(1, '4152607872', 1, '2023-05-09 15:09:32'),
+(3, '4152607872', 3, '2023-05-09 15:43:31'),
+(4, '4152607872', 4, '2023-05-09 15:43:46');
 
 -- --------------------------------------------------------
 
@@ -2599,9 +2622,7 @@ CREATE TABLE `shopping_cart` (
 --
 
 INSERT INTO `shopping_cart` (`cart_id`, `user_id`, `product_id`, `quantity`, `created_at`) VALUES
-('1', '9960669470', 2, 2, '2023-04-28 07:43:30'),
-('2', '7400633609', 1, 1, '2023-04-28 07:44:26'),
-('3', '6076469144', 3, 3, '2023-04-28 07:44:26');
+('149828', '4152607872', 2, 5, '2023-05-09 06:24:47');
 
 -- --------------------------------------------------------
 
@@ -2637,7 +2658,12 @@ INSERT INTO `users` (`sid`, `user_id`, `email`, `password`, `username`, `avatar`
 (8, '6076469144', 'uuid12333@llakke.com', '$2a$10$UaHI92cuz925g3Secvypreg/EbC4nhvYWA32cXTiP7DL17KiKXINC', 'uejj558', NULL, NULL, NULL, '2023-04-19 03:28:45', '2023-04-29 07:58:48'),
 (9, '9731103331', 'AAAAABBB@gmail.com', '$2a$10$rwKg160ycTIyD/LlqqL3DOK0i0cAJXwa7tQQ0s.ZmdDxuq6E0OSqy', 'sldkfjsl645454', NULL, NULL, NULL, '2023-04-28 03:29:56', '2023-04-29 07:58:48'),
 (10, '6818255871', 'AAAAAAAeeeel@gmail.com', '$2a$10$J1aGBYqcJlHO0pBvA/KXsOZm6/aTLq.bulQ/jVRYvnbTfT1pULuX6', 'test2', NULL, NULL, NULL, '2023-04-29 07:36:36', '2023-04-29 07:58:48'),
-(11, '4152607872', 'AAAAAAkaka@test.com', '$2a$10$pVyLNbYYAHake3PWZKUoVuX/AL0olHitz5VzHwkdHVs25owp3.XEm', NULL, NULL, NULL, NULL, '2023-05-08 01:53:36', '2023-05-08 01:53:36');
+(11, '4152607872', 'AAAAAAkaka@test.com', '$2a$10$pVyLNbYYAHake3PWZKUoVuX/AL0olHitz5VzHwkdHVs25owp3.XEm', NULL, NULL, NULL, NULL, '2023-05-08 01:53:36', '2023-05-08 01:53:36'),
+(12, '1242518067', 'AAAAAAkakakkkkkkkkk@test.com', '$2a$10$0IzsPXjOZOEyL/01XNCmyelIQCjB.OeFFTlnTsYi0aO4AtBrbVCse', NULL, NULL, NULL, NULL, '2023-05-09 07:54:50', '2023-05-09 07:54:50'),
+(13, '3115272541', 'AAAAAAbbbbbbbbbbbbbbbb@test.com', '$2a$10$lqyQoMnANiruSdySRAbkkO8io3UFUS/uIGuR2klbU3bTCbCL/dA0i', NULL, NULL, NULL, NULL, '2023-05-09 08:02:52', '2023-05-09 08:02:52'),
+(14, '7748936773', 'AAAAAAbbbbbbbb@test.com', '$2a$10$FBGE53x.GdmUaLpKqjtImuD1lKki489rgumVi9kpg0Sn9Pbeq1Zfa', NULL, NULL, NULL, NULL, '2023-05-09 08:19:35', '2023-05-09 08:19:35'),
+(15, '3505528339', 'AAAAAAxsxsxsxsxsxsxss@test.com', '$2a$10$LZeQqLIjaDHZWcP1nfARS.44zso/oSsIPh4gRz3z4xX1UwKLvQWUG', NULL, NULL, NULL, NULL, '2023-05-09 08:20:30', '2023-05-09 08:20:30'),
+(16, '2194961504', 'AAAAAAxsxsxsxsxsxsxss2@test.com', '$2a$10$MW9MrL/aAVcc0kda9jCrz.2JqyLnko9qfLP1DceCx2v3eG90S1yBu', NULL, NULL, NULL, NULL, '2023-05-09 08:23:51', '2023-05-09 08:23:51');
 
 --
 -- Indexes for dumped tables
@@ -2695,6 +2721,12 @@ ALTER TABLE `discounts`
 ALTER TABLE `exercise_records`
   ADD PRIMARY KEY (`exercise_records_id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `favorite`
+--
+ALTER TABLE `favorite`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `food`
@@ -2759,13 +2791,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `article_comments`
 --
 ALTER TABLE `article_comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `article_meg`
@@ -2778,6 +2810,12 @@ ALTER TABLE `article_meg`
 --
 ALTER TABLE `discounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `favorite`
+--
+ALTER TABLE `favorite`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `meal_records`
@@ -2801,7 +2839,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables

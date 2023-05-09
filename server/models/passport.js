@@ -10,7 +10,7 @@ const opts = {
 
 passport.use(
   "user",
-  new JwtStrategy(opts, function(jwt_payload, done) {
+  new JwtStrategy(opts, function (jwt_payload, done) {
     if (Date.now() > jwt_payload.exp) {
       return done(null, false, { message: "Token 已經過期" });
     }
@@ -32,7 +32,7 @@ passport.use(
 
 passport.use(
   "admin",
-  new JwtStrategy(opts, function(jwt_payload, done) {
+  new JwtStrategy(opts, function (jwt_payload, done) {
     if (Date.now() > jwt_payload.exp) {
       return done(null, false, { message: "Token 已經過期" });
     }

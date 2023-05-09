@@ -21,6 +21,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/food", foodRoutes);
 app.use("/api/articles", articleRoutes);
+app.use("/api/orders", articleRoutes);
 
 // 開始監聽
 app.listen(8080, () => {

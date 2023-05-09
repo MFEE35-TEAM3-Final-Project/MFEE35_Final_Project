@@ -472,6 +472,7 @@ router.delete("/food/food_id=:food_id", adminPassport, async (req, res) => {
 
 router.get('/orders', adminPassport, async (req, res) => {
   try {
+    console.log("inNNNNNN")
     let getquery = 'SELECT * FROM orders WHERE 1=1';
     const params = [];
 
