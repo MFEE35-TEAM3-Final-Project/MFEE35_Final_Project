@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/store.css";
 import Footer from "../components/footer";
-
-import { Helmet } from "react-helmet";
 
 const StorePage = () => {
   // 設定初始圖片狀態
   const [isCardColumn, setIsCardColumn] = useState(false);
+
   const handleCardBlClick = () => {
     setIsCardColumn(true);
   };
-
   const handleCardLnClick = () => {
     setIsCardColumn(false);
   };
-
   const columnClass = isCardColumn ? "col-md-12 cardColumn" : "col-md-3";
 
   // 設定秒數方法
@@ -35,8 +34,9 @@ const StorePage = () => {
   const [products, setProducts] = useState([]);
   // 設定初始頁面
   const [currentPage, setCurrentPage] = useState(1);
+  // 設定初始類別
+  const [currentCategory, setCurrentCategory] = useState("");
 
-  // 試用哲銓的api(活動)需要帶入回傳的資料項
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/activity/getActivity`)
@@ -57,7 +57,7 @@ const StorePage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsPage`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setProducts(res.data);
       })
       .catch((err) => {
@@ -80,16 +80,80 @@ const StorePage = () => {
   }, [second, numIds, eventTitles, images]);
 
   useEffect(() => {
-    function fetchData() {
-      const response = fetch(`/api/getProductsPage?page=${currentPage}`);
-      setProducts(data);
-    }
-
-    fetchData();
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/products/getProductsPage?page=${currentPage}`
+      )
+      .then((res) => {
+        // console.log(res);
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, [currentPage]);
 
-  function handleNextPage() {
-    setCurrentPage(currentPage + 1);
+  const PageOne = () => {
+    setCurrentPage(1);
+  };
+  const PageTwo = () => {
+    setCurrentPage(2);
+  };
+  const PageThree = () => {
+    setCurrentPage(3);
+  };
+
+  const testCategory = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`, {
+        params: {
+          category: "測試",
+          page: currentPage,
+          limit: 12,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        const testAllData = res.data.filter((item) => item.category == "213");
+        console.log(testAllData);
+        const testAllDataA = res.data.filter(
+          (itemA) => itemA.category == "12321"
+        );
+        console.log(testAllDataA);
+        const testAllDataB = res.data.filter(
+          (itemB) => itemB.category == "123321"
+        );
+        console.log(testAllDataB);
+        const testAllDataC = res.data.filter(
+          (itemC) => itemC.category == "測試"
+        );
+        console.log(testAllDataC);
+        const testAllDataD = res.data.filter(
+          (itemD) => itemD.category == "123"
+        );
+        console.log(testAllDataD);
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  function OneCategory() {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`, {
+        params: {
+          category: "12321",
+          page: currentPage,
+          limit: 12,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
 
   return (
@@ -130,24 +194,26 @@ const StorePage = () => {
       <br />
       <div className="goodsPge">
         <span className="drinkgoodsPge">
-          <a
+          <Link
+            to=""
             className="a"
-            href="http://localhost:3000/goods"
-            rel="noreferrer"
-            target="_blank"
+            onClick={() => {
+              testCategory();
+            }}
           >
             乳清蛋白
-          </a>
+          </Link>
         </span>
         <span className="dietgoodsPge">
-          <a
+          <Link
+            to=""
             className="b"
-            href="http://localhost:3000/goods"
-            rel="noreferrer"
-            target="_blank"
+            onClick={() => {
+              OneCategory();
+            }}
           >
             增肌減脂套餐
-          </a>
+          </Link>
         </span>
       </div>
 
@@ -262,28 +328,33 @@ const StorePage = () => {
       <br />
 
       <div className="nextPage">
-        <a
-          href="http://localhost:3000/goods"
-          rel="noreferrer"
-          className="nextOne"
+        <Link
+          to=""
+          className={`next${currentPage === 1 ? "One" : "Two"}`}
+          onClick={() => {
+            PageOne();
+          }}
         >
           1
-        </a>
-        <a
-          onClick={handleNextPage}
-          href="http://localhost:3000/goods"
-          rel="noreferrer"
-          className="nextTwo"
+        </Link>
+        <Link
+          to=""
+          className={`next${currentPage === 2 ? "One" : "Two"}`}
+          onClick={() => {
+            PageTwo();
+          }}
         >
           2
-        </a>
-        <a
-          href="http://localhost:3000/goods"
-          rel="noreferrer"
-          className="nextThree"
+        </Link>
+        <Link
+          to=""
+          className={`next${currentPage === 3 ? "One" : "Two"}`}
+          onClick={() => {
+            PageThree();
+          }}
         >
           3
-        </a>
+        </Link>
       </div>
 
       <br />
