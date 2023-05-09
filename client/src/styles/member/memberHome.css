@@ -36,8 +36,6 @@
 
 .myBarChart {
     height: 100%;
-    /* width: 100%; */
-    /* max-width: 500px; */
     min-width: 300px;
     margin: 20px auto
 }

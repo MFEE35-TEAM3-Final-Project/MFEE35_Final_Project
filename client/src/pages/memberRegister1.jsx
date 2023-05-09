@@ -82,7 +82,7 @@ const UserRegistration = () => {
                     className="userInput"
                     type="text"
                     name="userAccount"
-                    placeholder="請輸入帳號"
+                    placeholder="請輸入"
                     value={userAccount}
                     onChange={handleChange}
                     required
@@ -129,7 +129,7 @@ const UserRegistration = () => {
               </div>
 
               <div>
-                <Link to={isFormValid() ? "/register_2" : ""}>
+                <Link to={isFormValid() ? "/MemberRegister2" : ""}>
                   <button className="mysubmit" disabled={!isFormValid()}>
                     NEXT
                   </button>

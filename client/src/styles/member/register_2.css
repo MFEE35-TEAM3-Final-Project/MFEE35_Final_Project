@@ -1,0 +1,77 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
+
+
+h3 {
+    text-align: center;
+    font-weight: 800;
+    margin: 20px;
+}
+
+#logoimg {
+    display: block;
+    margin: auto;
+    height: 200px;
+    width: 200px;
+}
+
+.userInfo {
+    position: relative;
+    width: 80%;
+    height: 10%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    background-color: #DCDBD7;
+    border-radius: 20px;
+    margin: 30px 0px;
+}
+
+form {
+    padding: 20px 0;
+}
+
+.mysubmit {
+
+    background-color: #707D90;
+    font-family: 'Rajdhani';
+    font-style: normal;
+    letter-spacing: 0.2em;
+
+    color: #FEFDF8;
+    padding: 10px;
+    margin: 8px;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.userInput {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.col-12>div {
+    margin: 20px;
+}
+
+form>div>.col-4 {
+    text-align: right;
+}
+
+.userInput {
+    text-align: left;
+    width: 80%;
+}
+
+.usergender {
+    min-width: 40px;
+}
+
+select {
+    width: 80%;
+}
