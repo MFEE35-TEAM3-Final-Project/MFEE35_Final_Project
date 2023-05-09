@@ -31,14 +31,10 @@ const StorePage = () => {
   const [eventTitles, setEventTitle] = useState("");
   // 設定小標變數
   const [texts, setText] = useState("");
-  // 設定商品圖片
-  const [goodImgs, setGoodImg] = useState("");
-  // 設定商品名稱
-  const [goodNames, setGoodName] = useState("");
-  // 設定商品敘述
-  const [goodScripts, setGoodScript] = useState("");
-  // 設定商品價格
-  const [goodPrices, setGoodPrice] = useState("");
+  // 設定商品陣列
+  const [products, setProducts] = useState([]);
+  // 設定初始頁面
+  const [currentPage, setCurrentPage] = useState(1);
 
   // 試用哲銓的api(活動)需要帶入回傳的資料項
   useEffect(() => {
@@ -59,13 +55,10 @@ const StorePage = () => {
       });
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`)
+      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsPage`)
       .then((res) => {
         console.log(res);
-        setGoodImg(res.data[0].image[0]);
-        setGoodName(res.data[0].name);
-        setGoodScript(res.data[0].description);
-        setGoodPrice(res.data[0].price);
+        setProducts(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -85,6 +78,19 @@ const StorePage = () => {
 
     return () => clearInterval(intervalId);
   }, [second, numIds, eventTitles, images]);
+
+  useEffect(() => {
+    function fetchData() {
+      const response = fetch(`/api/getProductsPage?page=${currentPage}`);
+      setProducts(data);
+    }
+
+    fetchData();
+  }, [currentPage]);
+
+  function handleNextPage() {
+    setCurrentPage(currentPage + 1);
+  }
 
   return (
     <div>
@@ -205,57 +211,48 @@ const StorePage = () => {
 
       <div className="container">
         <div className="row">
-          {/* {data.map((item) => (
-            <div key={item.id} className={columnClass}>
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">{item.title}</h5>
-                  <p className="card-text">{item.content}</p>
+          {products.map((product) => (
+            <div key={product.productid} className={columnClass}>
+              <a
+                href="http://localhost:3000/goods"
+                rel="noreferrer"
+                target="_blank"
+                className="whereUsergo"
+              >
+                <div className="mycardIcon">
+                  <img id="myCard" src={product.image[0]} alt="商品大圖" />
+                  <span className="hiddenIcon">
+                    <div className="magnifierBlock">
+                      <img src="./image/store/ magnifier.png" alt="放大鏡" />
+                    </div>
+                  </span>
                 </div>
-              </div>
+              </a>
+
+              <br />
+              <a
+                href="http://localhost:3000/goods"
+                rel="noreferrer"
+                target="_blank"
+                className="whereUsergo"
+              >
+                <div>
+                  <p className="fw-semibold cardTopic">{product.name}</p>
+                  <p className="cardText">{product.description}</p>
+                </div>
+              </a>
+
+              <a
+                href="http://localhost:3000/goods"
+                rel="noreferrer"
+                target="_blank"
+                className="whereUsergo"
+              >
+                <span className="cardSprice">{product.price}</span>
+                {/* <span className="cardPrice">{goodPrices}</span> */}
+              </a>
             </div>
-          ))} */}
-
-          <div className={columnClass}>
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src={goodImgs} alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">{goodNames}</p>
-                <p className="cardText">{goodScripts}</p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">{goodPrices}</span>
-              {/* <span className="cardPrice">{goodPrices}</span> */}
-            </a>
-          </div>
+          ))}
         </div>
       </div>
 
@@ -273,6 +270,7 @@ const StorePage = () => {
           1
         </a>
         <a
+          onClick={handleNextPage}
           href="http://localhost:3000/goods"
           rel="noreferrer"
           className="nextTwo"
