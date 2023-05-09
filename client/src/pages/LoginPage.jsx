@@ -8,7 +8,7 @@
 //   // DATA
 //   const [userData, setUserData] = useState({
 //     email: "",
-//     password: ""
+//     password: "",
 //   });
 //   const [backData, setBackData] = useState({});
 //   const [jwtData, setJwtData] = useState("");

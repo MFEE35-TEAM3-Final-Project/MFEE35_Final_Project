@@ -7,24 +7,65 @@ import Footer from "../components/footer";
 import { Helmet } from "react-helmet";
 
 const StorePage = () => {
-  // 設定秒數
+  // 設定初始圖片狀態
+  const [isCardColumn, setIsCardColumn] = useState(false);
+  const handleCardBlClick = () => {
+    setIsCardColumn(true);
+  };
+
+  const handleCardLnClick = () => {
+    setIsCardColumn(false);
+  };
+
+  const columnClass = isCardColumn ? "col-md-12 cardColumn" : "col-md-3";
+
+  // 設定秒數方法
   const [second, setSecond] = useState("1");
+  // 設定秒數變數
   const [numIds, setNumIds] = useState();
+  // 設定圖片方法
   const [caroesel, setCarousel] = useState("");
+  // 設定圖片變數
   const [images, setImages] = useState("");
+  // 設定小標方法
   const [eventTitles, setEventTitle] = useState("");
+  // 設定小標變數
   const [texts, setText] = useState("");
+  // 設定商品圖片
+  const [goodImgs, setGoodImg] = useState("");
+  // 設定商品名稱
+  const [goodNames, setGoodName] = useState("");
+  // 設定商品敘述
+  const [goodScripts, setGoodScript] = useState("");
+  // 設定商品價格
+  const [goodPrices, setGoodPrice] = useState("");
 
   // 試用哲銓的api(活動)需要帶入回傳的資料項
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/activity/getActivity`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
+        // 從get的資料中選取活動圖片的Url陣列
         setImages(res.data.map((image) => image.activityUrl));
+        // 從get的資料中選取活動標題陣列
         setEventTitle(res.data.map((eventTitle) => eventTitle.activityName));
+        // 從get的資料中選取活動Id陣列
         const ids = res.data.map((numId) => numId.activityId);
         setNumIds(ids.length);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`)
+      .then((res) => {
+        console.log(res);
+        setGoodImg(res.data[0].image[0]);
+        setGoodName(res.data[0].name);
+        setGoodScript(res.data[0].description);
+        setGoodPrice(res.data[0].price);
       })
       .catch((err) => {
         console.error(err);
@@ -33,15 +74,17 @@ const StorePage = () => {
 
   // 環境重新渲染的function
   useEffect(() => {
+    // -> 更新 numIds參數
     const intervalId = setInterval(() => {
-      setSecond((prevCount) => (prevCount % numIds) + 1);
+      setSecond((prevCount) => (prevCount % numIds) + 1); // 取餘數
     }, 2000);
-
+    // -> 更新 images參數
     setCarousel(images[second - 1]);
+    // -> 更新 eventTitles參數
     setText(eventTitles[second - 1]);
 
     return () => clearInterval(intervalId);
-  }, [second, numIds]);
+  }, [second, numIds, eventTitles, images]);
 
   return (
     <div>
@@ -112,16 +155,13 @@ const StorePage = () => {
             <p>全站商品</p>
           </span>
           <span className="goodsQty">
-            <p>
-              共 <input className="howMuchGoods" type="text" placeholder="12" />{" "}
-              件商品
-            </p>
+            <p>共12件商品</p>
           </span>
           <span className="changegoodsWay">
             <button
               id="cardLn"
               className="squareBtn"
-              //   onClick={this.handleCardLnClick}
+              onClick={handleCardLnClick}
             >
               <img
                 className="squareImg"
@@ -129,11 +169,7 @@ const StorePage = () => {
                 alt="squarebtn"
               />
             </button>
-            <button
-              id="cardBl"
-              className="listBtn"
-              //   onClick={this.handleCardBlClick}
-            >
+            <button id="cardBl" className="listBtn" onClick={handleCardBlClick}>
               <img
                 className="listImg"
                 src="./image/store/changebtn2.webp"
@@ -169,7 +205,18 @@ const StorePage = () => {
 
       <div className="container">
         <div className="row">
-          <div className="col-md-3">
+          {/* {data.map((item) => (
+            <div key={item.id} className={columnClass}>
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">{item.title}</h5>
+                  <p className="card-text">{item.content}</p>
+                </div>
+              </div>
+            </div>
+          ))} */}
+
+          <div className={columnClass}>
             <a
               href="http://localhost:3000/goods"
               rel="noreferrer"
@@ -177,7 +224,7 @@ const StorePage = () => {
               className="whereUsergo"
             >
               <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
+                <img id="myCard" src={goodImgs} alt="商品大圖" />
                 <span className="hiddenIcon">
                   <div className="magnifierBlock">
                     <img src="./image/store/ magnifier.png" alt="放大鏡" />
@@ -194,14 +241,8 @@ const StorePage = () => {
               className="whereUsergo"
             >
               <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
+                <p className="fw-semibold cardTopic">{goodNames}</p>
+                <p className="cardText">{goodScripts}</p>
               </div>
             </a>
 
@@ -211,514 +252,8 @@ const StorePage = () => {
               target="_blank"
               className="whereUsergo"
             >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
-            </a>
-          </div>
-          <div className="col-md-3">
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src="./image/store/good1.png" alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img src="./image/store/ magnifier.png" alt="放大鏡" />
-                  </div>
-                </span>
-              </div>
-            </a>
-
-            <br />
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <div>
-                <p className="fw-semibold cardTopic">
-                  紅酒燉牛肉烤蔬菜地瓜餐盒
-                </p>
-                <p className="cardText">
-                  紅酒燉牛肉：綜合牛腱,紅酒,洋蔥,紅蘿蔔,番茄碎,百里香,月桂葉,迷迭香,西洋芹,鹽,黑胡椒粉。
-                  <br />
-                  地中海堅果烤蔬菜＋地瓜：牛番茄,紫洋蔥,青花菜,玉米筍,綠橄欖,橄欖油,鹽,葵瓜子,地瓜。
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="http://localhost:3000/goods"
-              rel="noreferrer"
-              target="_blank"
-              className="whereUsergo"
-            >
-              <span className="cardSprice">NTD1200</span>
-              <span className="cardPrice">NTD1600</span>
+              <span className="cardSprice">{goodPrices}</span>
+              {/* <span className="cardPrice">{goodPrices}</span> */}
             </a>
           </div>
         </div>
