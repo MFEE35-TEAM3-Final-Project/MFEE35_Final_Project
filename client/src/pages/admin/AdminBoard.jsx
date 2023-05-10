@@ -3,7 +3,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import axios from "axios";
 
 const AdminBoard = () => {
-  const [authenticated, setAuthenticated] = useState(null);
+  const [authenticated, setAuthenticated] = useState(true);
 
   //   useEffect(() => {
   //     checkToken();
@@ -35,7 +35,6 @@ const AdminBoard = () => {
         <div>Loading...</div>
       ) : authenticated ? (
         <>
-          <h2 className="text-white">THis AdminBoard</h2>
           <Outlet />
         </>
       ) : (

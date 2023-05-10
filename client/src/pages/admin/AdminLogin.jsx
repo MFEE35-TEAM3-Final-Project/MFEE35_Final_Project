@@ -1,113 +1,98 @@
-import {
-  DesktopOutlined,
-  FileOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
-import { useState } from "react";
-const { Header, Sider, Content, Footer } = Layout;
-const items = [
-  {
-    key: "1",
-    icon: <PieChartOutlined />,
-    label: "Option 1",
-  },
-  {
-    key: "2",
-    icon: <DesktopOutlined />,
-    label: "Option 2",
-  },
-  {
-    key: "sub1",
-    icon: <UserOutlined />,
-    label: "User",
-    children: [
-      {
-        key: "3",
-        label: "Tom",
-      },
-      {
-        key: "4",
-        label: "Bill",
-      },
-      {
-        key: "5",
-        label: "Alex",
-      },
-    ],
-  },
-  {
-    key: "sub2",
-    icon: <TeamOutlined />,
-    label: "Team",
-    children: [
-      {
-        key: "6",
-        label: "Team 1",
-      },
-      {
-        key: "7",
-        label: "Team 2",
-      },
-    ],
-  },
-  {
-    key: "9",
-    icon: <FileOutlined />,
-  },
-];
-const App = () => {
-  const [collapsed, setCollapsed] = useState(true);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+import { Button, Checkbox, Form, Input } from "antd";
+import { useNavigate } from "react-router-dom";
+
+const AdminLogin = () => {
+  const navigate = useNavigate();
+
+  const onFinish = (values) => {
+    console.log("Success:", values);
+    navigate("/admin/backstage");
+  };
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
-    <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["3"]}
-          defaultOpenKeys={["sub1"]}
-          items={items}
-        />
-      </Sider>
-      <Layout>
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
+    <div id="admin_login">
+      <div className="login_pic">
+        <div>
+          <img src="https://picsum.photos/200/200?random=1" alt="" />
+        </div>
+      </div>
+      <div>
+        <Form
+          name="basic"
+          labelCol={{
+            span: 8
           }}
+          wrapperCol={{
+            span: 16
+          }}
+          style={{
+            maxWidth: 600
+          }}
+          initialValues={{
+            remember: true
+          }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
         >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                type: "email",
+                message: "The input is not valid E-mail!"
+              },
+              {
+                required: true,
+                message: "Please input your E-mail!"
+              }
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!"
+              }
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <Form.Item
+            name="remember"
+            valuePropName="checked"
+            wrapperCol={{
+              offset: 8,
+              span: 16
             }}
-          />
-        </Header>{" "}
-        <Content
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-          }}
-        >
-          Content
-        </Content>{" "}
-        <Footer>Fooooooter</Footer>
-      </Layout>
-    </Layout>
+          >
+            <Checkbox>Remember me</Checkbox>
+          </Form.Item>
+
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Admin Login
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+    </div>
   );
 };
-export default App;
+
+export default AdminLogin;
