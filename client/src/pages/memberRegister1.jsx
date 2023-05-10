@@ -82,7 +82,7 @@ const UserRegistration = () => {
                     className="userInput"
                     type="text"
                     name="userAccount"
-                    placeholder="請輸入"
+                    placeholder="請輸入帳號(E-mail信箱)"
                     value={userAccount}
                     onChange={handleChange}
                     required
