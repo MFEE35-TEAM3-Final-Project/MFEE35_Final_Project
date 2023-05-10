@@ -4,11 +4,10 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config({ path: ".env.local" });
 
-// Routes
-const productsRoutes = require("./routes/productsRoutes");
-const activityRoutes = require("./routes/activityRoutes");
-const discountRoutes = require("./routes/discountRoutes");
-const foodRoutes = require("./routes/foodRoutes");
+//  joold Routes
+const activityRoutes = require("./routes_old/activityRoutes");
+const discountRoutes = require("./routes_old/discountRoutes");
+const productsRoutes = require("./routes_old/productsRoutes");
 
 //跨域設定
 app.use(cors());
@@ -16,10 +15,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//路由
+
+//  joold 路由
 app.use("/api/activity", activityRoutes);
 app.use("/api/discount", discountRoutes);
-app.use("/api/food", foodRoutes);
 app.use("/api/products", productsRoutes);
 
 // 開始監聽

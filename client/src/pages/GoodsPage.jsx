@@ -1,13 +1,51 @@
-import React from "react";
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-import Chart from "../components/chart";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+// import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import DoughnutChart from "../components/DoughnutChart";
 import "../css/goods.css";
 import Footer from "../components/footer";
 
 const GoodsPage = () => {
+  const [products, setProducts] = useState([]);
+  const [test, setTest] = useState("");
+  // const [quantity, setQuantity] = useState(1);
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsPage`)
+      .then((res) => {
+        console.log(res);
+        setProducts(res.data);
+        setTest(res.data[0].image[0]);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+  // const handleIncrease = () => {
+  //   setQuantity(quantity + 1);
+  // };
+
+  // const handleDecrease = () => {
+  //   if (quantity > 1) {
+  //     setQuantity(quantity - 1);
+  //   }
+  // };
+
+  // const handleChange = (event) => {
+  //   const value = parseInt(event.target.value);
+  //   if (!isNaN(value)) {
+  //     setQuantity(value);
+  //   }
+  // };
   return (
     <div>
+      <Helmet>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Allura&display=swap"
+          rel="stylesheet"
+        />
+      </Helmet>
       <div className="goodstype">
         <div className="diet">
           <a href="http://localhost:3000/goods" className="myDiet">
@@ -26,7 +64,9 @@ const GoodsPage = () => {
           <div className="bigGroup">
             <button className="prevBtn">＜</button>
             <img
-              src="./image/store/good1.png"
+              // src="./image/store/good1.png"
+              // src={products[0].image[0]}
+              src={test}
               className="bigImage"
               alt="大圖"
             />
@@ -35,18 +75,21 @@ const GoodsPage = () => {
           <div className="smallGroup">
             <img
               src="./image/store/good1.png"
+              // src={products[0].image[1]}
               className="smallImage active"
               data-target="./image/store/good1.png"
               alt="小圖"
             />
             <img
               src="./image/store/good2.png"
+              // src={products[0].image[2]}
               className="smallImage"
               data-target="./image/store/good2.png"
               alt="小圖"
             />
             <img
               src="./image/goods/chicken.png"
+              // src={products[0].image[3]}
               className="smallImage"
               data-target="./image/goods/chicken.png"
               alt="小圖"
@@ -56,15 +99,23 @@ const GoodsPage = () => {
         <div className="goodsText">
           <div className="gGroup">
             <h2 className="goodsName">建議售價</h2>
-            <p className="goodsPrice">NTD1200</p>
+            {/* <p className="goodsPrice">{products[0].price}</p> */}
+            <p className="goodsPrice">1200</p>
           </div>
           <button id="deBtn" className="increaseBtn">
+            {/* <button id="deBtn" className="increaseBtn" onClick={handleDecrease}> */}
             一
           </button>
           <div className="addingQty">
-            <input type="text" id="addGoods" value="1" />
+            <input
+              type="text"
+              id="addGoods"
+              // value={quantity}
+              // onChange={handleChange}
+            />
           </div>
           <button id="inBtn" className="increaseBtn">
+            {/* <button id="inBtn" className="increaseBtn" onClick={handleIncrease}> */}
             十
           </button>
           <br />
@@ -108,15 +159,7 @@ const GoodsPage = () => {
       <br />
       <br />
       <div className="myGoodscontain nutriChart">
-        <div>
-          <div className="App">
-            <Chart />
-          </div>
-          {/* <div> */}
-          {/* <canvas id="chartCanvas"></canvas> */}
-          {/* <Doughnut data={data} options={options} /> */}
-          {/* </div> */}
-        </div>
+        <DoughnutChart />
       </div>
       <br />
       <br />

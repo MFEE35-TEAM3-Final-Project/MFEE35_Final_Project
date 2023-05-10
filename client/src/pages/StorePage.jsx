@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/store.css";
 import Footer from "../components/footer";
 
@@ -35,7 +34,7 @@ const StorePage = () => {
   // 設定初始頁面
   const [currentPage, setCurrentPage] = useState(1);
   // 設定初始類別
-  // const [currentCategory, setCurrentCategory] = useState("");
+  const [currentCategory, setCurrentCategory] = useState("");
 
   useEffect(() => {
     axios
@@ -55,10 +54,12 @@ const StorePage = () => {
       });
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsPage`)
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/products/getProductsByCategory?page=${currentPage}&category=${currentCategory}`
+      )
       .then((res) => {
         // console.log(res);
-        setProducts(res.data);
+        setProducts(res.data.results);
       })
       .catch((err) => {
         console.error(err);
@@ -82,16 +83,16 @@ const StorePage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProductsPage?page=${currentPage}`
+        `${process.env.REACT_APP_API_URL}/api/products/getProductsByCategory?page=${currentPage}&category=${currentCategory}`
       )
       .then((res) => {
-        // console.log(res);
-        setProducts(res.data);
+        console.log(res);
+        setProducts(res.data.results);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [currentPage]);
+  }, [currentPage, currentCategory]);
 
   const PageOne = () => {
     setCurrentPage(1);
@@ -102,46 +103,21 @@ const StorePage = () => {
   const PageThree = () => {
     setCurrentPage(3);
   };
-
-  // const testCategory = () => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`, {
-  //       params: {
-  //         category: "測試",
-  //         page: currentPage,
-  //         limit: 12,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res);
-
-  //       const testAllData = res.data.filter(
-  //         (itemC) => itemC.category === "測試"
-  //       );
-  //       console.log(testAllData);
-  //       setProducts(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // };
-  // const OneCategory = () => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`, {
-  //       params: {
-  //         category: "12321",
-  //         page: currentPage,
-  //         limit: 12,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res);
-  //       setProducts(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // };
+  const PageFour = () => {
+    setCurrentPage(4);
+  };
+  const PageFive = () => {
+    setCurrentPage(5);
+  };
+  const allProductCategory = () => {
+    setCurrentCategory("");
+  };
+  const wheyProteinCategory = () => {
+    setCurrentCategory(1);
+  };
+  const gainMuscleCategory = () => {
+    setCurrentCategory(2);
+  };
 
   return (
     <div>
@@ -184,9 +160,20 @@ const StorePage = () => {
           <Link
             to=""
             className="a"
-            // onClick={() => {
-            //   testCategory();
-            // }}
+            onClick={() => {
+              allProductCategory();
+            }}
+          >
+            全站商品
+          </Link>
+        </span>
+        <span className="drinkgoodsPge">
+          <Link
+            to=""
+            className="a"
+            onClick={() => {
+              wheyProteinCategory();
+            }}
           >
             乳清蛋白
           </Link>
@@ -195,9 +182,9 @@ const StorePage = () => {
           <Link
             to=""
             className="b"
-            // onClick={() => {
-            //   OneCategory();
-            // }}
+            onClick={() => {
+              gainMuscleCategory();
+            }}
           >
             增肌減脂套餐
           </Link>
@@ -210,9 +197,6 @@ const StorePage = () => {
       <br />
       <div className="mycontain">
         <div className="selectS">
-          <span className="allGoods">
-            <p>全站商品</p>
-          </span>
           <span className="goodsQty">
             <p>共12件商品</p>
           </span>
@@ -243,7 +227,7 @@ const StorePage = () => {
       </div>
 
       <div>
-        <a href="#" className="gotopBtn">
+        <a href="http://localhost:3000/store" className="gotopBtn">
           <div className="backGroup">
             <div>
               <img
@@ -266,10 +250,8 @@ const StorePage = () => {
         <div className="row">
           {products.map((product) => (
             <div key={product.productid} className={columnClass}>
-              <a
-                href="http://localhost:3000/goods"
-                rel="noreferrer"
-                target="_blank"
+              <Link
+                to="http://localhost:3000/goods/:id"
                 className="whereUsergo"
               >
                 <div className="mycardIcon">
@@ -280,30 +262,26 @@ const StorePage = () => {
                     </div>
                   </span>
                 </div>
-              </a>
+              </Link>
 
               <br />
-              <a
-                href="http://localhost:3000/goods"
-                rel="noreferrer"
-                target="_blank"
+              <Link
+                to="http://localhost:3000/goods/:id"
                 className="whereUsergo"
               >
                 <div>
                   <p className="fw-semibold cardTopic">{product.name}</p>
                   <p className="cardText">{product.description}</p>
                 </div>
-              </a>
+              </Link>
 
-              <a
-                href="http://localhost:3000/goods"
-                rel="noreferrer"
-                target="_blank"
+              <Link
+                to="http://localhost:3000/goods/:id" // id = ?  product:food ==> foodid
                 className="whereUsergo"
               >
                 <span className="cardSprice">{product.price}</span>
                 {/* <span className="cardPrice">{goodPrices}</span> */}
-              </a>
+              </Link>
             </div>
           ))}
         </div>
@@ -341,6 +319,24 @@ const StorePage = () => {
           }}
         >
           3
+        </Link>
+        <Link
+          to=""
+          className={`next${currentPage === 4 ? "One" : "Two"}`}
+          onClick={() => {
+            PageFour();
+          }}
+        >
+          4
+        </Link>
+        <Link
+          to=""
+          className={`next${currentPage === 5 ? "One" : "Two"}`}
+          onClick={() => {
+            PageFive();
+          }}
+        >
+          5
         </Link>
       </div>
 
