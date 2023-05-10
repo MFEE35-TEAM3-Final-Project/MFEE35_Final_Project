@@ -1,51 +1,40 @@
 
-orders
-管理員專屬
-GET /admin/orders：查詢所有訂單 V 差驗證
 
-GET /orders/product/:product_id：根據產品查詢訂單 V 驗證
-GET /orders/status/:status：根據訂單狀態查詢訂單 V 驗證
-PATCH /admin/orders/:order_id：更新訂單狀態 V
-DELETE /users/:user_id/orders/:order_id：刪除訂單 V
+API 
+get /api/admin/orders
+put /api/admin/orders
+delete /api/admin/orders
 
-POSTAPI 內插入寄送MAIL的功能
-訂單的資訊要驗證
+get /api/users/orders
+post /api/users/orders
+delete /api/users/orders/:order_id
 
-會員專屬
-GET /users//orders：查詢會員所有訂單 V
-POST /users/:user_id/orders：新增訂單 V 
-DELETE /users/:user_id/orders/:order_id：刪除訂單 V
+GET api/orders/search
 
-共用
-GET /orders/search：查詢訂單 要合併 X
-GET /orders/phone/:phone：根據電話查詢訂單  X
-GET /orders/email/:email：根據 email 查詢訂單 合併 X
-/////////////////////
 cart
-會員專屬
-GET /users/:user_id/carts：查詢會員購物車V
-POST /users/:user_id/carts：新增購物車 V
-put
-先運行產品庫存驗證檢查庫存 才可以增加 V
-每次調整數量、增加數量都要送一次API
-DELETE /users/:user_id/carts/:cart_id：刪除購物車 V
-
-
-//////////////////////
+GET /users/cart
+POST /users/cart/add
+put /users/cart/update
+DELETE /users/carts/:cart_id
+DELETE /users/carts
 
 favorite
-會員專屬
-GET /users/:user_id/favorites：查詢會員收藏
-POST /users/:user_id/favorites：新增會員收藏
-DELETE /users/:user_id/favorites/:favorite_id：刪除會員
-/////////////////////
+GET /users/favorites
+POST /users/favorites
+DELETE /users/favorite
+
 coupon
 管理員專屬
-GET /admin/coupons：查詢所有優惠券
-POST /admin/coupons：新增優惠券
-PATCH /admin/coupons/:coupon_id：更新優惠券資訊
-DELETE /admin/coupons/:coupon_id：刪除優惠券
-會員專屬
+GET /admin/coupon：查詢所有優惠券
+POST /admin/coupon：新增優惠券
+PUT /admin/coupon/:coupon_id：更新優惠券資訊
+DELETE /admin/coupon/:code：刪除優惠券
+
+
+匯出資料庫 檢查 
+匯出post man 
+用新的git
+會員專屬code 
 GET /users/:user_id/coupons：查詢會員所有優惠券
 POST /users/:user_id/coupons/:coupon_id：兌換優惠券
 DELETE /users/:user_id/coupons/:coupon_id：刪除會員優惠券

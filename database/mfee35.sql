@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3370
--- Generation Time: May 09, 2023 at 08:27 AM
+-- Generation Time: May 10, 2023 at 08:22 AM
 -- Server version: 5.7.24
 -- PHP Version: 8.0.1
 
@@ -150,6 +150,34 @@ INSERT INTO `article_meg` (`sid`, `user_id`, `article_id`, `comment`, `created_a
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `coupon_id` int(5) NOT NULL,
+  `code` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `discount_rate` decimal(10,2) NOT NULL,
+  `discount_algorithm` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `usage_limit` int(11) DEFAULT NULL,
+  `usage_count` int(11) DEFAULT '0',
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `coupons`
+--
+
+INSERT INTO `coupons` (`coupon_id`, `code`, `name`, `discount_rate`, `discount_algorithm`, `description`, `usage_limit`, `usage_count`, `start_date`, `end_date`, `created_at`, `updated_at`) VALUES
+(3, 'ABC123', '特惠日優惠券', '0.80', 'percentage', '特惠日優惠券，享有八折優惠', 1000, 0, '2022-06-01 00:00:00', '2022-06-30 23:59:59', '2023-05-10 07:06:38', '2023-05-10 07:06:38');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `discounted_products`
 --
 
@@ -205,7 +233,7 @@ CREATE TABLE `exercise_records` (
 CREATE TABLE `favorite` (
   `id` int(11) NOT NULL,
   `user_id` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `productid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -213,10 +241,8 @@ CREATE TABLE `favorite` (
 -- Dumping data for table `favorite`
 --
 
-INSERT INTO `favorite` (`id`, `user_id`, `product_id`, `created_at`) VALUES
-(1, '4152607872', 1, '2023-05-09 15:09:32'),
-(3, '4152607872', 3, '2023-05-09 15:43:31'),
-(4, '4152607872', 4, '2023-05-09 15:43:46');
+INSERT INTO `favorite` (`id`, `user_id`, `productid`, `created_at`) VALUES
+(6, '4152607872', '09f437e8-169e-4dc0-80c1-f222b3719009', '2023-05-10 11:25:47');
 
 -- --------------------------------------------------------
 
@@ -2469,10 +2495,11 @@ CREATE TABLE `onlineproducts` (
 --
 
 INSERT INTO `onlineproducts` (`productid`, `name`, `description`, `price`, `stock`, `category`, `image`, `start_date`, `end_date`) VALUES
-('04b15522-6e0a-448a-86fe-6f2da58da30f', '我是測試產品', '測試', '123123.00', 213123, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:49:49', '2038-01-18 19:14:07'),
-('0861bb46-c0b8-45c9-9b55-c53e812547de', '我是測試產品', '測試', '123123.00', 213123, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:50:07', '2038-01-18 19:14:07'),
+('04b15522-6e0a-448a-86fe-6f2da58da30f', '我是測試產品', '測試', '123123.00', 213117, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:49:49', '2038-01-18 19:14:07'),
+('0861bb46-c0b8-45c9-9b55-c53e812547de', '我是測試產品', '測試', '123123.00', 213120, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:50:07', '2038-01-18 19:14:07'),
 ('09f437e8-169e-4dc0-80c1-f222b3719009', '我是測試產品', '測試', '123123.00', 213123, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:49:40', '2038-01-18 19:14:07'),
 ('0b1b3b6c-7a94-468a-8a4b-6fc7d2899cc0', '我是測試產品', '測試', '123123.00', 213123, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:49:33', '2038-01-18 19:14:07'),
+('1', '111111', '121121212', '12.00', 12, '12', '1212', '2023-05-10 01:59:44', '2038-01-18 19:14:07'),
 ('1a5d939b-a7cd-49b4-83cc-7a662a522bed', '我是測試產品', '測試', '123123.00', 213123, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:50:06', '2038-01-18 19:14:07'),
 ('1b523d52-ba1d-4e85-81d9-5b5f1d4a39a3', '我是測試產品', '測試', '123123.00', 213123, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:48:48', '2038-01-18 19:14:07'),
 ('1faf2d28-dc53-42ed-9c8a-9bf510660114', '我是測試產品', '測試', '123123.00', 213123, '測試', 'https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/id84bscatdbf3cd4xlxi.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/sikm69rxk7tt0cucxpwf.png,https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013672/jzptrshdckcbeyxac933.png,', '2023-05-02 07:49:44', '2038-01-18 19:14:07'),
@@ -2534,11 +2561,12 @@ INSERT INTO `onlineproducts` (`productid`, `name`, `description`, `price`, `stoc
 CREATE TABLE `orders` (
   `order_id` char(36) NOT NULL,
   `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
+  `email` varchar(50) NOT NULL,
+  `phone` varchar(10) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
-  `coupon_id` int(11) DEFAULT NULL,
+  `coupon_code` varchar(20) DEFAULT NULL,
   `total_quantity` int(11) DEFAULT NULL,
-  `total_price` int(11) DEFAULT NULL,
+  `total_price` decimal(10,2) DEFAULT NULL,
   `payment_method` varchar(20) DEFAULT NULL,
   `shipping_method` varchar(20) DEFAULT NULL,
   `shipping_address` varchar(100) DEFAULT NULL,
@@ -2551,8 +2579,10 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `user_id`, `phone`, `name`, `coupon_id`, `total_quantity`, `total_price`, `payment_method`, `shipping_method`, `shipping_address`, `ship_store`, `status`, `create_time`) VALUES
-('9ebafc05-d88b-4b1d-8ea0-e341279a13b9', '4152607872', '0987654321', 'John Doe', NULL, 3, 1500, 'credit_card', NULL, 'No. 123, Main Street, Taipei City', 'My Store', 'created', '2023-05-08 11:03:31');
+INSERT INTO `orders` (`order_id`, `user_id`, `email`, `phone`, `name`, `coupon_code`, `total_quantity`, `total_price`, `payment_method`, `shipping_method`, `shipping_address`, `ship_store`, `status`, `create_time`) VALUES
+('3add615e-f064-4f5e-accb-9e57c537c7b9', '4152607872', 'ppppppp@gmail.com', '0987654321', 'John Doe', 'TESTCODE', 3, '1500.00', 'credit_card', NULL, 'No. 123, Main Street, Taipei City', 'My Store', 'created', '2023-05-10 15:38:28'),
+('f9ae7d3b-11c3-4362-a943-8bffc1a7510b', '4152607872', 'ppppppp@gmail.com', '0987654321', 'John Doe', NULL, 3, '1500.00', 'credit_card', NULL, 'No. 123, Main Street, Taipei City', 'My Store', 'complete', '2023-05-10 10:34:27'),
+('fd1b1b09-a58c-42ee-ab83-c3442ca5113e', '4152607872', 'ppppppp@gmail.com', '0987654321', 'John Doe', NULL, 3, '1500.00', 'credit_card', NULL, 'No. 123, Main Street, Taipei City', 'My Store', 'created', '2023-05-10 10:34:29');
 
 -- --------------------------------------------------------
 
@@ -2563,20 +2593,22 @@ INSERT INTO `orders` (`order_id`, `user_id`, `phone`, `name`, `coupon_id`, `tota
 CREATE TABLE `order_details` (
   `detail_id` int(11) NOT NULL,
   `order_id` char(36) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `productid` varchar(50) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `price` int(11) NOT NULL
+  `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `order_details`
 --
 
-INSERT INTO `order_details` (`detail_id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(29, '9ebafc05-d88b-4b1d-8ea0-e341279a13b9', 1, 2, 500),
-(30, '9ebafc05-d88b-4b1d-8ea0-e341279a13b9', 2, 1, 500),
-(33, '1a6d5acb-1899-466e-8fc1-4c324d19d0d6', 1, 2, 500),
-(34, '1a6d5acb-1899-466e-8fc1-4c324d19d0d6', 2, 1, 500);
+INSERT INTO `order_details` (`detail_id`, `order_id`, `productid`, `quantity`, `price`) VALUES
+(37, 'f9ae7d3b-11c3-4362-a943-8bffc1a7510b', '0861bb46-c0b8-45c9-9b55-c53e812547de', 1, '500.00'),
+(38, 'f9ae7d3b-11c3-4362-a943-8bffc1a7510b', '04b15522-6e0a-448a-86fe-6f2da58da30f', 2, '500.00'),
+(39, 'fd1b1b09-a58c-42ee-ab83-c3442ca5113e', '0861bb46-c0b8-45c9-9b55-c53e812547de', 1, '500.00'),
+(40, 'fd1b1b09-a58c-42ee-ab83-c3442ca5113e', '04b15522-6e0a-448a-86fe-6f2da58da30f', 2, '500.00'),
+(41, '3add615e-f064-4f5e-accb-9e57c537c7b9', '0861bb46-c0b8-45c9-9b55-c53e812547de', 1, '500.00'),
+(42, '3add615e-f064-4f5e-accb-9e57c537c7b9', '04b15522-6e0a-448a-86fe-6f2da58da30f', 2, '500.00');
 
 -- --------------------------------------------------------
 
@@ -2612,17 +2644,10 @@ INSERT INTO `products` (`product_id`, `name`, `description`, `price`, `stock_qua
 CREATE TABLE `shopping_cart` (
   `cart_id` varchar(10) NOT NULL,
   `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `productid` varchar(50) NOT NULL,
   `quantity` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `shopping_cart`
---
-
-INSERT INTO `shopping_cart` (`cart_id`, `user_id`, `product_id`, `quantity`, `created_at`) VALUES
-('149828', '4152607872', 2, 5, '2023-05-09 06:24:47');
 
 -- --------------------------------------------------------
 
@@ -2703,6 +2728,13 @@ ALTER TABLE `article_meg`
   ADD PRIMARY KEY (`sid`);
 
 --
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`coupon_id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
 -- Indexes for table `discounted_products`
 --
 ALTER TABLE `discounted_products`
@@ -2759,7 +2791,7 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `order_details`
   ADD PRIMARY KEY (`detail_id`),
-  ADD KEY `product_id` (`product_id`),
+  ADD KEY `product_id` (`productid`),
   ADD KEY `order_details_ibfk_1` (`order_id`);
 
 --
@@ -2773,7 +2805,7 @@ ALTER TABLE `products`
 --
 ALTER TABLE `shopping_cart`
   ADD PRIMARY KEY (`cart_id`),
-  ADD KEY `product_id` (`product_id`),
+  ADD KEY `product_id` (`productid`),
   ADD KEY `shopping_cart_ibfk_2` (`user_id`);
 
 --
@@ -2806,6 +2838,12 @@ ALTER TABLE `article_meg`
   MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `coupon_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `discounts`
 --
 ALTER TABLE `discounts`
@@ -2815,7 +2853,7 @@ ALTER TABLE `discounts`
 -- AUTO_INCREMENT for table `favorite`
 --
 ALTER TABLE `favorite`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `meal_records`
@@ -2827,7 +2865,7 @@ ALTER TABLE `meal_records`
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `products`

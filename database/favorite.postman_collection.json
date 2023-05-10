@@ -21,7 +21,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_id\":\"4152607872\",\r\n    \"product_id\":\"5\"\r\n}",
+					"raw": "{\r\n    \"product_id\":\"09f437e8-169e-4dc0-80c1-f222b3719009\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -29,7 +29,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/user/favorite/add",
+					"raw": "localhost:8080/api/user/favorite",
 					"host": [
 						"localhost"
 					],
@@ -37,8 +37,7 @@
 					"path": [
 						"api",
 						"user",
-						"favorite",
-						"add"
+						"favorite"
 					]
 				}
 			},
@@ -108,7 +107,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user_id\":\"4152607872\"\r\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
