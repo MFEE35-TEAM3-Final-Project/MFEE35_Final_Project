@@ -3,11 +3,32 @@ import "../styles/blog.css"
 function Blog() {
     return (
         <div >
-
             <div className=" F-container mt-5">
                 <div className="row g-5">
                     <div className="col-lg-7 col-12">
-                        <div className="newpost"><a href="/"><img src="./1.jpg" alt="" /></a></div>
+                        <div className="newpost">
+                            <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
+                                <div className="carousel-inner">
+                                    <div className="carousel-item active">
+                                        <img src="..." className="d-block w-100" alt="..." />
+                                    </div>
+                                    <div className="carousel-item">
+                                        <img src="..." className="d-block w-100" alt="..." />
+                                    </div>
+                                    <div className="carousel-item">
+                                        <img src="..." className="d-block w-100" alt="..." />
+                                    </div>
+                                </div>
+                                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span className="visually-hidden">Previous</span>
+                                </button>
+                                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span className="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div className="col-lg-5 col-12">
                         <div className="row g-4 pe-5 popular">
@@ -46,7 +67,7 @@ function Blog() {
                 </div>
                 <div className="classify row g-0 nav nav-tabs" role="tablist" >
                     <div className="classify-img col-md-4 col-12">
-                        <a className="active" data-bs-toggle="tab"href="#HEALTHY" role="tab" aria-controls="HEALTHY" aria-selected="true" tabIndex="0">
+                        <a className="active" data-bs-toggle="tab" href="#HEALTHY" role="tab" aria-controls="HEALTHY" aria-selected="true" tabIndex="0">
                             <img src="/image/blog/healthy.png" className="img-fluid" alt="" />
                             <div >HEALTHY</div>
                         </a>
@@ -394,7 +415,6 @@ function Blog() {
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>

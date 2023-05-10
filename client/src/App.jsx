@@ -11,7 +11,7 @@ import LoginPage from "./pages/LoginPage";
 import UserProfiles from "./pages/user/UserProfile";
 import UserSelfies from "./pages/user/UserSelfies";
 import UserDashboard from "./pages/user/UserDashboard";
-import Articles from "./pages/admin/Article";
+// import Articles from "./pages/admin/Article";
 import Food from "./pages/user/Food";
 import Blog from "./pages/blog";
 import Calculator from "./pages/Calculator"
@@ -33,8 +33,7 @@ function App() {
             <Route path="/user/profile" element={<UserProfiles />} />
             <Route path="/user/selfies" element={<UserSelfies />} />
           </Route>
-          <Route path="/article" element={<Article />} />
-          <Route path="/articles" element={<Articles />} />
+          {/* <Route path="/articles" element={<Articles />} /> */}
           <Route path="/food" element={<Food />} />
         </Routes>
       </div>

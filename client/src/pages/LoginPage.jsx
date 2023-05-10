@@ -23,12 +23,14 @@ const UserLogin = () => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/user/login`, data)
       .then((res) => {
-        const { token, exp } = res.data;
+        const { token, exp, email } = res.data;
         const expDate = new Date(exp);
         document.cookie = `jwtToken=${token}; expires=${expDate.toUTCString()}`;
         setNowTime({ now: new Date(), tokenTime: expDate });
         setBackData(res.data);
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("email", res.data.email);
+        console.log(res.data.token)
       })
       .catch((err) => {
         localStorage.removeItem("token");

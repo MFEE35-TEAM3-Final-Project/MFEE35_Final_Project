@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { FaUser, FaShoppingCart, FaCaretRight } from "react-icons/fa";
-import axios from "axios";
+
 
 function Nav() {
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,6 +26,7 @@ function Nav() {
   //     });
   // };
   const isAuthenticated = localStorage.getItem("token") !== null;
+  const email = localStorage.getItem("email");
   const handleLogout = () => {
     localStorage.removeItem("token");
     document.cookie = "jwtToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
@@ -53,7 +54,7 @@ function Nav() {
             <li>
               <a href="#" onClick={handleLogout}>
                 <FaUser className="me-2" />
-                登出
+                {email} 登出
               </a>
             </li>
           ) : (

@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: betadays
+-- Host: 127.0.0.1    Database: mfee35
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.0.32
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS `article_comments`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `article_comments` (
   `comment_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `article_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -82,7 +82,7 @@ DROP TABLE IF EXISTS `article_meg`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `article_meg` (
   `sid` int NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `user_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `article_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -277,4 +277,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-05 11:30:23
+-- Dump completed on 2023-05-05 21:00:59
