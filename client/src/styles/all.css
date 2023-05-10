@@ -326,4 +326,10 @@
   border-radius: 50%;
   overflow: hidden;
 }
+
+#backstage .logo {
+  height: 4rem;
+  width: 100%;
+  background-color: aqua;
+}
 /*# sourceMappingURL=all.css.map */

@@ -9,41 +9,40 @@ import {
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const { Header, Sider, Content, Footer } = Layout;
 const items = [
   {
     key: "1",
     icon: <PieChartOutlined />,
-    label: "Option 1"
+    label: "銷售狀況"
   },
   {
     key: "2",
-    icon: <DesktopOutlined />,
-    label: "Option 2"
+    icon: <UserOutlined />,
+    label: "會員管理"
   },
+  {
+    key: "3",
+    icon: <UserOutlined />,
+    label: "訂單管理"
+  },
+  {
+    key: "4",
+    icon: <UserOutlined />,
+    label: "優惠券管理"
+  },
+  {
+    key: "5",
+    icon: <UserOutlined />,
+    label: "文章管理"
+  },
+
   {
     key: "sub1",
-    icon: <UserOutlined />,
-    label: "User",
-    children: [
-      {
-        key: "3",
-        label: "Tom"
-      },
-      {
-        key: "4",
-        label: "Bill"
-      },
-      {
-        key: "5",
-        label: "Alex"
-      }
-    ]
-  },
-  {
-    key: "sub2",
     icon: <TeamOutlined />,
-    label: "Team",
+    label: "測試",
     children: [
       {
         key: "6",
@@ -62,51 +61,54 @@ const items = [
 ];
 const Backstage = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const navigate = useNavigate();
   const {
     token: { colorBgContainer }
   } = theme.useToken();
   return (
-    <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["3"]}
-          defaultOpenKeys={["sub1"]}
-          items={items}
-        />
-      </Sider>
+    <div id="backstage">
       <Layout>
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer
-          }}
-        >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64
-            }}
+        <Sider trigger={null} collapsible collapsed={collapsed}>
+          <div className="logo" />
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["sub1"]}
+            items={items}
           />
-        </Header>{" "}
-        <Content
-          style={{
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer
-          }}
-        >
-          Content
-        </Content>
-        <Footer>Fooooooter</Footer>
+        </Sider>
+        <Layout>
+          <Header
+            style={{
+              padding: 0,
+              background: colorBgContainer
+            }}
+          >
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{
+                fontSize: "16px",
+                width: 64,
+                height: 64
+              }}
+            />
+          </Header>{" "}
+          <Content
+            style={{
+              padding: 24,
+              minHeight: 280,
+              background: colorBgContainer
+            }}
+          >
+            Content
+          </Content>
+          <Footer>Fooooooter</Footer>
+        </Layout>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 export default Backstage;
