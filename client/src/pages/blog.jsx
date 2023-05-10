@@ -33,13 +33,13 @@ function Blog() {
               >
                 <div className="carousel-inner">
                   <div className="carousel-item active">
-                    <img src="..." className="d-block w-100" alt="..." />
+                    <img src="/image/blog/carousel1.jpg" className="d-block w-100" alt="..." />
                   </div>
                   <div className="carousel-item">
-                    <img src="..." className="d-block w-100" alt="..." />
+                    <img src="/image/blog/carousel2.jpg" className="d-block w-100" alt="..." />
                   </div>
                   <div className="carousel-item">
-                    <img src="..." className="d-block w-100" alt="..." />
+                    <img src="/image/blog/carousel3.jpg" className="d-block w-100" alt="..." />
                   </div>
                 </div>
                 <button
@@ -74,14 +74,12 @@ function Blog() {
               <a href="/">
                 <div className="col-12 d-flex flex-md-row">
                   <div className="popular-img me-4">
-                    <img src="./test.jpg" alt="" />
+                    <img src="/image/blog/popular1.jpg" alt=""  className="img-fluid"/>
                   </div>
                   <div className="popular-text">
-                    <h5>What is Lorem</h5>
+                    <h5>素食、葷食 哪種飲食型態對跑步表現較好﹖</h5>
                     <p>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                      LoremLoremLoremLoremLoremLoremLoremLoremLoremLorem
+                    無論做任何運動，營養補給都是影響運動表現相當重要的關鍵...
                     </p>
                   </div>
                 </div>
@@ -89,14 +87,12 @@ function Blog() {
               <a href="/">
                 <div className="col-12 d-flex flex-md-row">
                   <div className="popular-img me-4">
-                    <img src="./test.jpg" alt="" />
+                    <img src="/image/blog/popular2.jpg" alt="" className="img-fluid" />
                   </div>
                   <div className="popular-text">
-                    <h5>What is Lorem</h5>
+                    <h5>吃素就一定比較健康嗎？研究結果和你想得不一樣</h5>
                     <p>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                      LoremLoremLoremLoremLoremLoremLoremLoremLoremLorem
+                    選擇吃素的朋友可能有各種不同的初衷...
                     </p>
                   </div>
                 </div>
@@ -104,14 +100,12 @@ function Blog() {
               <a href="/">
                 <div className="col-12 d-flex flex-md-row">
                   <div className="popular-img me-4">
-                    <img src="./test.jpg" alt="" />
+                    <img src="/image/blog/popular3.jpg" alt="" className="img-fluid" />
                   </div>
                   <div className="popular-text">
-                    <h5>What is Lorem</h5>
+                    <h5>靠TDEE與基礎代謝率BMR計算機就能減肥？</h5>
                     <p>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry.
-                      LoremLoremLoremLoremLoremLoremLoremLoremLoremLorem
+                    其實快速減肥的方法有好多種，生酮、低醣（低碳）飲食、間歇性斷食⋯
                     </p>
                   </div>
                 </div>

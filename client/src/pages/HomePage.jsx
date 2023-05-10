@@ -55,6 +55,7 @@ export default function HomePage() {
 
             // 更新state變量
             setTopImgWidth(width);
+            
         };
 
         // 監聽視窗的滾動事件
@@ -169,9 +170,9 @@ export default function HomePage() {
                 <div className="R-text">BeforeAfter</div>
                 <div className="BA-item">
                     <div className="BA-item-box"><img className="img-fluid" src="/image/beaf.jpg" alt="" /></div>
-                    <div className="BA-item-box"><img className="img-fluid" src="/image/beaf.jpg" alt="" /></div>
-                    <div className="BA-item-box"><img className="img-fluid" src="/image/beaf.jpg" alt="" /></div>
-                    <div className="BA-item-box"><img className="img-fluid" src="/image/beaf.jpg" alt="" /></div>
+                    <div className="BA-item-box"><img className="img-fluid" src="/image/beaf2.jpg" alt="" /></div>
+                    <div className="BA-item-box"><img className="img-fluid" src="/image/beaf3.jpg" alt="" /></div>
+                    <div className="BA-item-box"><img className="img-fluid" src="/image/beaf4.jpg" alt="" /></div>
                 </div>
             </div>
             <div className="product">

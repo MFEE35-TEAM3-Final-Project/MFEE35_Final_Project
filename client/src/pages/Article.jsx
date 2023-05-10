@@ -3,19 +3,19 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function Article() {
-  const [articles, setArticle] = useState([]);
-  axios
-    .get(`${process.env.REACT_APP_API_URL}/api/articles`)
-    .then((res) => {
-      console.log(res.data.articles);
-      setArticle(res.data.articles);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  // const [articles, setArticle] = useState([]);
+  // axios
+  //   .get(`${process.env.REACT_APP_API_URL}/api/articles`)
+  //   .then((res) => {
+  //     console.log(res.data.articles);
+  //     setArticle(res.data.articles);
+  //   })
+  //   .catch((err) => {
+  //     console.error(err);
+  //   });
   return (
     <div>
-      <div className="article">
+      <div className="A-article">
         <div className="row g-0">
           <div className="col-3 ">
             <div className="s-title">
@@ -54,7 +54,7 @@ function Article() {
           <div className="col-6 ">
             <div className="content">
               <div className="content-title">
-                {articles[1].title}
+              健康飲食怎麼吃？營養師曝「最佳飲食法」操作指南
                 <span>2023/04/27</span>
               </div>
               <div className="content-p">
@@ -130,18 +130,18 @@ function Article() {
                 這樣的飲食模式已流傳已久，且許多研究也證實地中海飲食法與得舒飲食法，具有多個健康效益，其中地中海飲食法的執行難易度相較於其他飲食方法，更容易長久執行。只要均衡的攝取到地中海飲食法的食物類別，以及保持適度的運動、攝取適量水分，要維持身體健康其實不難
               </div>
             </div>
-            <div className="recommend ">
+            <div className="A-recommend ">
               <div className="d-flex  flex-row">
                 <div className="left-r">
                   <a href="">
-                    <div className="recommend-text">延伸閱讀</div>
-                    <div className="recommend-title">標題 What is Lorem </div>
+                    <div className="A-recommend-text">延伸閱讀</div>
+                    <div className="A-recommend-title">標題 What is Lorem </div>
                   </a>
                 </div>
                 <div className="right-r">
                   <a href="">
-                    <div className="recommend-text">下一篇</div>
-                    <div className="recommend-title">標題 What is Lorem </div>
+                    <div className="A-recommend-text">下一篇</div>
+                    <div className="A-recommend-title">標題 What is Lorem </div>
                   </a>
                 </div>
               </div>
@@ -170,7 +170,7 @@ function Article() {
                 <div className="userPost">
                   <div className="d-flex align-items-center mt-3">
                     <div>
-                      <img src="./images/user (1).png" alt="" />
+                      <img src="/image/article/userhead.png" alt="" />
                     </div>
                     <span className="userName p-3">Name</span>
                     <span>2023/04/27 12:00</span>
