@@ -23,13 +23,14 @@ function MemberHeader() {
           ☰
         </div>
         <div id="mySidenav" className="sidenav">
-          <a href="javascript:void(0)" className="closebtn" onClick={closeNav}>
+          {/* <a href="javascript:void(0)" className="closebtn" onClick={closeNav}> */}
+          <a href="#" className="closebtn" onClick={closeNav}>
             &times;
           </a>
           <Link to="/MemberHomePage">
             <li>會員首頁</li>
           </Link>
-          <Link to="/member-data">
+          <Link to="/MemberData">
             <li>會員資料</li>
           </Link>
           <Link to="/calculator">

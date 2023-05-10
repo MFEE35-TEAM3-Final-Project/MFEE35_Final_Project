@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
 import MyBarChart from "../../components/member/BarChart";
 import MemberHeader from "../../components/member/MemberHeader";
 import Footer from "../../components/member/Footer";
@@ -8,8 +10,18 @@ import MyStackedBarChart from "../../components/member/MyStackedBarChart";
 import "../../styles/member/chartlist.css";
 
 function ChartListPage() {
+  // useEffect(() => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/api/articles`)
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // }, []);
   return (
-    <div>
+    <div style={{ backgroundColor: "#F7F4E9" }}>
       <MemberHeader />
       <div className="wapper">
         <div className="memberTitle">
@@ -22,10 +34,10 @@ function ChartListPage() {
             <div className="row">
               <MyBarChart />
               <MyDonutChart />
-              <div class="myBarChart col-6">
+              <div className="myBarChart col-6">
                 <MyStackedBarChart />
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col-6" style={{ textAlign: "left" }}>
                     <p>營養素</p>
                     <p>
                       <i

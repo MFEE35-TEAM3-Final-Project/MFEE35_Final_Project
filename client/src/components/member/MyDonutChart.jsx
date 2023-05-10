@@ -50,7 +50,7 @@ function MyDonutChart() {
     return () => {
       donutChart.destroy();
     };
-  }, []); // 這裡添加了括號以解決語法錯誤
+  }, []); 
 
   return (
     <div className="myBarChart col-6">

@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import MemberHeader from "../../components/member/MemberHeader";
 import Footer from "../../components/member/Footer";
 import BarChart from "../../components/member/BarChart.jsx";
@@ -136,7 +138,9 @@ function MemberHomePage() {
             <BarChart />
 
             <div className="myBtn">
-              <button className="foodRecordBtn">查看更多數據</button>
+              <Link to="/MemberChartList">
+                <button className="foodRecordBtn">查看更多數據</button>
+              </Link>
             </div>
           </div>
         </div>
