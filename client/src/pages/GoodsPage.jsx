@@ -1,8 +1,8 @@
 import React from "react";
-// import React, { useState } from "react";
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+import Chart from "../components/chart";
 import "../css/goods.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
 import Footer from "../components/footer";
 
 const GoodsPage = () => {
@@ -109,9 +109,13 @@ const GoodsPage = () => {
       <br />
       <div className="myGoodscontain nutriChart">
         <div>
-          <div>
-            <canvas id="chartCanvas"></canvas>
+          <div className="App">
+            <Chart />
           </div>
+          {/* <div> */}
+          {/* <canvas id="chartCanvas"></canvas> */}
+          {/* <Doughnut data={data} options={options} /> */}
+          {/* </div> */}
         </div>
       </div>
       <br />

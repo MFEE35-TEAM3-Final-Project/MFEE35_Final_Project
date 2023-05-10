@@ -35,7 +35,7 @@ const StorePage = () => {
   // 設定初始頁面
   const [currentPage, setCurrentPage] = useState(1);
   // 設定初始類別
-  const [currentCategory, setCurrentCategory] = useState("");
+  // const [currentCategory, setCurrentCategory] = useState("");
 
   useEffect(() => {
     axios
@@ -103,58 +103,45 @@ const StorePage = () => {
     setCurrentPage(3);
   };
 
-  const testCategory = () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`, {
-        params: {
-          category: "測試",
-          page: currentPage,
-          limit: 12,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        const testAllData = res.data.filter((item) => item.category == "213");
-        console.log(testAllData);
-        const testAllDataA = res.data.filter(
-          (itemA) => itemA.category == "12321"
-        );
-        console.log(testAllDataA);
-        const testAllDataB = res.data.filter(
-          (itemB) => itemB.category == "123321"
-        );
-        console.log(testAllDataB);
-        const testAllDataC = res.data.filter(
-          (itemC) => itemC.category == "測試"
-        );
-        console.log(testAllDataC);
-        const testAllDataD = res.data.filter(
-          (itemD) => itemD.category == "123"
-        );
-        console.log(testAllDataD);
-        setProducts(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-  function OneCategory() {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`, {
-        params: {
-          category: "12321",
-          page: currentPage,
-          limit: 12,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        setProducts(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
+  // const testCategory = () => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`, {
+  //       params: {
+  //         category: "測試",
+  //         page: currentPage,
+  //         limit: 12,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+
+  //       const testAllData = res.data.filter(
+  //         (itemC) => itemC.category === "測試"
+  //       );
+  //       console.log(testAllData);
+  //       setProducts(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
+  // const OneCategory = () => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsAll`, {
+  //       params: {
+  //         category: "12321",
+  //         page: currentPage,
+  //         limit: 12,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //       setProducts(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
 
   return (
     <div>
@@ -197,9 +184,9 @@ const StorePage = () => {
           <Link
             to=""
             className="a"
-            onClick={() => {
-              testCategory();
-            }}
+            // onClick={() => {
+            //   testCategory();
+            // }}
           >
             乳清蛋白
           </Link>
@@ -208,9 +195,9 @@ const StorePage = () => {
           <Link
             to=""
             className="b"
-            onClick={() => {
-              OneCategory();
-            }}
+            // onClick={() => {
+            //   OneCategory();
+            // }}
           >
             增肌減脂套餐
           </Link>
@@ -256,7 +243,7 @@ const StorePage = () => {
       </div>
 
       <div>
-        <a href="http://localhost:3000/goodstop" className="gotopBtn">
+        <a href="#" className="gotopBtn">
           <div className="backGroup">
             <div>
               <img
