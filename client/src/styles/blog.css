@@ -89,14 +89,16 @@
 .popular-text {
     width: 300px;
     height: 120px;
+    position: relative;
 }
 
-.popular-text p {
-    height: 56px;
-    padding: 10px 0;
+.popular-text span {
+    color: gray;
+    position: absolute;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 14px;
+    bottom: 0;
 }
 
 .gutter {
@@ -120,15 +122,15 @@
 
 .classify a:hover img {
     transition-duration: 1s;
-    -webkit-filter: brightness(1);
+    -webkit-filter: brightness(.8);
 
 }
 
 .classify-img {
     cursor: pointer;
     display: inline-block;
-    width: 480px;
-    height: 200px;
+    width: 360px;
+    height: 180px;
     background-color: bisque;
     font-size: 32px;
     font-weight: bolder;
@@ -138,8 +140,9 @@
 
 .classify-img >a> div {
     position: absolute;
-    top: 80px;
+    top: 65px;
     left: 30px;
+    font-weight: bolder;
 }
 .articlelist {
     transition-duration: 1s;
@@ -147,12 +150,14 @@
     
 }
 .article :hover {
+    transition: 0.3s ;
     color: rgb(199, 199, 199);
 }
 
 .article {
     /* width: 800px; */
     /* height: 350px; */
+    transition: all 0.3s ;
     margin-top: 50px;
 
 }
@@ -176,10 +181,11 @@
 
 .article-text {
     width: 425px;
-    height: 350px;
+    transition: all 0.3s ;
+    /* height: 350px; */
     display: inline-block;
     /* background-color: black; */
-    border-bottom: 1px solid rgb(163, 161, 161);
+    border-bottom: 1px solid #F2EBEB;
 
 }
 
@@ -188,10 +194,37 @@
 }
 
 .article-text p {
-    padding-top: 50px;
+    /* padding-top: 50px; */
 }
 
 .Userfeedback {
     margin-top: 30px;
-    height: 16px;
+   
+}
+.newimgbox{
+    height: 430px;
+    position: relative;
+}
+.carousel-imgtext-box{
+    color: black;
+    padding: 10px;
+    background-color: #d9d9d983;
+    position: absolute;
+    bottom: 0;
+    width: 50%;
+    /* font-size: 40px; */
+    /* font-weight: 400; */
+}
+.B-Title{
+    padding-bottom: 50px;
+    font-family: 'Quicksand', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 40px;
+    text-align: left;
+}
+.popular-img-pad{
+    margin: 35px 0px;
+}.react-icons{
+    font-size: 20px;
 }
