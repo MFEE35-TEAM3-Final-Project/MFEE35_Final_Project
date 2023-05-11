@@ -21,7 +21,7 @@ const UserLogin = () => {
     }
   }, [token]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, data) => {
     e.preventDefault();
 
     try {
@@ -58,20 +58,16 @@ const UserLogin = () => {
       );
 
       if (response.ok) {
-        // 令牌验证成功，执行相应操作
         const data = await response.json();
         console.log("令牌验证成功");
         console.log(data.user); // 可以根据需要处理用户信息
-        // 进行重定向或其他操作
         navigate("/MemberHomePage");
       } else {
-        // 令牌验证失败，执行错误处理
         const errorData = await response.json();
         console.log("令牌验证失败");
         console.log(errorData.message); // 显示错误消息或执行其他错误处理
       }
     } catch (error) {
-      // 发生错误，显示错误消息
       console.error(error);
       setErrorMessage("发生了一个错误，请稍后重试");
     }
@@ -171,9 +167,9 @@ const UserLogin = () => {
                   <a href="">Forgot Password ?</a>
                 </span>
               </div>
+              {errorMessage && <div>{errorMessage}</div>}
             </form>
           </div>
-          {errorMessage && <div>{errorMessage}</div>}
         </div>
       </div>
       <Footer />
