@@ -5,9 +5,9 @@ import axios from "axios";
 const AdminBoard = () => {
   const [authenticated, setAuthenticated] = useState(true);
 
-  //   useEffect(() => {
-  //     checkToken();
-  //   }, []);
+  useEffect(() => {
+    checkToken();
+  }, []);
 
   function checkToken() {
     const jwtToken = document.cookie.replace(

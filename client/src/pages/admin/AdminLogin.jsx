@@ -1,12 +1,38 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { useState } from "react";
+import { Button, Checkbox, Form, Input, message, Alert } from "antd";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
 
+  const [error, setError] = useState(null);
+  // function
+  const deleteCookie = (cookieName) => {
+    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  };
   const onFinish = (values) => {
-    console.log("Success:", values);
-    navigate("/admin/backstage");
+    const data = {
+      email: values.email,
+      password: values.password
+    };
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/api/admin/login`, data)
+      .then((res) => {
+        const { token, exp } = res.data;
+        const expDate = new Date(exp);
+        document.cookie = `jwtToken=${token}; expires=${expDate.toUTCString()};path=/;`;
+        navigate("/admin/backstage");
+      })
+      .catch((err) => {
+        deleteCookie("jwtToken");
+        setError("email或密碼錯誤");
+        messageApi.open({
+          type: "error",
+          content: "email或密碼錯誤"
+        });
+      });
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -20,6 +46,7 @@ const AdminLogin = () => {
         </div>
       </div>
       <div>
+        {contextHolder}
         <Form
           name="basic"
           labelCol={{
