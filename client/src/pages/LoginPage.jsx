@@ -8,7 +8,7 @@ const UserLogin = () => {
   // DATA
   const [userData, setUserData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [backData, setBackData] = useState({});
   const [jwtData, setJwtData] = useState("");
@@ -42,7 +42,7 @@ const UserLogin = () => {
 
     axios.defaults.headers.common["Authorization"] = jwtToken;
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/user/check`)
+      .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
       .then((res) => {
         console.log(res);
         setJwtData(res.status + "  " + res.data.message);
