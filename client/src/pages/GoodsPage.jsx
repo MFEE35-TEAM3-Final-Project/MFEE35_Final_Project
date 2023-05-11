@@ -1,43 +1,80 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 // import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import DoughnutChart from "../components/DoughnutChart";
+import DoughnutComponent from "../components/DoughnutChart";
 import "../css/goods.css";
-import Footer from "../components/footer";
 
 const GoodsPage = () => {
-  const [products, setProducts] = useState([]);
-  const [test, setTest] = useState("");
-  // const [quantity, setQuantity] = useState(1);
+  const { productId, foodId } = useParams();
+  const [onlyOneProducts, setOnlyOneProducts] = useState([]);
+  const [ImageList, setImageList] = useState([]);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [onlyOneFoods, setOnlyOneFoods] = useState([]);
+  const [quantity, setQuantity] = useState(1);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/products/getProductsPage`)
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/products/getProductsById?productId=${productId}`
+      )
+      .then((res) => {
+        // console.log(res);
+        setOnlyOneProducts(res.data);
+        setImageList(res.data[0].image);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`)
       .then((res) => {
         console.log(res);
-        setProducts(res.data);
-        setTest(res.data[0].image[0]);
+        setOnlyOneFoods(res.data);
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
-  // const handleIncrease = () => {
-  //   setQuantity(quantity + 1);
-  // };
+  const prevButtonHandler = () => {
+    setActiveImageIndex((prevIndex) => {
+      let newIndex = prevIndex - 1;
+      if (newIndex < 0) {
+        newIndex = ImageList.length - 1;
+      }
+      return newIndex;
+    });
+  };
 
-  // const handleDecrease = () => {
-  //   if (quantity > 1) {
-  //     setQuantity(quantity - 1);
-  //   }
-  // };
+  const nextButtonHandler = () => {
+    setActiveImageIndex((prevIndex) => {
+      let newIndex = prevIndex + 1;
+      if (newIndex > ImageList.length - 1) {
+        newIndex = 0;
+      }
+      return newIndex;
+    });
+  };
+  const handleImageClick = (index) => {
+    setActiveImageIndex(index);
+  };
+  const handleIncrease = () => {
+    setQuantity(quantity + 1);
+  };
 
-  // const handleChange = (event) => {
-  //   const value = parseInt(event.target.value);
-  //   if (!isNaN(value)) {
-  //     setQuantity(value);
-  //   }
-  // };
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handleChange = (event) => {
+    const value = parseInt(event.target.value);
+    if (!isNaN(value)) {
+      setQuantity(value);
+    }
+  };
+
   return (
     <div>
       <Helmet>
@@ -46,6 +83,9 @@ const GoodsPage = () => {
           rel="stylesheet"
         />
       </Helmet>
+      <h1>
+        商品頁面 - 商品 ID：{productId} 跟 {foodId}
+      </h1>
       <div className="goodstype">
         <div className="diet">
           <a href="http://localhost:3000/goods" className="myDiet">
@@ -58,80 +98,77 @@ const GoodsPage = () => {
           </a>
         </div>
       </div>
-
-      <div className="goodsCard myGoodscontain">
-        <div className="goodsImage">
-          <div className="bigGroup">
-            <button className="prevBtn">＜</button>
-            <img
-              // src="./image/store/good1.png"
-              // src={products[0].image[0]}
-              src={test}
-              className="bigImage"
-              alt="大圖"
-            />
-            <button className="nextBtn">＞</button>
+      {onlyOneProducts.map((onlyOneProduct) => (
+        <div
+          key={onlyOneProduct.productid}
+          className="goodsCard myGoodscontain"
+        >
+          <div className="goodsImage">
+            <div className="bigGroup">
+              <button className="prevBtn" onClick={prevButtonHandler}>
+                ＜
+              </button>
+              <img
+                src={onlyOneProduct.image[[activeImageIndex]]}
+                className="bigImage"
+                alt="大圖"
+              />
+              <button className="nextBtn" onClick={nextButtonHandler}>
+                ＞
+              </button>
+            </div>
+            <div className="smallGroup">
+              {ImageList.filter(
+                (imageUrl) =>
+                  imageUrl !== onlyOneProduct.image[activeImageIndex]
+              ).map((imageUrl, index) => (
+                <img
+                  key={index}
+                  src={imageUrl}
+                  className={`smallImage ${
+                    index === activeImageIndex && "active"
+                  }`}
+                  data-target={imageUrl}
+                  alt="小圖"
+                  onClick={() => handleImageClick(index)}
+                />
+              ))}
+            </div>
           </div>
-          <div className="smallGroup">
-            <img
-              src="./image/store/good1.png"
-              // src={products[0].image[1]}
-              className="smallImage active"
-              data-target="./image/store/good1.png"
-              alt="小圖"
-            />
-            <img
-              src="./image/store/good2.png"
-              // src={products[0].image[2]}
-              className="smallImage"
-              data-target="./image/store/good2.png"
-              alt="小圖"
-            />
-            <img
-              src="./image/goods/chicken.png"
-              // src={products[0].image[3]}
-              className="smallImage"
-              data-target="./image/goods/chicken.png"
-              alt="小圖"
-            />
+          <div className="goodsText">
+            <div className="gGroup">
+              <h2 className="goodsName">建議售價</h2>
+              <p className="goodsPrice">{onlyOneProduct.price}</p>
+              {/* <p className="goodsPrice">1200</p> */}
+            </div>
+            <button id="deBtn" className="increaseBtn" onClick={handleDecrease}>
+              一
+            </button>
+            <div className="addingQty">
+              <input
+                type="text"
+                id="addGoods"
+                value={quantity}
+                onChange={handleChange}
+              />
+            </div>
+            <button id="inBtn" className="increaseBtn" onClick={handleIncrease}>
+              十
+            </button>
+            <br />
+            <br />
+            <div className="addingGroup">
+              <button className="cartIn">加入購物車</button>
+              <button className="buyIn">立即購買</button>
+            </div>
+            <br />
+            <br />
+            <button className="joinFollow">
+              <img src="./image/goods/heart.png" alt="最愛" /> 加入最愛
+            </button>
           </div>
         </div>
-        <div className="goodsText">
-          <div className="gGroup">
-            <h2 className="goodsName">建議售價</h2>
-            {/* <p className="goodsPrice">{products[0].price}</p> */}
-            <p className="goodsPrice">1200</p>
-          </div>
-          <button id="deBtn" className="increaseBtn">
-            {/* <button id="deBtn" className="increaseBtn" onClick={handleDecrease}> */}
-            一
-          </button>
-          <div className="addingQty">
-            <input
-              type="text"
-              id="addGoods"
-              // value={quantity}
-              // onChange={handleChange}
-            />
-          </div>
-          <button id="inBtn" className="increaseBtn">
-            {/* <button id="inBtn" className="increaseBtn" onClick={handleIncrease}> */}
-            十
-          </button>
-          <br />
-          <br />
-          <div className="addingGroup">
-            <button className="cartIn">加入購物車</button>
-            <button className="buyIn">立即購買</button>
-          </div>
-          <br />
-          <br />
-          <button className="joinFollow">
-            <img src="./image/goods/heart.png" alt="最愛" /> 加入最愛
-          </button>
-        </div>
-      </div>
-
+      ))}
       <br />
       <br />
       <br />
@@ -159,7 +196,7 @@ const GoodsPage = () => {
       <br />
       <br />
       <div className="myGoodscontain nutriChart">
-        <DoughnutChart />
+        <DoughnutComponent foodId={foodId} productId={productId} />
       </div>
       <br />
       <br />
@@ -230,7 +267,6 @@ const GoodsPage = () => {
           </a>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

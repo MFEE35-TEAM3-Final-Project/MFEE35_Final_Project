@@ -3,7 +3,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import "../css/store.css";
-import Footer from "../components/footer";
 
 const StorePage = () => {
   // 設定初始圖片狀態
@@ -35,6 +34,8 @@ const StorePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   // 設定初始類別
   const [currentCategory, setCurrentCategory] = useState("");
+  // 設定初始活動
+  const [currentActivity, setCurrentActivity] = useState("");
 
   useEffect(() => {
     axios
@@ -55,7 +56,7 @@ const StorePage = () => {
 
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProductsByCategory?page=${currentPage}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/products/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
       )
       .then((res) => {
         // console.log(res);
@@ -83,7 +84,8 @@ const StorePage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProductsByCategory?page=${currentPage}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/products/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
+        // 動態生成頁數
       )
       .then((res) => {
         console.log(res);
@@ -92,7 +94,7 @@ const StorePage = () => {
       .catch((err) => {
         console.error(err);
       });
-  }, [currentPage, currentCategory]);
+  }, [currentPage, currentActivity, currentCategory]);
 
   const PageOne = () => {
     setCurrentPage(1);
@@ -118,6 +120,12 @@ const StorePage = () => {
   const gainMuscleCategory = () => {
     setCurrentCategory(2);
   };
+  const changeActivityToOne = () => {
+    setCurrentActivity(1);
+  };
+  const changeActivityToTwo = () => {
+    setCurrentActivity(2);
+  };
 
   return (
     <div>
@@ -136,19 +144,38 @@ const StorePage = () => {
           <div className="countingIcon">
             <div className="countingNumber">{second}</div>
           </div>
-          <a href="http://localhost:3000/goods" rel="noreferrer">
+          {/* <a href="http://localhost:3000/goods" rel="noreferrer">
             <div className="changingImg">
               <img className="chPic" src={caroesel} alt="輪播圖" />
             </div>
-          </a>
-          <a
+          </a> */}
+          <Link
+            to=""
+            onClick={() => {
+              changeActivityToOne();
+            }}
+          >
+            <div className="changingImg">
+              <img className="chPic" src={caroesel} alt="輪播圖" />
+            </div>
+          </Link>
+          <Link
+            to=""
+            className="event"
+            onClick={() => {
+              changeActivityToTwo();
+            }}
+          >
+            {texts}
+          </Link>
+          {/* <a
             className="event"
             href="http://localhost:3000/goods"
             rel="noreferrer"
             target="_blank"
           >
             {texts}
-          </a>
+          </a> */}
         </div>
       </div>
 
@@ -251,7 +278,7 @@ const StorePage = () => {
           {products.map((product) => (
             <div key={product.productid} className={columnClass}>
               <Link
-                to="http://localhost:3000/goods/:id"
+                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
                 <div className="mycardIcon">
@@ -266,7 +293,7 @@ const StorePage = () => {
 
               <br />
               <Link
-                to="http://localhost:3000/goods/:id"
+                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
                 <div>
@@ -276,7 +303,7 @@ const StorePage = () => {
               </Link>
 
               <Link
-                to="http://localhost:3000/goods/:id" // id = ?  product:food ==> foodid
+                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
                 <span className="cardSprice">{product.price}</span>
@@ -344,8 +371,6 @@ const StorePage = () => {
       <br />
       <br />
       <br />
-
-      <Footer />
     </div>
   );
 };

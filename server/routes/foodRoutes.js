@@ -55,33 +55,33 @@ router.get("/search", async (req, res) => {
   if (foodId && foodId !== "") {
     searchSql += "food_id = ?";
     getResults = await query(searchSql, [foodId]);
-
     if (getResults.length > 0) {
       // 哲銓魔改一波
-      // const {
-      //   sampleName,
-      //   Calories_adjusted,
-      //   carbohydrate,
-      //   crude_protein,
-      //   crude_fat,
-      //   sodium,
-      // } = getResults[0];
-      // return res.json({
-      //   success: true,
-      //   message: "已取得特定食物",
-      //   sampleName: sampleName,
-      //   Calories_adjusted: Calories_adjusted,
-      //   carbohydrate: carbohydrate,
-      //   crude_protein: crude_protein,
-      //   crude_fat: crude_fat,
-      //   sodium: sodium,
-      // });
-      // 原版本
+      const {
+        sample_name,
+        Calories_adjusted,
+        carbohydrate,
+        crude_protein,
+        crude_fat,
+        sodium,
+      } = getResults[0];
+
       return res.json({
         success: true,
         message: "已取得特定食物",
-        // food_info: getResults[0],
+        sample_name: sample_name,
+        Calories_adjusted: Calories_adjusted,
+        carbohydrate: carbohydrate,
+        crude_protein: crude_protein,
+        crude_fat: crude_fat,
+        sodium: sodium,
       });
+      // 原版本
+      // return res.json({
+      //   success: true,
+      //   message: "已取得特定食物",
+      //   // food_info: getResults[0],
+      // });
     } else {
       return res.status(404).json({
         success: false,
