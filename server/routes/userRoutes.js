@@ -561,7 +561,6 @@ router.post('/orders', userPassport, async (req, res) => {
     const status = 'created';
     const order_id = uuidv4();
     const {
-      user_id,
       phone,
       name,
       email,
@@ -573,7 +572,7 @@ router.post('/orders', userPassport, async (req, res) => {
       ship_store,
       order_details
     } = req.body;
-
+    const user_id = req.user[0].user_id;
     if (!order_details || order_details.length === 0) {
       return res.status(400).json({
         success: false,
@@ -676,10 +675,6 @@ router.post('/orders', userPassport, async (req, res) => {
   }
 });
 
-
-
-
-
 //會員查詢訂單 
 router.get('/orders', userPassport, async (req, res) => {
   try {
@@ -719,6 +714,39 @@ router.get('/orders', userPassport, async (req, res) => {
     res.status(200).json({
       success: true,
       data: ordersWithDetails
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: "伺服器錯誤",
+    });
+  }
+});
+
+router.put('/orders/:orderId', userPassport, async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const { shipping_address, shipping_method, ship_store } = req.body;
+
+    const [existingOrder] = await query(
+      "SELECT * FROM orders WHERE order_id = ? AND user_id = ?",
+      [orderId, req.user[0].user_id]
+    );
+    if (!existingOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "訂單不存在",
+      });
+    }
+
+    const updateSql =
+      "UPDATE orders SET shipping_address = ?, shipping_method = ?, ship_store = ? WHERE order_id = ?";
+    const result = await query(updateSql, [shipping_address, shipping_method, ship_store, orderId]);
+
+    res.status(200).json({
+      success: true,
+      message: `訂單更新成功，訂單ID為 ${orderId}`,
     });
   } catch (err) {
     console.log(err);
@@ -788,18 +816,27 @@ router.get('/cart', userPassport, async (req, res) => {
       [user_id]
     );
 
-    res.json({
-      success: true,
-      data: cart_list
-    });
+    if (cart_list.length === 0) {
+      res.json({
+        success: false,
+        message: '購物車內沒有東西',
+        data: []
+      });
+    } else {
+      res.json({
+        success: true,
+        data: cart_list
+      });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: '伺服器連線錯誤'
+      message: '伺服器錯誤'
     });
   }
 });
+
 
 
 router.post('/cart/add', userPassport, async (req, res) => {
@@ -807,27 +844,29 @@ router.post('/cart/add', userPassport, async (req, res) => {
     const user_id = req.user[0].user_id;
     const { productid, quantity } = req.body;
 
-    // 查询用户是否已经有购物车
     let [cart] = await query(
       'SELECT * FROM shopping_cart WHERE user_id = ?',
       [user_id]
     );
 
     if (cart) {
-      // 查询购物车内是否已有此商品
       const [cart_product] = await query(
         "SELECT quantity FROM shopping_cart WHERE cart_id = ? and productid = ?",
         [cart.cart_id, productid]
       );
 
-      // 查询商品库存是否足够
       const [product] = await query(
         "SELECT stock FROM onlineproducts WHERE productid = ?",
         [productid]
       );
 
       const total_quantity = parseInt(quantity) + (cart_product ? parseInt(cart_product.quantity) : 0);
-
+      if (!product) {
+        return res.status(400).json({
+          success: false,
+          message: '查無此商品'
+        });
+      }
       if (product.stock < total_quantity) {
         return res.status(400).json({
           success: false,
@@ -836,13 +875,11 @@ router.post('/cart/add', userPassport, async (req, res) => {
       }
 
       if (cart_product) {
-        // 如果已有此商品，增加数量
         await query(
           'UPDATE shopping_cart SET quantity = quantity + ? WHERE cart_id = ? AND productid = ?',
           [quantity, cart.cart_id, productid]
         );
       } else {
-        // 如果没有此商品，插入新记录
         const new_cart_id = 100000 + Math.floor(Math.random() * 90000);
         await query(
           'INSERT INTO shopping_cart (cart_id, productid, quantity,user_id) VALUES (?, ?, ?,?)',
@@ -877,7 +914,7 @@ router.post('/cart/add', userPassport, async (req, res) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: '發生錯誤，請稍後再試'
+      message: '伺服器錯誤'
     });
   }
 });
@@ -1006,6 +1043,7 @@ router.get('/favorite', userPassport, async (req, res) => {
       });
     }
 
+
     res.json({
       success: true,
       message: favorites
@@ -1099,75 +1137,6 @@ router.delete('/favorite', userPassport, async (req, res) => {
 
 //user coupon
 
-router.post('/coupon', userPassport, async (req, res) => {
-  try {
-    const { code, name, discount_rate, discount_algorithm, description, usage_limit, start_date, end_date } = req.body;
-    const [coupon] = await query('SELECT * FROM coupons WHERE code = ?', [code]);
-    if (coupon) {
-      return res.status(400).json({
-        success: false,
-        message: '該優惠券代碼已存在'
-      });
-    }
-    await query(
-      'INSERT INTO coupons (code, name, discount_rate, discount_algorithm, description, usage_limit, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [code, name, discount_rate, discount_algorithm, description, usage_limit, start_date, end_date]
-    );
-    res.json({
-      success: true,
-      message: '新增優惠券成功'
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: '發生錯誤，請稍後再試'
-    });
-  }
-});
-
-router.get('/coupon', userPassport, async (req, res) => {
-  try {
-    const coupons = await query('SELECT  FROM coupons WHERE ');
-    res.json({
-      success: true,
-      data: coupons
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: '發生錯誤，請稍後再試'
-    });
-  }
-});
-
-router.delete('/coupon/:code', userPassport, async (req, res) => {
-  try {
-    const { code } = req.params;
-
-    const [coupon] = await query('SELECT * FROM coupons WHERE code = ?', [code]);
-    if (!coupon) {
-      return res.status(404).json({
-        success: false,
-        message: '找不到該優惠券'
-      });
-    }
-
-    await query('DELETE FROM coupons WHERE code = ?', [code]);
-
-    res.json({
-      success: true,
-      message: '刪除優惠券成功'
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: '發生錯誤，請稍後再試'
-    });
-  }
-});
 
 
 

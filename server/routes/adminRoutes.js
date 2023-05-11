@@ -490,7 +490,7 @@ router.get('/orders', adminPassport, async (req, res) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: '伺服器錯誤',
     });
   }
 });
@@ -502,7 +502,7 @@ router.put('/orders/:order_id', adminPassport, async (req, res) => {
       user_id,
       phone,
       name,
-      coupon_id,
+      coupon_code,
       total_quantity,
       total_price,
       payment_method,
@@ -512,12 +512,12 @@ router.put('/orders/:order_id', adminPassport, async (req, res) => {
       status
     } = req.body;
 
-    const updateSql = "UPDATE orders SET user_id = ?, phone = ?, name = ?, coupon_id = ?, total_quantity = ?, total_price = ?, payment_method = ?, shipping_method = ?, shipping_address = ?, ship_store = ?, status = ? WHERE order_id = ?";
+    const updateSql = "UPDATE orders SET user_id = ?, phone = ?, name = ?, coupon_code = ?, total_quantity = ?, total_price = ?, payment_method = ?, shipping_method = ?, shipping_address = ?, ship_store = ?, status = ? WHERE order_id = ?";
     const params = [
       user_id,
       phone,
       name,
-      coupon_id,
+      coupon_code,
       total_quantity,
       total_price,
       payment_method,
@@ -552,10 +552,12 @@ router.put('/orders/:order_id', adminPassport, async (req, res) => {
 router.delete('/orders/:order_id', adminPassport, async (req, res) => {
   try {
     const orderId = req.params.order_id;
-    const deleteSql = 'DELETE FROM orders WHERE order_id = ?';
-    const { affectedRows } = await query(deleteSql, [orderId]);
+    const deleteOrderSql = 'DELETE FROM orders WHERE order_id = ?';
+    const deleteOrderDetailSql = 'DELETE FROM order_details WHERE order_id = ?';
+    const { affectedRows: orderRows } = await query(deleteOrderSql, [orderId]);
+    const { affectedRows: orderDetailRows } = await query(deleteOrderDetailSql, [orderId]);
 
-    if (affectedRows > 0) {
+    if (orderRows > 0 && orderDetailRows > 0) {
       res.status(200).json({
         success: true,
         message: '已刪除訂單',
@@ -574,6 +576,7 @@ router.delete('/orders/:order_id', adminPassport, async (req, res) => {
     });
   }
 });
+
 
 // 優惠券
 router.post('/coupon', adminPassport, async (req, res) => {
@@ -649,12 +652,11 @@ router.put('/coupon/:coupon_id', adminPassport, async (req, res) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      message: '發生錯誤，請稍後再試'
+      message: '伺服器錯誤'
     });
   }
 });
 
-// DELETE /coupon/:id
 // 刪除指定優惠券
 router.delete('/coupon/:code', adminPassport, async (req, res) => {
   try {
