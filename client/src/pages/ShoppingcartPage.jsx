@@ -1,7 +1,6 @@
 import React from "react";
 // import React, { useState } from "react";
 import "../css/shoppingcart.css";
-import Footer from "../components/footer";
 import { Helmet } from "react-helmet";
 
 const ShoppingcartPage = () => {
@@ -503,8 +502,6 @@ const ShoppingcartPage = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

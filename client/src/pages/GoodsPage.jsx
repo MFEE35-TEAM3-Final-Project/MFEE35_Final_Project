@@ -224,18 +224,22 @@ const GoodsPage = () => {
       <br />
       <br />
       <div className="recommendBar">
+        {/* {onlyOneProducts.map((product) => ( */}
         <div className="myGoodscontain recomGoods">
-          <a
-            href="http://localhost:3000/goods"
-            className="jumpPage"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img id="myGoodCard" src="./image/store/good1.png" alt="推播圖1" />
-            <p className="fw-semibold cardTopic">迷迭香雞胸香菜糙米飯</p>
-            <span className="mycardPrice">NTD1600</span>
-          </a>
-          <a
+          {/* <Link
+              to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+              className="jumpPage"
+            >
+              <img
+                id="myGoodCard"
+                src="./image/store/good1.png"
+                alt="推播圖1"
+              />
+              <p className="fw-semibold cardTopic">迷迭香雞胸香菜糙米飯</p>
+              <span className="mycardPrice">NTD1600</span>
+            </Link> */}
+
+          {/* <a
             href="http://localhost:3000/goods"
             className="jumpPage"
             target="_blank"
@@ -264,8 +268,9 @@ const GoodsPage = () => {
             <img id="myGoodCard" src="./image/store/good2.png" alt="推播圖4" />
             <p className="fw-semibold cardTopic">迷迭香雞胸香菜糙米飯</p>
             <span className="mycardPrice">NTD1600</span>
-          </a>
+          </a> */}
         </div>
+        {/* ))} */}
       </div>
     </div>
   );

@@ -32,6 +32,14 @@ const StorePage = () => {
   const [products, setProducts] = useState([]);
   // 設定初始頁面
   const [currentPage, setCurrentPage] = useState(1);
+  // 設定使用者選取的類別
+  const [userSelectWay, setUserSelectWay] = useState("全站商品");
+  // 設定總頁數
+  const [totalPages, setTotalPage] = useState(1);
+  const onPageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   // 設定初始類別
   const [currentCategory, setCurrentCategory] = useState("");
   // 設定初始活動
@@ -61,6 +69,7 @@ const StorePage = () => {
       .then((res) => {
         // console.log(res);
         setProducts(res.data.results);
+        setTotalPage(res.data.totalPages);
       })
       .catch((err) => {
         console.error(err);
@@ -84,47 +93,59 @@ const StorePage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/products/getProducts?&activityId=${currentActivity}&category=${currentCategory}`
         // 動態生成頁數
       )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setProducts(res.data.results);
+
+        if (
+          (currentPage !== 1 &&
+            (currentActivity !== res.data.activityId ||
+              currentCategory !== res.data.category)) ||
+          (currentPage === 1 &&
+            currentActivity !== res.data.activityId &&
+            currentCategory !== res.data.category)
+        ) {
+          setCurrentPage(1);
+        }
+        setTotalPage(res.data.totalPages);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [currentPage, currentActivity, currentCategory]);
-
-  const PageOne = () => {
-    setCurrentPage(1);
-  };
-  const PageTwo = () => {
-    setCurrentPage(2);
-  };
-  const PageThree = () => {
-    setCurrentPage(3);
-  };
-  const PageFour = () => {
-    setCurrentPage(4);
-  };
-  const PageFive = () => {
-    setCurrentPage(5);
-  };
+  }, [currentActivity, currentCategory]);
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/products/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
+        // 動態生成頁數
+      )
+      .then((res) => {
+        // console.log(res);
+        setProducts(res.data.results);
+        setTotalPage(res.data.totalPages);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [currentPage]);
   const allProductCategory = () => {
     setCurrentCategory("");
+    setUserSelectWay("全站商品");
   };
   const wheyProteinCategory = () => {
     setCurrentCategory(1);
+    setUserSelectWay("乳清蛋白");
   };
   const gainMuscleCategory = () => {
     setCurrentCategory(2);
+    setUserSelectWay("增肌減脂套餐");
   };
-  const changeActivityToOne = () => {
-    setCurrentActivity(1);
-  };
-  const changeActivityToTwo = () => {
-    setCurrentActivity(2);
+  const changeActivityID = () => {
+    setCurrentActivity({ second }.second);
+    setUserSelectWay(eventTitles[second - 1]);
   };
 
   return (
@@ -135,7 +156,6 @@ const StorePage = () => {
           rel="stylesheet"
         />
       </Helmet>
-
       <div className="firstP">
         <div>
           <p className="topicText">PRODUCT</p>
@@ -144,15 +164,10 @@ const StorePage = () => {
           <div className="countingIcon">
             <div className="countingNumber">{second}</div>
           </div>
-          {/* <a href="http://localhost:3000/goods" rel="noreferrer">
-            <div className="changingImg">
-              <img className="chPic" src={caroesel} alt="輪播圖" />
-            </div>
-          </a> */}
           <Link
             to=""
             onClick={() => {
-              changeActivityToOne();
+              changeActivityID();
             }}
           >
             <div className="changingImg">
@@ -163,22 +178,13 @@ const StorePage = () => {
             to=""
             className="event"
             onClick={() => {
-              changeActivityToTwo();
+              changeActivityID();
             }}
           >
             {texts}
           </Link>
-          {/* <a
-            className="event"
-            href="http://localhost:3000/goods"
-            rel="noreferrer"
-            target="_blank"
-          >
-            {texts}
-          </a> */}
         </div>
       </div>
-
       <br />
       <br />
       <br />
@@ -217,7 +223,6 @@ const StorePage = () => {
           </Link>
         </span>
       </div>
-
       <br />
       <br />
       <br />
@@ -252,9 +257,13 @@ const StorePage = () => {
         <p id="top"></p>
         <hr />
       </div>
-
       <div>
-        <a href="http://localhost:3000/store" className="gotopBtn">
+        {/* <a href="http://localhost:3000/store" className="gotopBtn"> */}
+        <Link
+          to=""
+          className="gotopBtn"
+          onClick={() => window.scrollTo({ top: 250, behavior: "smooth" })}
+        >
           <div className="backGroup">
             <div>
               <img
@@ -265,16 +274,18 @@ const StorePage = () => {
             </div>
             <span>TOP</span>
           </div>
-        </a>
+        </Link>
       </div>
-
       <br />
       <br />
       <br />
       <br />
-
       <div className="container">
         <div className="row">
+          <h2>
+            篩選條件:
+            {userSelectWay}
+          </h2>
           {products.map((product) => (
             <div key={product.productid} className={columnClass}>
               <Link
@@ -313,60 +324,25 @@ const StorePage = () => {
           ))}
         </div>
       </div>
-
       <br />
       <br />
       <br />
       <br />
-
       <div className="nextPage">
-        <Link
-          to=""
-          className={`next${currentPage === 1 ? "One" : "Two"}`}
-          onClick={() => {
-            PageOne();
-          }}
-        >
-          1
-        </Link>
-        <Link
-          to=""
-          className={`next${currentPage === 2 ? "One" : "Two"}`}
-          onClick={() => {
-            PageTwo();
-          }}
-        >
-          2
-        </Link>
-        <Link
-          to=""
-          className={`next${currentPage === 3 ? "One" : "Two"}`}
-          onClick={() => {
-            PageThree();
-          }}
-        >
-          3
-        </Link>
-        <Link
-          to=""
-          className={`next${currentPage === 4 ? "One" : "Two"}`}
-          onClick={() => {
-            PageFour();
-          }}
-        >
-          4
-        </Link>
-        <Link
-          to=""
-          className={`next${currentPage === 5 ? "One" : "Two"}`}
-          onClick={() => {
-            PageFive();
-          }}
-        >
-          5
-        </Link>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <Link
+            key={i + 1}
+            to=""
+            onClick={() => {
+              onPageChange(i + 1);
+              window.scrollTo({ top: 700, behavior: "smooth" });
+            }}
+            className={`next${currentPage === i + 1 ? "One" : "Two"}`}
+          >
+            {i + 1}
+          </Link>
+        ))}
       </div>
-
       <br />
       <br />
       <br />
