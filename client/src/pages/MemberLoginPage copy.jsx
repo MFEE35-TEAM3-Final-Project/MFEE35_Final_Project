@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 import MemberHeader from "../components/member/MemberHeader";
@@ -8,75 +8,6 @@ import Footer from "../components/member/Footer";
 import logo from "../../src/images/logo/logo.png";
 
 const UserLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [token, setToken] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // 检查是否存在令牌，如果存在则执行验证方法
-    if (token) {
-      verifyToken();
-    }
-  }, [token]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/user/login`,
-        {
-          email,
-          password,
-        }
-      );
-
-      if (response.data.success) {
-        const authToken = response.data.token;
-        setToken(authToken);
-      } else {
-        setErrorMessage(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("發生了一個錯誤，請稍後重試");
-    }
-  };
-
-  const verifyToken = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/user/check`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      if (response.ok) {
-        // 令牌验证成功，执行相应操作
-        const data = await response.json();
-        console.log("令牌验证成功");
-        console.log(data.user); // 可以根据需要处理用户信息
-        // 进行重定向或其他操作
-        navigate("/MemberHomePage");
-      } else {
-        // 令牌验证失败，执行错误处理
-        const errorData = await response.json();
-        console.log("令牌验证失败");
-        console.log(errorData.message); // 显示错误消息或执行其他错误处理
-      }
-    } catch (error) {
-      // 发生错误，显示错误消息
-      console.error(error);
-      setErrorMessage("发生了一个错误，请稍后重试");
-    }
-  };
-
   return (
     <div style={{ backgroundColor: "#F7F4E9" }}>
       <MemberHeader />
@@ -90,12 +21,12 @@ const UserLogin = () => {
 
         <div className="container">
           <div className="userInfo row">
-            <form id="loginForm" className="col-12" onSubmit={handleSubmit}>
+            <form id="loginForm" className="col-12" action="">
               <div className="row myMember">
                 <div className="col-6">
                   <Link
                     to="/LoginPage"
-                    className="userbtn"
+                    className="memberLink"
                     style={{
                       textDecoration: "none",
                       color: "black",
@@ -108,7 +39,7 @@ const UserLogin = () => {
                 <div className="col-6">
                   <Link
                     to="/MemberRegister1"
-                    className="userbtn"
+                    className="memberLink"
                     style={{
                       textDecoration: "none",
                       color: "black",
@@ -119,6 +50,7 @@ const UserLogin = () => {
                   </Link>
                 </div>
               </div>
+
               <div className="row">
                 <div className="col-4">
                   <label htmlFor="userAccount">
@@ -130,8 +62,6 @@ const UserLogin = () => {
                     className="userInput"
                     type="text"
                     name="userName"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                   <br />
@@ -149,8 +79,6 @@ const UserLogin = () => {
                     className="userInput"
                     type="password"
                     name="userName"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                   <br />
@@ -173,7 +101,6 @@ const UserLogin = () => {
               </div>
             </form>
           </div>
-          {errorMessage && <div>{errorMessage}</div>}
         </div>
       </div>
       <Footer />

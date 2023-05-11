@@ -2,16 +2,19 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 // style
-import "./styles/member/body.css";
 import "./styles/member/main.css";
 import "./styles/member/MemberHeader.css";
-
 import "./styles/member/footer.css";
+import "./styles/member/user_foodRecord.css";
+import "./styles/member/memberHome.css";
+import "./styles/member/userinfo.css";
+import "./styles/member/chartlist.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 // Route
 import MemberLoginPage from "./pages/MemberLoginPage";
-import MemberRegister1 from "./pages/memberRegister1";
-import MemberRegister2 from "./pages/memberRegister2";
+import MemberRegister1 from "./pages/MemberRegister1";
+import MemberRegister2 from "./pages/MemberRegister2";
 import MemberHomePage from "./pages/user/MemberHomePage";
 import MemberChartList from "./pages/user/MemberChartList";
 import MemberData from "./pages/user/MemberData";

@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import MemberHeader from "../../components/member/MemberHeader";
 import Footer from "../../components/member/Footer";
 
-import "../../styles/member/userinfo.css";
-
 function MemberData() {
   const [members, setMembers] = useState([]); // 存储会员数据的数组
   const [isEditing, setIsEditing] = useState(false); // 是否处于编辑模式

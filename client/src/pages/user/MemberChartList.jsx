@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 
 import MyBarChart from "../../components/member/BarChart";
 import MemberHeader from "../../components/member/MemberHeader";
 import Footer from "../../components/member/Footer";
 import MyDonutChart from "../../components/member/MyDonutChart";
 import MyStackedBarChart from "../../components/member/MyStackedBarChart";
-
-import "../../styles/member/chartlist.css";
 
 function ChartListPage() {
   // useEffect(() => {

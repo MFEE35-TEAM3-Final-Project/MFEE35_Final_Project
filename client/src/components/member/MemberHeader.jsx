@@ -13,16 +13,16 @@ function closeNav() {
 
 function MemberHeader() {
   return (
-    <div className="header">
-      <div className="topnav">
+    <div className="memberHeader">
+      <div className="memberTopnav">
         <a href="#">LOGO</a>
       </div>
 
       <nav className="navbar">
-        <div id="openNavBtn" onClick={openNav}>
+        <div id="openMemberNavBtn" onClick={openNav}>
           ☰
         </div>
-        <div id="mySidenav" className="sidenav">
+        <div id="mySidenav" className="memberSidenav">
           {/* <a href="javascript:void(0)" className="closebtn" onClick={closeNav}> */}
           <a href="#" className="closebtn" onClick={closeNav}>
             &times;
@@ -56,7 +56,7 @@ function MemberHeader() {
           </Link>
         </div>
         <div className="logout">
-          <button id="signoutBtn">登出</button>
+          <button id="membersignoutBtn">登出</button>
         </div>
       </nav>
     </div>

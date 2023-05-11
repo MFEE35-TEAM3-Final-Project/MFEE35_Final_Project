@@ -5,10 +5,6 @@ import MemberHeader from "../../components/member/MemberHeader";
 import Footer from "../../components/member/Footer";
 import BarChart from "../../components/member/BarChart.jsx";
 
-import "bootstrap/dist/css/bootstrap.css";
-import "../../styles/member/memberHome.css";
-import "../../styles/member/user_foodRecord.css";
-
 import target from "../../../src/images/memberrecrod/target.png";
 import fork from "../../../src/images/memberrecrod/fork.png";
 import logo from "../../../src/images/logo/logo.png";
