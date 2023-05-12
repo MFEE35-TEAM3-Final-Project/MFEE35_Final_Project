@@ -1,0 +1,139 @@
+.addFoodBgDiv {
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 700px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background-color: #FEFDF8;
+  border-radius: 30px;
+  z-index: 10000; */
+  position: fixed;
+  width: 700px;
+  height: 600px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  background-color: #FEFDF8;
+  border-radius: 30px;
+  /* padding: 20px; */
+}
+
+.addFoodBgDiv.active {
+  display: block;
+}
+
+
+/* 第一區 選擇的食品名稱區域 */
+.chooseFoodName {
+  height: 80px;
+  align-items: center;
+  background-color: #707D90;
+  color: white;
+  border-radius: 30px 30px 0px 0px;
+  font-weight: bolder;
+}
+
+.chooseFoodName div:nth-child(1) {
+  font-size: 40px;
+  padding-left: 40px;
+}
+
+.chooseFoodName div:nth-child(2) {
+  font-size: 20px;
+  text-align: end;
+  padding-right: 40px;
+}
+/* 第一區 選擇的食品名稱區域 */
+
+/* 第二區 使用者輸入數字 */
+.userEnterNumberBg {
+  padding-top: 30px;
+  font-weight: bolder;
+}
+
+.userEnterNumberBg img:nth-child(1) {
+  width: 80px;
+  margin: 0px 20px 0px 70px;
+}
+
+.userEnterNumberBg input:nth-child(2) {
+  height: 50px;
+  width: 60%;
+  border-radius: 10px;
+  font-size: 30px;
+  padding-left: 20px;
+}
+
+.userEnterNumberBg span:nth-child(3) {
+  font-size: 30px;
+  padding-left: 10px;
+}
+/* 第二區 使用者輸入數字 */
+
+/* 第三區 儲存 */
+.storeDataBg {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  border-radius: 15px;
+}
+
+.storeData {
+  font-weight: bolder;
+  font-size: 30px;
+  width: 600px;
+  height: 60px;
+  background: #C5A188;
+  border-radius: 15px;
+  padding-top: 9px;
+}
+/* 第三區 儲存 */
+
+/* 第四區 營養成分表*/
+.storeDataDetailBg {
+  display: flex;
+  justify-content: center;
+  font-weight: bolder;
+  color: white;
+  font-size: 28px;
+}
+
+.storeDataDetail {
+  background-color: #DCDBD7;
+  margin: 10px 5px 3px 5px;
+  border-radius: 10px;
+  width: 300px;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.storeDataDetailCalories {
+  background-color: #DCDBD7;
+  margin: 10px 5px 3px 5px;
+  border-radius: 10px;
+  width: 610px;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* 第四區 營養成分表*/
+
+
+.chooseFoodName > div:nth-child(2) {
+  cursor: pointer;
+}
+
+.storeData {
+  cursor: pointer;
+}

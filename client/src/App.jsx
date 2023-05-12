@@ -14,6 +14,7 @@ import Articles from "./pages/admin/Article";
 import Food from "./pages/user/Food";
 import AdminBoard from "./pages/admin/AdminBoard";
 import AdminLogin from "./pages/admin/AdminLogin";
+import FoodRecordNumber from "./pages/foodRecordNumber";
 
 function App() {
   const [isBack, setIsBack] = useState(false);
@@ -40,6 +41,9 @@ function App() {
           <Route element={<AdminBoard />}>
             <Route path="/admin/backstage" element={<BackStage />} />
           </Route>
+          <Route path="/articles" element={<Articles />} />
+          <Route path="/food" element={<Food />} />
+          <Route path="/foodRecord" element={<FoodRecordNumber />} />
         </Routes>
       </div>
       {isBack ? "" : <Footer />}

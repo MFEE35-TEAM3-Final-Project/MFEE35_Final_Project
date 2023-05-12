@@ -1,0 +1,133 @@
+import React, { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+import "../styles/addFoodItem.css";
+
+// 帶token
+axios.defaults.headers.common["Authorization"] =
+  "JWT " +
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
+
+function FoodDetailsNutrients({ cancelButtonClick, selected }) {
+  const [grams, setGrams] = useState(100);
+  const [food, setFood] = useState({});
+
+  // 觸發儲存資料至會員的方法
+  function storeToMember() {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/user/meal_records?start_date=2023-04-30&end_date=2023-05-10`
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  // 取消按鈕
+  function handleCancelClick() {
+    cancelButtonClick();
+  }
+
+  // const searchFood = () => {
+  //   axios
+  //     .get(
+  //       `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${selected}`
+  //     )
+  //     .then((res) => {
+  //       console.log(res);
+  //       setFood(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   searchFood();
+  // }, [searchFood]);
+
+  // 更新版 searchFood
+  const searchFood = useCallback(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${selected}`
+      )
+      .then((res) => {
+        console.log(res);
+        setFood(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [selected]);
+
+  useEffect(() => {
+    searchFood();
+  }, [searchFood, selected]);
+
+  const handleGramsChange = (event) => {
+    setGrams(event.target.value);
+  };
+
+  return (
+    <div className="addFoodBgDiv">
+      {/* 第一區 食品名稱區 */}
+      <div className="chooseFoodName d-flex">
+        <div className="w-50">{food.sample_name}</div>
+        <div className="w-50" onClick={handleCancelClick}>
+          取消
+        </div>
+      </div>
+      {/* 第二區 +/- 數字 與 克數 */}
+      <div className="userEnterNumberBg d-flex">
+        <img src="./img/plusanddash.png" alt="無法顯示" />
+        <input
+          className="userEnterNumber"
+          type="text"
+          value={grams}
+          onChange={handleGramsChange}
+        />
+        <span>克</span>
+      </div>
+      {/* 第三區 儲存格 */}
+      <div className="storeDataBg">
+        <div className="storeData" onClick={storeToMember}>
+          儲存
+        </div>
+      </div>
+      {/* 第四區 營養素表 */}
+      {/*  */}
+      <div className="storeDataDetailBg d-flex">
+        <div className="storeDataDetail">
+          <div>碳水化合物</div>
+          <div>{Math.round(food.carbohydrate * (grams / 100))}</div>
+        </div>
+        <div className="storeDataDetail">
+          <div>鈉</div>
+          <div>{Math.round(food.sodium * (grams / 100))}</div>
+        </div>
+      </div>
+      <div className="storeDataDetailBg d-flex">
+        <div className="storeDataDetail">
+          <div>蛋白質</div>
+          <div>{Math.round(food.crude_protein * (grams / 100))}</div>
+        </div>
+        <div className="storeDataDetail">
+          <div>脂肪</div>
+          <div>{Math.round(food.crude_fat * (grams / 100))}</div>
+        </div>
+      </div>
+      <div className="storeDataDetailBg d-flex">
+        <div className="storeDataDetailCalories">
+          <div>卡路里</div>
+          <div>{Math.round(food.Calories_adjusted * (grams / 100))}</div>
+        </div>
+      </div>
+      {/*  */}
+    </div>
+  );
+}
+
+export default FoodDetailsNutrients;
