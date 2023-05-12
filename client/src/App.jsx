@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import Nav from "./components/Nav";
+import "./styles/Nav.css";
+// import Footer from "./components/Footer";
+// import HomePage from "./pages/HomePage";
 
 import StorePage from "./pages/StorePage";
 import GoodsPage from "./pages/GoodsPage";
@@ -13,8 +17,11 @@ import LoginPage from "./pages/LoginPage";
 import UserProfiles from "./pages/user/UserProfile";
 import UserSelfies from "./pages/user/UserSelfies";
 import UserDashboard from "./pages/user/UserDashboard";
-import Articles from "./pages/admin/Article";
+// import Articles from "./pages/admin/Article";
 import Food from "./pages/user/Food";
+import Blog from "./pages/blog";
+import Calculator from "./pages/Calculator";
+import Article from "./pages/Article";
 // style
 import "./styles/member/main.css";
 import "./styles/member/MemberHeader.css";
@@ -43,9 +50,13 @@ function App() {
 
   return (
     <div className="App">
+      <Nav />
       <div>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/calculator" element={<Calculator />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/article/:id" element={<Article />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           {/* user page */}

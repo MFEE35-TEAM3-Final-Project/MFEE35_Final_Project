@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #footer .footer {
   background-color: #dcdbd7;
   color: black;
@@ -43,6 +44,11 @@
   width: 100px;
   height: 100px;
   padding-bottom: 20px;
+=======
+body {
+  background-color: rgb(255, 255, 255);
+  
+>>>>>>> origin/hihi
 }
 
 #header {
