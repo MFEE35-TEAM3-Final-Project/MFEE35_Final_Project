@@ -1,31 +1,55 @@
 import React from "react";
-import "../styles/footer.css";
+import { Link } from "react-router-dom";
 
-function Footer() {
+const footer = () => {
   return (
-    <div className="footer">
-      <div className="row">
-        <div className="col-2"></div>
-        <div className="col-8">
-          <div>網站地圖</div>
+    <div id="footer">
+      <div className="footer">
+        <div className="iconGroup">
+          <img className="logoPic" src="/img/footer/logo.png" alt="LOGO" />
+          <div className="socialSite">
+            <Link className="sitepicGroup" to="#">
+              <img className="sitePic" src="/img/footer/insta.webp" alt="Ins" />
+            </Link>
+            <Link className="sitepicGroup" to="#">
+              <img className="sitePic" src="/img/footer/fb.webp" alt="FB" />
+            </Link>
+            <Link className="sitepicGroup" to="#">
+              <img
+                className="sitePic"
+                src="/img/footer/twitter.png"
+                alt="Twitter"
+              />
+            </Link>
+            <Link className="sitepicGroup" to="#">
+              <img className="sitePic" src="/img/footer/line.png" alt="Line" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="siteMap">
+          <div className="siteSmalltitle">網站地圖</div>
           <div>
-            <a href="https://www.notion.so/API-d1f95cd8d0b346a3a973ca2ec52297cf">
+            <hr />
+          </div>
+          <div className="footerSelection">
+            <Link className="siteText" to="#">
               關於
-            </a>
-            <a href="https://www.notion.so/API-d1f95cd8d0b346a3a973ca2ec52297cf">
+            </Link>
+            <Link className="siteText" to="#">
               商城
-            </a>
-            <a href="https://www.notion.so/API-d1f95cd8d0b346a3a973ca2ec52297cf">
+            </Link>
+            <Link className="siteText" to="#">
               計算機
-            </a>
-            <a href="https://www.notion.so/API-d1f95cd8d0b346a3a973ca2ec52297cf">
+            </Link>
+            <Link className="siteText" to="#">
               會員專區
-            </a>
+            </Link>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default Footer;
+export default footer;
