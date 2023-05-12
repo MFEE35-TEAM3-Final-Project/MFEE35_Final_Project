@@ -4,9 +4,10 @@ import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import DoughnutComponent from "../components/DoughnutChart";
 import "../css/goods.css";
-axios.defaults.headers.common["Authorization"] =
-  "JWT " +
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
+// axios.defaults.headers.common["Authorization"] =
+//   "JWT " +
+//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
+
 const GoodsPage = () => {
   const { productId, foodId } = useParams();
   const [onlyOneProducts, setOnlyOneProducts] = useState([]);
@@ -40,7 +41,7 @@ const GoodsPage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/products/getProducts`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setPromotionGood(res.data.results.slice(0, 4));
       })
       .catch((err) => {
@@ -85,24 +86,24 @@ const GoodsPage = () => {
       setQuantity(value);
     }
   };
-  const addingCartData = {
-    productid: { productId },
-    quantity: { quantity },
-    // productid: "123",
-    // quantity: "2",
-  };
+  // const addingCartData = {
+  //   productid: { productId },
+  //   quantity: { quantity },
+  //   // productid: "123",
+  //   // quantity: "2",
+  // };
 
-  axios
-    .post(
-      `${process.env.REACT_APP_API_URL}/api/userRoutes/cart/add`,
-      addingCartData
-    )
-    .then((res) => {
-      console.log(res.data); // 處理回傳的資料
-    })
-    .catch((err) => {
-      console.error(err); // 處理錯誤訊息
-    });
+  // axios
+  //   .post(
+  //     `${process.env.REACT_APP_API_URL}/api/userRoutes/cart/add`,
+  //     addingCartData
+  //   )
+  //   .then((res) => {
+  //     console.log(res.data); // 處理回傳的資料
+  //   })
+  //   .catch((err) => {
+  //     console.error(err); // 處理錯誤訊息
+  //   });
 
   return (
     <div>
