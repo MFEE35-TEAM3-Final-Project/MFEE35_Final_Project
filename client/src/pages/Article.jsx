@@ -1,18 +1,48 @@
 import "../styles/article.css";
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import { BiMessageEdit } from "react-icons/bi";
 
 function Article() {
-  // const [articles, setArticle] = useState([]);
-  // axios
-  //   .get(`${process.env.REACT_APP_API_URL}/api/articles`)
-  //   .then((res) => {
-  //     console.log(res.data.articles);
-  //     setArticle(res.data.articles);
-  //   })
-  //   .catch((err) => {
-  //     console.error(err);
-  //   });
+  const [article, setArticle] = useState([]);
+  const [articles, setArticles] = useState([]);
+  const { id } = useParams();
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/articles/id=${id}`)
+      .then((res) => {
+        setArticle(res.data.article);
+        console.log(res.data.article);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/articles`)
+      .then((res) => {
+        console.log(res.data.articles);
+        setArticles(res.data.articles);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+  const shuffledArticles = articles.sort(() => Math.random() - 0.5);
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/articles/article_comments/article_id=${id}`
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
   return (
     <div>
       <div className="A-article">
@@ -53,8 +83,13 @@ function Article() {
           </div>
           <div className="col-6 ">
             <div className="content">
-              <div className="content-title">
-              健康飲食怎麼吃？營養師曝「最佳飲食法」操作指南
+              <div>
+                <div
+                  dangerouslySetInnerHTML={{ __html: `${article.content}` }}
+                />
+              </div>
+              {/* <div className="content-title">
+                健康飲食怎麼吃？營養師曝「最佳飲食法」操作指南
                 <span>2023/04/27</span>
               </div>
               <div className="content-p">
@@ -128,7 +163,7 @@ function Article() {
               <div className="content-h3">結論</div>
               <div className="content-p">
                 這樣的飲食模式已流傳已久，且許多研究也證實地中海飲食法與得舒飲食法，具有多個健康效益，其中地中海飲食法的執行難易度相較於其他飲食方法，更容易長久執行。只要均衡的攝取到地中海飲食法的食物類別，以及保持適度的運動、攝取適量水分，要維持身體健康其實不難
-              </div>
+              </div> */}
             </div>
             <div className="A-recommend ">
               <div className="d-flex  flex-row">
@@ -148,24 +183,29 @@ function Article() {
             </div>
             <div className="message-board">
               <div>
-                <h1>留言板</h1>
+                <h1>
+                  <BiMessageEdit />
+                  <strong>留言板</strong>
+                </h1>
               </div>
               <div>
-                <div className="userText">
-                  <div className="d-flex  align-items-center">
-                    <div>
-                      <img src="./images/user (1).png" alt="" />
-                    </div>
-                    <div className="userName ps-3">Name</div>
+                <div className="userText ">
+                  <div className="">
+                    <label for="content-textarea">
+                      嗨囉!
+                      <span className="userName ps-3 pe-3">Name</span>
+                      留言分享你的想法吧！
+                    </label>
+                    <textarea
+                      id="userText"
+                      name="content"
+                      className="form-control"
+                      aria-label="With textarea"
+                    ></textarea>
                   </div>
-                  <label for="content-textarea">留言分享你的想法吧！</label>
-                  <textarea
-                    id="userText"
-                    name="content"
-                    className="form-control"
-                    aria-label="With textarea"
-                  ></textarea>
-                  <button className="btn btn-dark ms-auto">發送</button>
+                  <div className="d-flex">
+                    <button className="btn btn-dark ms-auto">發送</button>
+                  </div>
                 </div>
                 <div className="userPost">
                   <div className="d-flex align-items-center mt-3">
@@ -174,7 +214,7 @@ function Article() {
                     </div>
                     <span className="userName p-3">Name</span>
                     <span>2023/04/27 12:00</span>
-                    <div className="ms-auto">回覆</div>
+                    {/* <button className="btn btn-dark ms-auto">回覆</button> */}
                   </div>
                   <div className="userCotent ">
                     <span>22</span>
@@ -189,60 +229,19 @@ function Article() {
       <div className="sugges-post A-container">
         <div className="sp-title">您可能還會想看</div>
         <div className="d-flex justify-content-evenly flex-wrap d-grid gap-5">
-          <div className="card">
-            <div className="card-img">
-              <img src="./images//b/GettyImages-850620288.jpg" alt="" />
-            </div>
-            <div className="card-body">
-              <span>19 jan 2023</span>
-              <h3>What is Lorem</h3>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-img">
-              <img src="./images//b/GettyImages-850620288.jpg" alt="" />
-            </div>
-            <div className="card-body">
-              <span>19 jan 2023</span>
-              <h3>What is Lorem</h3>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-img">
-              <img src="./images//b/GettyImages-850620288.jpg" alt="" />
-            </div>
-            <div className="card-body">
-              <span>19 jan 2023</span>
-              <h3>What is Lorem</h3>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-img">
-              <img src="./images//b/GettyImages-850620288.jpg" alt="" />
-            </div>
-            <div className="card-body">
-              <span>19 jan 2023</span>
-              <h3>What is Lorem</h3>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-img">
-              <img src="./images//b/GettyImages-850620288.jpg" alt="" />
-            </div>
-            <div className="card-body">
-              <span>19 jan 2023</span>
-              <h3>What is Lorem</h3>
-            </div>
-          </div>
-          <div className="card">
-            <div className="card-img">
-              <img src="./images//b/GettyImages-850620288.jpg" alt="" />
-            </div>
-            <div className="card-body">
-              <span>19 jan 2023</span>
-              <h3>What is Lorem</h3>
-            </div>
-          </div>
+          {shuffledArticles
+            .map((articlelist) => (
+              <div key={articlelist.article_id} className="card">
+                <div className="card-img">
+                  <img src={articlelist.cover_image} alt="" />
+                </div>
+                <div className="card-body">
+                  <span>{articlelist.created_at}</span>
+                  <h3>{articlelist.title}</h3>
+                </div>
+              </div>
+            ))
+            .slice(0, 6)}
         </div>
       </div>
       <div className="overflow-hidden">

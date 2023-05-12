@@ -19,7 +19,7 @@ function Blog() {
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const year = date.getFullYear();
-    const month = date.toLocaleString("default", { month: "short" });
+    const month = date.toLocaleString("en-US", { month: "short" });
     const day = date.getDate();
     return `${day} ${month} ${year}`;
   };
@@ -30,7 +30,7 @@ function Blog() {
           `${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=10&category=${category}`
         )
         .then((res) => {
-          setArticles(res.data.articles);
+          console.log(res.data.articles);
           const formattedArticles = res.data.articles.map((article) => {
             return {
               ...article,
@@ -257,32 +257,32 @@ function Blog() {
             >
               {articles.map((article) => (
                 <div key={article.article_id} className="article  d-flex row">
-                  <a href="/">
-                    <div className=" col-md-6 col-12 article-img">
-                      <div>
+                  <div className=" col-md-6 col-12 article-img">
+                    <div>
+                      <a href={`/article/${article.article_id}`}>
                         <img
-                          src={article.cover_image}
+                          src={`${article.cover_image}+".jpeg"`}
                           alt=""
                           className="img-fluid"
                         />
-                      </div>
+                      </a>
                     </div>
-                    <div className="col-md-6 col-12 article-text ms-5">
-                      <div>
+                  </div>
+                  <div className="col-md-6 col-12 article-text ms-5 d-flex flex-column">
+                    <div>
+                      <a href={`/article/${article.article_id}`}>
                         <span>{article.created_at}</span>
                         <h1>{article.title}</h1>
                         {article.sub_title}
-                      </div>
-                      <div className="Userfeedback d-flex flex-row">
-                        <span className="ms-auto">
-                          <FaRegCommentAlt
-                            value={{ className: "react-icons" }}
-                          />
-                          <span className="ms-2">{article.is_published}</span>
-                        </span>
-                      </div>
+                      </a>
                     </div>
-                  </a>
+                    <div className=" d-flex mt-auto">
+                      <span className="ms-auto">
+                        <FaRegCommentAlt value={{ className: "react-icons" }} />
+                        <span className="ms-2">{article.is_published}</span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

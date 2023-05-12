@@ -1,10 +1,10 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Nav from "./components/Nav";
-import "./styles/Nav.css"
+import "./styles/Nav.css";
 // import Footer from "./components/Footer";
 // import HomePage from "./pages/HomePage";
-import HomePage from "./pages/HomePage"
+import HomePage from "./pages/HomePage";
 import RegisterPage from "./pages/RegisterPage";
 import "./styles/all.css";
 import LoginPage from "./pages/LoginPage";
@@ -14,7 +14,7 @@ import UserDashboard from "./pages/user/UserDashboard";
 // import Articles from "./pages/admin/Article";
 import Food from "./pages/user/Food";
 import Blog from "./pages/blog";
-import Calculator from "./pages/Calculator"
+import Calculator from "./pages/Calculator";
 import Article from "./pages/Article";
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/article" element={<Article />} />
+          <Route path="/article/:id" element={<Article />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           {/* user page */}
