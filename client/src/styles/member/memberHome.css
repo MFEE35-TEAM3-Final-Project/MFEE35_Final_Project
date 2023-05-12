@@ -1,0 +1,77 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
+
+
+/* h3 {
+    text-align: center;
+    font-weight: 800;
+    margin: 20px;
+} */
+
+#memberHomeForm {
+    padding: 30px 0;
+    margin: 30px;
+}
+
+.col-4>img {
+    width: 200px;
+    height: 200px;
+}
+
+.col-4>p {
+    margin: 5px;
+}
+
+
+.col-4:nth-child(1) {
+    text-align: right;
+}
+
+.col-4:nth-child(3) {
+    display: block;
+    margin: auto;
+}
+
+
+
+.myBarChart {
+    height: 100%;
+    min-width: 300px;
+    margin: 20px auto
+}
+
+
+.myBtn {
+    /* display: block; */
+    margin: 20px;
+    padding: 20px;
+    text-align: right;
+}
+
+
+
+.foodRecordBtn {
+    color: #FEFDF8;
+    line-height: 31px;
+    background: #707D90;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    margin-right: 50px;
+}
+
+
+.foodRecordBtn:hover {
+    opacity: 0.9;
+}
+
+.memberInfo {
+    position: relative;
+    width: 80%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    background-color: #DCDBD7;
+    border-radius: 20px;
+    margin: 30px 0px;
+}

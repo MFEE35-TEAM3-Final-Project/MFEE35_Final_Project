@@ -1,0 +1,95 @@
+/* .footer {
+    background: #EFEFEE;
+    overflow: hidden;
+    height: 200px;
+
+}
+
+
+.col-8>div:first-child {
+    border-bottom: 2px solid black;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+
+.col-8>div {
+    display: flex;
+    text-align: left;
+    color: #000000;
+    font-size: 20px;
+    letter-spacing: 0.2em;
+}
+
+.col-8>div>a {
+    padding-top: 20px;
+    flex: 2;
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    min-width: 90px;
+
+}
+
+.footermenu {
+    display: flex;
+    justify-content: space-evenly;
+} */
+
+
+.footer {
+    background-color: #DCDBD7;
+    color: black;
+    padding: 30px;
+    text-align: center;
+    display: flex;
+    font-size: 20px;
+}
+
+.iconGroup {
+    width: 40%;
+}
+
+.socialSite {
+    text-decoration: none;
+    color: #000;
+}
+
+.siteMap {
+    width: 80%;
+}
+
+.siteSmalltitle {
+    text-align: start;
+    padding: 10px 0px;
+}
+
+.siteText {
+    text-decoration: none;
+    color: #000;
+    padding: 0px 20px;
+}
+
+.sitePic {
+    width: 40px;
+    height: 40px;
+}
+
+.sitepicGroup {
+    text-decoration: none;
+    color: #000;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.footerSelection {
+    text-align: center;
+    padding-top: 15px;
+}
+
+.logoPic {
+    width: 100px;
+    height: 100px;
+    padding-bottom: 20px;
+}

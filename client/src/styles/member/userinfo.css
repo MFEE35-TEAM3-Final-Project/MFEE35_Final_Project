@@ -1,0 +1,79 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
+
+
+.col-12>div {
+    margin: 20px;
+}
+
+.userInfo {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    background-color: #DCDBD7;
+    border-radius: 20px;
+    margin: 30px 0px;
+}
+
+.userInput {
+    text-align: left;
+    width: 80%;
+}
+
+.usergender {
+    min-width: 40px;
+}
+
+select {
+    width: 80%;
+}
+
+form {
+    padding: 20px 0;
+}
+
+
+
+.infoupdateBtn {
+    float: right;
+
+    color: #FEFDF8;
+    line-height: 31px;
+
+    background: #707D90;
+    border: 1px solid #000000;
+    border-radius: 20px;
+
+    min-width: 110px;
+
+
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+
+.userInput {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+#upDateBtn{
+    box-sizing: border-box;
+    display: block;
+    flex-direction: row;
+    align-items: flex-start;
+    float: right;
+    color: #FEFDF8;
+
+    line-height: 35px;
+    background: #707D90;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    width: 80px;
+    margin-right: 20px;
+}
