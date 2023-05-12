@@ -261,7 +261,7 @@ function Blog() {
                     <div>
                       <a href={`/article/${article.article_id}`}>
                         <img
-                          src={`${article.cover_image}+".jpeg"`}
+                          src={article.cover_image}
                           alt=""
                           className="img-fluid"
                         />
