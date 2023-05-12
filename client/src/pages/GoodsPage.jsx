@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-// import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import DoughnutComponent from "../components/DoughnutChart";
 import "../css/goods.css";
@@ -13,6 +12,7 @@ const GoodsPage = () => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [onlyOneFoods, setOnlyOneFoods] = useState([]);
   const [quantity, setQuantity] = useState(1);
+  const [promotionGoods, setPromotionGood] = useState([]);
   useEffect(() => {
     axios
       .get(
@@ -29,8 +29,17 @@ const GoodsPage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setOnlyOneFoods(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/products/getProducts`)
+      .then((res) => {
+        console.log(res);
+        setPromotionGood(res.data.results.slice(0, 4));
       })
       .catch((err) => {
         console.error(err);
@@ -83,9 +92,9 @@ const GoodsPage = () => {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>
+      {/* <h1>
         商品頁面 - 商品 ID：{productId} 跟 {foodId}
-      </h1>
+      </h1> */}
       <div className="goodstype">
         <div className="diet">
           <a href="http://localhost:3000/goods" className="myDiet">
@@ -98,11 +107,8 @@ const GoodsPage = () => {
           </a>
         </div>
       </div>
-      {onlyOneProducts.map((onlyOneProduct) => (
-        <div
-          key={onlyOneProduct.productid}
-          className="goodsCard myGoodscontain"
-        >
+      {onlyOneProducts.map((onlyOneProduct, indexA) => (
+        <div key={indexA} className="goodsCard myGoodscontain">
           <div className="goodsImage">
             <div className="bigGroup">
               <button className="prevBtn" onClick={prevButtonHandler}>
@@ -164,7 +170,8 @@ const GoodsPage = () => {
             <br />
             <br />
             <button className="joinFollow">
-              <img src="./image/goods/heart.png" alt="最愛" /> 加入最愛
+              <img src="../../public/image/goods/heart.png" alt="最愛" />
+              加入最愛
             </button>
           </div>
         </div>
@@ -183,14 +190,11 @@ const GoodsPage = () => {
         <div className="gIntro">
           <p className="sTopic">商品介紹</p>
         </div>
-        <div>
-          <p className="sParagraph">
-            內容物： 白酒菲力鬼頭刀：鬼頭刀,白酒,柳丁,鹽,黑胡椒粉
-            日式煮物：白蘿蔔,紅蘿蔔,蓮藕,牛蒡,醬油,味醂
-            義式番茄藜麥飯：白米,紅藜麥,番茄糊
-            綠咖哩烤雞腿：雞腿肉,綠咖哩,椰奶,水,芥花油
-          </p>
-        </div>
+        {onlyOneProducts.map((onlyOneProduct, indexB) => (
+          <div key={indexB}>
+            <p className="sParagraph">{onlyOneProduct.description}</p>
+          </div>
+        ))}
       </div>
       <br />
       <br />
@@ -208,14 +212,11 @@ const GoodsPage = () => {
         <div className="gIntro">
           <p className="sTopic">保存方式</p>
         </div>
-        <div>
-          <p className="sParagraph">
-            微波：撕開保護膜的一角，放入微波爐加熱2-3分鐘（退冰）、加熱6-8分鐘（未退冰），加熱時間可能因微波爐不同而異。
-            電鍋：將包裝拆除移到盤中，放入1/2杯水（150ml），待電鍋跳起。
-            烤箱：將包裝拆除移到盤中，170度加熱7分鐘或到達食用溫度。
-            平底鍋：將包裝拆除放到鍋中，加熱至所需溫度。
-          </p>
-        </div>
+        {onlyOneProducts.map((onlyOneProduct, indexC) => (
+          <div key={indexC}>
+            <p className="sParagraph">{onlyOneProduct.storage_method}</p>
+          </div>
+        ))}
       </div>
       <br />
       <br />
@@ -224,53 +225,18 @@ const GoodsPage = () => {
       <br />
       <br />
       <div className="recommendBar">
-        {/* {onlyOneProducts.map((product) => ( */}
-        <div className="myGoodscontain recomGoods">
-          {/* <Link
-              to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+        {promotionGoods.map((promotionGood, indexD) => (
+          <div key={indexD} className="myGoodscontain recomGoods">
+            <Link
+              to={`http://localhost:3000/goods/${promotionGood.productid}/${promotionGood.activityId}/${promotionGood.food_id}`}
               className="jumpPage"
             >
-              <img
-                id="myGoodCard"
-                src="./image/store/good1.png"
-                alt="推播圖1"
-              />
-              <p className="fw-semibold cardTopic">迷迭香雞胸香菜糙米飯</p>
-              <span className="mycardPrice">NTD1600</span>
-            </Link> */}
-
-          {/* <a
-            href="http://localhost:3000/goods"
-            className="jumpPage"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img id="myGoodCard" src="./image/store/good2.png" alt="推播圖2" />
-            <p className="fw-semibold cardTopic">迷迭香雞胸香菜糙米飯</p>
-            <span className="mycardPrice">NTD1600</span>
-          </a>
-          <a
-            href="http://localhost:3000/goods"
-            className="jumpPage"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img id="myGoodCard" src="./image/store/good1.png" alt="推播圖3" />
-            <p className="fw-semibold cardTopic">迷迭香雞胸香菜糙米飯</p>
-            <span className="mycardPrice">NTD1600</span>
-          </a>
-          <a
-            href="http://localhost:3000/goods"
-            className="jumpPage"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img id="myGoodCard" src="./image/store/good2.png" alt="推播圖4" />
-            <p className="fw-semibold cardTopic">迷迭香雞胸香菜糙米飯</p>
-            <span className="mycardPrice">NTD1600</span>
-          </a> */}
-        </div>
-        {/* ))} */}
+              <img id="myGoodCard" src={promotionGood.image[0]} alt="推播圖1" />
+              <p className="fw-semibold cardTopic">{promotionGood.name}</p>
+              <span className="mycardPrice">{promotionGood.price}</span>
+            </Link>
+          </div>
+        ))}
       </div>
     </div>
   );
