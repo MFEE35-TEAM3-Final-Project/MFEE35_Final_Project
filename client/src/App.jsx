@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
+import StorePage from "./pages/StorePage";
+import GoodsPage from "./pages/GoodsPage";
+import ShoppingcartPage from "./pages/ShoppingcartPage";
+
 import "./styles/all.css";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
@@ -9,12 +13,8 @@ import LoginPage from "./pages/LoginPage";
 import UserProfiles from "./pages/user/UserProfile";
 import UserSelfies from "./pages/user/UserSelfies";
 import UserDashboard from "./pages/user/UserDashboard";
-import BackStage from "./pages/admin/BackStage";
 import Articles from "./pages/admin/Article";
 import Food from "./pages/user/Food";
-import AdminBoard from "./pages/admin/AdminBoard";
-import AdminLogin from "./pages/admin/AdminLogin";
-import FoodRecordNumber from "./pages/foodRecordNumber";
 
 function App() {
   const [isBack, setIsBack] = useState(false);
@@ -47,6 +47,16 @@ function App() {
         </Routes>
       </div>
       {isBack ? "" : <Footer />}
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/store" element={<StorePage />} />
+        <Route
+          path="/goods/:productId/:activityid/:foodId"
+          element={<GoodsPage />}
+        />
+        <Route path="/cart" element={<ShoppingcartPage />} />
+      </Routes>
+      <Footer />
     </div>
   );
 }

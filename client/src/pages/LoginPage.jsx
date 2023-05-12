@@ -127,7 +127,7 @@ const UserLogin = () => {
           {jwtData && <p className="mt-3  text-danger">{jwtData}</p>}
         </div>
         <hr />
-        <Link className="my-5 mx-2 btn btn-danger" to="/user/profile">
+        <Link className="my-5 mx-2 btn btn-danger" to="/store">
           LETS GOOOOOOOOOOOO!
         </Link>
       </div>
