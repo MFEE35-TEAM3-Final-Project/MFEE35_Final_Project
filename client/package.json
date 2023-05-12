@@ -1,5 +1,5 @@
 {
-  "name": "bocchi_the_rock_nisemono",
+  "name": "MFEE35_Final_Project",
   "version": "0.1.0",
   "private": true,
   "paths": {
@@ -14,7 +14,6 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.4.7",
-  
     "aos": "^2.3.4",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0-alpha1",
@@ -22,7 +21,6 @@
     "dompurify": "^3.0.2",
     "dotenv": "^16.0.3",
     "jquery": "^3.6.4",
-    "jQuery": "^1.7.4",
     "js-cookie": "^3.0.5",
     "path": "^0.12.7",
     "react": "^18.2.0",
