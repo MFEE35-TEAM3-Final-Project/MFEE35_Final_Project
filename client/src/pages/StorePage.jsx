@@ -258,7 +258,6 @@ const StorePage = () => {
         <hr />
       </div>
       <div>
-        {/* <a href="http://localhost:3000/store" className="gotopBtn"> */}
         <Link
           to=""
           className="gotopBtn"
