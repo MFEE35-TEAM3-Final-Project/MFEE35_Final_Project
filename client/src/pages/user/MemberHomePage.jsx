@@ -2,12 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import MemberHeader from "../../components/member/MemberHeader";
-import Footer from "../../components/member/Footer";
-import BarChart from "../../components/member/BarChart.jsx";
 
-import target from "../../../src/images/memberrecrod/target.png";
-import fork from "../../../src/images/memberrecrod/fork.png";
-import logo from "../../../src/images/logo/logo.png";
+import BarChart from "../../components/member/BarChart.jsx";
 
 function MemberHomePage() {
   return (
@@ -48,7 +44,7 @@ function MemberHomePage() {
                   <p>幾乎不運動</p>
                 </div>
                 <div className="col-4">
-                  <img src={logo} alt="" />
+                  <img src="/images/logo/logo.png" alt="" />
                 </div>
               </div>
             </form>
@@ -63,7 +59,10 @@ function MemberHomePage() {
                     {/* 目標量的Icon */}
                     <div className="oneAreaTarget">
                       <div>
-                        <img src={target} alt="這是目標值" />
+                        <img
+                          src="/images/memberrecrod/target.png"
+                          alt="這是目標值"
+                        />
                       </div>
                       <div>目標值</div>
                     </div>
@@ -75,7 +74,10 @@ function MemberHomePage() {
                     {/* 已攝取量的Icon */}
                     <div className="oneAreaAlreadyEat">
                       <div>
-                        <img src={fork} alt="這是刀叉圖片" />
+                        <img
+                          src="/images/memberrecrod/fork.png"
+                          alt="這是刀叉圖片"
+                        />
                       </div>
                       <div>已攝取</div>
                     </div>
@@ -141,8 +143,6 @@ function MemberHomePage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

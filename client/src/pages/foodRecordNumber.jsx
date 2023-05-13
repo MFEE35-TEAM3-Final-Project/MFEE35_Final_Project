@@ -1,9 +1,9 @@
-import React, { Fragment } from "react";
-import { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
+
 import "../styles/userFoodRecord.css";
-import Footer from "../components/footer";
-import Header from "../components/header";
-import AddFoodList from "../components/addFoodList";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import AddFoodList from "../components/AddFoodList";
 import axios from "axios";
 
 // 帶會員驗證token;

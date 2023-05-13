@@ -1,6 +1,6 @@
 import React from "react";
 // import React, { useState } from "react";
-import "../css/shoppingcart.css";
+import "../styles/shoppingcart.css";
 import { Helmet } from "react-helmet";
 
 const ShoppingcartPage = () => {

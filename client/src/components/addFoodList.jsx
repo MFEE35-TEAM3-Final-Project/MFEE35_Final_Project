@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import "../styles/addFoodList.css";
-import FoodDetailsNutrients from "./foodDetailsNutrients";
+import FoodDetailsNutrients from "./FoodDetailsNutrients";
 
 function AddFoodList({ onCancelButtonClick }) {
   // 搜尋相關程式

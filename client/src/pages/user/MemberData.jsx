@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 // import axios from "axios";
 import MemberHeader from "../../components/member/MemberHeader";
-import Footer from "../../components/member/Footer";
 
 function MemberData() {
   const [members, setMembers] = useState([]); // 存储会员数据的数组
@@ -233,8 +232,6 @@ function MemberData() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

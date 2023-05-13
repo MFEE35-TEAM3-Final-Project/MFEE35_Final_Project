@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import MyBarChart from "../../components/member/BarChart";
 import MemberHeader from "../../components/member/MemberHeader";
-import Footer from "../../components/member/Footer";
+
 import MyDonutChart from "../../components/member/MyDonutChart";
 import MyStackedBarChart from "../../components/member/MyStackedBarChart";
 
@@ -79,7 +79,6 @@ function ChartListPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

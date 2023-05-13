@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import MemberHeader from "../components/member/MemberHeader";
-import Footer from "../components/member/Footer";
-
-import logo from "../../src/images/logo/logo.png";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +25,7 @@ const UserLogin = () => {
         `${process.env.REACT_APP_API_URL}/api/user/login`,
         {
           email,
-          password,
+          password
         }
       );
 
@@ -52,8 +48,8 @@ const UserLogin = () => {
         {
           method: "POST",
           headers: {
-            Authorization: token,
-          },
+            Authorization: token
+          }
         }
       );
 
@@ -81,7 +77,7 @@ const UserLogin = () => {
           <h3 id="titleH3">會員登入</h3>
         </div>
         <div style={{ margin: "20px" }}>
-          <img id="logoimg" src={logo} alt="" />
+          <img id="logoimg" src="/image/logo/logo.png" alt="" />
         </div>
 
         <div className="container">
@@ -95,7 +91,7 @@ const UserLogin = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px",
+                      fontSize: "25px"
                     }}
                   >
                     會員登入
@@ -108,7 +104,7 @@ const UserLogin = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px",
+                      fontSize: "25px"
                     }}
                   >
                     會員註冊
@@ -172,7 +168,6 @@ const UserLogin = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

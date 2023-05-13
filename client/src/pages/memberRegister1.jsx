@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import MemberHeader from "../components/member/MemberHeader";
-import Footer from "../components/member/Footer";
 
-import logo from "../../src/images/logo/logo.png";
+import logo from "../image/logo/logo.png";
 
 const UserRegistration = () => {
   const [formValues, setFormValues] = useState({
     userAccount: "",
     userPassword: "",
-    confirmPassword: "",
+    confirmPassword: ""
   });
 
   const { userAccount, userPassword, confirmPassword } = formValues;
@@ -50,7 +49,7 @@ const UserRegistration = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px",
+                      fontSize: "25px"
                     }}
                   >
                     會員登入
@@ -63,7 +62,7 @@ const UserRegistration = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px",
+                      fontSize: "25px"
                     }}
                   >
                     會員註冊
@@ -139,7 +138,6 @@ const UserRegistration = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

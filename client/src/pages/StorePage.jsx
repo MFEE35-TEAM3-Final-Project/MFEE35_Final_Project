@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import "../css/store.css";
+import "../styles/store.css";
 
 const StorePage = () => {
   // 設定初始圖片狀態

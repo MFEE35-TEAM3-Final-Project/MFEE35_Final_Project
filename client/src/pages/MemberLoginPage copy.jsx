@@ -1,9 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-
 import MemberHeader from "../components/member/MemberHeader";
-import Footer from "../components/member/Footer";
 
 import logo from "../../src/images/logo/logo.png";
 
@@ -30,7 +27,7 @@ const UserLogin = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px",
+                      fontSize: "25px"
                     }}
                   >
                     會員登入
@@ -43,7 +40,7 @@ const UserLogin = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px",
+                      fontSize: "25px"
                     }}
                   >
                     會員註冊
@@ -103,7 +100,6 @@ const UserLogin = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
