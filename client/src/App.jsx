@@ -14,6 +14,7 @@ import StorePage from "./pages/StorePage";
 import GoodsPage from "./pages/GoodsPage";
 import ShoppingcartPage from "./pages/ShoppingcartPage";
 import FoodRecordNumber from "./pages/FoodRecordNumber";
+import AdminLogin from "./pages/admin/AdminLogin";
 import AdminBoard from "./pages/admin/AdminBoard";
 import BackStage from "./pages/admin/BackStage";
 import MemberLoginPage from "./pages/MemberLoginPage";
@@ -35,7 +36,7 @@ function App() {
 
   return (
     <div>
-      <Nav />
+      {isBack ? "" : <Nav />}
       <div>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -49,9 +50,7 @@ function App() {
           />
           <Route path="/cart" element={<ShoppingcartPage />} />
           <Route path="/foodRecord" element={<FoodRecordNumber />} />
-          <Route element={<AdminBoard />}>
-            <Route path="/admin/backstage" element={<BackStage />} />
-          </Route>
+
           {/* user page */}
           <Route path="/LoginPage" element={<MemberLoginPage />} />
           <Route path="/MemberHomePage" element={<MemberHomePage />} />
@@ -59,6 +58,12 @@ function App() {
           <Route path="/MemberRegister2" element={<MemberRegister2 />} />
           <Route path="/MemberChartList" element={<MemberChartList />} />
           <Route path="/MemberData" element={<MemberData />} />
+
+          {/* admin page */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route element={<AdminBoard />}>
+            <Route path="/admin/backstage" element={<BackStage />} />
+          </Route>
         </Routes>
       </div>
       {isBack ? "" : <Footer />}

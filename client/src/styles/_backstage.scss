@@ -6,7 +6,12 @@
       background-color: aqua;
     }
   }
-  // .header {
-  //   background-color: #e4dcd1;
-  // }
+  .order_table {
+    .status_tag {
+      padding: 0.5rem;
+      .anticon {
+        vertical-align: 0.1rem;
+      }
+    }
+  }
 }

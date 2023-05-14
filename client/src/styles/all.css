@@ -19,4 +19,10 @@
   height: 4rem;
   width: 100%;
   background-color: aqua;
+}
+#backstage .order_table .status_tag {
+  padding: 0.5rem;
+}
+#backstage .order_table .status_tag .anticon {
+  vertical-align: 0.1rem;
 }/*# sourceMappingURL=all.css.map */
