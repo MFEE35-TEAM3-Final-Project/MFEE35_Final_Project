@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserTable from "../../components/backstage/UserTable";
 import OrderTable from "../../components/backstage/OrderTable";
+import ArticleTable from "../../components/backstage/ArticleTable";
 
 const Backstage = () => {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ const Backstage = () => {
 
   // data
   const [collapsed, setCollapsed] = useState(false);
-  const [siderSelected, setSiderSelected] = useState("order");
+  const [siderSelected, setSiderSelected] = useState("article");
   // function
   const selectedItem = (e) => {
     setSiderSelected(e.key);
@@ -119,6 +120,7 @@ const Backstage = () => {
           >
             {siderSelected === "user" && <UserTable />}
             {siderSelected === "order" && <OrderTable />}
+            {siderSelected === "article" && <ArticleTable />}
           </Content>
           <Footer>Fooooooter</Footer>
         </Layout>

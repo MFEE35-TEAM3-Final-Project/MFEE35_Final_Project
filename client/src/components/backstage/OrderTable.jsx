@@ -1,18 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Table,
-  Modal,
-  Button,
-  Descriptions,
-  Input,
-  Tag,
-  Progress,
-  Radio,
-  InputNumber,
-  Image,
-  Space
-} from "antd";
+import { Table, Modal, Button, Descriptions, Tag, Radio, Image } from "antd";
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -37,7 +25,7 @@ const statusConfig = (status) => {
         color: "warning",
         text: "已付款 待出貨"
       };
-    case "shipped":
+    case "shipping":
       return {
         icon: <SyncOutlined spin />,
         color: "processing",
@@ -49,7 +37,7 @@ const statusConfig = (status) => {
         color: "success",
         text: "完成"
       };
-    case "cancelled":
+    case "cancel":
       return {
         icon: <CloseCircleOutlined />,
         color: "error",
@@ -184,7 +172,6 @@ const OrderManagement = () => {
     setIsModalVisible(true);
   };
   const handleModalCancel = () => {
-    console.log("cancel");
     if (selectedOrder === selectedOrderChange) {
       setSelectedOrder(null);
       setSelectedOrderChange(null);
@@ -194,9 +181,6 @@ const OrderManagement = () => {
     }
   };
 
-  const handleModalSave = () => {
-    updateModal();
-  };
   const orderStatusChange = (e) => {
     setSelectedOrderChange({
       ...selectedOrderChange,
@@ -212,7 +196,53 @@ const OrderManagement = () => {
   };
 
   const confirmUpdate = () => {
-    console.log("send data");
+    const orderId = selectedOrderChange.order_id;
+    const {
+      user_id,
+      phone,
+      name,
+      coupon_code,
+      total_quantity,
+      total_price,
+      payment_method,
+      shipping_method,
+      shipping_address,
+      ship_store,
+      status
+    } = selectedOrderChange;
+    const updateData = {
+      user_id,
+      phone,
+      name,
+      coupon_code,
+      total_quantity,
+      total_price,
+      payment_method,
+      shipping_method,
+      shipping_address,
+      ship_store,
+      status
+    };
+    axios
+      .put(
+        `${process.env.REACT_APP_API_URL}/api/admin/orders/${orderId}`,
+        updateData
+      )
+      .then((res) => {
+        setSelectedOrder(null);
+        setSelectedOrderChange(null);
+        getOrder();
+        Modal.destroyAll();
+        setIsModalVisible(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setSelectedOrder(null);
+        setSelectedOrderChange(null);
+        getOrder();
+        Modal.destroyAll();
+        setIsModalVisible(false);
+      });
   };
 
   const warningModal = () => {
@@ -225,8 +255,7 @@ const OrderManagement = () => {
       okButtonProps: {
         danger: true,
         onClick: confirmClose,
-        type: "primary",
-        render: (node) => <Button key="confirm_update" {...node} />
+        type: "primary"
       }
     });
   };
@@ -239,8 +268,7 @@ const OrderManagement = () => {
       okText: "更新資料",
       okButtonProps: {
         onClick: confirmUpdate,
-        type: "primary",
-        render: (node) => <Button key="confirm_update" {...node} />
+        type: "primary"
       }
     });
   };
@@ -256,7 +284,9 @@ const OrderManagement = () => {
         title={`訂單詳細情況   ${selectedOrder && selectedOrder.order_id}`}
         open={isModalVisible}
         onCancel={handleModalCancel}
-        onOk={handleModalSave}
+        onOk={() => {
+          updateModal();
+        }}
         okButtonProps={{
           disabled: selectedOrder === selectedOrderChange
         }}
