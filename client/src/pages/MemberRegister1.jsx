@@ -5,11 +5,13 @@ import MemberHeader from "../components/member/MemberHeader";
 
 import logo from "../image/logo/logo.png";
 
+import "../styles/member/main.css";
+
 const UserRegistration = () => {
   const [formValues, setFormValues] = useState({
     userAccount: "",
     userPassword: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const { userAccount, userPassword, confirmPassword } = formValues;
@@ -28,8 +30,8 @@ const UserRegistration = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#F7F4E9" }}>
-      <MemberHeader />
+    <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
+      {/* <MemberHeader /> */}
       <div className="wrapper">
         <div>
           <h3 id="titleH3">會員註冊</h3>
@@ -49,7 +51,7 @@ const UserRegistration = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px"
+                      fontSize: "25px",
                     }}
                   >
                     會員登入
@@ -62,7 +64,7 @@ const UserRegistration = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px"
+                      fontSize: "25px",
                     }}
                   >
                     會員註冊
@@ -71,7 +73,7 @@ const UserRegistration = () => {
               </div>
 
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userAccount">
                     <i className="fa fa-user" style={{ fontSize: "30px" }}></i>
                   </label>
@@ -90,7 +92,7 @@ const UserRegistration = () => {
               </div>
 
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userPassword">
                     <i className="fa fa-lock" style={{ fontSize: "30px" }}></i>
                   </label>
@@ -109,7 +111,7 @@ const UserRegistration = () => {
               </div>
 
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="confirmPassword">
                     <i className="fa fa-lock" style={{ fontSize: "30px" }}></i>
                   </label>

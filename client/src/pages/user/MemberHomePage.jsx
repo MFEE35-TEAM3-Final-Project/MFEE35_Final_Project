@@ -2,12 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import MemberHeader from "../../components/member/MemberHeader";
-
 import BarChart from "../../components/member/BarChart.jsx";
+
+import "../../styles/member/memberHome.css";
+
+import target from "../../image/memberrecrod/target.png";
+import fork from "../../image/memberrecrod/fork.png";
 
 function MemberHomePage() {
   return (
-    <div style={{ backgroundColor: "#F7F4E9" }}>
+    <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
       <MemberHeader />
 
       <div className="wrapper">
@@ -50,7 +54,10 @@ function MemberHomePage() {
             </form>
 
             {/* 數字圖表區 */}
-            <div className="foodRecordBgDiv">
+            <div
+              className="foodRecordBgDiv"
+              style={{ backgroundColor: "#DCDBD7" }}
+            >
               <div className="row foodRecordBg shadow p-3 mb-2 bg-body rounded">
                 <div className="oneAndTwoAreaBg d-flex">
                   {/* 第一區 - 目標值與已攝取區 */}
@@ -59,10 +66,7 @@ function MemberHomePage() {
                     {/* 目標量的Icon */}
                     <div className="oneAreaTarget">
                       <div>
-                        <img
-                          src="/images/memberrecrod/target.png"
-                          alt="這是目標值"
-                        />
+                        <img src={target} alt="這是目標值" />
                       </div>
                       <div>目標值</div>
                     </div>
@@ -74,10 +78,7 @@ function MemberHomePage() {
                     {/* 已攝取量的Icon */}
                     <div className="oneAreaAlreadyEat">
                       <div>
-                        <img
-                          src="/images/memberrecrod/fork.png"
-                          alt="這是刀叉圖片"
-                        />
+                        <img src={fork} alt="這是刀叉圖片" />
                       </div>
                       <div>已攝取</div>
                     </div>

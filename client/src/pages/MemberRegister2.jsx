@@ -1,12 +1,8 @@
 import React from "react";
 
-// import '../styles/member/register_2.css';
-import MemberHeader from "../components/member/MemberHeader";
-
 function RegisterForm() {
   return (
-    <div style={{ backgroundColor: "#F7F4E9" }}>
-      <MemberHeader />
+    <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
       <div className="wapper">
         <div>
           <h3 id="titleH3">會員註冊</h3>

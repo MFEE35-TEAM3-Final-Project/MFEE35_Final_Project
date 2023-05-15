@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import MemberHeader from "../components/member/MemberHeader";
+// import MemberHeader from "../components/member/MemberHeader";
+
+import "../styles/member/main.css";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -11,13 +13,17 @@ const UserLogin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 检查是否存在令牌，如果存在则执行验证方法
+    // 檢查是否存在令牌，如果存在則執行驗證方法
     if (token) {
       verifyToken();
     }
   }, [token]);
 
-  const handleSubmit = async (e, data) => {
+  axios.defaults.headers.common["Authorization"] =
+    "JWT " +
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -25,7 +31,7 @@ const UserLogin = () => {
         `${process.env.REACT_APP_API_URL}/api/user/login`,
         {
           email,
-          password
+          password,
         }
       );
 
@@ -48,31 +54,32 @@ const UserLogin = () => {
         {
           method: "POST",
           headers: {
-            Authorization: token
-          }
+            Authorization: token,
+          },
         }
       );
 
       if (response.ok) {
         const data = await response.json();
-        console.log("令牌验证成功");
-        console.log(data.user); // 可以根据需要处理用户信息
+        console.log("令牌驗證成功");
+        console.log(data.user); // 可以根據需要處理使用者資訊
         navigate("/MemberHomePage");
       } else {
         const errorData = await response.json();
-        console.log("令牌验证失败");
-        console.log(errorData.message); // 显示错误消息或执行其他错误处理
+        console.log("令牌驗證失敗");
+        console.log(errorData.message); // 顯示錯誤訊息或執行其他錯誤處理
       }
     } catch (error) {
       console.error(error);
-      setErrorMessage("发生了一个错误，请稍后重试");
+      setErrorMessage("發生了一個錯誤，請稍後重試");
     }
   };
 
   return (
-    <div style={{ backgroundColor: "#F7F4E9" }}>
-      <MemberHeader />
-      <div className="wrapper">
+    <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
+      {/* <MemberHeader /> */}
+
+      <div className="wrapper" style={{ backgroundColor: "#F7F4E9" }}>
         <div>
           <h3 id="titleH3">會員登入</h3>
         </div>
@@ -91,7 +98,7 @@ const UserLogin = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px"
+                      fontSize: "25px",
                     }}
                   >
                     會員登入
@@ -104,7 +111,7 @@ const UserLogin = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px"
+                      fontSize: "25px",
                     }}
                   >
                     會員註冊
@@ -122,7 +129,8 @@ const UserLogin = () => {
                     className="userInput"
                     type="text"
                     name="userName"
-                    value={email}
+                    placeholder="請輸入帳號(E-mail信箱)"
+                    value={email} // 將value設定為email狀態變數
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
@@ -141,7 +149,8 @@ const UserLogin = () => {
                     className="userInput"
                     type="password"
                     name="userName"
-                    value={password}
+                    placeholder="請輸入密碼(6~16位英數字)"
+                    value={password} // 將value設定為password狀態變數
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
