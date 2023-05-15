@@ -7,18 +7,30 @@ axios.defaults.headers.common["Authorization"] =
   "JWT " +
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
 
-function FoodDetailsNutrients({ cancelButtonClick, selected }) {
+function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
   const [grams, setGrams] = useState(100);
   const [food, setFood] = useState({});
 
   // 觸發儲存資料至會員的方法
   function storeToMember() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const date = String(today.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${date}`;
+
+    const gramsInKilo = (grams / 100).toFixed(1);
+
     axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/user/meal_records?start_date=2023-04-30&end_date=2023-05-10`
-      )
+      .post(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
+        meal_type: foodSection,
+        meal_date: formattedDate,
+        food_id: selected,
+        food_qty: gramsInKilo,
+      })
       .then((response) => {
         console.log(response);
+        window.location.reload(); // 刷新页面
       })
       .catch((error) => {
         console.log(error);
@@ -29,24 +41,6 @@ function FoodDetailsNutrients({ cancelButtonClick, selected }) {
   function handleCancelClick() {
     cancelButtonClick();
   }
-
-  // const searchFood = () => {
-  //   axios
-  //     .get(
-  //       `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${selected}`
-  //     )
-  //     .then((res) => {
-  //       console.log(res);
-  //       setFood(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   searchFood();
-  // }, [searchFood]);
 
   // 更新版 searchFood
   const searchFood = useCallback(() => {
@@ -82,7 +76,7 @@ function FoodDetailsNutrients({ cancelButtonClick, selected }) {
       </div>
       {/* 第二區 +/- 數字 與 克數 */}
       <div className="userEnterNumberBg d-flex">
-        <img src="./img/plusanddash.png" alt="無法顯示" />
+        <img src={require("../image/plusanddash.png")} alt="無法顯示" />
         <input
           className="userEnterNumber"
           type="text"
@@ -102,27 +96,29 @@ function FoodDetailsNutrients({ cancelButtonClick, selected }) {
       <div className="storeDataDetailBg d-flex">
         <div className="storeDataDetail">
           <div>碳水化合物</div>
-          <div>{Math.round(food.carbohydrate * (grams / 100))}</div>
+          <div>{Math.round(food.carbohydrate * (grams / 100)).toString()}</div>
         </div>
         <div className="storeDataDetail">
           <div>鈉</div>
-          <div>{Math.round(food.sodium * (grams / 100))}</div>
+          <div>{Math.round(food.sodium * (grams / 100)).toString()}</div>
         </div>
       </div>
       <div className="storeDataDetailBg d-flex">
         <div className="storeDataDetail">
           <div>蛋白質</div>
-          <div>{Math.round(food.crude_protein * (grams / 100))}</div>
+          <div>{Math.round(food.crude_protein * (grams / 100)).toString()}</div>
         </div>
         <div className="storeDataDetail">
           <div>脂肪</div>
-          <div>{Math.round(food.crude_fat * (grams / 100))}</div>
+          <div>{Math.round(food.crude_fat * (grams / 100)).toString()}</div>
         </div>
       </div>
       <div className="storeDataDetailBg d-flex">
         <div className="storeDataDetailCalories">
           <div>卡路里</div>
-          <div>{Math.round(food.Calories_adjusted * (grams / 100))}</div>
+          <div>
+            {Math.round(food.Calories_adjusted * (grams / 100)).toString()}
+          </div>
         </div>
       </div>
       {/*  */}

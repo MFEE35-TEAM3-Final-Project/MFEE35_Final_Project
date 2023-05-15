@@ -105,19 +105,15 @@
 
 .howMuchLeftValue div:nth-child(1) {
   font-size: 28px;
-  padding-top: 70px;
+  padding-top: 60px;
 }
 
 .howMuchLeftValue div:nth-child(2) {
   font-size: 80px;
-  position: absolute;
-  top: 100px;
-  left: 70px;
 }
 
 .howMuchLeftValue div:nth-child(3) {
   font-size: 28px;
-  padding-top: 100px;
 }
 
 /* 還有多少量可以吃 */
@@ -352,4 +348,8 @@ thead:first-child {
 table {
   table-layout: fixed;
   width: 100%;
+}
+
+.calories {
+  text-align: center;
 }

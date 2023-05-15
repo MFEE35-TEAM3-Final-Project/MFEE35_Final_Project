@@ -3,14 +3,28 @@ import axios from "axios";
 import "../styles/addFoodList.css";
 import FoodDetailsNutrients from "./FoodDetailsNutrients";
 
-function AddFoodList({ onCancelButtonClick }) {
+function AddFoodList({ onCancelButtonClick, foodSection }) {
+  // 判斷早餐、午餐、晚餐、零食
+  const [eatingTime, setEatingTime] = useState();
+
+  const eatingTimeObj = {
+    breakfast: "早餐",
+    lunch: "午餐",
+    dinner: "晚餐",
+    snack: "零食",
+  };
+
+  useEffect(() => {
+    setEatingTime(eatingTimeObj[foodSection]);
+  }, [foodSection]);
+
   // 搜尋相關程式
   const [categories, setCategories] = useState([]);
   const [tempCategory, setTempCategory] = useState("all");
   const [keyword, setKeyword] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showcase, setShowcase] = useState(false);
-  const [selected, setSelected] = useState("選擇的食物");
+  const [selected, setSelected] = useState("尚未選擇食物");
   const [showAddFoodItem, setshowAddFoodItem] = useState(false);
 
   // 點擊食品後跳出的食品細項
@@ -84,7 +98,7 @@ function AddFoodList({ onCancelButtonClick }) {
         {/* 我是第一區 _ 選擇哪餐 日期 取消 */}
         <div className="d-flex">
           <div className="dateDiv w-50 p-3">
-            <div>午餐</div>
+            <div>{eatingTime}</div>
             <div>星期二, 4月18日</div>
           </div>
           <div
@@ -172,6 +186,7 @@ function AddFoodList({ onCancelButtonClick }) {
         <FoodDetailsNutrients
           cancelButtonClick={handleCancelClick}
           selected={selected}
+          foodSection={foodSection}
         />
       )}
     </Fragment>
