@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import logo from "../image/logo/logo.png";
 
 import "../styles/member/main.css";
 
 const UserRegistration = () => {
+  const navigate = useNavigate();
+
   const [formValues, setFormValues] = useState({
     userAccount: "",
     userPassword: "",
@@ -20,9 +22,11 @@ const UserRegistration = () => {
   };
 
   const handleButtonClick = () => {
-    console.log("Email:", formValues.userAccount);
-    console.log("Password:", formValues.userPassword);
-    console.log("RepeatPassword", formValues.repeatPassword);
+    if (isFormValid()) {
+      console.log("Password:", formValues.userPassword);
+      console.log("RepeatPassword", formValues.repeatPassword);
+      navigate("/MemberRegister2", { state: { userMail: userAccount } });
+    }
   };
 
   const isFormValid = () => {
@@ -35,7 +39,6 @@ const UserRegistration = () => {
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
-      {/* <MemberHeader /> */}
       <div className="wrapper">
         <div>
           <h3 id="titleH3">會員註冊</h3>
@@ -113,7 +116,6 @@ const UserRegistration = () => {
                   />
                 </div>
               </div>
-
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="repeatPassword">
@@ -134,15 +136,13 @@ const UserRegistration = () => {
               </div>
 
               <div>
-                <Link to={isFormValid() ? "/MemberRegister2" : ""}>
-                  <button
-                    className="mysubmit"
-                    disabled={!isFormValid()}
-                    onClick={handleButtonClick}
-                  >
-                    NEXT
-                  </button>
-                </Link>
+                <button
+                  className="mysubmit"
+                  disabled={!isFormValid()}
+                  onClick={handleButtonClick}
+                >
+                  NEXT
+                </button>
               </div>
             </form>
           </div>

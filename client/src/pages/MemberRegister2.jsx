@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 function RegisterForm() {
-  //   const location = useLocation();
-  //   const { userMail } = location.state; // 獲取從上一頁傳遞過來的參數
+  const { state } = useLocation();
 
   const [formValues, setFormValues] = useState({
     userName: "",
@@ -11,15 +10,19 @@ function RegisterForm() {
     userAge: "",
     userHeight: "",
     userWeight: "",
-    userSport: "",
+    userMail: state?.userMail || "",
+    userSport: "幾乎不運動",
   });
 
-  const { userName, userGender, userAge, userHeight, userWeight, userSport } =
-    formValues;
-
-  // useEffect(() => {
-  //   setFormValues({ ...formValues, userMail }); // 將上一頁的參數設置為表單的初始值
-  // }, [userMail]);
+  const {
+    userName,
+    userGender,
+    userAge,
+    userHeight,
+    userWeight,
+    userSport,
+    userMail,
+  } = formValues;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +37,7 @@ function RegisterForm() {
     console.log("userHeight:", formValues.userHeight);
     console.log("userWeight:", formValues.userWeight);
     console.log("userSport:", formValues.userSport);
+    console.log("userMail:", formValues.userMail);
   };
 
   return (
@@ -167,10 +171,11 @@ function RegisterForm() {
                     type="email"
                     name="userMail"
                     placeholder=""
-                    // value={userMail}
-                    // readOnly // 設置為只讀狀態
+                    value={userMail}
+                    readOnly
                     required
                   />
+
                   <br />
                 </div>
               </div>
