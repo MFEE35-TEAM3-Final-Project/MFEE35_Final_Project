@@ -7,11 +7,24 @@
     }
   }
   .order_table {
+    //table
     .status_tag {
       padding: 0.5rem;
       .anticon {
         vertical-align: 0.1rem;
       }
+    }
+  }
+}
+
+.detail_list {
+  .detail_item > div {
+    display: flex;
+    & > div {
+      flex: 3;
+    }
+    .img_container {
+      flex: 1;
     }
   }
 }

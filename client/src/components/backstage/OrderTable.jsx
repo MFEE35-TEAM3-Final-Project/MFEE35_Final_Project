@@ -9,7 +9,9 @@ import {
   Tag,
   Progress,
   Radio,
-  InputNumber
+  InputNumber,
+  Image,
+  Space
 } from "antd";
 import {
   CheckCircleOutlined,
@@ -182,14 +184,18 @@ const OrderManagement = () => {
     setIsModalVisible(true);
   };
   const handleModalCancel = () => {
-    setSelectedOrder(null);
-    setIsModalVisible(false);
+    console.log("cancel");
+    if (selectedOrder === selectedOrderChange) {
+      setSelectedOrder(null);
+      setSelectedOrderChange(null);
+      setIsModalVisible(false);
+    } else {
+      warningModal();
+    }
   };
-  const handleModalSave = () => {
-    // 在這裡處理儲存訂單的邏輯
 
-    // 關閉彈窗
-    handleModalCancel();
+  const handleModalSave = () => {
+    updateModal();
   };
   const orderStatusChange = (e) => {
     setSelectedOrderChange({
@@ -197,7 +203,47 @@ const OrderManagement = () => {
       status: e.target.value
     });
   };
+  // 確認離開
+  const confirmClose = () => {
+    setSelectedOrder(null);
+    setSelectedOrderChange(null);
+    Modal.destroyAll();
+    setIsModalVisible(false);
+  };
 
+  const confirmUpdate = () => {
+    console.log("send data");
+  };
+
+  const warningModal = () => {
+    Modal.warning({
+      title: "放棄更變",
+      content: "確定要放棄更變嗎?",
+      closable: true,
+      maskClosable: true,
+      okText: "確認放棄",
+      okButtonProps: {
+        danger: true,
+        onClick: confirmClose,
+        type: "primary",
+        render: (node) => <Button key="confirm_update" {...node} />
+      }
+    });
+  };
+  const updateModal = () => {
+    Modal.success({
+      title: "更新資料",
+      content: "確定要更新資料嗎?",
+      closable: true,
+      maskClosable: true,
+      okText: "更新資料",
+      okButtonProps: {
+        onClick: confirmUpdate,
+        type: "primary",
+        render: (node) => <Button key="confirm_update" {...node} />
+      }
+    });
+  };
   useEffect(() => {
     getOrder();
   }, []);
@@ -206,13 +252,17 @@ const OrderManagement = () => {
       <Table dataSource={orders} columns={columns} rowKey="order_id" />
 
       <Modal
+        id="order_modal"
         title={`訂單詳細情況   ${selectedOrder && selectedOrder.order_id}`}
         open={isModalVisible}
         onCancel={handleModalCancel}
         onOk={handleModalSave}
+        okButtonProps={{
+          disabled: selectedOrder === selectedOrderChange
+        }}
         bodyStyle={{ maxHeight: "70vh", overflowY: "auto" }}
         width={1200}
-        maskClosable={false}
+        maskClosable={selectedOrder === selectedOrderChange}
       >
         {selectedOrder && (
           <Descriptions bordered>
@@ -259,28 +309,45 @@ const OrderManagement = () => {
               還沒想到要填啥
             </Descriptions.Item>
             <Descriptions.Item label="總金額">
-              $ {parseInt(selectedOrderChange.total_price, 10)}
+              <span className="text-danger">
+                $ {parseInt(selectedOrderChange.total_price, 10)}
+              </span>
             </Descriptions.Item>
             <Descriptions.Item label="購買商品">
-              {selectedOrderChange.order_details.map((product) => (
-                <div key={product.id}>
-                  <p>名稱: {product.name}</p>
-                  <p>
-                    數量:
-                    <InputNumber
-                      value={product.quantity}
-                      min={1}
-                      onChange={(value) => {}}
-                    />
-                  </p>
-                  <p>單價: {product.price}</p>
-                  <p>總價: {product.price * product.quantity}</p>
-                  <Button type="primary" danger onClick={() => {}}>
-                    刪除商品
-                  </Button>
-                  <hr />
-                </div>
-              ))}
+              <div className="detail_list">
+                {selectedOrderChange.order_details.map((product) => (
+                  <div className="detail_item" key={product.detail_id}>
+                    <div>
+                      <div className="img_container">
+                        <Image
+                          width={150}
+                          src="https://picsum.photos/400/400?random=1"
+                        />
+                      </div>
+                      <div>
+                        <p>名稱: {product.name}</p>
+                        <p>
+                          數量:{" "}
+                          <span className="fw-bold">{product.quantity}</span>
+                        </p>
+                        <p>
+                          單價:{" "}
+                          <span className="fw-bold">
+                            {parseInt(product.price)}
+                          </span>{" "}
+                        </p>
+                        <p>
+                          總價:{" "}
+                          <span className="fw-bold text-danger">
+                            {product.price * product.quantity}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <hr />
+                  </div>
+                ))}
+              </div>
             </Descriptions.Item>
           </Descriptions>
         )}
