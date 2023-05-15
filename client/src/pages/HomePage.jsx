@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import Slider from "react-slick";
-import DoughnutChart from "../components/DoughnutChart";
+import DoughnutChart from "../components/DoughnutChart copy";
 import LineChart from "../components/LineChart";
 import "aos/dist/aos.css";
 import "../styles/homepage.css";
@@ -170,11 +170,15 @@ export default function HomePage() {
             <div className="recommend-img" style={{ position: "relative" }}>
               <div className="top-imgbox">
                 <div className="top-img" style={{ width: `${topImgWidth}%` }}>
-                  <img src="/image/top-img.png" alt="" />
+                  <img src={require("../image/top-img.png")} alt="Top image" />
                 </div>
               </div>
               <div className="bottom-img">
-                <img className="img-fluid" src="/image/bottom.png" alt="" />
+                <img
+                  className="img-fluid"
+                  src={require("../image/bottom.png")}
+                  alt=""
+                />
               </div>
             </div>
           </div>
@@ -188,7 +192,7 @@ export default function HomePage() {
         <div className="benefit-item d-flex justify-content-center">
           <div className="item-box">
             <div className="item-box-img">
-              <img src="/image/7.png" alt="" />
+              <img src={require("../image/7.png")} />
             </div>
             <div className="item-box-text">
               <span>吃的健康</span>
@@ -197,7 +201,7 @@ export default function HomePage() {
           </div>
           <div className="item-box">
             <div className="item-box-img">
-              <img src="/image/8.png" alt="" />
+              <img src={require("../image/8.png")} />
             </div>
             <div className="item-box-text">
               <span>好身材</span>
@@ -208,7 +212,7 @@ export default function HomePage() {
           </div>
           <div className="item-box">
             <div className="item-box-img">
-              <img src="/image/6.png" alt="" />
+              <img src={require("../image/6.png")} alt="" />
             </div>
             <div className="item-box-text">
               <span>自信</span>
@@ -221,16 +225,16 @@ export default function HomePage() {
         <div className="R-text">BeforeAfter</div>
         <div className="BA-item">
           <div className="BA-item-box">
-            <img className="img-fluid" src="/image/beaf.jpg" alt="" />
+            <img className="img-fluid" src={require("../image/beaf.jpg")} />
           </div>
           <div className="BA-item-box">
-            <img className="img-fluid" src="/image/beaf2.jpg" alt="" />
+            <img className="img-fluid" src={require("../image/beaf2.jpg")} />
           </div>
           <div className="BA-item-box">
-            <img className="img-fluid" src="/image/beaf3.jpg" alt="" />
+            <img className="img-fluid" src={require("../image/beaf3.jpg")} />
           </div>
           <div className="BA-item-box">
-            <img className="img-fluid" src="/image/beaf4.jpg" alt="" />
+            <img className="img-fluid" src={require("../image/beaf4.jpg")} />
           </div>
         </div>
       </div>
@@ -250,7 +254,7 @@ export default function HomePage() {
                   <p>可可風味能量棒</p>
                   <p>前往購買</p>
                 </div>
-                <img src="/image/product1.jpg" alt="" />
+                <img src={require("../image/product1.jpg")} />
               </a>
             </div>
             <div className="P-item-box ">
@@ -259,7 +263,7 @@ export default function HomePage() {
                   <p>抹茶豌豆蛋白粉</p>
                   <p>前往購買</p>
                 </div>
-                <img src="/image/product2.jpg" alt="" />
+                <img src={require("../image/product2.jpg")} />
               </a>
             </div>
             <div className="P-item-box ">
@@ -268,7 +272,7 @@ export default function HomePage() {
                   <p>低溫舒肥雞胸肉健康餐盒</p>
                   <p>前往購買</p>
                 </div>
-                <img src="/image/product3.jpg" alt="" />
+                <img src={require("../image/product3.jpg")} alt="" />
               </a>
             </div>
             <div className="P-item-box ">
@@ -277,7 +281,7 @@ export default function HomePage() {
                   <p>低溫舒肥雞胸肉健康餐盒</p>
                   <p>前往購買</p>
                 </div>
-                <img src="/image/product4.jpg" alt="" />
+                <img src={require("../image/product4.jpg")} alt="" />
               </a>
             </div>
             <div className="P-item-box ">
@@ -286,7 +290,7 @@ export default function HomePage() {
                   <p>低溫舒肥雞胸肉健康餐盒</p>
                   <p>前往購買</p>
                 </div>
-                <img src="/image/product5.jpg" alt="" />
+                <img src={require("../image/product5.jpg")} alt="" />
               </a>
             </div>
             <div className="P-item-box ">
@@ -295,7 +299,7 @@ export default function HomePage() {
                   <p>低溫舒肥雞胸肉健康餐盒</p>
                   <p>前往購買</p>
                 </div>
-                <img src="/image/product3.jpg" alt="" />
+                <img src={require("../image/product3.jpg")} alt="" />
               </a>
             </div>
           </Slider>

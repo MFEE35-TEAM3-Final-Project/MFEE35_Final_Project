@@ -19,12 +19,26 @@ function Article() {
         console.error(err);
       });
   }, []);
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = date.toLocaleString("en-US", { month: "short" });
+    const day = date.getDate();
+    return `${day} ${month} ${year}`;
+  };
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/articles`)
       .then((res) => {
         console.log(res.data.articles);
-        setArticles(res.data.articles);
+        const formattedArticles = res.data.articles.map((article) => {
+          return {
+            ...article,
+            created_at: formatDate(article.created_at),
+            updated_at: formatDate(article.updated_at),
+          };
+        });
+        setArticles(formattedArticles);
       })
       .catch((err) => {
         console.error(err);
@@ -94,7 +108,9 @@ function Article() {
                 <div className="left-r">
                   <a href="">
                     <div className="A-recommend-text">延伸閱讀</div>
-                    <div className="A-recommend-title">標題 What is Lorem </div>
+                    <div className="A-recommend-title">
+                      標題 What is Lorem{shuffledArticles.title}
+                    </div>
                   </a>
                 </div>
                 <div className="right-r">
@@ -134,7 +150,10 @@ function Article() {
                 <div className="userPost">
                   <div className="d-flex align-items-center mt-3">
                     <div>
-                      <img src="/image/article/userhead.png" alt="" />
+                      <img
+                        src={require("../image/article/userhead.png")}
+                        alt=""
+                      />
                     </div>
                     <span className="userName p-3">Name</span>
                     <span>2023/04/27 12:00</span>
@@ -155,13 +174,19 @@ function Article() {
         <div className="d-flex justify-content-evenly flex-wrap d-grid gap-5">
           {shuffledArticles
             .map((articlelist) => (
-              <div key={articlelist.article_id} className="card">
+              <div
+                key={articlelist.article_id}
+                className="card"
+                id="cardforuser"
+              >
                 <div className="card-img">
-                  <img src={articlelist.cover_image} alt="" />
+                  <img src={`${articlelist.cover_image}.jpeg`} alt="" />
                 </div>
-                <div className="card-body">
-                  <span>{articlelist.created_at}</span>
-                  <h3>{articlelist.title}</h3>
+                <div className="card-body c-bodylink">
+                  <a href={articlelist.article_id}>
+                    <span>{articlelist.created_at}</span>
+                    <h3>{articlelist.title}</h3>
+                  </a>
                 </div>
               </div>
             ))

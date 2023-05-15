@@ -268,8 +268,7 @@ footer {
   z-index: 1;
   overflow: hidden;
 }
-.top-img::before {
-}
+
 .top-img {
   transition: width 0.2s ease-out;
   /* width: 15px; */
@@ -593,6 +592,7 @@ button:hover .button-text {
   transform: translateY(170px);
 }
 .mask {
+  color: white;
   transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
   margin-bottom: 0px;
   transform: translateY(260px);

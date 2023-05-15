@@ -68,7 +68,7 @@ function Blog() {
                       <span>小標題</span>
                     </div>
                     <img
-                      src="/image/blog/carousel1.jpg"
+                      src={require("../image/blog/carousel1.jpg")}
                       className="d-block w-100 img-fluid"
                       alt="..."
                     />
@@ -79,7 +79,7 @@ function Blog() {
                       <span>小標題</span>
                     </div>
                     <img
-                      src="/image/blog/carousel2.jpg"
+                      src={require("../image/blog/carousel2.jpg")}
                       className="d-block w-100 img-fluid"
                       alt="..."
                     />
@@ -90,7 +90,7 @@ function Blog() {
                       <span>小標題</span>
                     </div>
                     <img
-                      src="/image/blog/carousel3.jpg"
+                      src={require("../image/blog/carousel3.jpg")}
                       className="d-block w-100 img-fluid"
                       alt="..."
                     />
@@ -130,7 +130,7 @@ function Blog() {
                 <div className="col-12 d-flex flex-md-row ">
                   <div className="popular-img  me-md-3">
                     <img
-                      src="/image/blog/popular1.jpg"
+                      src={require("../image/blog/popular1.jpg")}
                       alt=""
                       className="img-fluid"
                     />
@@ -147,7 +147,7 @@ function Blog() {
                 <div className="col-12  d-flex flex-md-row popular-img-pad">
                   <div className="popular-img  me-md-3">
                     <img
-                      src="/image/blog/popular2.jpg"
+                      src={require("../image/blog/popular2.jpg")}
                       alt=""
                       className="img-fluid"
                     />
@@ -162,13 +162,13 @@ function Blog() {
                 <div className="col-12 d-flex flex-md-row">
                   <div className="popular-img me-md-3">
                     <img
-                      src="/image/blog/popular3.jpg"
+                      src={require("../image/blog/popular3.jpg")}
                       alt=""
                       className="img-fluid"
                     />
                   </div>
                   <div className="popular-text">
-                    <h5>靠TDEE與基礎代謝率BMR計算機就能減肥？</h5>
+                    <h5>靠tdee與基礎代謝率BMR計算機就能減肥？</h5>
                     <span>
                       其實快速減肥的方法有好多種，生酮、低醣（低碳）飲食、間歇性斷食⋯
                     </span>
@@ -180,7 +180,7 @@ function Blog() {
         </div>
         <div className="Title">.Category</div>
         <div className="classify row g-0 nav nav-tabs" role="tablist">
-          <div className="classify-img col-md-1 col-12">
+          <div className="classify-img col-md-3 col-12">
             <a
               className="active"
               data-bs-toggle="tab"
@@ -191,11 +191,15 @@ function Blog() {
               tabIndex="0"
               onClick={() => handleClickCategory([])}
             >
-              <img src="/image/blog/all.jpg" className="img-fluid" alt="" />
+              <img
+                src={require("../image/blog/all.jpg")}
+                className="img-fluid"
+                alt=""
+              />
               <div>ALL</div>
             </a>
           </div>
-          <div className="classify-img col-md-1 col-12">
+          <div className="classify-img col-md-3 col-12">
             <a
               className="active"
               data-bs-toggle="tab"
@@ -206,11 +210,15 @@ function Blog() {
               tabIndex="0"
               onClick={() => handleClickCategory("HEALTHY")}
             >
-              <img src="/image/blog/healthy.png" className="img-fluid" alt="" />
+              <img
+                src={require("../image/blog/healthy.png")}
+                className="img-fluid"
+                alt=""
+              />
               <div>HEALTHY</div>
             </a>
           </div>
-          <div className="classify-img col-md-1 col-12">
+          <div className="classify-img col-md-3 col-12">
             <a
               className=""
               data-bs-toggle="tab"
@@ -222,14 +230,14 @@ function Blog() {
               onClick={() => handleClickCategory("FITNESS")}
             >
               <img
-                src="/image/blog/fitness.jpg"
+                src={require("../image/blog/fitness.jpg")}
                 className="img-fluid "
                 alt=""
               />
               <div>FITNESS</div>
             </a>
           </div>
-          <div className="classify-img col-md-1 col-12">
+          <div className="classify-img col-md-3 col-12">
             <a
               className=""
               data-bs-toggle="tab"
@@ -241,7 +249,7 @@ function Blog() {
               onClick={() => handleClickCategory("NUTRITION")}
             >
               <img
-                src="/image/blog/nutrition.jpg"
+                src={require("../image/blog/nutrition.jpg")}
                 className="img-fluid"
                 alt=""
               />
@@ -250,25 +258,28 @@ function Blog() {
           </div>
         </div>
         <div className="articlelist">
-          <div className="row g-0  tab-content">
+          <div className="row g-0  tab-content d-flex flex-column">
             <div
-              className="col-lg-8 col-md-12 flex-column fade tab-pane show active"
+              className="col-lg-8 col-md-12  fade tab-pane show active flex-wrap"
               id="HEALTHY"
             >
               {articles.map((article) => (
-                <div key={article.article_id} className="article  d-flex row">
-                  <div className=" col-md-6 col-12 article-img">
+                <div
+                  key={article.article_id}
+                  className="article  d-flex flex-row"
+                >
+                  <div className="  article-img">
                     <div>
                       <a href={`/article/${article.article_id}`}>
                         <img
-                          src={article.cover_image}
+                          src={`${article.cover_image}.jpeg`}
                           alt=""
                           className="img-fluid"
                         />
                       </a>
                     </div>
                   </div>
-                  <div className="col-md-6 col-12 article-text ms-5 d-flex flex-column">
+                  <div className=" article-text ms-5 d-flex flex-column">
                     <div>
                       <a href={`/article/${article.article_id}`}>
                         <span>{article.created_at}</span>

@@ -206,7 +206,7 @@ function Calculator() {
                   <input
                     name="image1"
                     type="image"
-                    src="/image/tdee/1.png"
+                    src={require("../image/tdee/1.png")}
                     data-value="1.2"
                     onClick={ImageClick}
                     alt=""
@@ -223,7 +223,7 @@ function Calculator() {
                   <input
                     name="image2"
                     type="image"
-                    src="/image/tdee/2.png"
+                    src={require("../image/tdee/2.png")}
                     data-value="1.375"
                     onClick={ImageClick}
                     alt=""
@@ -240,7 +240,7 @@ function Calculator() {
                   <input
                     name="image3"
                     type="image"
-                    src="/image/tdee/3.png"
+                    src={require("../image/tdee/3.png")}
                     data-value="1.55"
                     onClick={ImageClick}
                     alt=""
@@ -257,7 +257,7 @@ function Calculator() {
                   <input
                     name="image4"
                     type="image"
-                    src="/image/tdee/4.png"
+                    src={require("../image/tdee/4.png")}
                     data-value="1.72"
                     onClick={ImageClick}
                     alt=""
@@ -274,7 +274,7 @@ function Calculator() {
                   <input
                     name="image5"
                     type="image"
-                    src="/image/tdee/5.png"
+                    src={require("../image/tdee/5.png")}
                     data-value="1.9"
                     onClick={ImageClick}
                     alt=""
@@ -319,7 +319,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/rice.png" alt="" />
+                      <img src={require("../image/tdee/rice.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -337,7 +337,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/meat.png" alt="" />
+                      <img src={require("../image/tdee/meat.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -349,7 +349,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/milk.png" alt="" />
+                      <img src={require("../image/tdee/milk.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -361,7 +361,10 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/vegertable.png" alt="" />
+                      <img
+                        src={require("../image/tdee/vegertable.png")}
+                        alt=""
+                      />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -373,7 +376,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/fruit.png" alt="" />
+                      <img src={require("../image/tdee/fruit.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -385,7 +388,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/bean.png" alt="" />
+                      <img src={require("../image/tdee/bean.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">

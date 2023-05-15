@@ -138,8 +138,8 @@
     height: 250px;
     width: 300px;
 }
-.card{
-    width: 250px;
+#cardforuser{
+    width: 300px;
     border-radius:5%;
     border: 0px;
 }
@@ -186,4 +186,12 @@
     line-height: 30px;
     padding-left: 78px;
     border-bottom: 1px solid #F2EBEB;
+}
+.c-bodylink a{
+    color: black;
+    text-decoration: none;
+}
+.c-bodylink a:hover{
+    color: rgb(65, 65, 65);
+    text-decoration: none;
 }

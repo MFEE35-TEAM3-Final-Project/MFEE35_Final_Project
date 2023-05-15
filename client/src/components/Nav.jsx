@@ -1,6 +1,6 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { FaUser, FaShoppingCart, FaCaretRight } from "react-icons/fa";
-
+import "../styles/Nav.css";
 
 function Nav() {
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -59,7 +59,7 @@ function Nav() {
             </li>
           ) : (
             <li>
-              <a href="/login">
+              <a href="/LoginPage">
                 <FaUser className="me-2" />
                 登入
               </a>

@@ -143,6 +143,7 @@
     top: 65px;
     left: 30px;
     font-weight: bolder;
+    color: white;
 }
 .articlelist {
     transition-duration: 1s;
