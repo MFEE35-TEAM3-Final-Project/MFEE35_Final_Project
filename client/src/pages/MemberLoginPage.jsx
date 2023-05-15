@@ -1,84 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-// import MemberHeader from "../components/member/MemberHeader";
-
 import "../styles/member/main.css";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [token, setToken] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // 檢查是否存在令牌，如果存在則執行驗證方法
-    if (token) {
-      verifyToken();
-    }
-  }, [token]);
-
-  axios.defaults.headers.common["Authorization"] =
-    "JWT " +
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
+      const loginResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/login`,
+        { email, password },
         {
-          email,
-          password,
-        }
-      );
-
-      if (response.data.success) {
-        const authToken = response.data.token;
-        setToken(authToken);
-      } else {
-        setErrorMessage(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("發生了一個錯誤，請稍後重試");
-    }
-  };
-
-  const verifyToken = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/user/check`,
-        {
-          method: "POST",
           headers: {
-            Authorization: `JWT ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("令牌驗證成功");
-        console.log(data.user); // 可以根據需要處理使用者資訊
-        navigate("/MemberHomePage");
+      const loginData = loginResponse.data;
+
+      if (loginResponse.status === 200) {
+        // 登入成功
+        const { token, userId } = loginData;
+
+        // 在此處儲存token和userId，例如使用localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", userId);
+
+        // 發送token驗證請求
+        const tokenResponse = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/user/check`,
+          {},
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        const tokenData = tokenResponse.data;
+
+        if (tokenResponse.status === 200) {
+          // Token驗證成功
+          console.log(tokenData.message);
+        } else {
+          // Token驗證失敗
+          console.log(tokenData.message);
+        }
       } else {
-        const errorData = await response.json();
-        console.log("令牌驗證失敗");
-        console.log(errorData.message); // 顯示錯誤訊息或執行其他錯誤處理
+        // 登入失敗
+        setErrorMessage(loginData.message);
       }
     } catch (error) {
       console.error(error);
-      setErrorMessage("發生了一個錯誤，請稍後重試");
+      setErrorMessage("發生錯誤");
     }
   };
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
-      {/* <MemberHeader /> */}
-
       <div className="wrapper" style={{ backgroundColor: "#F7F4E9" }}>
         <div>
           <h3 id="titleH3">會員登入</h3>
@@ -86,7 +71,6 @@ const UserLogin = () => {
         <div style={{ margin: "20px" }}>
           <img id="logoimg" src="/image/logo/logo.png" alt="" />
         </div>
-
         <div className="container">
           <div className="userInfo row">
             <form id="loginForm" className="col-12" onSubmit={handleSubmit}>
@@ -130,7 +114,7 @@ const UserLogin = () => {
                     type="text"
                     name="userName"
                     placeholder="請輸入帳號(E-mail信箱)"
-                    value={email} // 將value設定為email狀態變數
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
@@ -150,7 +134,7 @@ const UserLogin = () => {
                     type="password"
                     name="userName"
                     placeholder="請輸入密碼(6~16位英數字)"
-                    value={password} // 將value設定為password狀態變數
+                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
@@ -180,5 +164,4 @@ const UserLogin = () => {
     </div>
   );
 };
-
 export default UserLogin;
