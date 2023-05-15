@@ -20,6 +20,7 @@ import MemberLoginPage from "./pages/MemberLoginPage";
 import MemberRegister1 from "./pages/MemberRegister1.jsx";
 import MemberRegister2 from "./pages/MemberRegister2";
 import MemberHomePage from "./pages/user/MemberHomePage";
+import MemberFav from "./pages/user/MemberFav";
 import MemberChartList from "./pages/user/MemberChartList";
 import MemberData from "./pages/user/MemberData";
 
@@ -59,6 +60,7 @@ function App() {
           <Route path="/MemberRegister2" element={<MemberRegister2 />} />
           <Route path="/MemberChartList" element={<MemberChartList />} />
           <Route path="/MemberData" element={<MemberData />} />
+          <Route path="/MemberFav" element={<MemberFav />} />
         </Routes>
       </div>
       {isBack ? "" : <Footer />}
