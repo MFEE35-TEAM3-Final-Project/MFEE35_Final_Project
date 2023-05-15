@@ -1,6 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 function RegisterForm() {
+  //   const location = useLocation();
+  //   const { userMail } = location.state; // 獲取從上一頁傳遞過來的參數
+
+  const [formValues, setFormValues] = useState({
+    userName: "",
+    userGender: "",
+    userAge: "",
+    userHeight: "",
+    userWeight: "",
+    userSport: "",
+  });
+
+  const { userName, userGender, userAge, userHeight, userWeight, userSport } =
+    formValues;
+
+  // useEffect(() => {
+  //   setFormValues({ ...formValues, userMail }); // 將上一頁的參數設置為表單的初始值
+  // }, [userMail]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    console.log("userName:", formValues.userName);
+    console.log("userGender:", formValues.userGender);
+    console.log("userAge:", formValues.userAge);
+    console.log("userHeight:", formValues.userHeight);
+    console.log("userWeight:", formValues.userWeight);
+    console.log("userSport:", formValues.userSport);
+  };
+
   return (
     <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
       <div className="wapper">
@@ -24,6 +59,8 @@ function RegisterForm() {
                     type="text"
                     name="userName"
                     placeholder=""
+                    value={userName}
+                    onChange={handleChange}
                     required
                   />
                   <br />
@@ -41,6 +78,9 @@ function RegisterForm() {
                       type="radio"
                       name="userGender"
                       id="male"
+                      value="男生"
+                      checked={userGender === "男生"}
+                      onChange={handleChange}
                     />
                     <label className="usergender" htmlFor="male">
                       男生
@@ -51,9 +91,12 @@ function RegisterForm() {
                       className="userGender"
                       type="radio"
                       name="userGender"
-                      id="fmale"
+                      id="female"
+                      value="女生"
+                      checked={userGender === "女生"}
+                      onChange={handleChange}
                     />
-                    <label className="usergender" htmlFor="fmale">
+                    <label className="usergender" htmlFor="female">
                       女生
                     </label>
                     <br />
@@ -71,6 +114,8 @@ function RegisterForm() {
                     type="text"
                     name="userAge"
                     placeholder=""
+                    value={userAge}
+                    onChange={handleChange}
                     required
                   />
                   <br />
@@ -87,12 +132,13 @@ function RegisterForm() {
                     type="text"
                     name="userHeight"
                     placeholder=""
+                    value={userHeight}
+                    onChange={handleChange}
                     required
                   />
                   <br />
                 </div>
               </div>
-
               <div className="row">
                 <div className="col-4">
                   <label htmlFor="userWeight">體重：</label>
@@ -103,6 +149,8 @@ function RegisterForm() {
                     type="text"
                     name="userWeight"
                     placeholder=""
+                    value={userWeight}
+                    onChange={handleChange}
                     required
                   />
                   <br />
@@ -119,6 +167,8 @@ function RegisterForm() {
                     type="email"
                     name="userMail"
                     placeholder=""
+                    // value={userMail}
+                    // readOnly // 設置為只讀狀態
                     required
                   />
                   <br />
@@ -132,12 +182,18 @@ function RegisterForm() {
                   </label>
                 </div>
                 <div className="col-6">
-                  <select>
-                    <option>幾乎不運動</option>
-                    <option>每週運動 1-3 天</option>
-                    <option>每週運動 3-5 天</option>
-                    <option>每週運動 6-7 天</option>
-                    <option>長時間運動或體力勞動工作</option>
+                  <select
+                    name="userSport"
+                    value={userSport}
+                    onChange={handleChange}
+                  >
+                    <option value="幾乎不運動">幾乎不運動</option>
+                    <option value="每週運動 1-3 天">每週運動 1-3 天</option>
+                    <option value="每週運動 3-5 天">每週運動 3-5 天</option>
+                    <option value="每週運動 6-7 天">每週運動 6-7 天</option>
+                    <option value="長時間運動或體力勞動工作">
+                      長時間運動或體力勞動工作
+                    </option>
                   </select>
                   <br />
                 </div>
@@ -145,7 +201,11 @@ function RegisterForm() {
               <div className="row">
                 <div className="col-3"></div>
                 <div className="col-6">
-                  <button type="submit" className="mysubmit">
+                  <button
+                    type="submit"
+                    className="mysubmit"
+                    onClick={handleButtonClick}
+                  >
                     Finish
                   </button>
                   <br />
@@ -158,4 +218,5 @@ function RegisterForm() {
     </div>
   );
 }
+
 export default RegisterForm;

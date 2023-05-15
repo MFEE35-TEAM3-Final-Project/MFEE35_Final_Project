@@ -35,7 +35,7 @@ function App() {
 
   return (
     <div>
-      {/* <Nav /> */}
+      <Nav />
       <ScrollTop />
 
       <div>

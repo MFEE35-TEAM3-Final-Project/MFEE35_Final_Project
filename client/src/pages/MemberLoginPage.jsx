@@ -54,7 +54,7 @@ const UserLogin = () => {
         {
           method: "POST",
           headers: {
-            Authorization: token,
+            Authorization: `JWT ${token}`,
           },
         }
       );

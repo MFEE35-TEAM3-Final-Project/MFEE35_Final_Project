@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 
 import MyBarChart from "../../components/member/BarChart";
 import MemberHeader from "../../components/member/MemberHeader";
@@ -10,16 +10,16 @@ import MyStackedBarChart from "../../components/member/MyStackedBarChart";
 import "../../styles/member/chartlist.css";
 
 function ChartListPage() {
-  // useEffect(() => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_API_URL}/api/articles`)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/articles`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
       <MemberHeader />

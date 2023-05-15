@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import MemberHeader from "../components/member/MemberHeader";
-
 import logo from "../image/logo/logo.png";
 
 import "../styles/member/main.css";
@@ -11,21 +9,27 @@ const UserRegistration = () => {
   const [formValues, setFormValues] = useState({
     userAccount: "",
     userPassword: "",
-    confirmPassword: "",
+    repeatPassword: "",
   });
 
-  const { userAccount, userPassword, confirmPassword } = formValues;
+  const { userAccount, userPassword, repeatPassword } = formValues;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
 
+  const handleButtonClick = () => {
+    console.log("Email:", formValues.userAccount);
+    console.log("Password:", formValues.userPassword);
+    console.log("RepeatPassword", formValues.repeatPassword);
+  };
+
   const isFormValid = () => {
     return (
       userAccount !== "" &&
       userPassword !== "" &&
-      userPassword === confirmPassword
+      userPassword === repeatPassword
     );
   };
 
@@ -112,7 +116,7 @@ const UserRegistration = () => {
 
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="confirmPassword">
+                  <label htmlFor="repeatPassword">
                     <i className="fa fa-lock" style={{ fontSize: "30px" }}></i>
                   </label>
                 </div>
@@ -120,9 +124,9 @@ const UserRegistration = () => {
                   <input
                     className="userInput"
                     type="password"
-                    name="confirmPassword"
+                    name="repeatPassword"
                     placeholder="請再輸入一次密碼"
-                    value={confirmPassword}
+                    value={repeatPassword}
                     onChange={handleChange}
                     required
                   />
@@ -131,7 +135,11 @@ const UserRegistration = () => {
 
               <div>
                 <Link to={isFormValid() ? "/MemberRegister2" : ""}>
-                  <button className="mysubmit" disabled={!isFormValid()}>
+                  <button
+                    className="mysubmit"
+                    disabled={!isFormValid()}
+                    onClick={handleButtonClick}
+                  >
                     NEXT
                   </button>
                 </Link>
