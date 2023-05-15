@@ -3,11 +3,13 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import DoughnutComponent from "../components/DoughnutChart";
+import Cookies from "js-cookie";
 import "../styles/goods.css";
-// axios.defaults.headers.common["Authorization"] =
-//   "JWT " +
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
 
+// 帶token
+axios.defaults.headers.common["Authorization"] =
+  "JWT " +
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
 const GoodsPage = () => {
   const { productId, foodId } = useParams();
   const [onlyOneProducts, setOnlyOneProducts] = useState([]);
@@ -16,6 +18,8 @@ const GoodsPage = () => {
   const [onlyOneFoods, setOnlyOneFoods] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [promotionGoods, setPromotionGood] = useState([]);
+  const shuffledGoods = promotionGoods.sort(() => Math.random() - 0.5); //亂數
+  const [cartData, setCartData] = useState([]);
   useEffect(() => {
     axios
       .get(
@@ -41,8 +45,8 @@ const GoodsPage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/products/getProducts`)
       .then((res) => {
-        // console.log(res);
-        setPromotionGood(res.data.results.slice(0, 4));
+        console.log(res);
+        setPromotionGood(res.data.results);
       })
       .catch((err) => {
         console.error(err);
@@ -56,6 +60,28 @@ const GoodsPage = () => {
       }
       return newIndex;
     });
+  };
+
+  const handleAddToCart = () => {
+    const expires = 7;
+
+    // 從 cookies 取得之前的購物車資料
+    const cartDataFromCookie = Cookies.get("cartData");
+    let existingCartData = [];
+    if (cartDataFromCookie) {
+      existingCartData = JSON.parse(cartDataFromCookie);
+    }
+
+    // 將新的資料加入進去
+    const addingCartData = {
+      productid: productId,
+      quantity: quantity,
+    };
+    existingCartData.push(addingCartData);
+
+    // 將整個購物車資料更新回 cookies
+    Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
+    setCartData(existingCartData);
   };
 
   const nextButtonHandler = () => {
@@ -86,24 +112,11 @@ const GoodsPage = () => {
       setQuantity(value);
     }
   };
-  // const addingCartData = {
-  //   productid: { productId },
-  //   quantity: { quantity },
-  //   // productid: "123",
-  //   // quantity: "2",
-  // };
 
-  // axios
-  //   .post(
-  //     `${process.env.REACT_APP_API_URL}/api/userRoutes/cart/add`,
-  //     addingCartData
-  //   )
-  //   .then((res) => {
-  //     console.log(res.data); // 處理回傳的資料
-  //   })
-  //   .catch((err) => {
-  //     console.error(err); // 處理錯誤訊息
-  //   });
+  const handleDeleteCartData = () => {
+    Cookies.remove("cartData");
+    setCartData([]);
+  };
 
   return (
     <div>
@@ -115,6 +128,9 @@ const GoodsPage = () => {
       </Helmet>
       <h1>
         商品頁面 - 商品 ID：{productId} 跟 食物 ID{foodId}
+      </h1>
+      <h1>
+        <button onClick={handleDeleteCartData}>刪除購物車資料</button>
       </h1>
       <div className="goodstype">
         <div className="diet">
@@ -185,13 +201,15 @@ const GoodsPage = () => {
             <br />
             <br />
             <div className="addingGroup">
-              <button className="cartIn">加入購物車</button>
+              <button className="cartIn" onClick={handleAddToCart}>
+                加入購物車
+              </button>
               <button className="buyIn">立即購買</button>
             </div>
             <br />
             <br />
             <button className="joinFollow">
-              <img src="../../public/image/goods/heart.png" alt="最愛" />
+              <img src={require("../image/goods/heart.png")} alt="最愛" />
               加入最愛
             </button>
           </div>
@@ -246,18 +264,24 @@ const GoodsPage = () => {
       <br />
       <br />
       <div className="recommendBar">
-        {promotionGoods.map((promotionGood, indexD) => (
-          <div key={indexD} className="myGoodscontain recomGoods">
-            <Link
-              to={`http://localhost:3000/goods/${promotionGood.productid}/${promotionGood.activityId}/${promotionGood.food_id}`}
-              className="jumpPage"
-            >
-              <img id="myGoodCard" src={promotionGood.image[0]} alt="推播圖1" />
-              <p className="fw-semibold cardTopic">{promotionGood.name}</p>
-              <span className="mycardPrice">{promotionGood.price}</span>
-            </Link>
-          </div>
-        ))}
+        {shuffledGoods
+          .map((promotionGood, indexD) => (
+            <div key={indexD} className="myGoodscontain recomGoods">
+              <Link
+                to={`http://localhost:3000/goods/${promotionGood.productid}/${promotionGood.activityId}/${promotionGood.food_id}`}
+                className="jumpPage"
+              >
+                <img
+                  id="myGoodCard"
+                  src={promotionGood.image[0]}
+                  alt="推播圖1"
+                />
+                <p className="fw-semibold cardTopic">{promotionGood.name}</p>
+                <span className="mycardPrice">{promotionGood.price}</span>
+              </Link>
+            </div>
+          ))
+          .slice(0, 4)}
       </div>
     </div>
   );

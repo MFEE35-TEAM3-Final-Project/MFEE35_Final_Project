@@ -1,9 +1,17 @@
-import React from "react";
-// import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import "../styles/shoppingcart.css";
 import { Helmet } from "react-helmet";
 
 const ShoppingcartPage = () => {
+  const [cartData, setCartData] = useState(null);
+  useEffect(() => {
+    // 取得 cookie 中的購物車資料
+    const cookieCartData = Cookies.get("cartData");
+    if (cookieCartData) {
+      setCartData(JSON.parse(cookieCartData));
+    }
+  }, []);
   return (
     <div className="mybody">
       <Helmet>

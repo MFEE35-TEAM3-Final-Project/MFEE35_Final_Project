@@ -12,9 +12,10 @@ root.render(
   //   <App />
   // </BrowserRouter>
 
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
+  // React.StrictMode 嚴格模式是給開發者專用，會提示某些潛在危險
+  // <React.StrictMode>
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+  // </React.StrictMode>
 );

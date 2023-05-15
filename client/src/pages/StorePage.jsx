@@ -240,14 +240,14 @@ const StorePage = () => {
             >
               <img
                 className="squareImg"
-                src="./image/store/changebtn1.png"
+                src={require("../image/store/changebtn1.png")}
                 alt="squarebtn"
               />
             </button>
             <button id="cardBl" className="listBtn" onClick={handleCardBlClick}>
               <img
                 className="listImg"
-                src="./image/store/changebtn2.webp"
+                src={require("../image/store/changebtn2.webp")}
                 alt="listbtn"
               />
             </button>
@@ -267,7 +267,7 @@ const StorePage = () => {
             <div>
               <img
                 className="arrowImg"
-                src="./image/store/backToTop.png"
+                src={require("../image/store/backToTop.png")}
                 alt="箭頭"
               />
             </div>
@@ -295,7 +295,10 @@ const StorePage = () => {
                   <img id="myCard" src={product.image[0]} alt="商品大圖" />
                   <span className="hiddenIcon">
                     <div className="magnifierBlock">
-                      <img src="./image/store/ magnifier.png" alt="放大鏡" />
+                      <img
+                        src={require("../image/store/magnifier.png")}
+                        alt="放大鏡"
+                      />
                     </div>
                   </span>
                 </div>
