@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "../styles/userFoodRecord.css";
-import Footer from "../components/Footer";
+// import Footer from "../components/Footer";
 import Header from "../components/Header";
 import AddFoodList from "../components/AddFoodList";
 import axios from "axios";
@@ -138,10 +138,17 @@ function FoodRecordNumber() {
 
       const lunchRow = memberlunchs.map((memberlunch) => {
         lukey++;
-        const { name, calories, carbohydrate, protein, saturated_fat, sodium } =
-          memberlunch.food_info;
+        const {
+          record_id,
+          name,
+          calories,
+          carbohydrate,
+          protein,
+          saturated_fat,
+          sodium,
+        } = memberlunch.food_info;
         const qty = parseFloat(memberlunch.food_qty).toFixed(2);
-
+        const recordId = record_id;
         // 更新總計變數
         luCalories += Math.floor(calories * qty);
         luCarbohydrate += carbohydrate * qty;
@@ -167,11 +174,21 @@ function FoodRecordNumber() {
               </td>
             </tr>
 
-            <tr style={{ borderBottom: "1px solid black" }}>
+            <tr
+              style={{ borderBottom: "1px solid black", postion: "relative" }}
+            >
               <td>{carbohydrate * qty}</td>
               <td>{protein * qty}</td>
               <td>{saturated_fat * qty}</td>
               <td>{sodium * qty}</td>
+              <td
+                className="cancelSign"
+                onClick={() => {
+                  deleteFood(recordId, name);
+                }}
+              >
+                -
+              </td>
             </tr>
           </Fragment>
         );
@@ -206,10 +223,17 @@ function FoodRecordNumber() {
 
       const dinnerRow = memberDinners.map((memberDinner) => {
         dikey++;
-        const { name, calories, carbohydrate, protein, saturated_fat, sodium } =
-          memberDinner.food_info;
+        const {
+          record_id,
+          name,
+          calories,
+          carbohydrate,
+          protein,
+          saturated_fat,
+          sodium,
+        } = memberDinner.food_info;
         const qty = parseFloat(memberDinner.food_qty).toFixed(2);
-
+        const recordId = record_id;
         // 更新總計變數
         diCalories += Math.floor(calories * qty);
         diCarbohydrate += carbohydrate * qty;
@@ -235,11 +259,21 @@ function FoodRecordNumber() {
                 {Math.floor(calories * qty)}
               </td>
             </tr>
-            <tr style={{ borderBottom: "1px solid black" }}>
+            <tr
+              style={{ borderBottom: "1px solid black", position: "relative" }}
+            >
               <td>{carbohydrate * qty}</td>
               <td>{protein * qty}</td>
               <td>{saturated_fat * qty}</td>
               <td>{sodium * qty}</td>
+              <td
+                className="cancelSign"
+                onClick={() => {
+                  deleteFood(recordId, name);
+                }}
+              >
+                -
+              </td>
             </tr>
           </Fragment>
         );
@@ -276,6 +310,7 @@ function FoodRecordNumber() {
         snkey++;
         const { name, calories, carbohydrate, protein, saturated_fat, sodium } =
           memberSnack.food_info;
+        const recordId = memberSnack.record_id;
         const qty = parseFloat(memberSnack.food_qty).toFixed(2);
 
         // 更新總計變數
@@ -303,11 +338,21 @@ function FoodRecordNumber() {
                 {Math.floor(calories * qty)}
               </td>
             </tr>
-            <tr style={{ borderBottom: "1px solid black" }}>
+            <tr
+              style={{ borderBottom: "1px solid black", position: "relative" }}
+            >
               <td>{carbohydrate * qty}</td>
               <td>{protein * qty}</td>
               <td>{saturated_fat * qty}</td>
               <td>{sodium * qty}</td>
+              <td
+                className="cancelSign"
+                onClick={() => {
+                  deleteFood(recordId, name);
+                }}
+              >
+                -
+              </td>
             </tr>
           </Fragment>
         );
@@ -436,6 +481,23 @@ function FoodRecordNumber() {
     document.body.classList.remove("modal-open");
   }
 
+  // 刪除食品方法
+  function deleteFood(recordId, name) {
+    const confirmDelete = window.confirm(`確定要刪除 -${name} 這個紀錄吗？`);
+    if (confirmDelete) {
+      axios
+        .delete(
+          `${process.env.REACT_APP_API_URL}/api/user/meal_record/record_id=${recordId}`
+        )
+        .then((response) => {
+          window.location.reload(); // 刷新页面
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
   return (
     <Fragment>
       <Header />
@@ -485,22 +547,26 @@ function FoodRecordNumber() {
             <div>
               碳水化合物
               <hr />
-              <div>{AllNumberCarbohydratePlus}</div>
+              <span>{AllNumberCarbohydratePlus}</span>
+              <span> 克</span>
             </div>
             <div>
               蛋白質
               <hr />
-              <div>{AllNumberProteinPlus}</div>
+              <span>{AllNumberProteinPlus}</span>
+              <span> 克</span>
             </div>
             <div>
               脂肪
               <hr />
-              <div>{AllNumberSaturatedFatPlus}</div>
+              <span>{AllNumberSaturatedFatPlus}</span>
+              <span> 克</span>
             </div>
             <div>
               鈉
               <hr />
-              <div>{AllNumberSodiumPlus}</div>
+              <span>{AllNumberSodiumPlus}</span>
+              <span> 毫克</span>
             </div>
           </div>
         </div>
@@ -784,7 +850,7 @@ function FoodRecordNumber() {
           foodSection={foodSection}
         />
       )}
-      <Footer />
+      {/* <Footer /> */}
     </Fragment>
   );
 }

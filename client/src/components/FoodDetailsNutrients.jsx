@@ -79,7 +79,7 @@ function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
         <img src={require("../image/plusanddash.png")} alt="無法顯示" />
         <input
           className="userEnterNumber"
-          type="text"
+          type="number"
           value={grams}
           onChange={handleGramsChange}
         />

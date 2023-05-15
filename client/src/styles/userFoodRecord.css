@@ -140,8 +140,11 @@
   border-radius: 5px 5px 5px 5px;
 }
 
-.ThreeAreaBg>div>div {
+.ThreeAreaBg>div>span:nth-child(2) {
   font-size: 35px;
+}
+.ThreeAreaBg>div>span:nth-child(3) {
+  font-size: 20px;
 }
 
 /* 攝取營養量專區 */
@@ -352,4 +355,20 @@ table {
 
 .calories {
   text-align: center;
+}
+
+
+/* 取消標誌 */
+.cancelSign {
+  position: absolute;
+  right: 0px;
+  bottom: -10px;
+  font-size: 60px;
+  color: lightgray;
+
+}
+
+.cancelSign:hover {
+  color: rgb(252, 96, 96);
+  cursor: pointer;
 }
