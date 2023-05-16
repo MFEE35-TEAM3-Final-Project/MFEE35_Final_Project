@@ -10,55 +10,42 @@ const UserLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const loginResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/login`,
-        { email, password },
+        {
+          email: email,
+          password: password,
+        }
+      );
+      const token = loginResponse.data.token;
+      // 儲存令牌到本地（例如localStorage）
+      localStorage.setItem("token", token);
+
+      // 使用令牌發送驗證請求
+      const checkResponse = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/user/check`,
+        null,
         {
           headers: {
-            "Content-Type": "application/json",
+            Authorization: token,
           },
         }
       );
 
-      const loginData = loginResponse.data;
-
-      if (loginResponse.status === 200) {
-        // 登入成功
-        const { token, userId } = loginData;
-
-        // 在此處儲存token和userId，例如使用localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("userId", userId);
-
-        // 發送token驗證請求
-        const tokenResponse = await axios.post(
-          `${process.env.REACT_APP_API_URL}/api/user/check`,
-          {},
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-
-        const tokenData = tokenResponse.data;
-
-        if (tokenResponse.status === 200) {
-          // Token驗證成功
-          console.log(tokenData.message);
-        } else {
-          // Token驗證失敗
-          console.log(tokenData.message);
-        }
+      if (checkResponse.data.success) {
+        // 令牌驗證成功
+        // 執行後續操作（例如導航到其他頁面）
       } else {
-        // 登入失敗
-        setErrorMessage(loginData.message);
+        // 令牌驗證失敗
+        console.error("令牌驗證失敗");
+        // 設定錯誤訊息
+        setErrorMessage("令牌驗證失敗");
       }
     } catch (error) {
-      console.error(error);
-      setErrorMessage("發生錯誤");
+      console.error("登入失敗", error);
+      // 設定錯誤訊息
+      setErrorMessage("登入失敗");
     }
   };
 
@@ -112,7 +99,7 @@ const UserLogin = () => {
                   <input
                     className="userInput"
                     type="text"
-                    name="userName"
+                    name="userEmail"
                     placeholder="請輸入帳號(E-mail信箱)"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -132,12 +119,15 @@ const UserLogin = () => {
                   <input
                     className="userInput"
                     type="password"
-                    name="userName"
-                    placeholder="請輸入密碼(6~16位英數字)"
+                    name="userPassword"
+                    placeholder="請輸入密碼"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%&])[A-Za-z\d!@#$%&]{8,}$"
                     required
+                    title="密碼長度至少8碼，需包含一個大寫英文字母、一個小寫英文字母、一個數字和一個特殊字元"
                   />
+
                   <br />
                 </div>
               </div>

@@ -106,16 +106,16 @@ function MemberData() {
                 </div>
               </div>
 
-              {/* 基本資料 - 年齡 */}
+              {/* 基本資料 - 生日 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userAge">年齡：</label>
+                  <label htmlFor="userBirthday">生日：</label>
                 </div>
                 <div className="col-6">
                   <input
                     className="userInput"
-                    type="text"
-                    name="userAge"
+                    type="date"
+                    name="userBirthday"
                     placeholder=""
                     required
                   />

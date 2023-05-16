@@ -3,17 +3,22 @@ import { Link } from "react-router-dom";
 
 import "../../../src/styles/member/MemberHeader.css";
 
-/* Set the width of the side navigation to 250px */
 function openNav() {
   document.getElementById("mySidenav").style.width = "250px";
 }
 
-/* Set the width of the side navigation to 0 */
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
 
 function MemberHeader() {
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("確定要登出嗎？");
+    if (confirmLogout) {
+      // 在這裡處理登出邏輯
+    }
+  };
+
   return (
     <div className="memberHeader">
       <div className="memberTopnav">
@@ -25,7 +30,6 @@ function MemberHeader() {
           ☰
         </div>
         <div id="mySidenav" className="memberSidenav">
-          {/* <a href="javascript:void(0)" className="closebtn" onClick={closeNav}> */}
           <a href="#" className="closebtn" onClick={closeNav}>
             &times;
           </a>
@@ -58,7 +62,9 @@ function MemberHeader() {
           </Link>
         </div>
         <div className="logout">
-          <button id="membersignoutBtn">登出</button>
+          <button id="membersignoutBtn" onClick={handleLogout}>
+            登出
+          </button>
         </div>
       </nav>
     </div>
