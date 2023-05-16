@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Helmet } from "react-helmet";
 import Cookies from "js-cookie";
 import "../styles/shoppingcart.css";
-import { Helmet } from "react-helmet";
 
+axios.defaults.headers.common["Authorization"] =
+  "JWT " +
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
 const ShoppingcartPage = () => {
   const [cartData, setCartData] = useState(null);
+  const [isConvenient, setIsConvenient] = useState(true);
+  const [activeButton, setActiveButton] = useState(true);
+  const [invoiceClass, setInvoiceClass] = useState(1);
+  const [perInvoice, setPerInvoice] = useState(1);
+  const [popCuppon, setPopCuppon] = useState(true);
   useEffect(() => {
     // 取得 cookie 中的購物車資料
     const cookieCartData = Cookies.get("cartData");
@@ -12,6 +21,44 @@ const ShoppingcartPage = () => {
       setCartData(JSON.parse(cookieCartData));
     }
   }, []);
+
+  const sevenEleven = () => {
+    setActiveButton(true);
+  };
+  const familyMart = () => {
+    setActiveButton(false);
+  };
+  const showConvenient = () => {
+    setIsConvenient(true);
+  };
+
+  const showHomedelivery = () => {
+    setIsConvenient(false);
+  };
+  const personalInvoice = () => {
+    setInvoiceClass(1);
+  };
+  const donateInvoice = () => {
+    setInvoiceClass(2);
+  };
+  const companyInvoice = () => {
+    setInvoiceClass(3);
+  };
+  const mobileCarrier = () => {
+    setPerInvoice(1);
+  };
+  const paperInvoice = () => {
+    setPerInvoice(2);
+  };
+  const NaturalInvoice = () => {
+    setPerInvoice(3);
+  };
+  const showPop = () => {
+    setPopCuppon(false);
+  };
+  const closePop = () => {
+    setPopCuppon(true);
+  };
   return (
     <div className="mybody">
       <Helmet>
@@ -22,14 +69,14 @@ const ShoppingcartPage = () => {
       </Helmet>
 
       <div className="main">
-        <div className="header">
-          <p className="hText">購物車</p>
-          <p className="hText">|</p>
-          <p className="hText">會員/購買人專區</p>
-          <p className="hText">|</p>
-          <p className="hText">配送方式</p>
-          <p className="hText">|</p>
-          <p className="hText">結帳金額</p>
+        <div className="cartHeader">
+          <span className="hText">購物車</span>
+          <span className="hText">|</span>
+          <span className="hText">會員/購買人專區</span>
+          <span className="hText">|</span>
+          <span className="hText">配送方式</span>
+          <span className="hText">|</span>
+          <span className="hText">結帳金額</span>
         </div>
       </div>
 
@@ -120,23 +167,12 @@ const ShoppingcartPage = () => {
             訂單通知會寄到此信箱, 請您務必填入正確的E-MAIL
           </span>
         </div>
-        <hr className="myhr" />
-
-        <div className="memberBox">
-          <div>
-            <p className="fillRemind"> 優惠券/優惠碼</p>
-            <button type="button" className="specOff">
-              選擇優惠券或輸入優惠碼
-            </button>
-          </div>
-        </div>
 
         <hr className="myhr" />
-
         <div className="memberBox">
           <div>
             <p className="fillRemind"> 取件人資訊</p>
-            <span className="takingName"> 姓名</span>
+            <p className="takingName"> 姓名</p>
             <input type="text" className="fillFrame" placeholder="購買人姓名" />
           </div>
           <span className="remindText">
@@ -144,7 +180,7 @@ const ShoppingcartPage = () => {
           </span>
           <br />
           <div>
-            <span className="takingName"> 聯絡電話</span>
+            <p className="takingName"> 聯絡電話</p>
             <input
               type="text"
               className="fillFrame"
@@ -164,6 +200,18 @@ const ShoppingcartPage = () => {
             </label>
           </div>
         </div>
+        <hr className="myhr" />
+
+        <div className="memberBox">
+          <div>
+            <p className="fillRemind"> 優惠券/優惠碼</p>
+            <button type="button" className="specOff" onClick={showPop}>
+              選擇優惠券或輸入優惠碼
+            </button>
+          </div>
+        </div>
+
+        <hr className="myhr" />
       </div>
 
       <div className="theTopic">
@@ -181,64 +229,104 @@ const ShoppingcartPage = () => {
               <button
                 name="dChoose"
                 type="button"
-                className="specialOff defaultCon"
-                onclick="showConvenient()"
+                className={`specialOff ${isConvenient ? "defaultCon" : ""}`}
+                onClick={showConvenient}
               >
                 超商
               </button>
               <button
                 name="dChoose"
                 type="button"
-                className="specialOff"
-                onclick="showHomedelivery()"
+                className={`specialOff ${isConvenient ? "" : "defaultCon"}`}
+                onClick={showHomedelivery}
               >
                 宅配
               </button>
             </div>
           </div>
         </div>
-        <hr className="myhr" />
+        <hr />
 
-        <div className="memberBox convenientBox">
-          <div>
-            <p className="fillRemind">請選擇超商</p>
-            <button
-              name="cChoose"
-              type="button"
-              className="cWhich defaultSelect"
-            >
-              <span className="sText">7-11取貨(先付款)</span>
-              <span>NT$60</span>
-            </button>
-            <button name="cChoose" type="button" className="cWhich">
-              <span className="sText">全家取貨(先付款)</span>
-              <span>NT$60</span>
-            </button>
-            <button type="button" className="selectSeven">
-              請選擇取貨門市
-            </button>
-          </div>
-        </div>
-        <div className="addressBox memberBox deliveryHide">
-          <div>
-            <div className="addGroup">
-              <select className="citySel">
-                <option defaultValue="" selected>
-                  請選擇縣市
-                </option>
-              </select>
-              <select className="sectionSel">
-                <option defaultValue="" selected>
-                  請選擇鄉鎮市區
-                </option>
-              </select>
+        {isConvenient ? (
+          <div className="memberBox convenientBox">
+            <div>
+              <p className="fillRemind">請選擇超商</p>
+              <button
+                name="cChoose"
+                type="button"
+                className={`${activeButton ? "defaultSelect" : "cWhich"}`}
+                onClick={sevenEleven}
+              >
+                <span className="sText">7-11取貨(先付款)</span>
+                <span>NT$60</span>
+              </button>
+              <button
+                name="cChoose"
+                type="button"
+                className={`${activeButton ? "cWhich" : "defaultSelect"}`}
+                onClick={familyMart}
+              >
+                <span className="sText">全家取貨(先付款)</span>
+                <span>NT$60</span>
+              </button>
+              <button type="button" className="selectSeven">
+                請選擇取貨門市
+              </button>
             </div>
-            <input
-              type="text"
-              className="addressText"
-              placeholder="請輸入地址"
-            />
           </div>
+        ) : (
+          <div className="addressBox memberBox">
+            <div>
+              <div className="addGroup">
+                <select className="citySel">
+                  <option
+                    value=""
+                    // selected
+                  >
+                    請選擇縣市
+                  </option>
+                  {/* 下載JSON */}
+                </select>
+                <select className="sectionSel">
+                  <option
+                    value=""
+                    // selected
+                  >
+                    請選擇鄉鎮市區
+                  </option>
+                  {/* 下載JSON */}
+                </select>
+              </div>
+              <input
+                type="text"
+                className="addressText"
+                placeholder="請輸入地址"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="addressBox memberBox deliveryHide">
+        <div>
+          <div className="addGroup">
+            <select className="citySel">
+              <option
+                defaultValue=""
+                // selected
+              >
+                請選擇縣市
+              </option>
+            </select>
+            <select className="sectionSel">
+              <option
+                defaultValue=""
+                // selected
+              >
+                請選擇鄉鎮市區
+              </option>
+            </select>
+          </div>
+          <input type="text" className="addressText" placeholder="請輸入地址" />
         </div>
         <hr className="myhr" />
 
@@ -265,95 +353,121 @@ const ShoppingcartPage = () => {
           </span>
           <p className="fillRemind">發票資料</p>
           <div className="invoiceInfo  goodsExplain">
-            <button className="goodsIntro" onclick="showTypeOneBox()">
-              <p>個人發票</p>
+            <button
+              className={`${invoiceClass === 1 ? "goodsIntro" : "goodsSave"}`}
+              onClick={personalInvoice}
+            >
+              <span>個人發票</span>
             </button>
-            <button className="goodsSave" onclick="showTypeTwoBox()">
-              <p>發票捐贈</p>
+            <button
+              className={`${invoiceClass === 2 ? "goodsIntro" : "goodsSave"}`}
+              onClick={donateInvoice}
+            >
+              <span>發票捐贈</span>
             </button>
-            <button className="goodsSave" onclick="showTypeThreeBox()">
-              <p>公司用發票</p>
+            <button
+              className={`${invoiceClass === 3 ? "goodsIntro" : "goodsSave"}`}
+              onClick={companyInvoice}
+            >
+              <span>公司用發票</span>
             </button>
           </div>
-
+          {/* 個人發票 */}
           <p className="spaceSteal">1</p>
-          <div className="invoiceGroup invoiceTypeOne">
-            <input
-              name="invoice1"
-              type="radio"
-              id="phone"
-              onclick="showDeliveryBox()"
-              checked
-            />
-            <label htmlFor="phone">
-              <span className="invoiceText">手機條碼載句</span>
-            </label>
+          <div className={`${invoiceClass === 1 ? "" : "hiddenIvGroup"}`}>
+            <div className="invoiceGroup">
+              <input
+                name="invoice1"
+                type="radio"
+                id="phone"
+                onClick={mobileCarrier}
+                defaultChecked
+              />
+              <label htmlFor="phone">
+                <span className="invoiceText">手機條碼載句</span>
+              </label>
 
-            <input
-              name="invoice1"
-              type="radio"
-              id="letter"
-              onclick="showLetterBox()"
-            />
-            <label htmlFor="letter">
-              <span className="invoiceText">紙本發票</span>
-            </label>
+              <input
+                name="invoice1"
+                type="radio"
+                id="letter"
+                onClick={paperInvoice}
+              />
+              <label htmlFor="letter">
+                <span className="invoiceText">紙本發票</span>
+              </label>
 
-            <input
-              name="invoice1"
-              type="radio"
-              id="future"
-              onclick="showcloudBox()"
-            />
-            <label htmlFor="future">
-              <span className="invoiceText">自然人憑證條碼載具</span>
-            </label>
+              <input
+                name="invoice1"
+                type="radio"
+                id="future"
+                onClick={NaturalInvoice}
+              />
+              <label htmlFor="future">
+                <span className="invoiceText">自然人憑證條碼載具</span>
+              </label>
+            </div>
+            <div className="deliveryBox ">
+              <input
+                type="text"
+                // className="cloudIv"
+                className={`cloudIv ${perInvoice === 1 ? "" : "hiddenIv"}`}
+                placeholder="請輸入手機條碼載具"
+              />
+            </div>
+
+            <div
+              // className="cloudBox hiddenIv"
+              className={`cloudBox ${perInvoice === 3 ? "" : "hiddenIv"}`}
+            >
+              <input
+                type="text"
+                className="cloudIv"
+                placeholder="共16碼大寫英數字"
+              />
+            </div>
           </div>
+          {/* 基金會 */}
+          <div className={`${invoiceClass === 2 ? "" : "hiddenIvGroup"}`}>
+            <div className="invoiceGroup">
+              <input name="invoice2" type="radio" id="phone" defaultChecked />
+              <label htmlFor="phone">
+                <span className="invoiceText">基金會</span>
+              </label>
 
-          <div className="deliveryBox ">
-            <input
-              type="text"
-              className="cloudIv"
-              placeholder="請輸入手機條碼載具"
-            />
+              <input
+                name="invoice2"
+                type="radio"
+                id="letter"
+                // checked
+              />
+              <label htmlFor="letter">
+                <span className="invoiceText">基金會</span>
+              </label>
+
+              <input name="invoice2" type="radio" id="future" />
+              <label htmlFor="future">
+                <span className="invoiceText">基金會</span>
+              </label>
+            </div>
           </div>
-
-          <div className="cloudBox hiddenIv">
-            <input
-              type="text"
-              className="cloudIv"
-              placeholder="共16碼大寫英數字"
-            />
-          </div>
-
-          <div className="invoiceGroup hiddenIvGroup invoiceTypeTwo">
-            <input name="invoice2" type="radio" id="phone" />
-            <label htmlFor="phone">
-              <span className="invoiceText">基金會</span>
-            </label>
-
-            <input name="invoice2" type="radio" id="letter" checked />
-            <label htmlFor="letter">
-              <span className="invoiceText">基金會</span>
-            </label>
-
-            <input name="invoice2" type="radio" id="future" />
-            <label htmlFor="future">
-              <span className="invoiceText">基金會</span>
-            </label>
-          </div>
-
-          <div className="cloudBox hiddenIvGroup invoiceTypeThree">
-            <input
-              type="text"
-              className="cloudIv"
-              placeholder="請輸入統一編號"
-            />
-            <input
-              type="text"
-              className="cloudIv"
-              placeholder="請輸入公司名稱"
-            />
+          {/* 公司發票 */}
+          <div className={`${invoiceClass === 3 ? "" : "hiddenIvGroup"}`}>
+            <div
+              // className="invoiceGroup"
+              className="invoiceGroup"
+            >
+              <input
+                type="text"
+                className="cloudIv"
+                placeholder="請輸入統一編號"
+              />
+              <input
+                type="text"
+                className="cloudIv"
+                placeholder="請輸入公司名稱"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -374,7 +488,10 @@ const ShoppingcartPage = () => {
         <hr className="myhr" />
         <div className="typingIv">
           <p>折扣</p>
-          <button className="vIcon" onclick="showDiscount()">
+          <button
+            className="vIcon"
+            // onclick="showDiscount()"
+          >
             <img src="./image/shoppingcart/letter-v.png" alt="V" />
           </button>
           <p>-NT$0</p>
@@ -415,7 +532,10 @@ const ShoppingcartPage = () => {
         <hr className="myhr" />
         <div className="typingIv">
           <p>購物車內容</p>
-          <button className="bigvIcon" onclick="showmyShopping()">
+          <button
+            className="bigvIcon"
+            // onclick="showmyShopping()"
+          >
             <img
               className="vImage"
               src="./image/shoppingcart/letter-v.png"
@@ -448,64 +568,71 @@ const ShoppingcartPage = () => {
           <div>立即結帳</div>
         </button>
       </div>
-
-      <div className="cupponHidden hinds">
-        <div className="hiddenBox">
-          <p className="closeBtn">X</p>
-          <div className="saleGroup">
-            <input type="text" className="attText" placeholder="請輸入優惠碼" />
-            <button className="attBtn">新增優惠券</button>
-          </div>
-
-          <div className="cupponGroup">
-            <div className="borderLine">
-              <img
-                className="myLogo"
-                src="./image/store/good1.png"
-                alt="優惠券"
+      <div className={`${popCuppon ? "cupponHidden" : ""}`}>
+        <div className="hinds">
+          <div className="hiddenBox">
+            <p className="closeBtn" onClick={closePop}>
+              X
+            </p>
+            <div className="saleGroup">
+              <input
+                type="text"
+                className="attText"
+                placeholder="請輸入優惠碼"
               />
+              <button className="attBtn">新增優惠券</button>
             </div>
 
-            <div className="cupponDec">
-              <div>Special Offer</div>
-              <div>$ 50 OFF</div>
-            </div>
-            <div className="cupponBtn">
-              <button className="cupponSel">選擇</button>
-            </div>
-          </div>
-          <div className="cupponGroup">
-            <div className="borderLine">
-              <img
-                className="myLogo"
-                src="./image/store/good1.png"
-                alt="優惠券"
-              />
-            </div>
+            <div className="cupponGroup">
+              <div className="borderLine">
+                <img
+                  className="myLogo"
+                  src="./image/store/good1.png"
+                  alt="優惠券"
+                />
+              </div>
 
-            <div className="cupponDec">
-              <div>Special Offer</div>
-              <div>$ 50 OFF</div>
+              <div className="cupponDec">
+                <div>Special Offer</div>
+                <div>$ 50 OFF</div>
+              </div>
+              <div className="cupponBtn">
+                <button className="cupponSel">選擇</button>
+              </div>
             </div>
-            <div className="cupponBtn">
-              <button className="cupponSel">選擇</button>
-            </div>
-          </div>
-          <div className="cupponGroup">
-            <div className="borderLine">
-              <img
-                className="myLogo"
-                src="./image/store/good1.png"
-                alt="優惠券"
-              />
-            </div>
+            <div className="cupponGroup">
+              <div className="borderLine">
+                <img
+                  className="myLogo"
+                  src="./image/store/good1.png"
+                  alt="優惠券"
+                />
+              </div>
 
-            <div className="cupponDec">
-              <div>Special Offer</div>
-              <div>$ 50 OFF</div>
+              <div className="cupponDec">
+                <div>Special Offer</div>
+                <div>$ 50 OFF</div>
+              </div>
+              <div className="cupponBtn">
+                <button className="cupponSel">選擇</button>
+              </div>
             </div>
-            <div className="cupponBtn">
-              <button className="cupponSel">選擇</button>
+            <div className="cupponGroup">
+              <div className="borderLine">
+                <img
+                  className="myLogo"
+                  src="./image/store/good1.png"
+                  alt="優惠券"
+                />
+              </div>
+
+              <div className="cupponDec">
+                <div>Special Offer</div>
+                <div>$ 50 OFF</div>
+              </div>
+              <div className="cupponBtn">
+                <button className="cupponSel">選擇</button>
+              </div>
             </div>
           </div>
         </div>

@@ -10,20 +10,30 @@ import "../styles/goods.css";
 axios.defaults.headers.common["Authorization"] =
   "JWT " +
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
+let x = axios.defaults.headers.common["Authorization"];
 const GoodsPage = () => {
-  const { productId, foodId } = useParams();
+  // 設定取得的商品ID、食物ID
+  const { productid, foodId } = useParams();
+  // 設定取得的商品
   const [onlyOneProducts, setOnlyOneProducts] = useState([]);
-  const [ImageList, setImageList] = useState([]);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  // 設定取得的食物成份
   const [onlyOneFoods, setOnlyOneFoods] = useState([]);
+  // 設定可點選的4張圖片陣列
+  const [ImageList, setImageList] = useState([]);
+  // 設定圖片陣列的index
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  // 設定加入購物車的數量
   const [quantity, setQuantity] = useState(1);
+  // 設定推薦商品
   const [promotionGoods, setPromotionGood] = useState([]);
+  // 將推薦商品設定為亂數
   const shuffledGoods = promotionGoods.sort(() => Math.random() - 0.5); //亂數
+  // 捨定cookie的值
   const [cartData, setCartData] = useState([]);
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProductsById?productId=${productId}`
+        `${process.env.REACT_APP_API_URL}/api/products/getProductsById?productId=${productid}`
       )
       .then((res) => {
         // console.log(res);
@@ -45,13 +55,14 @@ const GoodsPage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/products/getProducts`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setPromotionGood(res.data.results);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [productid]);
+
   const prevButtonHandler = () => {
     setActiveImageIndex((prevIndex) => {
       let newIndex = prevIndex - 1;
@@ -63,25 +74,39 @@ const GoodsPage = () => {
   };
 
   const handleAddToCart = () => {
-    const expires = 7;
+    if (x) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/userRoutes/cart/add`, {
+          productid: productid,
+          quantity: quantity,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      const expires = 7;
 
-    // 從 cookies 取得之前的購物車資料
-    const cartDataFromCookie = Cookies.get("cartData");
-    let existingCartData = [];
-    if (cartDataFromCookie) {
-      existingCartData = JSON.parse(cartDataFromCookie);
+      // 從 cookies 取得之前的購物車資料
+      const cartDataFromCookie = Cookies.get("cartData");
+      let existingCartData = [];
+      if (cartDataFromCookie) {
+        existingCartData = JSON.parse(cartDataFromCookie);
+      }
+
+      // 將新的資料加入進去
+      const addingCartData = {
+        productid: productid,
+        quantity: quantity,
+      };
+      existingCartData.push(addingCartData);
+
+      // 將整個購物車資料更新回 cookies
+      Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
+      setCartData(existingCartData);
     }
-
-    // 將新的資料加入進去
-    const addingCartData = {
-      productid: productId,
-      quantity: quantity,
-    };
-    existingCartData.push(addingCartData);
-
-    // 將整個購物車資料更新回 cookies
-    Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
-    setCartData(existingCartData);
   };
 
   const nextButtonHandler = () => {
@@ -126,12 +151,12 @@ const GoodsPage = () => {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>
-        商品頁面 - 商品 ID：{productId} 跟 食物 ID{foodId}
-      </h1>
-      <h1>
+      {/* <h1>
+        商品頁面 - 商品 ID：{productid} 跟 食物 ID{foodId}
+      </h1> */}
+      {/* <h1>
         <button onClick={handleDeleteCartData}>刪除購物車資料</button>
-      </h1>
+      </h1> */}
       <div className="goodstype">
         <div className="diet">
           <a href="http://localhost:3000/goods" className="myDiet">
@@ -239,7 +264,7 @@ const GoodsPage = () => {
       <br />
       <br />
       <div className="myGoodscontain nutriChart">
-        <DoughnutComponent foodId={foodId} productId={productId} />
+        <DoughnutComponent foodId={foodId} productId={productid} />
       </div>
       <br />
       <br />
