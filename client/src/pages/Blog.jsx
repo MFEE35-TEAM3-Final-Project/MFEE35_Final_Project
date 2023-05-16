@@ -23,6 +23,7 @@ function Blog() {
     const day = date.getDate();
     return `${day} ${month} ${year}`;
   };
+  //分類
   useEffect(() => {
     if (category) {
       axios
@@ -290,7 +291,7 @@ function Blog() {
                     <div className=" d-flex mt-auto">
                       <span className="ms-auto">
                         <FaRegCommentAlt value={{ className: "react-icons" }} />
-                        <span className="ms-2">{article.is_published}</span>
+                        <span className="ms-2">0</span>
                       </span>
                     </div>
                   </div>

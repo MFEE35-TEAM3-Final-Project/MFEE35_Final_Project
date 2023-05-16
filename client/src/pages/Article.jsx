@@ -7,10 +7,12 @@ import { BiMessageEdit } from "react-icons/bi";
 function Article() {
   const [article, setArticle] = useState([]);
   const [articles, setArticles] = useState([]);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const { id } = useParams();
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [nextArticleId, setNextArticleId] = useState("");
+  const [nextArticleId, setNextArticleId] = useState(""); //下一篇文章
+  const [comments, setComments] = useState([]);
+  //抓取本篇文章內容標題
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/articles/id=${id}`)
@@ -21,7 +23,7 @@ function Article() {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [id]);
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const year = date.getFullYear();
@@ -29,80 +31,111 @@ function Article() {
     const day = date.getDate();
     return `${day} ${month} ${year}`;
   };
+  //抓取文章
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/articles`)
       .then((res) => {
         setDataLoaded(true);
         console.log(res.data.articles);
-        
+        // 找文章索引
+        const currentIndex = res.data.articles.findIndex(
+          (article) => article.article_id === id
+        );
+        console.log(currentIndex);
+        // 下一篇文章id
+        if (
+          currentIndex !== -1 &&
+          currentIndex < res.data.articles.length - 1
+        ) {
+          setNextArticleId(res.data.articles[currentIndex + 1]);
+        }
+        //亂數
+        const shuffledData = res.data.articles.sort(() => Math.random() - 0.5);
+
         //時間
-        const formattedArticles = res.data.articles.map((article) => {
+        const formattedArticles = shuffledData.map((article) => {
           return {
             ...article,
             created_at: formatDate(article.created_at),
             updated_at: formatDate(article.updated_at),
-
           };
-
         });
         setArticles(formattedArticles);
-        
-        // 找文章索引
-        const currentIndex = formattedArticles.findIndex(article => article.article_id === id);
-        console.log(currentIndex)
-        // 下一篇文章id
-        if (currentIndex !== -1 && currentIndex < formattedArticles.length - 1) {
-          setNextArticleId(formattedArticles[currentIndex + 1]);
-        }
       })
       .catch((err) => {
         console.error(err);
       });
   }, [id]);
+  //留言板
+  const commentDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
 
-  const shuffledArticles = articles.sort(() => Math.random() - 0.5); //亂數
-  console.log(shuffledArticles)
-  if (!dataLoaded) {
-    return <div>載入中..</div>;
-  }
-  // useEffect(() => {
-  //   axios
-  //     .get(
-  //       `${process.env.REACT_APP_API_URL}/api/articles/article_comments/article_id=${id}`
-  //     )
-  //     .then((res) => {
-  //       console.log(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // }, []);
+    const commenttedDate = `${year}/${String(month).padStart(2, "0")}/${String(
+      day
+    ).padStart(2, "0")}`;
+    const commenttedTime = `${String(hours).padStart(2, "0")}:${String(
+      minutes
+    ).padStart(2, "0")}`;
 
-
+    return `${commenttedDate} ${commenttedTime}`;
+  };
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/articles/article_comments/article_id=${id}`
+      )
+      .then((res) => {
+        // setDataLoaded(true);
+        const comments = res.data.comments.map((comment) => {
+          return {
+            ...comment,
+            created_at: commentDate(comment.created_at),
+            updated_at: commentDate(comment.updated_at),
+          };
+        });
+        setComments(comments);
+        console.log(comments);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   const sendMessage = async () => {
     try {
-      const jwtToken = document.cookie.replace(
-        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/article_comments/article_id=${id}`, {
-        message: message
-      },
+      const jwtToken =
+        "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/user/article_comments/article_id=${id}`,
+        {
+          comment: message,
+        },
         {
           headers: {
-            Authorization: jwtToken
-          }
-        });
-
+            Authorization: jwtToken,
+          },
+        }
+      );
+      setMessage("");
       console.log(response.data);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
   };
   const userTextMes = (event) => {
-    setMessage(event.target.value)
+    // console.log(id);
+    setMessage(event.target.value);
+  };
+
+  if (!dataLoaded) {
+    return <div>載入中..</div>;
   }
   return (
     <div>
@@ -153,17 +186,17 @@ function Article() {
             <div className="A-recommend ">
               <div className="d-flex  flex-row">
                 <div className="left-r">
-                  <a href= {shuffledArticles[0].article_id}>
+                  <a href={articles[0].article_id}>
                     <div className="A-recommend-text">延伸閱讀</div>
-                    <div className="A-recommend-title">
-                      {shuffledArticles[0].title}
-                    </div>
+                    <div className="A-recommend-title">{articles[0].title}</div>
                   </a>
                 </div>
                 <div className="right-r">
-                  <a href = {nextArticleId.article_id}>
+                  <a href={nextArticleId.article_id}>
                     <div className="A-recommend-text">下一篇</div>
-                    <div className="A-recommend-title">{nextArticleId.title} </div>
+                    <div className="A-recommend-title">
+                      {nextArticleId.title}{" "}
+                    </div>
                   </a>
                 </div>
               </div>
@@ -178,9 +211,9 @@ function Article() {
               <div>
                 <div className="userText ">
                   <div className="">
-                    <label for="content-textarea">
+                    <label htmlFor="content-textarea">
                       嗨囉!
-                      <span className="userName ps-3 pe-3">Name</span>
+                      <span className="userName ps-3 pe-3">登入抓使用者</span>
                       留言分享你的想法吧！
                     </label>
                     <textarea
@@ -193,25 +226,36 @@ function Article() {
                     ></textarea>
                   </div>
                   <div className="d-flex">
-                    <button className="btn btn-dark ms-auto" onClick={sendMessage}>發送</button>
+                    <button
+                      className="btn btn-dark ms-auto"
+                      onClick={sendMessage}
+                    >
+                      發送
+                    </button>
                   </div>
                 </div>
-                <div className="userPost">
-                  <div className="d-flex align-items-center mt-3">
-                    <div>
-                      <img
-                        src={require("../image/article/userhead.png")}
-                        alt=""
-                      />
+                {comments.map((commentsList) => (
+                  <div key={commentsList.comment_id} className="userPost">
+                    <div className="d-flex align-items-center mt-3">
+                      <div>
+                        <img
+                          src={require("../image/article/userhead.png")}
+                          alt=""
+                        />
+                      </div>
+                      <span className="userName p-3">
+                        {commentsList.user_id}
+                      </span>
+                      <span className="d-flex ms-auto">
+                        {commentsList.created_at}
+                      </span>
+                      {/* <button className="btn btn-dark ms-auto">回覆</button> */}
                     </div>
-                    <span className="userName p-3">Name</span>
-                    <span>2023/04/27 12:00</span>
-                    {/* <button className="btn btn-dark ms-auto">回覆</button> */}
+                    <div className="userCotent ">
+                      <span>{commentsList.comment}</span>
+                    </div>
                   </div>
-                  <div className="userCotent ">
-                    <span>22</span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -221,7 +265,7 @@ function Article() {
       <div className="sugges-post A-container">
         <div className="sp-title">您可能還會想看</div>
         <div className="d-flex justify-content-evenly flex-wrap d-grid gap-5">
-          {shuffledArticles
+          {articles
             .map((articlelist) => (
               <div
                 key={articlelist.article_id}
