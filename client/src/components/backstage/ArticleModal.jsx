@@ -7,10 +7,12 @@ import {
   Select,
   Row,
   Col,
-  Descriptions
+  Descriptions,
+  Button
 } from "antd";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ImageUploader from "../ImageUploader";
 
 const { Option } = Select;
 
@@ -22,7 +24,18 @@ const ArticleEditorModal = ({
   onSave
 }) => {
   const [form] = Form.useForm();
-  const [articleChange, setArticleChange] = useState(null);
+  const [articleChange, setArticleChange] = useState({
+    article_id: "",
+    admin_id: "",
+    title: "",
+    sub_title: "",
+    category: "",
+    cover_image: "",
+    content: "",
+    is_published: 0,
+    created_at: "",
+    updated_at: ""
+  });
   const [editorContent, setEditorContent] = useState("");
   const toLocalTime = (time) => {
     const date = new Date(time);
@@ -41,7 +54,8 @@ const ArticleEditorModal = ({
     });
   };
   useEffect(() => {
-    console.log("update temp article", tempArticle);
+    // console.log("update temp article", tempArticle);
+
     setArticleChange(tempArticle);
   }, [tempArticle]);
 
@@ -51,17 +65,20 @@ const ArticleEditorModal = ({
   }
   return (
     <Modal
-      title="文章编辑"
-      width={1200}
+      title="文章編輯"
+      width={1000}
+      style={{
+        top: 100
+      }}
       open={isOpen}
       onCancel={onCancel}
       footer={[
-        <button key="cancel" onClick={onCancel}>
+        <Button key="cancel" onClick={onCancel}>
           取消
-        </button>,
-        <button key="save" type="primary" onClick={handleSave}>
+        </Button>,
+        <Button key="save" type="primary" onClick={handleSave}>
           保存
-        </button>
+        </Button>
       ]}
     >
       <Form className="mt-5" form={form} layout="vertical">
@@ -70,31 +87,29 @@ const ArticleEditorModal = ({
             <Col span={8}>
               <div className="px-1">
                 <p className="fw-bold text-secondary">文章ID</p>
-                <p>{articleChange.article_id}</p>
+                {articleChange && <p>{articleChange.article_id}</p>}
               </div>
             </Col>
             <Col span={8}>
               <div className="px-1">
                 <p className="fw-bold text-secondary">上個編輯者</p>
-                <p>{articleChange.admin_id}</p>
+                {articleChange && <p>{articleChange.admin_id}</p>}
               </div>
             </Col>
             <Col span={8}>
               <div className="px-1">
                 <p className="fw-bold text-secondary">更新時間</p>
-                <p>{toLocalTime(articleChange.updated_at)}</p>
+                {articleChange && (
+                  <p>{toLocalTime(articleChange.updated_at)}</p>
+                )}
               </div>
             </Col>
           </Row>
         </Form.Item>
         <Row gutter={16}>
           <Col span={8}>
-            <Form.Item
-              name="title"
-              label="文章標題"
-              rules={[{ required: true, message: "請輸入文章標題" }]}
-            >
-              <Input maxLength={45} />
+            <Form.Item name="cover_image" label="封面圖片">
+              <ImageUploader />
             </Form.Item>
           </Col>
 
@@ -106,7 +121,9 @@ const ArticleEditorModal = ({
             >
               <Select placeholder="請選擇分類">
                 {categories.map((c, i) => (
-                  <Option value={c}>{c}</Option>
+                  <Option key={"option_" + i} {...c}>
+                    {c.value}
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
@@ -117,7 +134,7 @@ const ArticleEditorModal = ({
               label="是否發布"
               checkedChildren={1}
               unCheckedChildren={0}
-              value={articleChange.is_published}
+              value={articleChange && articleChange.is_published}
               onChange={() => {
                 articleChange.is_published = !articleChange.is_published;
               }}
@@ -127,24 +144,37 @@ const ArticleEditorModal = ({
             </Form.Item>
           </Col>
         </Row>
-
-        <Form.Item
-          name="sub_title"
-          label="副标题"
-          rules={[{ required: true, message: "请输入副标题" }]}
-        >
-          <Input maxLength={100} />
-        </Form.Item>
+        <Row gutter={16}>
+          <Col span={8}>
+            <Form.Item
+              name="title"
+              label="文章標題"
+              rules={[{ required: true, message: "請輸入文章標題" }]}
+            >
+              <Input maxLength={45} />
+            </Form.Item>
+          </Col>
+          <Col span={16}>
+            <Form.Item
+              name="sub_title"
+              label="副標題"
+              rules={[{ required: true, message: "請輸入副標題" }]}
+            >
+              <Input maxLength={100} />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Form.Item
           name="content"
-          label="内容"
-          rules={[{ required: true, message: "请输入内容" }]}
+          label="文章內容"
+          rules={[{ required: true, message: "請輸入內容" }]}
         >
           <CKEditor
             editor={ClassicEditor}
             data={editorContent}
             onChange={handleEditorChange}
+            style={{ minHeight: "300px" }}
           />
         </Form.Item>
       </Form>
