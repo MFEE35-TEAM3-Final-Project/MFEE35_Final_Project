@@ -20,9 +20,10 @@ import MemberLoginPage from "./pages/MemberLoginPage";
 import MemberRegister1 from "./pages/MemberRegister1.jsx";
 import MemberRegister2 from "./pages/MemberRegister2";
 import MemberHomePage from "./pages/user/MemberHomePage";
-import MemberFav from "./pages/user/MemberFav";
 import MemberChartList from "./pages/user/MemberChartList";
+import MemberFav from "./pages/user/MemberFav";
 import MemberData from "./pages/user/MemberData";
+import MemberOrders from "./pages/user/MemberOrders";
 
 // SCSS生成的CSS
 import "./styles/all.css";
@@ -61,6 +62,7 @@ function App() {
           <Route path="/MemberChartList" element={<MemberChartList />} />
           <Route path="/MemberData" element={<MemberData />} />
           <Route path="/MemberFav" element={<MemberFav />} />
+          <Route path="/MemberOrders" element={<MemberOrders />} />
         </Routes>
       </div>
       {isBack ? "" : <Footer />}

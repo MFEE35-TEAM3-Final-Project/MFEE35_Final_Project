@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../../styles/member/favoritelist.css";
 
 function Favorite() {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-    fetchFavoriteList();
-  }, []);
+    if (!hasFetched) {
+      fetchFavoriteList();
+    }
+  }, [hasFetched]);
 
   const fetchFavoriteList = async () => {
     try {
@@ -19,26 +24,30 @@ function Favorite() {
         }
       });
       setData(response.data.message);
+      setHasFetched(true);
     } catch (error) {
-      setError(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
+
+
 
   const handleDelete = async (productId) => {
     try {
       var jwtToken = document.cookie.split('=')[1].trim();
 
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/user/favorite`, {
+      const data = await axios.delete(`${process.env.REACT_APP_API_URL}/api/user/favorite`, {
         headers: {
           Authorization: jwtToken
         },
         data: { productid: productId }
       });
-
-      // 更新数据状态，从界面上移除被删除的商品
       setData(prevData => prevData.filter(item => item.productid !== productId));
-    } catch (error) {
-     
+      const message = data.data.message;
+      toast.success(message);
+    }  catch (error) {
+      console.log(error.response.data.message)
+      toast.error(error.response.data.message)
     }
   };
 
@@ -46,22 +55,26 @@ function Favorite() {
     try {
       var jwtToken = document.cookie.split('=')[1].trim();
   
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
+      const data = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
         productid: productId,
-        quantity: "12"
+        quantity: "1"
       }, {
         headers: {
           Authorization: jwtToken
         }
       });
-  
+      const message = data.data.message;
+      toast.success(message);
+     
     } catch (error) {
       console.log(error.response.data.message)
+      toast.error(error.response.data.message)
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       <h2>會員追蹤清單</h2>
       {error ? (
         <p>{error}</p>
@@ -84,7 +97,7 @@ function Favorite() {
             </div>
           ))
         ) : (
-          <div><p>追蹤清單內沒有東西</p></div>
+          <div className='favorite_nolist'><p>追蹤清單內沒有東西</p></div>
         )
       )}
     </div>
