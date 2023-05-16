@@ -94,7 +94,7 @@
     margin: 50px 0;
     /* height: 400px; */
     /* background-color: saddlebrown; */
-    border-bottom: 1px solid #F2EBEB;
+    /* border-bottom: 1px solid #F2EBEB; */
 }
 .left-r{
     width: 50%;
@@ -194,4 +194,10 @@
 .c-bodylink a:hover{
     color: rgb(65, 65, 65);
     text-decoration: none;
+}
+.nocomment{
+    text-align: center;
+    font-size: 28px;
+    padding: 20px 0;
+    font-weight: bold;
 }

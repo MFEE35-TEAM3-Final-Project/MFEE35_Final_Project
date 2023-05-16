@@ -12,6 +12,7 @@ function Article() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [nextArticleId, setNextArticleId] = useState(""); //下一篇文章
   const [comments, setComments] = useState([]);
+  // const [isAuthorization, setIsAuthorization] = useState(false)
   //抓取本篇文章內容標題
   useEffect(() => {
     axios
@@ -106,11 +107,12 @@ function Article() {
         console.error(err);
       });
   }, []);
-
+//判斷會員
+  
   const sendMessage = async () => {
     try {
       const jwtToken =
-        "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+        "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MjkwMzE0NDkzOSwiaWF0IjoxNjg0MjYzMTQ0fQ.0rqyEJW3OezJoiu43udQ1tK8m9rKuCzkTIyxwGKG_0M";
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/article_comments/article_id=${id}`,
         {
@@ -134,9 +136,12 @@ function Article() {
     setMessage(event.target.value);
   };
 
+  if(comments===null){
+    
+  }
   if (!dataLoaded) {
     return <div>載入中..</div>;
-  }
+  };
   return (
     <div>
       <div className="A-article">
@@ -234,7 +239,8 @@ function Article() {
                     </button>
                   </div>
                 </div>
-                {comments.map((commentsList) => (
+                {comments.length === 0 ? (<div className="nocomment">尚無留言</div>) :
+                (comments.map((commentsList) => (
                   <div key={commentsList.comment_id} className="userPost">
                     <div className="d-flex align-items-center mt-3">
                       <div>
@@ -255,7 +261,7 @@ function Article() {
                       <span>{commentsList.comment}</span>
                     </div>
                   </div>
-                ))}
+                )))}
               </div>
             </div>
           </div>

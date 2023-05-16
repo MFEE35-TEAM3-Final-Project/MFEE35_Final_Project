@@ -5,6 +5,7 @@ import { FaRegCommentAlt } from "react-icons/fa";
 function Blog() {
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
+  // const [totalPage, setTotalPage] = useState()
 
   useEffect(() => {
     axios
@@ -28,10 +29,10 @@ function Blog() {
     if (category) {
       axios
         .get(
-          `${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=10&category=${category}`
+          `${process.env.REACT_APP_API_URL}/api/articles?page=3&per_page=5&category=${category}`
         )
         .then((res) => {
-          console.log(res.data.articles);
+         
           const formattedArticles = res.data.articles.map((article) => {
             return {
               ...article,
@@ -297,6 +298,14 @@ function Blog() {
                   </div>
                 </div>
               ))}
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                  
+                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
