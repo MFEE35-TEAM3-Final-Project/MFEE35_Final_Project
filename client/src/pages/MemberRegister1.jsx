@@ -35,9 +35,9 @@ const UserRegistration = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleButtonClick = () => {
-    console.log(formValues);
-  };
+  // const handleButtonClick = () => {
+  //   console.log(formValues);
+  // };
 
   const isFormValid = () => {
     return (
