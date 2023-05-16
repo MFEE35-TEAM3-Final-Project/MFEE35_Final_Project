@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import logo from "../image/logo/logo.png";
-
 import "../styles/member/main.css";
 
 const UserRegistration = () => {
@@ -15,7 +15,7 @@ const UserRegistration = () => {
     userBirthday: "",
     userHeight: "",
     userWeight: "",
-    userSport: "幾乎不運動",
+    userSport: "1.2",
   });
 
   const {
@@ -47,11 +47,58 @@ const UserRegistration = () => {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (isFormValid()) {
-      handleButtonClick();
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/user/register`,
+          {
+            email: userAccount,
+            password: userPassword,
+            repeat_password: repeatPassword,
+            gender: userGender,
+            birthday: userBirthday,
+          }
+        );
+
+        if (response.data.success) {
+          console.log(response.data.message);
+          // 註冊成功後的操作...
+          alert("已建立成功");
+          // 跳轉到根目錄
+          window.location.href = "/";
+
+          // // 調用第二個API
+          // const exerciseRecordResponse = await axios.post(
+          //   `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+          //   {
+          //     gender: userGender,
+          //     birthday: userBirthday,
+          //     weight: userWeight,
+          //     height: userHeight,
+          //     exercise_level: userSport,
+          //     record_date: new Date().toISOString().slice(0, 10),
+          //   }
+          // );
+
+          // if (exerciseRecordResponse.data.success) {
+          //   console.log(exerciseRecordResponse.data.message);
+          //   // 第二個API調用成功後的操作...
+          // } else {
+          //   console.log(exerciseRecordResponse.data.message);
+          //   // 第二個API調用失敗後的操作...
+          // }
+        } else {
+          console.log(response.data.message);
+          // 註冊失敗後的操作...
+          alert(response.data.message);
+        }
+      } catch (error) {
+        console.error(error);
+        // 與伺服器通訊發生錯誤的操作...
+      }
     } else {
       console.log("表單尚未填寫完整或密碼規則不符合");
     }
@@ -195,8 +242,8 @@ const UserRegistration = () => {
                       type="radio"
                       name="userGender"
                       id="male"
-                      value="男生"
-                      checked={userGender === "男生"}
+                      value="male"
+                      checked={userGender === "male"}
                       onChange={handleChange}
                     />
                     <label className="usergender" htmlFor="male">
@@ -209,8 +256,8 @@ const UserRegistration = () => {
                       type="radio"
                       name="userGender"
                       id="female"
-                      value="女生"
-                      checked={userGender === "女生"}
+                      value="female"
+                      checked={userGender === "female"}
                       onChange={handleChange}
                     />
                     <label className="usergender" htmlFor="female">
@@ -288,13 +335,11 @@ const UserRegistration = () => {
                     onChange={handleChange}
                     required
                   >
-                    <option value="幾乎不運動">幾乎不運動</option>
-                    <option value="每週運動 1-3 天">每週運動 1-3 天</option>
-                    <option value="每週運動 3-5 天">每週運動 3-5 天</option>
-                    <option value="每週運動 6-7 天">每週運動 6-7 天</option>
-                    <option value="長時間運動或體力勞動工作">
-                      長時間運動或體力勞動工作
-                    </option>
+                    <option value="1.2">幾乎不運動</option>
+                    <option value="1.375">每週運動 1-3 天</option>
+                    <option value="1.55">每週運動 3-5 天</option>
+                    <option value="1.72">每週運動 6-7 天</option>
+                    <option value="1.9">長時間運動或體力勞動工作</option>
                   </select>
                   <br />
                 </div>
@@ -306,7 +351,6 @@ const UserRegistration = () => {
                     type="submit"
                     className="mysubmit"
                     disabled={!isFormValid()}
-                    onClick={handleButtonClick}
                   >
                     Finish
                   </button>

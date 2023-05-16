@@ -1,51 +1,75 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
+
 import "../styles/member/main.css";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [token, setToken] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const authToken = Cookies.get("authToken");
+    if (authToken) {
+      verifyToken(authToken);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const loginResponse = await axios.post(
+      const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/login`,
         {
-          email: email,
-          password: password,
-        }
-      );
-      const token = loginResponse.data.token;
-      // 儲存令牌到本地（例如localStorage）
-      localStorage.setItem("token", token);
-
-      // 使用令牌發送驗證請求
-      const checkResponse = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/user/check`,
-        null,
-        {
-          headers: {
-            Authorization: token,
-          },
+          email,
+          password,
         }
       );
 
-      if (checkResponse.data.success) {
-        // 令牌驗證成功
-        // 執行後續操作（例如導航到其他頁面）
+      if (response.data.success) {
+        const authToken = response.data.token;
+        setToken(authToken);
+        Cookies.set("authToken", authToken, { expires: 7 }); // 將 Token 存放在 Cookies 中，有效期為 7 天
+        navigate("/MemberHomePage");
       } else {
-        // 令牌驗證失敗
-        console.error("令牌驗證失敗");
-        // 設定錯誤訊息
-        setErrorMessage("令牌驗證失敗");
+        setErrorMessage(response.data.message);
       }
     } catch (error) {
-      console.error("登入失敗", error);
-      // 設定錯誤訊息
-      setErrorMessage("登入失敗");
+      console.error(error);
+      setErrorMessage("發生了一個錯誤，請稍後重試");
+    }
+  };
+
+  const verifyToken = async (token) => {
+    try {
+      axios.defaults.headers.common["Authorization"] = token;
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/user/check`
+      );
+
+      if (response.data.success) {
+        console.log("請求成功:", response.data);
+        const data = response.data;
+        console.log("已驗證 Token");
+        console.log(data.user);
+        // 可以根據需要處理使用者資訊
+      } else {
+        console.log("Token 錯誤，請重新登入");
+        console.log(response.data.message);
+        // 顯示錯誤訊息或執行其他錯誤處理
+      }
+    } catch (error) {
+      console.error("請求失敗:", error);
+
+      console.error(error);
+      setErrorMessage("發生了一個錯誤，請稍後重試");
     }
   };
 
@@ -99,7 +123,7 @@ const UserLogin = () => {
                   <input
                     className="userInput"
                     type="text"
-                    name="userEmail"
+                    name="userName"
                     placeholder="請輸入帳號(E-mail信箱)"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -119,15 +143,12 @@ const UserLogin = () => {
                   <input
                     className="userInput"
                     type="password"
-                    name="userPassword"
-                    placeholder="請輸入密碼"
+                    name="userName"
+                    placeholder="請輸入密碼(6~16位英數字)"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%&])[A-Za-z\d!@#$%&]{8,}$"
                     required
-                    title="密碼長度至少8碼，需包含一個大寫英文字母、一個小寫英文字母、一個數字和一個特殊字元"
                   />
-
                   <br />
                 </div>
               </div>
