@@ -1,26 +1,131 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet";
-import Cookies from "js-cookie";
 import "../styles/shoppingcart.css";
+import cityCountryData from "../json/CityCountyData.json";
+// import Cookies from "js-cookie";
 
-axios.defaults.headers.common["Authorization"] =
-  "JWT " +
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
 const ShoppingcartPage = () => {
-  const [cartData, setCartData] = useState(null);
+  // const [cartData, setCartData] = useState(null);
   const [isConvenient, setIsConvenient] = useState(true);
   const [activeButton, setActiveButton] = useState(true);
   const [invoiceClass, setInvoiceClass] = useState(1);
   const [perInvoice, setPerInvoice] = useState(1);
+  const [incomingDatas, setIncomingData] = useState([]);
+
+  const [code, setCode] = useState("");
+  const [coupons, setCoupons] = useState([]);
+  const [callCouponApi, setCallCouponApi] = useState(false);
+  const [couponApplied, setCouponApplied] = useState(false);
   const [popCuppon, setPopCuppon] = useState(true);
+  const [couponInfo, setCouponInfo] = useState(null);
+
+  const [cityList, setCityList] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("請選擇縣市");
+  const [selectedTownship, setSelectedTownship] = useState("請先選擇縣市");
+  const [selectedCityData, setSelectedCityData] = useState({});
+
+  const handleCityChange = (event) => {
+    setSelectedCity(event.target.value);
+    setSelectedTownship("");
+  };
+
+  const handleTownshipChange = (event) => {
+    setSelectedTownship(event.target.value);
+  };
+
   useEffect(() => {
-    // 取得 cookie 中的購物車資料
-    const cookieCartData = Cookies.get("cartData");
-    if (cookieCartData) {
-      setCartData(JSON.parse(cookieCartData));
-    }
+    setCityList(cityCountryData);
+    // const cookieCartData = Cookies.get("cartData");
+    // // 當使用者=非會員時 從cookie取得購物車資料
+    // if (cookieCartData) {
+    //   setCartData(JSON.parse(cookieCartData));
+    // }
+    // 當使用者=會員時 呼叫API傳入訂單資料
+    const token =
+      "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+    axios.defaults.headers.common["Authorization"] = `${token}`;
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
+      .then((res) => {
+        // console.log(res);
+        setIncomingData(res.data.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      console.log(id);
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`
+      );
+      console.log(res.data);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const selectedCityData =
+      cityList.find((city) => city.CityName === selectedCity) || {};
+    setSelectedCityData(selectedCityData);
+  }, [selectedCity, cityList]);
+
+  const renderedOptions = selectedCityData.AreaList
+    ? selectedCityData.AreaList.map((township) => (
+        <option key={township.AreaName} value={township.AreaName}>
+          {township.AreaName}
+        </option>
+      ))
+    : null;
+  const handleQuantityChange = (cart_id, newQuantity, productId) => {
+    axios
+      .put(`${process.env.REACT_APP_API_URL}/api/user/cart/update`, {
+        cart_id: cart_id,
+        quantity: newQuantity,
+      })
+      .then((res) => {
+        // console.log(res);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  useEffect(() => {
+    if (callCouponApi && !couponApplied) {
+      findCoupon();
+    }
+  }, [callCouponApi, couponApplied]);
+
+  const findCoupon = async () => {
+    setCallCouponApi(true);
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/coupon/use`,
+        { code }
+      );
+      const isExist = coupons.some(
+        (coupon) => coupon.coupon_id === res.data.message.coupon_id
+      );
+      if (isExist) {
+        // console.log("此折價券已儲存");
+        setCouponApplied(false);
+        return;
+      } else {
+        setCoupons([...coupons, res.data.message]);
+        setCouponApplied(true);
+      }
+      // setCallCouponApi(false);
+    } catch (error) {
+      // console.log(error);
+      setCouponApplied(false);
+    }
+  };
 
   const sevenEleven = () => {
     setActiveButton(true);
@@ -53,12 +158,18 @@ const ShoppingcartPage = () => {
   const NaturalInvoice = () => {
     setPerInvoice(3);
   };
+
+  // 彈跳視窗開啟
   const showPop = () => {
     setPopCuppon(false);
+    setCode("");
   };
+  // 彈跳視窗關閉
   const closePop = () => {
     setPopCuppon(true);
+    setCallCouponApi(false);
   };
+
   return (
     <div className="mybody">
       <Helmet>
@@ -67,7 +178,6 @@ const ShoppingcartPage = () => {
           rel="stylesheet"
         />
       </Helmet>
-
       <div className="main">
         <div className="cartHeader">
           <span className="hText">購物車</span>
@@ -89,62 +199,90 @@ const ShoppingcartPage = () => {
 
       <div className="goods">
         <p className="smallTopic">商品明細</p>
-        <div className="goodGroup">
-          <div>
-            <img
-              className="goodPic"
-              src="./image/store/good1.png"
-              alt="第一個商品圖"
-            />
-          </div>
-          <div className="goodText">
-            <p className="goodName">波波明太子舒肥雞腿餐盒</p>
-            <p className="goodPrice">NT$ 160</p>
-          </div>
-          <div className="buttonGroup">
-            <div>
-              <button id="decreaseBtn">一</button>
-              <input type="text" defaultValue="1" id="addingGoods" />
-              <button id="increaseBtn">十</button>
+
+        {incomingDatas.map((incomingData, index) => (
+          <div key={index}>
+            <div className="goodGroup">
+              <div>
+                <img
+                  className="goodPic"
+                  src={incomingData.image}
+                  alt="第一個商品圖"
+                />
+              </div>
+              <div className="goodText">
+                <p className="goodName">{incomingData.name}</p>
+                <p className="goodPrice">{incomingData.price}</p>
+              </div>
+              <div className="buttonGroup">
+                <div>
+                  <button
+                    id="decreaseBtn"
+                    onClick={() =>
+                      handleQuantityChange(
+                        incomingData.cart_id,
+                        incomingData.quantity - 1,
+                        incomingData.productid
+                      )
+                    }
+                  >
+                    一
+                  </button>
+                  <input
+                    type="text"
+                    defaultValue={incomingData.quantity}
+                    id="addingGoods"
+                  />
+                  <button
+                    id="increaseBtn"
+                    onClick={() =>
+                      handleQuantityChange(
+                        incomingData.cart_id,
+                        incomingData.quantity + 1,
+                        incomingData.productid
+                      )
+                    }
+                  >
+                    十
+                  </button>
+                </div>
+                <p className="bigPrice">
+                  NT$
+                  <span id="addingGoodsPrice">
+                    {incomingData.price * incomingData.quantity}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <button
+                  className="deBtn"
+                  onClick={() => handleDelete(incomingData.cart_id)}
+                >
+                  X
+                </button>
+              </div>
             </div>
-            <p className="bigPrice">
-              NT$<span id="addingGoodsPrice">160</span>
-            </p>
+            <hr className="myhr" />
           </div>
-          <div>
-            <button className="deBtn">X</button>
-          </div>
-        </div>
-        <hr className="myhr" />
-        <div className="goodGroup">
-          <div>
-            <img
-              className="goodPic"
-              src="./image/store/good1.png"
-              alt="第二個商品圖"
-            />
-          </div>
-          <div className="goodText">
-            <p className="goodName">波波明太子舒肥雞腿餐盒</p>
-            <p className="goodPrice">NT$ 160</p>
-          </div>
-          <div className="buttonGroup">
-            <div>
-              <button id="decreaseBtnOne">一</button>
-              <input type="text" defaultValue="1" id="addingGoodsone" />
-              <button id="increaseBtnOne">十</button>
-            </div>
-            <p className="bigPrice">
-              NT$<span id="addingGoodsPriceOne">160</span>
-            </p>
-          </div>
-          <div>
-            <button className="deBtn">X</button>
-          </div>
-        </div>
-        <hr className="myhr" />
+        ))}
+
         <p className="smallTopic goodQtys">
-          購物車合計有<span id="addingTotalQty">2</span>項商品
+          合計有
+          <span id="addingTotalQty">
+            {incomingDatas.reduce((accumulator, currentItem) => {
+              return accumulator + currentItem.quantity;
+            }, 0)}
+          </span>
+          項商品
+        </p>
+        <p className="smallTopic goodQtys totalQty">
+          {/* <p className="smallTopic goodQtys"> */}
+          總計
+          <span id="addingTotalQty">
+            {incomingDatas.reduce((acc, { quantity, price }) => {
+              return acc + parseFloat(quantity) * parseFloat(price);
+            }, 0)}
+          </span>
         </p>
       </div>
 
@@ -206,7 +344,9 @@ const ShoppingcartPage = () => {
           <div>
             <p className="fillRemind"> 優惠券/優惠碼</p>
             <button type="button" className="specOff" onClick={showPop}>
-              選擇優惠券或輸入優惠碼
+              {couponInfo
+                ? `Special Offer $ ${couponInfo.discount_rate * 100}% OFF`
+                : "選擇優惠券或輸入優惠碼"}
             </button>
           </div>
         </div>
@@ -278,23 +418,31 @@ const ShoppingcartPage = () => {
           <div className="addressBox memberBox">
             <div>
               <div className="addGroup">
-                <select className="citySel">
-                  <option
-                    value=""
-                    // selected
-                  >
+                <select
+                  className="citySel"
+                  value={selectedCity}
+                  onChange={handleCityChange}
+                >
+                  <option defaultValue="" disabled>
                     請選擇縣市
                   </option>
-                  {/* 下載JSON */}
+                  {cityList.map((city) => (
+                    <option key={city.CityName} value={city.CityName}>
+                      {city.CityName}
+                    </option>
+                  ))}
                 </select>
-                <select className="sectionSel">
-                  <option
-                    value=""
-                    // selected
-                  >
+
+                <select
+                  className="citySel"
+                  value={selectedTownship}
+                  onChange={handleTownshipChange}
+                >
+                  <option defaultValue="" disabled>
                     請選擇鄉鎮市區
                   </option>
-                  {/* 下載JSON */}
+                  {renderedOptions}
+                  {/* {holymama} */}
                 </select>
               </div>
               <input
@@ -305,29 +453,7 @@ const ShoppingcartPage = () => {
             </div>
           </div>
         )}
-      </div>
-      <div className="addressBox memberBox deliveryHide">
-        <div>
-          <div className="addGroup">
-            <select className="citySel">
-              <option
-                defaultValue=""
-                // selected
-              >
-                請選擇縣市
-              </option>
-            </select>
-            <select className="sectionSel">
-              <option
-                defaultValue=""
-                // selected
-              >
-                請選擇鄉鎮市區
-              </option>
-            </select>
-          </div>
-          <input type="text" className="addressText" placeholder="請輸入地址" />
-        </div>
+
         <hr className="myhr" />
 
         <div className="memberBox">
@@ -432,7 +558,7 @@ const ShoppingcartPage = () => {
             <div className="invoiceGroup">
               <input name="invoice2" type="radio" id="phone" defaultChecked />
               <label htmlFor="phone">
-                <span className="invoiceText">基金會</span>
+                <span className="invoiceText">伊甸園基金會</span>
               </label>
 
               <input
@@ -442,12 +568,12 @@ const ShoppingcartPage = () => {
                 // checked
               />
               <label htmlFor="letter">
-                <span className="invoiceText">基金會</span>
+                <span className="invoiceText">家扶中心基金會</span>
               </label>
 
               <input name="invoice2" type="radio" id="future" />
               <label htmlFor="future">
-                <span className="invoiceText">基金會</span>
+                <span className="invoiceText">喜憨兒社會福利基金會</span>
               </label>
             </div>
           </div>
@@ -579,61 +705,44 @@ const ShoppingcartPage = () => {
                 type="text"
                 className="attText"
                 placeholder="請輸入優惠碼"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
               />
-              <button className="attBtn">新增優惠券</button>
+              <button className="attBtn" onClick={findCoupon}>
+                新增優惠券
+              </button>
             </div>
-
-            <div className="cupponGroup">
-              <div className="borderLine">
-                <img
-                  className="myLogo"
-                  src="./image/store/good1.png"
-                  alt="優惠券"
-                />
+            {callCouponApi && !couponApplied && (
+              <h4 style={{ color: "red" }}>無效的折扣碼</h4>
+            )}
+            {coupons.map((coupon) => (
+              <div key={coupon.id}>
+                <div className="cupponGroup">
+                  <div className="borderLine">
+                    <img
+                      className="myLogo"
+                      src={require("../image/footer/logo.png")}
+                      alt="優惠券"
+                    />
+                  </div>
+                  <div className="cupponDec">
+                    <div>Special Offer</div>
+                    <div>$ {coupon.discount_rate * 100} OFF</div>
+                  </div>
+                  <div className="cupponBtn">
+                    <button
+                      className="cupponSel"
+                      onClick={() => {
+                        setCouponInfo(coupon);
+                        closePop();
+                      }}
+                    >
+                      選擇
+                    </button>
+                  </div>
+                </div>
               </div>
-
-              <div className="cupponDec">
-                <div>Special Offer</div>
-                <div>$ 50 OFF</div>
-              </div>
-              <div className="cupponBtn">
-                <button className="cupponSel">選擇</button>
-              </div>
-            </div>
-            <div className="cupponGroup">
-              <div className="borderLine">
-                <img
-                  className="myLogo"
-                  src="./image/store/good1.png"
-                  alt="優惠券"
-                />
-              </div>
-
-              <div className="cupponDec">
-                <div>Special Offer</div>
-                <div>$ 50 OFF</div>
-              </div>
-              <div className="cupponBtn">
-                <button className="cupponSel">選擇</button>
-              </div>
-            </div>
-            <div className="cupponGroup">
-              <div className="borderLine">
-                <img
-                  className="myLogo"
-                  src="./image/store/good1.png"
-                  alt="優惠券"
-                />
-              </div>
-
-              <div className="cupponDec">
-                <div>Special Offer</div>
-                <div>$ 50 OFF</div>
-              </div>
-              <div className="cupponBtn">
-                <button className="cupponSel">選擇</button>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

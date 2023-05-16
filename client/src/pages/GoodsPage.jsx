@@ -6,11 +6,6 @@ import DoughnutComponent from "../components/DoughnutChart";
 import Cookies from "js-cookie";
 import "../styles/goods.css";
 
-// 帶token
-axios.defaults.headers.common["Authorization"] =
-  "JWT " +
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
-let x = axios.defaults.headers.common["Authorization"];
 const GoodsPage = () => {
   // 設定取得的商品ID、食物ID
   const { productid, foodId } = useParams();
@@ -33,7 +28,7 @@ const GoodsPage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProductsById?productId=${productid}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProductsById?productId=${productid}`
       )
       .then((res) => {
         // console.log(res);
@@ -53,7 +48,7 @@ const GoodsPage = () => {
         console.error(err);
       });
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/products/getProducts`)
+      .get(`${process.env.REACT_APP_API_URL}/api/product/getProducts`)
       .then((res) => {
         // console.log(res);
         setPromotionGood(res.data.results);
@@ -61,6 +56,10 @@ const GoodsPage = () => {
       .catch((err) => {
         console.error(err);
       });
+  }, [productid]);
+
+  useEffect(() => {
+    setQuantity(1);
   }, [productid]);
 
   const prevButtonHandler = () => {
@@ -73,10 +72,32 @@ const GoodsPage = () => {
     });
   };
 
+  // const handleAddToCart = async () => {
+  //   try {
+  //     const token =
+  //       "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+  //     axios.defaults.headers.common["Authorization"] = `${token}`;
+  //     const response = await axios.post(
+  //       `${process.env.REACT_APP_API_URL}/api/user/cart/add`,
+  //       {
+  //         productid: productid,
+  //         quantity: quantity,
+  //       }
+  //     );
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   const handleAddToCart = () => {
+    const token =
+      "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+    axios.defaults.headers.common["Authorization"] = `${token}`;
+    let x = axios.defaults.headers.common["Authorization"];
     if (x) {
       axios
-        .post(`${process.env.REACT_APP_API_URL}/api/userRoutes/cart/add`, {
+        .post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
           productid: productid,
           quantity: quantity,
         })
@@ -138,10 +159,10 @@ const GoodsPage = () => {
     }
   };
 
-  const handleDeleteCartData = () => {
-    Cookies.remove("cartData");
-    setCartData([]);
-  };
+  // const handleDeleteCartData = () => {
+  //   Cookies.remove("cartData");
+  //   setCartData([]);
+  // };
 
   return (
     <div>

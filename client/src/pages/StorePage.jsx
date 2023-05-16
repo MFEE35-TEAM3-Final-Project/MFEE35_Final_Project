@@ -64,7 +64,7 @@ const StorePage = () => {
 
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
       )
       .then((res) => {
         // console.log(res);
@@ -93,7 +93,7 @@ const StorePage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProducts?&activityId=${currentActivity}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProducts?&activityId=${currentActivity}&category=${currentCategory}`
         // 動態生成頁數
       )
       .then((res) => {
@@ -119,7 +119,7 @@ const StorePage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
         // 動態生成頁數
       )
       .then((res) => {
