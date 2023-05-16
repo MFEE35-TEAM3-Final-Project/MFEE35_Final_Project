@@ -21,11 +21,57 @@ axios.defaults.headers.common["Authorization"] =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
 
 function FoodRecordNumber() {
-  const [resMemberData, setResMemberData] = useState("");
-  const [loading, setLoading] = useState(true);
+  // 顯示正確的日期時間
+  const [currentDate, setCurrentDate] = useState("");
+
+  const getWeekday = (weekday) => {
+    const weekdays = [
+      "星期日",
+      "星期一",
+      "星期二",
+      "星期三",
+      "星期四",
+      "星期五",
+      "星期六",
+    ];
+    return weekdays[weekday];
+  };
+
+  const getMonth = (month) => {
+    const months = [
+      "1月",
+      "2月",
+      "3月",
+      "4月",
+      "5月",
+      "6月",
+      "7月",
+      "8月",
+      "9月",
+      "10月",
+      "11月",
+      "12月",
+    ];
+    return months[month];
+  };
 
   useEffect(() => {
-    console.log("FoodRecordNumber 被渲染了");
+    const date = new Date();
+    const weekday = getWeekday(date.getDay());
+    const month = getMonth(date.getMonth());
+    const day = date.getDate();
+    setCurrentDate(`${weekday}, ${month} ${day}日`);
+  }, []);
+
+  // 拿取會員紀錄時間
+  const [resMemberData, setResMemberData] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [exerciseRecords, setExerciseRecords] = useState();
+  const [formattedDate, setFormattedDate] = useState();
+  const [targetCal, setTargetCal] = useState();
+
+  useEffect(() => {
+    // console.log("FoodRecordNumber 被渲染了");
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -38,11 +84,77 @@ function FoodRecordNumber() {
       .then((response) => {
         setResMemberData(response);
         setLoading(false);
+        setFormattedDate(formattedDate);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [setResMemberData]);
+  }, []);
+
+  // 拿取會員的運動資料
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/user/exercise_records?start_date=${formattedDate}&end_date=${formattedDate}`
+      )
+      .then((response) => {
+        setExerciseRecords(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [formattedDate]);
+
+  // 若初始值為 undefined或 長度不 > 0 則不執行
+  useEffect(() => {
+    if (
+      exerciseRecords !== undefined &&
+      exerciseRecords.data.records.length > 0
+    ) {
+      // console.log(exerciseRecords);
+      console.log(exerciseRecords.data.records[0]);
+      const { birthday, exercise_level, gender, height, weight } =
+        exerciseRecords.data.records[0];
+
+      // 計算今年的年紀 age就是年紀
+      const calculateAge = (birthday, gender) => {
+        const birthDate = new Date(birthday);
+        const currentDate = new Date();
+
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+        // 检查是否已经過了生日，若是，年龄减一
+        const currentMonth = currentDate.getMonth();
+        const birthMonth = birthDate.getMonth();
+        const currentDay = currentDate.getDate();
+        const birthDay = birthDate.getDate();
+
+        if (
+          currentMonth < birthMonth ||
+          (currentMonth === birthMonth && currentDay < birthDay)
+        ) {
+          age--;
+        }
+
+        let genderValue = 0;
+        if (gender === "male") {
+          genderValue = 1;
+        }
+
+        return [age, genderValue];
+      };
+
+      const [age, genderValue] = calculateAge(birthday, gender);
+      console.log(age); // 输出年龄
+      console.log(genderValue); // 输出性別代表的數字
+
+      const sum1 =
+        9.99 * weight + 6.25 * height - 4.92 * age + (166 * genderValue - 161);
+      // setResult1(Math.round(sum1));
+      const sum2 = Math.round(sum1) * exercise_level;
+      setTargetCal(Math.round(sum2));
+    }
+  }, [exerciseRecords]);
 
   // 早餐區;
   const [breakfastRow, setBreakfastRow] = useState([]);
@@ -72,7 +184,7 @@ function FoodRecordNumber() {
         brkey++;
         const { name, calories, carbohydrate, protein, saturated_fat, sodium } =
           memberBreakfast.food_info;
-        console.log(memberBreakfast.food_info);
+        // console.log(memberBreakfast.food_info);
         const qty = parseFloat(memberBreakfast.food_qty).toFixed(2);
         const recordId = memberBreakfast.record_id;
 
@@ -290,7 +402,7 @@ function FoodRecordNumber() {
   // 計算零食項目
   useEffect(() => {
     if (!loading) {
-      console.log(resMemberData);
+      // console.log(resMemberData);
       const memberData = resMemberData.data.records;
       const memberSnacks = memberData.filter(
         (meal) => meal.meal_type === "snack"
@@ -412,14 +524,31 @@ function FoodRecordNumber() {
   });
 
   // 會員還有多少卡路里可以吃
-  const [caloriesCanEat, setCaloriesCanEat] = useState();
+  const [caloriesCanEat, setCaloriesCanEat] = useState("");
 
   useEffect(() => {
     if (!loading) {
-      let caloriesReduce = 1313;
+      let caloriesReduce = targetCal - AllNumberCaloriesPlus;
       setCaloriesCanEat(caloriesReduce);
     }
   });
+
+  // 根據多少卡路里的值 是正或負 來判斷 div內的文字
+  useEffect(() => {
+    if (caloriesCanEat) {
+      changeWord(caloriesCanEat);
+    }
+  }, [caloriesCanEat]);
+
+  const changeWord = ({ caloriesCanEat }) => {
+    const displayText = isNaN(caloriesCanEat)
+      ? "數值無效"
+      : caloriesCanEat > 0
+      ? "還可以吃"
+      : "已超標";
+    return <div>{String(displayText)}</div>;
+    // return <div>{caloriesCanEat > 0 ? "還可以吃" : "已超標"}</div>;
+  };
 
   // 早餐的細項隱藏增加 新版
   const [brFoodRecordListIsHidden, setBrFoodRecordListIsHidden] =
@@ -504,7 +633,7 @@ function FoodRecordNumber() {
           <div className="oneAndTwoAreaBg d-flex">
             {/* 第一區 - 目標值與已攝取區 */}
             <div className="w-50 position-relative">
-              <div> 4月15日 週六 </div>
+              <div>{currentDate}</div>
               {/* 目標量的Icon */}
               <div className="oneAreaTarget">
                 <div>
@@ -514,7 +643,7 @@ function FoodRecordNumber() {
               </div>
               {/* 目標值 */}
               <div className="oneAreaTargetValue">
-                <div>待填</div>
+                <div>{targetCal}</div>
                 <div>卡路里</div>
               </div>
               {/* 已攝取量的Icon */}
@@ -534,7 +663,7 @@ function FoodRecordNumber() {
             <div className="howMuchLeftBgDiv w-50">
               <img src={circleShape} alt="" />
               <div className="howMuchLeftValue">
-                <div>還可以吃</div>
+                {changeWord({ caloriesCanEat })}
                 <div className="calories">{caloriesCanEat}</div>
                 <div>卡路里</div>
               </div>
@@ -595,7 +724,7 @@ function FoodRecordNumber() {
           </div>
           {/* 營養素加總標題 */}
           <table>
-            <thead>
+            <thead className="FoodRecordThead">
               <tr>
                 <th>
                   碳水
@@ -665,7 +794,7 @@ function FoodRecordNumber() {
           </div>
           {/* 營養素加總標題 */}
           <table>
-            <thead>
+            <thead className="FoodRecordThead">
               <tr>
                 <th>
                   碳水
@@ -732,7 +861,7 @@ function FoodRecordNumber() {
           </div>
           {/* 營養素加總標題 */}
           <table>
-            <thead>
+            <thead className="FoodRecordThead">
               <tr>
                 <th>
                   碳水
@@ -798,7 +927,7 @@ function FoodRecordNumber() {
           </div>
           {/* 營養素加總標題 */}
           <table>
-            <thead>
+            <thead className="FoodRecordThead">
               <tr>
                 <th>
                   碳水

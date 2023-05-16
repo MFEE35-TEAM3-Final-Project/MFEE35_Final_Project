@@ -199,9 +199,15 @@
 }
 
 .recommendItem{
-  height: 140px;
+  height: 170px;
   position: relative;
   display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+}
+
+.recommendItem:hover {
+  background-color: #EBEAE6;
 }
 
 .recommendImg > img {
@@ -213,3 +219,12 @@
 .recommendText {
   display: flex;
 }
+
+.recommendText > table > thead > tr > th {
+  font-size:  30px;
+}
+
+.recommendText > table > tbody > tr > td > span:nth-child(1) {
+  font-size:  24px;
+}
+

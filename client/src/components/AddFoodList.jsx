@@ -9,15 +9,20 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
   const [isFourAreaVisible, setIsFourAreaVisible] = useState(true);
   const [isFiveAreaVisible, setIsFiveAreaVisible] = useState(false);
   const [isFoodId, setIsFoodId] = useState();
+
+  // 我的版本
   const [FoodIdNutrients, setFoodIdNutrients] = useState([]);
-  // 點擊推薦後觸發 產品資訊API
-  // const [recommendProduct, setRecommendProduct] = useState();
+  const [FoodProductInfo, setFoodProductInfo] = useState([]);
+  const [RecommendCombinedRow, setRecommendCombinedRow] = useState([]);
+  // const [combinedData, setCombinedData] = useState();
+
   function getRecommendProduct() {
     axios
       .get(
         `${process.env.REACT_APP_API_URL}/api/product/getProducts?category=1&page=1`
       )
       .then((res) => {
+        setFoodProductInfo(res.data.results);
         let foodIds = res.data.results.map((result) => result.food_id);
         setIsFoodId(foodIds);
       })
@@ -44,7 +49,61 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
   }, [isFoodId]);
 
   useEffect(() => {
+    console.log(FoodProductInfo);
+  }, [FoodProductInfo]);
+
+  useEffect(() => {
     console.log(FoodIdNutrients);
+    const combinedDatas = FoodIdNutrients.map((nutrient, index) => ({
+      nutrient: nutrient,
+      product: FoodProductInfo[index],
+    }));
+    // setCombinedData(combinedDatas);
+    const recommendCombinedData = combinedDatas.map((combinedData, index) => {
+      console.log(combinedData);
+
+      return (
+        <Fragment key={index}>
+          <div className="recommendItem">
+            <div className="recommendImg">
+              <img src={combinedData.product.image[0]} alt="" />
+            </div>
+            <div className="recommendText">
+              <table>
+                <thead>
+                  <tr>
+                    <th>{combinedData.nutrient.sample_name}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <span>{combinedData.nutrient.Calories_adjusted}</span>
+                      <span> 卡路里</span>
+                    </td>
+                    <td>
+                      <span>{combinedData.nutrient.sodium}</span>
+                      <span> 鈉</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <span>{combinedData.nutrient.carbohydrate}</span>
+                      <span> 碳水化合物</span>
+                    </td>
+                    <td>
+                      <span>{combinedData.nutrient.crude_protein}</span>
+                      <span> 蛋白質</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </Fragment>
+      );
+    });
+    setRecommendCombinedRow(recommendCombinedData);
   }, [FoodIdNutrients]);
 
   // 顯示正確的時間
@@ -289,35 +348,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
 
         {/* 我是第五區 - 推薦食品區域 */}
         {isFiveAreaVisible && (
-          <div className="recommendArea">
-            <div className="recommendItem">
-              <div className="recommendImg">
-                <img
-                  src="https://res.cloudinary.com/ddh6e9dad/image/upload/v1683013671/ipltppdac2iqofo7hu2s.png"
-                  alt=""
-                />
-              </div>
-              <div className="recommendText">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>餐盒</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>卡路里</td>
-                      <td>鈉</td>
-                    </tr>
-                    <tr>
-                      <td>碳水化合物</td>
-                      <td>蛋白質</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <div className="recommendArea">{RecommendCombinedRow}</div>
         )}
       </div>
       {/* 食品營養細細區 */}

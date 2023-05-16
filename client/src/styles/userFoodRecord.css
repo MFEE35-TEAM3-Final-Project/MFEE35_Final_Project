@@ -287,7 +287,7 @@ th {
   white-space: nowrap;
 } */
 
-thead:first-child {
+.FoodRecordThead:first-child {
   background-color: lightgray;
 }
 
