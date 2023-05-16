@@ -7,7 +7,10 @@ import { BiMessageEdit } from "react-icons/bi";
 function Article() {
   const [article, setArticle] = useState([]);
   const [articles, setArticles] = useState([]);
+  const [message, setMessage] = useState('');
   const { id } = useParams();
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [nextArticleId, setNextArticleId] = useState("");
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/articles/id=${id}`)
@@ -30,33 +33,77 @@ function Article() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/articles`)
       .then((res) => {
+        setDataLoaded(true);
         console.log(res.data.articles);
+        
+        //時間
         const formattedArticles = res.data.articles.map((article) => {
           return {
             ...article,
             created_at: formatDate(article.created_at),
             updated_at: formatDate(article.updated_at),
+
           };
+
         });
         setArticles(formattedArticles);
+        
+        // 找文章索引
+        const currentIndex = formattedArticles.findIndex(article => article.article_id === id);
+        console.log(currentIndex)
+        // 下一篇文章id
+        if (currentIndex !== -1 && currentIndex < formattedArticles.length - 1) {
+          setNextArticleId(formattedArticles[currentIndex + 1]);
+        }
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [id]);
+
   const shuffledArticles = articles.sort(() => Math.random() - 0.5); //亂數
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/articles/article_comments/article_id=${id}`
-      )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+  console.log(shuffledArticles)
+  if (!dataLoaded) {
+    return <div>載入中..</div>;
+  }
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       `${process.env.REACT_APP_API_URL}/api/articles/article_comments/article_id=${id}`
+  //     )
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // }, []);
+
+
+
+  const sendMessage = async () => {
+    try {
+      const jwtToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/article_comments/article_id=${id}`, {
+        message: message
+      },
+        {
+          headers: {
+            Authorization: jwtToken
+          }
+        });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const userTextMes = (event) => {
+    setMessage(event.target.value)
+  }
   return (
     <div>
       <div className="A-article">
@@ -106,17 +153,17 @@ function Article() {
             <div className="A-recommend ">
               <div className="d-flex  flex-row">
                 <div className="left-r">
-                  <a href="">
+                  <a href= {shuffledArticles[0].article_id}>
                     <div className="A-recommend-text">延伸閱讀</div>
                     <div className="A-recommend-title">
-                      標題 What is Lorem{shuffledArticles.title}
+                      {shuffledArticles[0].title}
                     </div>
                   </a>
                 </div>
                 <div className="right-r">
-                  <a href="">
+                  <a href = {nextArticleId.article_id}>
                     <div className="A-recommend-text">下一篇</div>
-                    <div className="A-recommend-title">標題 What is Lorem </div>
+                    <div className="A-recommend-title">{nextArticleId.title} </div>
                   </a>
                 </div>
               </div>
@@ -139,12 +186,14 @@ function Article() {
                     <textarea
                       id="userText"
                       name="content"
+                      value={message}
+                      onChange={userTextMes}
                       className="form-control"
                       aria-label="With textarea"
                     ></textarea>
                   </div>
                   <div className="d-flex">
-                    <button className="btn btn-dark ms-auto">發送</button>
+                    <button className="btn btn-dark ms-auto" onClick={sendMessage}>發送</button>
                   </div>
                 </div>
                 <div className="userPost">
