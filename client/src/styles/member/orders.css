@@ -1,0 +1,46 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
+
+
+
+
+/* orders.css */
+
+.order-container {
+    margin-top: 20px;
+}
+
+.order-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.order-item:hover {
+    background-color: #f0f0f0;
+}
+
+.order-item.expanded {
+    background-color: #f0f0f0;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-header p {
+    margin: 0;
+}
+
+.order-details {
+    margin-top: 10px;
+}
+
+.order-detail-item {
+    margin-bottom: 5px;
+}
+
+/* Add additional styles as needed */
