@@ -190,3 +190,26 @@
   border-bottom: 3px solid white;
 }
 
+/* 推薦食品區 */
+.recommendArea {
+  background-color: #C5A188;
+  height: 370px;
+  padding: 20px 30px;
+  overflow: scroll;
+}
+
+.recommendItem{
+  height: 140px;
+  position: relative;
+  display: flex;
+}
+
+.recommendImg > img {
+  width: 170px;
+  border-radius: 5px;
+  padding-right: 10px;
+}
+
+.recommendText {
+  display: flex;
+}

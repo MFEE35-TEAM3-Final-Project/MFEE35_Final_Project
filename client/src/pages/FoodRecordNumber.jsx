@@ -72,7 +72,9 @@ function FoodRecordNumber() {
         brkey++;
         const { name, calories, carbohydrate, protein, saturated_fat, sodium } =
           memberBreakfast.food_info;
+        console.log(memberBreakfast.food_info);
         const qty = parseFloat(memberBreakfast.food_qty).toFixed(2);
+        const recordId = memberBreakfast.record_id;
 
         // 更新總計變數
         brCalories += Math.floor(calories * qty);
@@ -99,11 +101,21 @@ function FoodRecordNumber() {
                 {Math.floor(calories * qty)}
               </td>
             </tr>
-            <tr style={{ borderBottom: "1px solid black" }}>
+            <tr
+              style={{ borderBottom: "1px solid black", position: "relative" }}
+            >
               <td>{carbohydrate * qty}</td>
               <td>{protein * qty}</td>
               <td>{saturated_fat * qty}</td>
               <td>{sodium * qty}</td>
+              <td
+                className="cancelSign"
+                onClick={() => {
+                  deleteFood(recordId, name);
+                }}
+              >
+                -
+              </td>
             </tr>
           </Fragment>
         );
@@ -138,17 +150,10 @@ function FoodRecordNumber() {
 
       const lunchRow = memberlunchs.map((memberlunch) => {
         lukey++;
-        const {
-          record_id,
-          name,
-          calories,
-          carbohydrate,
-          protein,
-          saturated_fat,
-          sodium,
-        } = memberlunch.food_info;
+        const { name, calories, carbohydrate, protein, saturated_fat, sodium } =
+          memberlunch.food_info;
         const qty = parseFloat(memberlunch.food_qty).toFixed(2);
-        const recordId = record_id;
+        const recordId = memberlunch.record_id;
         // 更新總計變數
         luCalories += Math.floor(calories * qty);
         luCarbohydrate += carbohydrate * qty;
@@ -173,9 +178,8 @@ function FoodRecordNumber() {
                 {Math.floor(calories * qty)}
               </td>
             </tr>
-
             <tr
-              style={{ borderBottom: "1px solid black", postion: "relative" }}
+              style={{ borderBottom: "1px solid black", position: "relative" }}
             >
               <td>{carbohydrate * qty}</td>
               <td>{protein * qty}</td>
@@ -223,17 +227,10 @@ function FoodRecordNumber() {
 
       const dinnerRow = memberDinners.map((memberDinner) => {
         dikey++;
-        const {
-          record_id,
-          name,
-          calories,
-          carbohydrate,
-          protein,
-          saturated_fat,
-          sodium,
-        } = memberDinner.food_info;
+        const { name, calories, carbohydrate, protein, saturated_fat, sodium } =
+          memberDinner.food_info;
         const qty = parseFloat(memberDinner.food_qty).toFixed(2);
-        const recordId = record_id;
+        const recordId = memberDinner.record_id;
         // 更新總計變數
         diCalories += Math.floor(calories * qty);
         diCarbohydrate += carbohydrate * qty;
@@ -483,6 +480,7 @@ function FoodRecordNumber() {
 
   // 刪除食品方法
   function deleteFood(recordId, name) {
+    console.log(recordId);
     const confirmDelete = window.confirm(`確定要刪除 -${name} 這個紀錄吗？`);
     if (confirmDelete) {
       axios
