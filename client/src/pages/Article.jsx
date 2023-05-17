@@ -64,14 +64,15 @@ function Article() {
           };
         });
         setArticles(formattedArticles);
+        console.log(formattedArticles)
       })
       .catch((err) => {
         console.error(err);
       });
   }, [id]);
   //留言板
-  const commentDate = (dateStr) => {
-    const date = new Date(dateStr);
+  const commentDate = (dateSr) => {
+    const date = new Date(dateSr);
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
@@ -94,6 +95,7 @@ function Article() {
       )
       .then((res) => {
         // setDataLoaded(true);
+        console.log(res.data);
         const comments = res.data.comments.map((comment) => {
           return {
             ...comment,
@@ -147,7 +149,7 @@ function Article() {
       <div className="A-article">
         <div className="row g-0">
           <div className="col-3 ">
-            <div className="s-title">
+            {/* <div className="s-title">
               <a href="">
                 <span>飲食怎麼樣才算健康？</span>
               </a>
@@ -178,7 +180,7 @@ function Article() {
               <a href="">
                 <span>結論</span>
               </a>
-            </div>
+            </div> */}
           </div>
           <div className="col-6 ">
             <div className="content">
@@ -250,17 +252,16 @@ function Article() {
                   comments.map((commentsList) => (
                     <div key={commentsList.comment_id} className="userPost">
                       <div className="d-flex align-items-center mt-3">
-                        <div>
+                        <div className="headimg">
                           <img
-                          src={commentsList.user.avatar}
-                            // src={require("../image/article/userhead.png")}
+                           src={commentsList.user.avatar ? commentsList.user.avatar : require("../image/article/userhead.png")}
                             alt=""
                           />
                         </div>
-                        <span className="userName p-3">
+                        <span className="userName p-3 commentName">
                           {commentsList.user.username}
                         </span>
-                        <span className="d-flex ms-auto">
+                        <span className="d-flex ms-auto commentTime">
                           {commentsList.created_at}
                         </span>
                         {/* <button className="btn btn-dark ms-auto">回覆</button> */}

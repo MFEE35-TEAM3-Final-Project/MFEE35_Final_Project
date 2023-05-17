@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/blog.css";
 import axios from "axios";
 import { FaRegCommentAlt } from "react-icons/fa";
+import { GrNext, GrPrevious } from "react-icons/gr";
 function Blog() {
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
@@ -78,8 +79,8 @@ function Blog() {
                 <div className="carousel-inner">
                   <div className="carousel-item active newimgbox">
                     <div className="carousel-imgtext-box">
-                      <h1>大標題</h1>
-                      <span>小標題</span>
+                      <h1>健康飲食怎麼吃？營養師曝「最佳飲食法」</h1>
+                      <span>民以食為天，飲食文化是各個國家都在關注的...</span>
                     </div>
                     <img
                       src={require("../image/blog/carousel1.jpg")}
@@ -89,8 +90,8 @@ function Blog() {
                   </div>
                   <div className="carousel-item newimgbox">
                     <div className="carousel-imgtext-box">
-                      <h1>大標題</h1>
-                      <span>小標題</span>
+                      <h1>減肥餐自己煮！5個低卡便當食譜公開!</h1>
+                      <span>烤雞腿、糖醋排骨通通有，熱量低又美味減肥超有感...</span>
                     </div>
                     <img
                       src={require("../image/blog/carousel2.jpg")}
@@ -100,8 +101,8 @@ function Blog() {
                   </div>
                   <div className="carousel-item newimgbox">
                     <div className="carousel-imgtext-box">
-                      <h1>大標題</h1>
-                      <span>小標題</span>
+                      <h1>把握3招4式，外食族也能吃出健康與滿足！</h1>
+                      <span>面對忙碌的生活，外食方便與快速的特性...</span>
                     </div>
                     <img
                       src={require("../image/blog/carousel3.jpg")}
@@ -313,8 +314,17 @@ function Blog() {
               <div className="pageNav">
                 <nav className="" aria-label="Page navigation">
                   <ul className=" pagination">
-                    <li className="pageButton-li">
-                      <button class="pageButton" href="#"></button>
+                    <li className="">
+                    <button
+                        class={`${
+                           pagination.current_page === 1 ? "pagenone" : "pageButton-next"
+                        }`}
+                        onClick={() =>
+                          handleClickPage(pagination.current_page - 1)
+                        }
+                      >
+                        <GrPrevious/>
+                      </button>
                     </li>
                     {Array.from(
                       { length: pagination.total_pages },
@@ -322,12 +332,12 @@ function Blog() {
                     ).map((pageNumber) => (
                       <li
                         key={pageNumber}
-                        className={`pageButton-li ${
-                          pageNumber === pagination.current_page ? "active" : ""
-                        }`}
+                        className="pageButton-li "
                       >
                         <button
-                          className="pageButton"
+                          className={`pageButton  ${
+                            pageNumber === pagination.current_page ? "pagefucus" : ""
+                          }`}
                           onClick={() => handleClickPage(pageNumber)}
                         >
                           {pageNumber}
@@ -335,14 +345,16 @@ function Blog() {
                       </li>
                     ))}
 
-                    <li class="pageButton-next">
+                    <li class="">
                       <button
-                        class="pageButton"
+                       className={`${
+                        pagination.current_page === pagination.total_pages ? "pagenone" : "pageButton-next"
+                     }`}
                         onClick={() =>
                           handleClickPage(pagination.current_page + 1)
                         }
                       >
-                        Next
+                        <GrNext/>
                       </button>
                     </li>
                   </ul>

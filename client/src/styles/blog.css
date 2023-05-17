@@ -210,12 +210,21 @@
 .carousel-imgtext-box{
     color: black;
     padding: 10px;
-    background-color: #d9d9d983;
+    background-color: #d9d9d9b9;
     position: absolute;
     bottom: 0;
-    width: 50%;
+    width: 100%;
+    /* white-space:nowrap; */
     /* font-size: 40px; */
     /* font-weight: 400; */
+    /* height: 100px; */
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
+    font-weight: bold;
+}
+.carousel-imgtext-box h1{
+  font-weight: bold;
+  
 }
 .B-Title{
     padding-bottom: 50px;
@@ -233,6 +242,8 @@
 .pageNav{
     text-align: center;
     margin-top: 50px;
+    display: flex;
+  justify-content: center;
 }
 .pageButton{
     height: 30px;
@@ -243,6 +254,9 @@
     border:none;
 
 }
+.pagenone{
+    visibility:hidden
+}
 .pageButton-li {
     height: 30px;
     width: 30px;
@@ -252,16 +266,35 @@
   text-align: center;
    
 }
-.pageButton-li :focus{
+.pageButton :active{
     height: 30px;
     width: 30px;
-    
-    background-color: #474747;
+    border: 1px solid black;
+    background-color: #a8a8a8;
     color: rgb(255, 255, 255);
     border-radius: 50%;
     
 }
+
+.pageButton-next {
+ 
+    text-align: center;
+    background-color:transparent;
+    color: #000000;
+    border:none;
+  
+    
+}
 .pageButton-next :active{
+
+    text-align: center;
+    background-color:transparent;
+    color: #ffffff;
+    border:none;
+  
+    
+}
+.pagefucus{
     height: 30px;
     width: 30px;
     
