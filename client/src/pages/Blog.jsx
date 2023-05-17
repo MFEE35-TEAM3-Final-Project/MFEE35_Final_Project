@@ -5,11 +5,12 @@ import { FaRegCommentAlt } from "react-icons/fa";
 function Blog() {
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
-  // const [totalPage, setTotalPage] = useState()
-
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState();
+  const [dataLoaded, setDataLoaded] = useState(false);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=10`)
+      .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=5`)
       .then((res) => {
         setArticles(res.data.articles);
       })
@@ -26,31 +27,42 @@ function Blog() {
   };
   //分類
   useEffect(() => {
-    if (category) {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/articles?page=3&per_page=5&category=${category}`
-        )
-        .then((res) => {
-         
-          const formattedArticles = res.data.articles.map((article) => {
-            return {
-              ...article,
-              created_at: formatDate(article.created_at),
-              updated_at: formatDate(article.updated_at),
-            };
-          });
-          setArticles(formattedArticles);
-        })
-        .catch((err) => {
-          console.error(err);
+    axios
+
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/articles?page=${page}&per_page=5&category=${category}`
+      )
+      .then((res) => {
+        const formattedArticles = res.data.articles.map((article) => {
+          return {
+            ...article,
+            created_at: formatDate(article.created_at),
+            updated_at: formatDate(article.updated_at),
+          };
         });
-    }
-  }, [category]);
+        setArticles(formattedArticles);
+        setPagination(res.data.pagination);
+        console.log(res.data.pagination);
+        setDataLoaded(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [category, page]);
   const handleClickCategory = (category) => {
     setCategory(category);
   };
+  const handleClickPage = (page) => {
+    setPage(page);
+  };
 
+  useEffect(() => {
+    setPage(1);
+  }, [category]);
+
+  if (!dataLoaded) {
+    return <div>載入中..</div>;
+  }
   return (
     <div>
       <div className=" F-container mt-5">
@@ -298,14 +310,44 @@ function Blog() {
                   </div>
                 </div>
               ))}
-              <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                  
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-              </nav>
+              <div className="pageNav">
+                <nav className="" aria-label="Page navigation">
+                  <ul className=" pagination">
+                    <li className="pageButton-li">
+                      <button class="pageButton" href="#"></button>
+                    </li>
+                    {Array.from(
+                      { length: pagination.total_pages },
+                      (item, index) => index + 1
+                    ).map((pageNumber) => (
+                      <li
+                        key={pageNumber}
+                        className={`pageButton-li ${
+                          pageNumber === pagination.current_page ? "active" : ""
+                        }`}
+                      >
+                        <button
+                          className="pageButton"
+                          onClick={() => handleClickPage(pageNumber)}
+                        >
+                          {pageNumber}
+                        </button>
+                      </li>
+                    ))}
+
+                    <li class="pageButton-next">
+                      <button
+                        class="pageButton"
+                        onClick={() =>
+                          handleClickPage(pagination.current_page + 1)
+                        }
+                      >
+                        Next
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>

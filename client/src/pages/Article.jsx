@@ -13,18 +13,6 @@ function Article() {
   const [nextArticleId, setNextArticleId] = useState(""); //下一篇文章
   const [comments, setComments] = useState([]);
   // const [isAuthorization, setIsAuthorization] = useState(false)
-  //抓取本篇文章內容標題
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/articles/id=${id}`)
-      .then((res) => {
-        setArticle(res.data.article);
-        console.log(res.data.article);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [id]);
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const year = date.getFullYear();
@@ -32,10 +20,23 @@ function Article() {
     const day = date.getDate();
     return `${day} ${month} ${year}`;
   };
+  //抓取本篇文章內容標題
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/articles/id=${id}`)
+      .then((res) => {
+        setArticle(res.data.article);
+        console.log(formatDate(res.data.article.created_at));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [id]);
+
   //抓取文章
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/articles`)
+      .get(`${process.env.REACT_APP_API_URL}/api/articles?per_page=40`)
       .then((res) => {
         setDataLoaded(true);
         console.log(res.data.articles);
@@ -107,8 +108,8 @@ function Article() {
         console.error(err);
       });
   }, []);
-//判斷會員
-  
+  //判斷會員
+
   const sendMessage = async () => {
     try {
       const jwtToken =
@@ -136,12 +137,11 @@ function Article() {
     setMessage(event.target.value);
   };
 
-  if(comments===null){
-    
+  if (comments === null) {
   }
   if (!dataLoaded) {
     return <div>載入中..</div>;
-  };
+  }
   return (
     <div>
       <div className="A-article">
@@ -183,7 +183,12 @@ function Article() {
           <div className="col-6 ">
             <div className="content">
               <div>
+                <div class="content-title">
+                  {article.title}
+                  <span>{formatDate(article.created_at)}</span>
+                </div>
                 <div
+                  className="content-p"
                   dangerouslySetInnerHTML={{ __html: `${article.content}` }}
                 />
               </div>
@@ -239,29 +244,32 @@ function Article() {
                     </button>
                   </div>
                 </div>
-                {comments.length === 0 ? (<div className="nocomment">尚無留言</div>) :
-                (comments.map((commentsList) => (
-                  <div key={commentsList.comment_id} className="userPost">
-                    <div className="d-flex align-items-center mt-3">
-                      <div>
-                        <img
-                          src={require("../image/article/userhead.png")}
-                          alt=""
-                        />
+                {comments.length === 0 ? (
+                  <div className="nocomment">尚無留言</div>
+                ) : (
+                  comments.map((commentsList) => (
+                    <div key={commentsList.comment_id} className="userPost">
+                      <div className="d-flex align-items-center mt-3">
+                        <div>
+                          <img
+                            src={require("../image/article/userhead.png")}
+                            alt=""
+                          />
+                        </div>
+                        <span className="userName p-3">
+                          {commentsList.user_id}
+                        </span>
+                        <span className="d-flex ms-auto">
+                          {commentsList.created_at}
+                        </span>
+                        {/* <button className="btn btn-dark ms-auto">回覆</button> */}
                       </div>
-                      <span className="userName p-3">
-                        {commentsList.user_id}
-                      </span>
-                      <span className="d-flex ms-auto">
-                        {commentsList.created_at}
-                      </span>
-                      {/* <button className="btn btn-dark ms-auto">回覆</button> */}
+                      <div className="userCotent ">
+                        <span>{commentsList.comment}</span>
+                      </div>
                     </div>
-                    <div className="userCotent ">
-                      <span>{commentsList.comment}</span>
-                    </div>
-                  </div>
-                )))}
+                  ))
+                )}
               </div>
             </div>
           </div>

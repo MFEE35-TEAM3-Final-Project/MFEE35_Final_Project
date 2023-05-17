@@ -230,3 +230,43 @@
 }.react-icons{
     font-size: 20px;
 }
+.pageNav{
+    text-align: center;
+    margin-top: 50px;
+}
+.pageButton{
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    background-color:transparent;
+    color: #000000;
+    border:none;
+
+}
+.pageButton-li {
+    height: 30px;
+    width: 30px;
+    margin: 0 10px;
+    display: flex;
+  align-items: center;
+  text-align: center;
+   
+}
+.pageButton-li :focus{
+    height: 30px;
+    width: 30px;
+    
+    background-color: #474747;
+    color: rgb(255, 255, 255);
+    border-radius: 50%;
+    
+}
+.pageButton-next :active{
+    height: 30px;
+    width: 30px;
+    
+    background-color: #474747;
+    color: rgb(255, 255, 255);
+    border-radius: 50%;
+    
+}
