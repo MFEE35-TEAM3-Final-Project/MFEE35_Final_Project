@@ -17,76 +17,50 @@ import ImageUploader from "../ImageUploader";
 const { Option } = Select;
 
 const ArticleEditorModal = ({
-  articleData: tempArticle,
+  articleDataOld,
+  articleData,
+  setArticleData,
   categories,
   isOpen,
   onCancel,
   onSave
 }) => {
   const [form] = Form.useForm();
-  const [articleChange, setArticleChange] = useState({
-    article_id: "",
-    admin_id: "",
-    title: "",
-    sub_title: "",
-    category: "",
-    cover_image: "",
-    content: "",
-    is_published: 0,
-    created_at: "",
-    updated_at: ""
-  });
-  const [editorContent, setEditorContent] = useState("");
+  const [dataOrigin, setDataOrigin] = useState(null);
+
+  //設定原本資料
+  useEffect(() => {
+    if (articleData) {
+      setDataOrigin(articleData);
+    }
+  }, [articleDataOld]);
 
   // function
   const toLocalTime = (time) => {
     const date = new Date(time);
     return date.toLocaleString();
   };
-  const formHandler = (key, name) => {
-    // const { name, value } = e.target;
-    // setArticleChange((origin) => ({
-    //   ...origin,
-    //   [name]: value
-    // }));
-    console.log(key, name);
+  const formHandler = (fieldName, value) => {
+    setArticleData((origin) => ({
+      ...origin,
+      [fieldName]: value
+    }));
   };
   const switchOnChange = (checked) => {
     const newValue = checked ? 1 : 0;
-    setArticleChange((origin) => ({
-      ...origin,
-      is_published: newValue
-    }));
+    formHandler("is_published", newValue);
   };
   const imgChange = (url) => {
     console.log("imgUrl", url);
-    setArticleChange((origin) => ({
-      ...origin,
-      cover_image: url
-    }));
+    formHandler("cover_image", url);
   };
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
-    setEditorContent(data);
+    formHandler("content", data);
   };
 
-  const handleSave = () => {
-    form.validateFields().then((values) => {
-      onSave({ ...values, content: editorContent });
-      form.resetFields();
-      setEditorContent("");
-    });
-  };
-
-  useEffect(() => {
-    // console.log("update temp article", tempArticle);
-
-    setArticleChange(tempArticle);
-  }, [tempArticle]);
-
-  if (!tempArticle) {
+  if (!articleData) {
     return null;
-    // 如果没有文章详细信息，则不渲染Modal
   }
   return (
     <Modal
@@ -97,11 +71,17 @@ const ArticleEditorModal = ({
       }}
       open={isOpen}
       onCancel={onCancel}
+      maskClosable={dataOrigin === articleData}
       footer={[
         <Button key="cancel" onClick={onCancel}>
           取消
         </Button>,
-        <Button key="save" type="primary" onClick={handleSave}>
+        <Button
+          key="save"
+          type="primary"
+          onClick={onSave}
+          disabled={dataOrigin === articleData}
+        >
           保存
         </Button>
       ]}
@@ -112,21 +92,19 @@ const ArticleEditorModal = ({
             <Col span={8}>
               <div className="px-1">
                 <p className="fw-bold text-secondary">文章ID</p>
-                {articleChange && <p>{articleChange.article_id}</p>}
+                {articleData && <p>{articleData.article_id}</p>}
               </div>
             </Col>
             <Col span={8}>
               <div className="px-1">
                 <p className="fw-bold text-secondary">上個編輯者</p>
-                {articleChange && <p>{articleChange.admin_id}</p>}
+                {articleData && <p>{articleData.admin_id}</p>}
               </div>
             </Col>
             <Col span={8}>
               <div className="px-1">
                 <p className="fw-bold text-secondary">更新時間</p>
-                {articleChange && (
-                  <p>{toLocalTime(articleChange.updated_at)}</p>
-                )}
+                {articleData && <p>{toLocalTime(articleData.updated_at)}</p>}
               </div>
             </Col>
           </Row>
@@ -137,7 +115,7 @@ const ArticleEditorModal = ({
               <div>
                 <ImageUploader
                   getImg={imgChange}
-                  imgUrl={articleChange && articleChange.cover_image}
+                  imgUrl={articleData && articleData.cover_image}
                 />
               </div>
             </Form.Item>
@@ -149,12 +127,15 @@ const ArticleEditorModal = ({
                   name="category"
                   label="文章分類"
                   rules={[{ required: true, message: "請選擇分類" }]}
+                  initialValue={articleData.category}
                 >
                   <Select
                     placeholder="請選擇分類"
                     name="category"
-                    value={articleChange.category}
-                    onSelect={formHandler(key, name)}
+                    value={articleData && articleData.category}
+                    onChange={(e) => {
+                      formHandler("category", e);
+                    }}
                   >
                     {categories.map((c, i) => (
                       <Option key={"option_" + i} {...c}>
@@ -165,12 +146,11 @@ const ArticleEditorModal = ({
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="是否發布">
-                  <Switch
-                    name="is_published"
-                    checked={articleChange && articleChange.is_published}
-                    onChange={switchOnChange}
-                  />
+                <Form.Item
+                  label="是否發布"
+                  initialValue={articleData.is_published}
+                >
+                  <Switch name="is_published" onChange={switchOnChange} />
                 </Form.Item>
               </Col>
             </Row>
@@ -178,39 +158,42 @@ const ArticleEditorModal = ({
             <Form.Item
               name="title"
               label="文章標題"
+              initialValue={articleData.title}
               rules={[{ required: true, message: "請輸入文章標題" }]}
             >
               <Input
                 name="title"
                 maxLength={45}
-                value={articleChange && articleChange.title}
-                onChange={formHandler}
+                onChange={(e) => {
+                  formHandler("title", e.target.value);
+                }}
               />
             </Form.Item>
 
             <Form.Item
               name="sub_title"
               label="副標題"
+              initialValue={articleData.sub_title}
               rules={[{ required: true, message: "請輸入副標題" }]}
             >
               <Input
                 name="sub_title"
                 maxLength={100}
-                value={articleChange && articleChange.sub_title}
-                onChange={formHandler}
+                onChange={(e) => {
+                  formHandler("sub_title", e.target.value);
+                }}
               />
             </Form.Item>
           </Col>
         </Row>
 
         <Form.Item
-          name="content"
           label="文章內容"
           rules={[{ required: true, message: "請輸入內容" }]}
         >
           <CKEditor
             editor={ClassicEditor}
-            data={editorContent}
+            data={articleData && articleData.content}
             onChange={handleEditorChange}
             style={{ minHeight: "300px" }}
           />

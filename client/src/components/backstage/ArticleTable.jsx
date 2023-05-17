@@ -8,7 +8,8 @@ import {
   Tag,
   Radio,
   Image,
-  Select
+  Select,
+  message
 } from "antd";
 import {
   CheckCircleOutlined,
@@ -47,7 +48,7 @@ const ArticleTable = () => {
         if (status === 1) {
           return (
             <Tag
-              className="status_tag"
+              className="status_tag p-2"
               icon={<CheckCircleOutlined />}
               color="success"
             >
@@ -58,11 +59,7 @@ const ArticleTable = () => {
           return (
             <Tag
               className="status_tag p-2"
-              icon={
-                <ExclamationCircleOutlined
-                  style={{ verticalAlign: "0.1rem" }}
-                />
-              }
+              icon={<ExclamationCircleOutlined />}
               color="error"
             >
               未發布
@@ -100,12 +97,16 @@ const ArticleTable = () => {
       )
     }
   ];
+  // context hook
+  const [messageApi, contextHolder] = message.useMessage();
+
   // state hook
   const [categories, setCategories] = useState([]);
   const [tempCategory, setTempCategory] = useState("");
   const [articleList, setArticleList] = useState([]);
   const [articleModalVisible, setArticleModalVisible] = useState(false);
   const [tempArticle, setTempArticle] = useState(null);
+  const [tempArticleChange, setTempArticleChange] = useState(null);
 
   const toLocalTime = (time) => {
     const date = new Date(time);
@@ -153,8 +154,9 @@ const ArticleTable = () => {
     axios
       .get(api)
       .then((res) => {
-        console.log(res.data);
+        // console.log(tempArticle);
         setTempArticle(res.data.article);
+        setTempArticleChange(res.data.article);
       })
       .catch((err) => {
         console.log(err);
@@ -164,10 +166,85 @@ const ArticleTable = () => {
     await getArticle(id);
     setArticleModalVisible(true);
   };
+  // modal按下cancel
   const closeModal = () => {
-    setArticleModalVisible(false);
+    if (tempArticle === tempArticleChange) {
+      setTempArticle(null);
+      setTempArticleChange(null);
+      setArticleModalVisible(false);
+    } else {
+      confirmWarning();
+    }
   };
-  const saveArticle = () => {};
+  // modal按下OK
+  const saveArticle = () => {
+    Modal.success({
+      title: "更新文章",
+      content: "確定要更新文章嗎?",
+      closable: true,
+      maskClosable: true,
+      okText: "確定",
+      okButtonProps: {
+        onClick: confirmUpdate,
+        type: "primary"
+      }
+    });
+  };
+  // 放棄警告
+  const confirmWarning = () => {
+    Modal.warning({
+      title: "放棄更變",
+      content: "確定要放棄更變嗎?",
+      closable: true,
+      maskClosable: true,
+      okText: "確認",
+      okButtonProps: {
+        danger: true,
+        type: "primary",
+        onClick: () => {
+          setTempArticle(null);
+          setTempArticleChange(null);
+          Modal.destroyAll();
+          setArticleModalVisible(false);
+        }
+      }
+    });
+  };
+  // 確認更新
+  const confirmUpdate = () => {
+    const articleId = tempArticleChange.article_id;
+    const { title, sub_title, category, cover_image, content, is_published } =
+      tempArticleChange;
+    const data = {
+      title,
+      sub_title,
+      category,
+      cover_image,
+      content,
+      is_published
+    };
+    axios
+      .put(
+        `${process.env.REACT_APP_API_URL}/api/admin/article/${articleId}`,
+        data
+      )
+      .then((res) => {
+        setTempArticle(null);
+        setTempArticleChange(null);
+        getArticleList(tempCategory);
+        Modal.destroyAll();
+        setArticleModalVisible(false);
+        if (res.data.success) {
+          messageApi.success("文章更新成功");
+        } else {
+          messageApi.error("文章更新失敗");
+        }
+      })
+      .catch((err) => {
+        messageApi.error("伺服器錯誤");
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     getCategories();
@@ -176,37 +253,46 @@ const ArticleTable = () => {
     getArticleList(tempCategory);
   }, [tempCategory]);
   return (
-    <div className="article_table">
-      <p className="fs-4 fw-bold">
-        類別：
-        <Select
-          defaultValue="all"
-          style={{
-            width: 120
-          }}
-          onChange={(key) => {
-            setTempCategory(key);
-          }}
-          options={[
-            {
-              value: "all",
-              label: "All"
-            },
-            ...categories
-          ]}
-        />
-      </p>
-      <div>
-        <Table dataSource={articleList} columns={columns} rowKey="article_id" />
-        <ArticleModal
-          articleData={tempArticle}
-          categories={categories}
-          isOpen={articleModalVisible}
-          onCancel={closeModal}
-          onSave={saveArticle}
-        />
+    <>
+      {contextHolder}
+      <div className="article_table">
+        <p className="fs-4 fw-bold">
+          類別：
+          <Select
+            defaultValue="all"
+            style={{
+              width: 120
+            }}
+            onChange={(key) => {
+              setTempCategory(key);
+            }}
+            options={[
+              {
+                value: "all",
+                label: "All"
+              },
+              ...categories
+            ]}
+          />
+        </p>
+        <div>
+          <Table
+            dataSource={articleList}
+            columns={columns}
+            rowKey="article_id"
+          />
+          <ArticleModal
+            articleDataOld={tempArticle}
+            articleData={tempArticleChange}
+            setArticleData={setTempArticleChange}
+            categories={categories}
+            isOpen={articleModalVisible}
+            onCancel={closeModal}
+            onSave={saveArticle}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
