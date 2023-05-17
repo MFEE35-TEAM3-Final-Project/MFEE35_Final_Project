@@ -252,12 +252,13 @@ function Article() {
                       <div className="d-flex align-items-center mt-3">
                         <div>
                           <img
-                            src={require("../image/article/userhead.png")}
+                          src={commentsList.user.avatar}
+                            // src={require("../image/article/userhead.png")}
                             alt=""
                           />
                         </div>
                         <span className="userName p-3">
-                          {commentsList.user_id}
+                          {commentsList.user.username}
                         </span>
                         <span className="d-flex ms-auto">
                           {commentsList.created_at}
