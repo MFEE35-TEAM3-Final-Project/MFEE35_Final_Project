@@ -3,9 +3,9 @@ import axios from "axios";
 import "../styles/addFoodItem.css";
 
 // 帶token
-axios.defaults.headers.common["Authorization"] =
-  "JWT " +
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
+// 帶會員驗證token;
+const token =
+  "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjk4MTgzODAwNywiaWF0IjoxNjg0MzQxODM4fQ.YW0zlQPpESUGye583u6xZGSR3f-sbEyQGsj27eHgM6I";
 
 function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
   const [grams, setGrams] = useState(100);
@@ -22,12 +22,20 @@ function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
     const gramsInKilo = (grams / 100).toFixed(1);
 
     axios
-      .post(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
-        meal_type: foodSection,
-        meal_date: formattedDate,
-        food_id: selected,
-        food_qty: gramsInKilo,
-      })
+      .post(
+        `${process.env.REACT_APP_API_URL}/api/user/meal_records`,
+        {
+          meal_type: foodSection,
+          meal_date: formattedDate,
+          food_id: selected,
+          food_qty: gramsInKilo,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then((response) => {
         console.log(response);
         window.location.reload(); // 刷新页面
@@ -46,7 +54,12 @@ function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
   const searchFood = useCallback(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${selected}`
+        `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${selected}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       )
       .then((res) => {
         console.log(res);

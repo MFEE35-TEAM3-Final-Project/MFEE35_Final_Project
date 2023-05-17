@@ -15,12 +15,11 @@ import moon from "../image/moon.png";
 import sunrise from "../image/sunrise.png";
 import circleShape from "../image/circle-shape.png";
 
-// 帶會員驗證token;
-axios.defaults.headers.common["Authorization"] =
-  "JWT " +
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
-
 function FoodRecordNumber() {
+  // 帶會員驗證token;
+  const token =
+    "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjk4MTgzODAwNywiaWF0IjoxNjg0MzQxODM4fQ.YW0zlQPpESUGye583u6xZGSR3f-sbEyQGsj27eHgM6I";
+
   // 顯示正確的日期時間
   const [currentDate, setCurrentDate] = useState("");
 
@@ -79,7 +78,12 @@ function FoodRecordNumber() {
     const formattedDate = `${year}-${month}-${date}`;
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/user/meal_records?start_date=${formattedDate}&end_date=${formattedDate}`
+        `${process.env.REACT_APP_API_URL}/api/user/meal_records?start_date=${formattedDate}&end_date=${formattedDate}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       )
       .then((response) => {
         setResMemberData(response);
@@ -92,10 +96,17 @@ function FoodRecordNumber() {
   }, []);
 
   // 拿取會員的運動資料
+
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/user/exercise_records?start_date=${formattedDate}&end_date=${formattedDate}`
+        // `${process.env.REACT_APP_API_URL}/api/user/exercise_records?start_date=${formattedDate}&end_date=${formattedDate}`
+        `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       )
       .then((response) => {
         setExerciseRecords(response);
@@ -533,21 +544,20 @@ function FoodRecordNumber() {
     }
   });
 
-  // 根據多少卡路里的值 是正或負 來判斷 div內的文字
+  // 根據多少卡路里的值是正或負來判斷div內的文字
   useEffect(() => {
-    if (caloriesCanEat) {
+    if (!isNaN(caloriesCanEat)) {
       changeWord(caloriesCanEat);
     }
   }, [caloriesCanEat]);
 
-  const changeWord = ({ caloriesCanEat }) => {
+  const changeWord = (caloriesCanEat) => {
     const displayText = isNaN(caloriesCanEat)
       ? "數值無效"
       : caloriesCanEat > 0
       ? "還可以吃"
       : "已超標";
     return <div>{String(displayText)}</div>;
-    // return <div>{caloriesCanEat > 0 ? "還可以吃" : "已超標"}</div>;
   };
 
   // 早餐的細項隱藏增加 新版
@@ -614,7 +624,12 @@ function FoodRecordNumber() {
     if (confirmDelete) {
       axios
         .delete(
-          `${process.env.REACT_APP_API_URL}/api/user/meal_record/record_id=${recordId}`
+          `${process.env.REACT_APP_API_URL}/api/user/meal_record/record_id=${recordId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
         )
         .then((response) => {
           window.location.reload(); // 刷新页面
@@ -663,9 +678,16 @@ function FoodRecordNumber() {
             <div className="howMuchLeftBgDiv w-50">
               <img src={circleShape} alt="" />
               <div className="howMuchLeftValue">
-                {changeWord({ caloriesCanEat })}
+                {typeof caloriesCanEat === "number" ? (
+                  <>
+                    {changeWord(caloriesCanEat)}
+                    <div className="calories">{String(caloriesCanEat)}</div>
+                    <div>卡路里</div>
+                  </>
+                ) : null}
+                {/* {changeWord({ caloriesCanEat })}
                 <div className="calories">{caloriesCanEat}</div>
-                <div>卡路里</div>
+                <div>卡路里</div> */}
               </div>
             </div>
           </div>

@@ -4,6 +4,10 @@ import "../styles/addFoodList.css";
 import FoodDetailsNutrients from "./FoodDetailsNutrients";
 
 function AddFoodList({ onCancelButtonClick, foodSection }) {
+  // 帶會員驗證token;
+  const token =
+    "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjk4MTgzODAwNywiaWF0IjoxNjg0MzQxODM4fQ.YW0zlQPpESUGye583u6xZGSR3f-sbEyQGsj27eHgM6I";
+
   // 點擊 "推薦食品" 隱藏 食品的div們
   const [isThirdAreaVisible, setIsThirdAreaVisible] = useState(true);
   const [isFourAreaVisible, setIsFourAreaVisible] = useState(true);
@@ -19,7 +23,12 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
   function getRecommendProduct() {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/product/getProducts?category=1&page=1`
+        `${process.env.REACT_APP_API_URL}/api/product/getProducts?category=餐盒&page=1`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       )
       .then((res) => {
         setFoodProductInfo(res.data.results);
@@ -34,7 +43,12 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
       Promise.all(
         isFoodId.map((foodId) =>
           axios.get(
-            `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`
+            `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
           )
         )
       )
@@ -71,9 +85,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
             <div className="recommendText">
               <table>
                 <thead>
-                  <tr>
-                    <th>{combinedData.nutrient.sample_name}</th>
-                  </tr>
+                  <tr>{combinedData.nutrient.sample_name}</tr>
                 </thead>
                 <tbody>
                   <tr>
@@ -184,7 +196,12 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
   const searchFood = (category, keyword, qty) => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/food/search?category=${category}&qty=${qty}&keyword=${keyword}`
+        `${process.env.REACT_APP_API_URL}/api/food/search?category=${category}&qty=${qty}&keyword=${keyword}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
       )
       .then((res) => {
         // console.log("ressss", res);
@@ -201,7 +218,11 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
   //取得 category列表
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/food/category=all`)
+      .get(`${process.env.REACT_APP_API_URL}/api/food/category=all`, {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         // console.log("all categories", res.data.categories);
         setCategories(res.data.categories);

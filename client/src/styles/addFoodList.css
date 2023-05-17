@@ -208,6 +208,7 @@
 
 .recommendItem:hover {
   background-color: #EBEAE6;
+  cursor: pointer;
 }
 
 .recommendImg > img {
@@ -220,8 +221,9 @@
   display: flex;
 }
 
-.recommendText > table > thead > tr > th {
+.recommendText > table > thead > tr {
   font-size:  30px;
+  white-space: nowrap;
 }
 
 .recommendText > table > tbody > tr > td > span:nth-child(1) {
