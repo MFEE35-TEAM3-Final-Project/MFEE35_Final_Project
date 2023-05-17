@@ -1,12 +1,44 @@
-import React, { useState } from "react";
-// import axios from "axios";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import MemberHeader from "../../components/member/MemberHeader";
 
 import "../../styles/member/userinfo.css";
 
 function MemberData() {
-  const [members, setMembers] = useState([]); // 存儲會員數據的陣列
+  const [user, setUser] = useState(null); // 存儲會員資料的狀態
   const [isEditing, setIsEditing] = useState(false); // 是否處於編輯模式
+
+  useEffect(() => {
+    fetchMemberData(); // 初始化時獲取會員資料
+  }, []);
+
+  const fetchMemberData = async () => {
+    try {
+      const jwtToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/user/check`,
+        null,
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        const userData = response.data.user;
+        setUser(userData); // 將會員資料存儲到狀態中
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -39,6 +71,7 @@ function MemberData() {
         <div className="container">
           <div className="userInfo row">
             <form className="col-12" action="">
+              {/* 會員編號 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
                   <label style={{ minWidth: "80px" }} htmlFor="userNumber">
@@ -46,7 +79,7 @@ function MemberData() {
                   </label>
                 </div>
                 <div className="col-6">
-                  <p></p>
+                  <p>{user && user.user_id}</p> {/* 顯示會員編號 */}
                 </div>
                 <div className="col-2">
                   {!isEditing && (
@@ -57,179 +90,110 @@ function MemberData() {
                 </div>
               </div>
 
-              {/* 基本資料 - 姓名 */}
+              {/* 姓名 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userName">姓名：</label>
                 </div>
                 <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="text"
-                    name="userName"
-                    placeholder=""
-                    required
-                  />
-                  <br />
+                  <p>{user && user.username}</p> {/* 顯示姓名 */}
                 </div>
+                <div className="col-2"></div>
               </div>
 
-              {/* 基本資料 - 性別 */}
+              {/* 電子郵件 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userGender">性別：</label>
+                  <label htmlFor="email">電子郵件：</label>
                 </div>
-                <div className="col-6 row">
-                  <div className="col-5">
+                <div className="col-6">
+                  <p>{user && user.email}</p> {/* 顯示電子郵件 */}
+                </div>
+                <div className="col-2"></div>
+              </div>
+
+              {/* 性別 */}
+              <div className="row">
+                <div className="col-4" style={{ textAlign: "right" }}>
+                  <label htmlFor="gender">性別：</label>
+                </div>
+                <div className="col-6">
+                  <p>{user && (user.gender === "male" ? "男生" : "女生")}</p>{" "}
+                  {/* 顯示性別 */}
+                </div>
+                <div className="col-2"></div>
+              </div>
+
+              {/* 生日 */}
+              <div className="row">
+                <div className="col-4" style={{ textAlign: "right" }}>
+                  <label htmlFor="birthday">生日：</label>
+                </div>
+                <div className="col-6">
+                  <p>
+                    {user &&
+                      user.birthday &&
+                      new Date(user.birthday).toLocaleDateString()}
+                  </p>{" "}
+                  {/* 顯示生日 */}
+                </div>
+                <div className="col-2"></div>
+              </div>
+
+              {/* 聯絡電話 */}
+              {/* <div className="row">
+                <div className="col-4" style={{ textAlign: "right" }}>
+                  <label htmlFor="phone">聯絡電話：</label>
+                </div>
+                <div className="col-6">
+                  {isEditing ? (
                     <input
-                      className="userGender"
-                      type="radio"
-                      name="userGender"
-                      id="male"
+                      type="text"
+                      id="phone"
+                      name="phone"
+                      defaultValue={user && user.phone} // 顯示聯絡電話
                     />
-                    <label className="usergender" htmlFor="male">
-                      男生
-                    </label>
-                  </div>
-                  <div className="col-5">
-                    <input
-                      className="userGender"
-                      type="radio"
-                      name="userGender"
-                      id="female"
+                  ) : (
+                    <p>{user && user.phone}</p>
+                  )}
+                </div>
+                <div className="col-2"></div>
+              </div> */}
+
+              {/* 地址 */}
+              {/* <div className="row">
+                <div className="col-4" style={{ textAlign: "right" }}>
+                  <label htmlFor="address">地址：</label>
+                </div>
+                <div className="col-6">
+                  {isEditing ? (
+                    <textarea
+                      id="address"
+                      name="address"
+                      defaultValue={user && user.address} // 顯示地址
                     />
-                    <label className="usergender" htmlFor="female">
-                      女生
-                    </label>
-                    <br />
+                  ) : (
+                    <p>{user && user.address}</p>
+                  )}
+                </div>
+                <div className="col-2"></div>
+              </div> */}
+
+              {/* 操作按鈕 */}
+              {isEditing ? (
+                <div className="row">
+                  <div className="col-4"></div>
+                  <div className="col-6">
+                    <button id="upDateBtn" onClick={handleSave}>
+                      SAVE
+                    </button>
+                    <button id="upDateBtn" onClick={handleCancel}>
+                      CANCEL
+                    </button>
                   </div>
+                  <div className="col-2"></div>
                 </div>
-              </div>
-
-              {/* 基本資料 - 生日 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userBirthday">生日：</label>
-                </div>
-                <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="date"
-                    name="userBirthday"
-                    placeholder=""
-                    required
-                  />
-                  <br />
-                </div>
-              </div>
-
-              {/* 基本資料 - 身高 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userHeight">身高：</label>
-                </div>
-                <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="text"
-                    name="userHeight"
-                    placeholder=""
-                    required
-                  />
-                  <br />
-                </div>
-              </div>
-
-              {/* 基本資料 - 體重 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userWeight">體重：</label>
-                </div>
-                <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="text"
-                    name="userWeight"
-                    placeholder=""
-                    required
-                  />
-                  <br />
-                </div>
-              </div>
-
-              {/* 基本資料 - 信箱 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userMail">信箱：</label>
-                </div>
-                <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="email"
-                    name="userMail"
-                    placeholder=""
-                    required
-                  />
-                  <br />
-                </div>
-              </div>
-
-              {/* 基本資料 - 運動頻率 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label style={{ minWidth: "80px" }} htmlFor="userSport">
-                    運動頻率：
-                  </label>
-                </div>
-                <div className="col-6">
-                  <select>
-                    <option>幾乎不運動</option>
-                    <option>每週運動 1-3 天</option>
-                    <option>每週運動 3-5 天</option>
-                    <option>每週運動 6-7 天</option>
-                    <option>長時間運動或體力勞動工作</option>
-                  </select>
-                  <br />
-                </div>
-              </div>
-
-              {/* 基本資料 - 電話 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userPhone">電話：</label>
-                </div>
-                <div className="col-6">
-                  <input className="userInput" type="tel" name="userPhone" />
-                  <br />
-                </div>
-              </div>
-
-              {/* 基本資料 - 地址 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userAddress">地址：</label>
-                </div>
-                <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="text"
-                    name="userAddress"
-                    placeholder=""
-                    required
-                  />
-                  <br />
-                </div>
-              </div>
-              {isEditing && (
-                <div>
-                  <button id="upDateBtn" onClick={handleSave}>
-                    SAVE
-                  </button>
-                  <button id="upDateBtn" onClick={handleCancel}>
-                    CANCEL
-                  </button>
-                </div>
-              )}
+              ) : null}
             </form>
           </div>
         </div>
@@ -237,4 +201,5 @@ function MemberData() {
     </div>
   );
 }
+
 export default MemberData;
