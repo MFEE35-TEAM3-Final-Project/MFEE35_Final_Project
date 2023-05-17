@@ -1,6 +1,9 @@
 @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
 @import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
 
+#memberInfoForm>div{
+    text-align: right;
+}
 
 .col-12>div {
     margin: 20px;

@@ -17,7 +17,7 @@ import FoodRecordNumber from "./pages/FoodRecordNumber";
 import AdminBoard from "./pages/admin/AdminBoard";
 import BackStage from "./pages/admin/BackStage";
 import MemberLoginPage from "./pages/MemberLoginPage";
-import MemberRegister1 from "./pages/MemberRegister1.jsx";
+import MemberRegister1 from "./pages/MemberRegister1";
 import MemberRegister2 from "./pages/MemberRegister2";
 import MemberHomePage from "./pages/user/MemberHomePage";
 import MemberChartList from "./pages/user/MemberChartList";
@@ -38,6 +38,8 @@ function App() {
   return (
     <div>
       <Nav />
+      <ScrollTop />
+
       <div>
         <Routes>
           <Route path="/" element={<HomePage />} />

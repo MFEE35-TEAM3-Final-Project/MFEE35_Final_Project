@@ -1,17 +1,36 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-/* Set the width of the side navigation to 250px */
+import Cookies from "js-cookie";
+
+import "../../../src/styles/member/MemberHeader.css";
+
 function openNav() {
   document.getElementById("mySidenav").style.width = "250px";
 }
 
-/* Set the width of the side navigation to 0 */
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
 
 function MemberHeader() {
+  const [token, setToken] = useState("");
+  const navigate = useNavigate(); // 新增此行
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("確定要登出嗎？");
+    if (confirmLogout) {
+      // 在這裡處理登出邏輯
+      // 清除本地存儲的身份驗證憑證
+      Cookies.remove("authToken");
+      // 重置用戶相關狀態或資料
+      setToken("");
+      // 導向登出後的頁面（例如返回登入頁面）
+
+      navigate("/LoginPage");
+    }
+  };
+
   return (
     <div className="memberHeader">
       <div className="memberTopnav">
@@ -23,7 +42,6 @@ function MemberHeader() {
           ☰
         </div>
         <div id="mySidenav" className="memberSidenav">
-          {/* <a href="javascript:void(0)" className="closebtn" onClick={closeNav}> */}
           <a href="#" className="closebtn" onClick={closeNav}>
             &times;
           </a>
@@ -56,7 +74,9 @@ function MemberHeader() {
           </Link>
         </div>
         <div className="logout">
-          <button id="membersignoutBtn">登出</button>
+          <button id="membersignoutBtn" onClick={handleLogout}>
+            登出
+          </button>
         </div>
       </nav>
     </div>

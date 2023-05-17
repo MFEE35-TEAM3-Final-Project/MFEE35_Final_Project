@@ -2,31 +2,33 @@ import React, { useState } from "react";
 // import axios from "axios";
 import MemberHeader from "../../components/member/MemberHeader";
 
+import "../../styles/member/userinfo.css";
+
 function MemberData() {
-  const [members, setMembers] = useState([]); // 存储会员数据的数组
-  const [isEditing, setIsEditing] = useState(false); // 是否处于编辑模式
+  const [members, setMembers] = useState([]); // 存儲會員數據的陣列
+  const [isEditing, setIsEditing] = useState(false); // 是否處於編輯模式
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = () => {
-    // 处理保存逻辑
+    // 處理保存邏輯
 
-    // 将保存后的数据更新到后端
+    // 將保存後的數據更新到後端
     // ...
 
     setIsEditing(false);
   };
 
   const handleCancel = () => {
-    // 处理取消逻辑
+    // 處理取消邏輯
 
     setIsEditing(false);
   };
 
   return (
-    <div style={{ backgroundColor: "#F7F4E9" }}>
+    <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
       <MemberHeader />
       <div className="wapper">
         <div className="memberTitle">
@@ -57,7 +59,7 @@ function MemberData() {
 
               {/* 基本資料 - 姓名 */}
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userName">姓名：</label>
                 </div>
                 <div className="col-6">
@@ -74,7 +76,7 @@ function MemberData() {
 
               {/* 基本資料 - 性別 */}
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userGender">性別：</label>
                 </div>
                 <div className="col-6 row">
@@ -104,16 +106,16 @@ function MemberData() {
                 </div>
               </div>
 
-              {/* 基本資料 - 年齡 */}
+              {/* 基本資料 - 生日 */}
               <div className="row">
-                <div className="col-4">
-                  <label htmlFor="userAge">年齡：</label>
+                <div className="col-4" style={{ textAlign: "right" }}>
+                  <label htmlFor="userBirthday">生日：</label>
                 </div>
                 <div className="col-6">
                   <input
                     className="userInput"
-                    type="text"
-                    name="userAge"
+                    type="date"
+                    name="userBirthday"
                     placeholder=""
                     required
                   />
@@ -123,7 +125,7 @@ function MemberData() {
 
               {/* 基本資料 - 身高 */}
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userHeight">身高：</label>
                 </div>
                 <div className="col-6">
@@ -140,7 +142,7 @@ function MemberData() {
 
               {/* 基本資料 - 體重 */}
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userWeight">體重：</label>
                 </div>
                 <div className="col-6">
@@ -157,7 +159,7 @@ function MemberData() {
 
               {/* 基本資料 - 信箱 */}
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userMail">信箱：</label>
                 </div>
                 <div className="col-6">
@@ -174,7 +176,7 @@ function MemberData() {
 
               {/* 基本資料 - 運動頻率 */}
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label style={{ minWidth: "80px" }} htmlFor="userSport">
                     運動頻率：
                   </label>
@@ -193,7 +195,7 @@ function MemberData() {
 
               {/* 基本資料 - 電話 */}
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userPhone">電話：</label>
                 </div>
                 <div className="col-6">
@@ -204,7 +206,7 @@ function MemberData() {
 
               {/* 基本資料 - 地址 */}
               <div className="row">
-                <div className="col-4">
+                <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userAddress">地址：</label>
                 </div>
                 <div className="col-6">
