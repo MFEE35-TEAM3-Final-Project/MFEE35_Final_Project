@@ -43,7 +43,6 @@
 .favorite_nolist {
     display: flex;
     align-items: center;
-    
     height: 800px;
     background-color: #DCDBD7;
 }

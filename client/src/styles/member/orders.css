@@ -11,9 +11,14 @@
 }
 
 .order-item {
+    display: flex;
+    align-items: flex-end;
+    width: 80%;
+    margin: 5% auto;
+    padding: 5%;
+    background-color: #DCDBD7;
+    border-radius: 20px;
     border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
     cursor: pointer;
 }
 
@@ -26,7 +31,7 @@
 }
 
 .order-header {
-    display: flex;
+    display: flex-start;
     justify-content: space-between;
     align-items: center;
 }

@@ -44,8 +44,8 @@ function Orders() {
       {Array.isArray(data) && data.length > 0 ? (
         <div className="order-container">
           {data.map((order, index) => (
-            <div key={index} className={`order-item ${expandedOrderId === order.order_id ? 'expanded' : ''}`}>
-              <div className="order-header" onClick={() => toggleOrderDetails(order.order_id)}>
+            <div key={index} onClick={() => toggleOrderDetails(order.order_id)} className={`order-item ${expandedOrderId === order.order_id ? 'expanded' : ''}`}>
+              <div className="order-header" >
                 <p>訂單編號：{order.order_id}</p>
                 <p>金額：{order.total_price}</p>
                 {/* 顯示其他訂單相關資訊 */}
@@ -56,6 +56,7 @@ function Orders() {
                     <div key={detailIndex} className="order-detail-item">
                       <p>產品名稱：{detail.name}</p>
                       <p>數量：{detail.quantity}</p>
+                      <img src="{detail.image}"/>
                       {/* 顯示其他訂單詳細資訊 */}
                     </div>
                   ))}
