@@ -24,6 +24,7 @@ function Favorite() {
         }
       });
       setData(response.data.message);
+      console.log(response.data.message);
       setHasFetched(true);
     } catch (error) {
       toast.error(error.response.data.message);
@@ -45,7 +46,7 @@ function Favorite() {
       setData(prevData => prevData.filter(item => item.productid !== productId));
       const message = data.data.message;
       toast.success(message);
-    }  catch (error) {
+    } catch (error) {
       console.log(error.response.data.message)
       toast.error(error.response.data.message)
     }
@@ -54,7 +55,7 @@ function Favorite() {
   const handleAdd = async (productId) => {
     try {
       var jwtToken = document.cookie.split('=')[1].trim();
-  
+
       const data = await axios.post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
         productid: productId,
         quantity: "1"
@@ -65,7 +66,7 @@ function Favorite() {
       });
       const message = data.data.message;
       toast.success(message);
-     
+
     } catch (error) {
       console.log(error.response.data.message)
       toast.error(error.response.data.message)
@@ -83,12 +84,12 @@ function Favorite() {
           data.map(item => (
             <div key={item.id} className='favorite_list'>
               <div className="image">
-                <img src={item.image} alt="Product Image" />
+                <img src={item.image[0]} alt="Product Image" />
               </div>
               <div className="info">
                 <p>商品名稱: {item.name}</p>
                 <p>商品描述: {item.description}</p>
-                <p>價格: ${item.productid}</p>
+                <p>價格: ${item.price}</p>
                 <div className="buttons">
                   <button onClick={() => handleDelete(item.productid)}>刪除</button>
                   <button onClick={() => handleAdd(item.productid)}>加入購物車</button>

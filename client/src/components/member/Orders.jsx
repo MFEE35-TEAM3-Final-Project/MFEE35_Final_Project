@@ -7,7 +7,7 @@ import '../../styles/member/orders.css';
 
 function Orders() {
   const [data, setData] = useState([]);
-  const [expandedOrderId, setExpandedOrderId] = useState(null); // 追踪展開的訂單ID
+  const [expandedOrderId, setExpandedOrderId] = useState(null); // 追踪展开的订单ID
   const [error, setError] = useState(null);
   const [hasFetched, setHasFetched] = useState(false);
 
@@ -27,9 +27,11 @@ function Orders() {
       });
       console.log(response);
       setData(response.data.data || []);
-      setHasFetched(true);
+      setExpandedOrderId(response.data.data[0]?.order_id || null); // 设置展开的订单ID为第一笔订单的ID
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setHasFetched(true);
     }
   };
 
@@ -44,24 +46,29 @@ function Orders() {
       {Array.isArray(data) && data.length > 0 ? (
         <div className="order-container">
           {data.map((order, index) => (
-            <div key={index} onClick={() => toggleOrderDetails(order.order_id)} className={`order-item ${expandedOrderId === order.order_id ? 'expanded' : ''}`}>
-              <div className="order-header" >
-                <p>訂單編號：{order.order_id}</p>
-                <p>金額：{order.total_price}</p>
-                {/* 顯示其他訂單相關資訊 */}
-              </div>
-              {expandedOrderId === order.order_id && (
-                <div className="order-details">
-                  {order.order_details.map((detail, detailIndex) => (
-                    <div key={detailIndex} className="order-detail-item">
-                      <p>產品名稱：{detail.name}</p>
-                      <p>數量：{detail.quantity}</p>
-                      <img src="{detail.image}"/>
-                      {/* 顯示其他訂單詳細資訊 */}
-                    </div>
-                  ))}
+            <div key={index} className={`order-item ${expandedOrderId === order.order_id ? 'expanded' : ''}`}>
+              <div className="order-header">
+                {order.order_details.length > 0 && (
+                  <div className="order-detail-item">
+                    <img src={order.order_details[0].image[0]} alt={order.order_details[0].name} />
+                    <p>產品名稱：{order.order_details[0].name}</p>
+                    <p>數量：{order.order_details[0].quantity}</p>
+                  </div>
+                )}
+                <div className={`order-details ${expandedOrderId === order.order_id ? 'expanded' : ''}`}>
+                  {expandedOrderId === order.order_id && (
+                    order.order_details.map((detail, detailIndex) => (
+                      <div key={detailIndex} className="order-detail-item">
+                        <p>產品名稱：{detail.name}</p>
+                        <p>數量：{detail.quantity}</p>
+                        <img src={detail.image[0]} alt={detail.name} />
+                        {/* 顯示其他訂單詳細資訊 */}
+                      </div>
+                    ))
+                  )}
                 </div>
-              )}
+                <div className="expand-button" onClick={() => toggleOrderDetails(order.order_id)}>展開</div>
+              </div>
             </div>
           ))}
         </div>

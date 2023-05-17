@@ -8,8 +8,8 @@
     display: flex;
     align-items: center;
     width: 80%;
-    margin: 5% auto;
-    padding: 5%;
+    margin: 3% auto;
+    padding: 3%;
     background-color: #DCDBD7;
     border-radius: 20px;
 }
@@ -43,6 +43,6 @@
 .favorite_nolist {
     display: flex;
     align-items: center;
-    height: 800px;
+    height: 100%;
     background-color: #DCDBD7;
 }
