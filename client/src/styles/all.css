@@ -39,4 +39,9 @@
 
 .ck-editor__editable_inline {
   min-height: 300px;
+}
+
+#cover_image .cover_img_container .ant-image {
+  border: 2px dashed;
+  padding: 5px;
 }/*# sourceMappingURL=all.css.map */

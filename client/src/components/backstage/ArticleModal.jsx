@@ -37,9 +37,33 @@ const ArticleEditorModal = ({
     updated_at: ""
   });
   const [editorContent, setEditorContent] = useState("");
+
+  // function
   const toLocalTime = (time) => {
     const date = new Date(time);
     return date.toLocaleString();
+  };
+  const formHandler = (key, name) => {
+    // const { name, value } = e.target;
+    // setArticleChange((origin) => ({
+    //   ...origin,
+    //   [name]: value
+    // }));
+    console.log(key, name);
+  };
+  const switchOnChange = (checked) => {
+    const newValue = checked ? 1 : 0;
+    setArticleChange((origin) => ({
+      ...origin,
+      is_published: newValue
+    }));
+  };
+  const imgChange = (url) => {
+    console.log("imgUrl", url);
+    setArticleChange((origin) => ({
+      ...origin,
+      cover_image: url
+    }));
   };
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
@@ -53,6 +77,7 @@ const ArticleEditorModal = ({
       setEditorContent("");
     });
   };
+
   useEffect(() => {
     // console.log("update temp article", tempArticle);
 
@@ -68,7 +93,7 @@ const ArticleEditorModal = ({
       title="文章編輯"
       width={1000}
       style={{
-        top: 100
+        top: 20
       }}
       open={isOpen}
       onCancel={onCancel}
@@ -109,58 +134,71 @@ const ArticleEditorModal = ({
         <Row gutter={16}>
           <Col span={8}>
             <Form.Item name="cover_image" label="封面圖片">
-              <ImageUploader />
+              <div>
+                <ImageUploader
+                  getImg={imgChange}
+                  imgUrl={articleChange && articleChange.cover_image}
+                />
+              </div>
             </Form.Item>
           </Col>
+          <Col span={12}>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="category"
+                  label="文章分類"
+                  rules={[{ required: true, message: "請選擇分類" }]}
+                >
+                  <Select
+                    placeholder="請選擇分類"
+                    name="category"
+                    value={articleChange.category}
+                    onSelect={formHandler(key, name)}
+                  >
+                    {categories.map((c, i) => (
+                      <Option key={"option_" + i} {...c}>
+                        {c.value}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="是否發布">
+                  <Switch
+                    name="is_published"
+                    checked={articleChange && articleChange.is_published}
+                    onChange={switchOnChange}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
 
-          <Col span={8}>
-            <Form.Item
-              name="category"
-              label="文章分類"
-              rules={[{ required: true, message: "請選擇分類" }]}
-            >
-              <Select placeholder="請選擇分類">
-                {categories.map((c, i) => (
-                  <Option key={"option_" + i} {...c}>
-                    {c.value}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Form.Item
-              name="is_published"
-              label="是否發布"
-              checkedChildren={1}
-              unCheckedChildren={0}
-              value={articleChange && articleChange.is_published}
-              onChange={() => {
-                articleChange.is_published = !articleChange.is_published;
-              }}
-              valuePropName="checked"
-            >
-              <Switch />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={8}>
             <Form.Item
               name="title"
               label="文章標題"
               rules={[{ required: true, message: "請輸入文章標題" }]}
             >
-              <Input maxLength={45} />
+              <Input
+                name="title"
+                maxLength={45}
+                value={articleChange && articleChange.title}
+                onChange={formHandler}
+              />
             </Form.Item>
-          </Col>
-          <Col span={16}>
+
             <Form.Item
               name="sub_title"
               label="副標題"
               rules={[{ required: true, message: "請輸入副標題" }]}
             >
-              <Input maxLength={100} />
+              <Input
+                name="sub_title"
+                maxLength={100}
+                value={articleChange && articleChange.sub_title}
+                onChange={formHandler}
+              />
             </Form.Item>
           </Col>
         </Row>
