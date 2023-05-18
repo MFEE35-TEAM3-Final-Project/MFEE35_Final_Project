@@ -264,6 +264,7 @@ function MemberData() {
                   {isEditing ? (
                     <select
                       className="userInput"
+                      id="exerciseSelect"
                       name="exerciseLevel"
                       value={exerciseLevel}
                       onChange={(e) => setExerciseLevel(e.target.value)}

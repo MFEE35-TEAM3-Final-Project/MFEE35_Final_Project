@@ -9,7 +9,8 @@
     text-align: right;
 }
 
-.col-12>div {
+/* 待修 */
+#userInfoForm>div {
     margin: 20px;
 }
 
@@ -34,11 +35,13 @@
     min-width: 40px;
 }
 
-select {
+/* 待修 */
+#exerciseSelect {
     width: 80%;
 }
 
-form {
+/* 待修 */
+#userInfoForm {
     padding: 20px 0;
 }
 
@@ -59,7 +62,12 @@ form {
 
 }
 
-button:hover {
+/* 待改 */
+.infoupdateBtn:hover {
+    opacity: 0.9;
+}
+
+#upDateBtn:hover {
     opacity: 0.9;
 }
 

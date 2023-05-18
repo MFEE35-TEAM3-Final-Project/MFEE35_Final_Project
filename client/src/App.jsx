@@ -18,7 +18,6 @@ import AdminBoard from "./pages/admin/AdminBoard";
 import BackStage from "./pages/admin/BackStage";
 import MemberLoginPage from "./pages/MemberLoginPage";
 import MemberRegister1 from "./pages/MemberRegister1";
-import MemberRegister2 from "./pages/MemberRegister2";
 import MemberHomePage from "./pages/user/MemberHomePage";
 import MemberChartList from "./pages/user/MemberChartList";
 import MemberData from "./pages/user/MemberData";
@@ -58,7 +57,6 @@ function App() {
           <Route path="/LoginPage" element={<MemberLoginPage />} />
           <Route path="/MemberHomePage" element={<MemberHomePage />} />
           <Route path="/MemberRegister1" element={<MemberRegister1 />} />
-          <Route path="/MemberRegister2" element={<MemberRegister2 />} />
           <Route path="/MemberChartList" element={<MemberChartList />} />
           <Route path="/MemberData" element={<MemberData />} />
         </Routes>

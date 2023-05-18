@@ -7,7 +7,7 @@ import MemberHeader from "../../components/member/MemberHeader";
 import MyDonutChart from "../../components/member/MyDonutChart";
 import MyStackedBarChart from "../../components/member/MyStackedBarChart";
 
-import "../../styles/member/chartlist.css";
+// import "../../styles/member/chartlist.css";
 
 function ChartListPage() {
   useEffect(() => {

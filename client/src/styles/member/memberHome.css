@@ -8,21 +8,21 @@
     margin: 30px;
 }
 
-.col-4>img {
+.memberHomePageInfo>img {
     width: 200px;
     height: 200px;
 }
 
-.col-4>p {
+.memberHomePageInfo>p {
     margin: 5px;
 }
 
 
-.col-4:nth-child(1) {
+.memberHomePageInfo:nth-child(1) {
     text-align: right;
 }
 
-.col-4:nth-child(3) {
+.memberHomePageInfo:nth-child(3) {
     display: block;
     margin: auto;
 }
@@ -36,7 +36,7 @@
 }
 
 
-.myBtn {
+.memberHomePageBtn {
     /* display: block; */
     margin: 20px;
     padding: 20px;
@@ -70,4 +70,3 @@
     border-radius: 20px;
     margin: 30px 0px;
 }
-

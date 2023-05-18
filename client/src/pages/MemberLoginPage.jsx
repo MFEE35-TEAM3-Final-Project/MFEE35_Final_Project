@@ -86,10 +86,13 @@ const UserLogin = () => {
           <div className="userInfo row">
             <form id="loginForm" className="col-12" onSubmit={handleSubmit}>
               <div className="row myMember">
-                <div className="col-6">
+                <div
+                  className="col-6"
+                  id="loginBox"
+                  style={{ textAlign: "center" }}
+                >
                   <Link
                     to="/LoginPage"
-                    className="userbtn"
                     style={{
                       textDecoration: "none",
                       color: "black",
@@ -99,10 +102,14 @@ const UserLogin = () => {
                     會員登入
                   </Link>
                 </div>
-                <div className="col-6">
+                <div
+                  className="col-6"
+                  id="registerBox"
+                  style={{ textAlign: "center" }}
+                >
                   <Link
                     to="/MemberRegister1"
-                    className="userbtn"
+                    className="loginBtn"
                     style={{
                       textDecoration: "none",
                       color: "black",
@@ -153,15 +160,18 @@ const UserLogin = () => {
                 </div>
               </div>
 
-              <div>
+              <div style={{ textAlign: "center" }}>
                 <button type="submit" className="mysubmit">
                   SIGN IN
                 </button>
                 <br />
               </div>
-              <input id="userRem" type="checkbox" />
-              <label htmlFor="userRem">Remember me</label>
-              <div>
+              <div style={{ textAlign: "center" }}>
+                <input id="userRem" type="checkbox" />
+                <label htmlFor="userRem">Remember me</label>
+              </div>
+
+              <div style={{ textAlign: "center" }}>
                 <span className="psw">
                   {" "}
                   <a href="">Forgot Password ?</a>
