@@ -7,7 +7,7 @@ import "../styles/member/main.css";
 
 const UserRegistration = () => {
   const [formValues, setFormValues] = useState({
-    userAccount: "",
+    userMail: "",
     userPassword: "",
     repeatPassword: "",
     userName: "",
@@ -19,7 +19,7 @@ const UserRegistration = () => {
   });
 
   const {
-    userAccount,
+    userMail,
     userPassword,
     repeatPassword,
     userName,
@@ -35,15 +35,9 @@ const UserRegistration = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  // const handleButtonClick = () => {
-  //   console.log(formValues);
-  // };
-
   const isFormValid = () => {
     return (
-      userAccount !== "" &&
-      userPassword !== "" &&
-      userPassword === repeatPassword
+      userMail !== "" && userPassword !== "" && userPassword === repeatPassword
     );
   };
 
@@ -55,7 +49,8 @@ const UserRegistration = () => {
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/user/register`,
           {
-            email: userAccount,
+            email: userMail,
+            username: userName,
             password: userPassword,
             repeat_password: repeatPassword,
             gender: userGender,
@@ -64,40 +59,77 @@ const UserRegistration = () => {
         );
 
         if (response.data.success) {
-          console.log(response.data.message);
-          // 註冊成功後的操作...
+          console.log(response.data); // 註冊成功後的操作
           alert("已建立成功");
-          // 跳轉到根目錄
-          window.location.href = "/";
 
-          // // 調用第二個API
-          // const exerciseRecordResponse = await axios.post(
-          //   `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
-          //   {
-          //     gender: userGender,
-          //     birthday: userBirthday,
-          //     weight: userWeight,
-          //     height: userHeight,
-          //     exercise_level: userSport,
-          //     record_date: new Date().toISOString().slice(0, 10),
-          //   }
-          // );
+          const loginResponse = await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/user/login`,
+            {
+              email: userMail,
+              password: userPassword,
+            }
+          );
 
-          // if (exerciseRecordResponse.data.success) {
-          //   console.log(exerciseRecordResponse.data.message);
-          //   // 第二個API調用成功後的操作...
-          // } else {
-          //   console.log(exerciseRecordResponse.data.message);
-          //   // 第二個API調用失敗後的操作...
-          // }
+          if (loginResponse.data.success) {
+            console.log(loginResponse.data);
+
+            const { token, exp } = loginResponse.data;
+            const expDate = new Date(exp);
+            document.cookie = `jwtToken=${token}; expires=${expDate.toUTCString()}`;
+
+            // 檢查Token並取得會員資料
+            const checkTokenResponse = await axios.post(
+              `${process.env.REACT_APP_API_URL}/api/user/check`,
+              {},
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+
+            if (checkTokenResponse.data.success) {
+              console.log(checkTokenResponse.data); // Token認證成功後的操作
+
+              // 調用運動部分API
+              const exerciseRecordResponse = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+                {
+                  gender: userGender,
+                  birthday: userBirthday,
+                  weight: userWeight,
+                  height: userHeight,
+                  exercise_level: userSport,
+                  record_date: new Date().toISOString().slice(0, 10),
+                },
+                {
+                  headers: {
+                    Authorization: token,
+                  },
+                }
+              );
+
+              if (exerciseRecordResponse.data.success) {
+                console.log(exerciseRecordResponse.data); // 運動API調用成功後的操作
+                // 跳轉到根目錄
+                window.location.href = "/MemberData";
+              } else {
+                console.log(exerciseRecordResponse.data); // 運動API調用失敗後的操作
+              }
+            } else {
+              console.log(checkTokenResponse.data.message); // Token認證失敗後的操作
+              alert(checkTokenResponse.data.message);
+            }
+          } else {
+            console.log(loginResponse.data.message); // 登入失敗後的操作
+            alert(loginResponse.data.message);
+          }
         } else {
-          console.log(response.data.message);
-          // 註冊失敗後的操作...
+          console.log(response.data.message); // 註冊失敗後的操作
           alert(response.data.message);
         }
       } catch (error) {
-        console.error(error);
-        // 與伺服器通訊發生錯誤的操作...
+        console.error(error); // 與伺服器通訊發生錯誤的操作
       }
     } else {
       console.log("表單尚未填寫完整或密碼規則不符合");
@@ -151,7 +183,7 @@ const UserRegistration = () => {
                   className="col-4"
                   style={{ textAlign: "right", paddingRight: "30px" }}
                 >
-                  <label htmlFor="userAccount">
+                  <label htmlFor="userMail">
                     <i className="fa fa-user" style={{ fontSize: "30px" }}></i>
                   </label>
                 </div>
@@ -159,9 +191,9 @@ const UserRegistration = () => {
                   <input
                     className="userInput"
                     type="text"
-                    name="userAccount"
+                    name="userMail"
                     placeholder="請輸入帳號(E-mail信箱)"
-                    value={userAccount}
+                    value={userMail}
                     onChange={handleChange}
                     required
                   />

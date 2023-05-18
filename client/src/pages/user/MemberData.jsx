@@ -1,29 +1,98 @@
-import React, { useState } from "react";
-// import axios from "axios";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import MemberHeader from "../../components/member/MemberHeader";
 
 import "../../styles/member/userinfo.css";
 
 function MemberData() {
-  const [members, setMembers] = useState([]); // 存儲會員數據的陣列
-  const [isEditing, setIsEditing] = useState(false); // 是否處於編輯模式
+  const [user, setUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [userHeight, setUserHeight] = useState("");
+  const [userWeight, setUserWeight] = useState("");
+  const [exerciseLevel, setExerciseLevel] = useState("");
+  const [userPhone, setUserPhone] = useState("");
+  const [userAddress, setUserAddress] = useState("");
+
+  useEffect(() => {
+    fetchMemberData();
+  }, []);
+
+  const fetchMemberData = async () => {
+    try {
+      const jwtToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/user/check`,
+        null,
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        const userData = response.data.user;
+        setUser(userData);
+        setUserHeight(userData.userHeight);
+        setUserWeight(userData.userWeight);
+        setExerciseLevel(userData.exerciseLevel);
+        setUserPhone(userData.phone);
+        setUserAddress(userData.address);
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
-    // 處理保存邏輯
+  const handleSave = async () => {
+    try {
+      // 處理保存邏輯
 
-    // 將保存後的數據更新到後端
-    // ...
+      // 將保存後的數據更新到後端
+      const updatedData = {
+        userHeight,
+        userWeight,
+        exerciseLevel,
+        phone: userPhone,
+        address: userAddress,
+      };
 
-    setIsEditing(false);
+      const jwtToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/user/update`,
+        updatedData,
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setIsEditing(false);
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleCancel = () => {
-    // 處理取消邏輯
-
     setIsEditing(false);
   };
 
@@ -39,6 +108,7 @@ function MemberData() {
         <div className="container">
           <div className="userInfo row">
             <form className="col-12" action="">
+              {/* 會員編號 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
                   <label style={{ minWidth: "80px" }} htmlFor="userNumber">
@@ -46,7 +116,7 @@ function MemberData() {
                   </label>
                 </div>
                 <div className="col-6">
-                  <p></p>
+                  <p>{user && user.user_id}</p>
                 </div>
                 <div className="col-2">
                   {!isEditing && (
@@ -57,70 +127,52 @@ function MemberData() {
                 </div>
               </div>
 
-              {/* 基本資料 - 姓名 */}
+              {/* 姓名 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
                   <label htmlFor="userName">姓名：</label>
                 </div>
                 <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="text"
-                    name="userName"
-                    placeholder=""
-                    required
-                  />
-                  <br />
+                  <p>{user && user.username}</p>
                 </div>
+                <div className="col-2"></div>
               </div>
 
-              {/* 基本資料 - 性別 */}
+              {/* 電子郵件 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userGender">性別：</label>
-                </div>
-                <div className="col-6 row">
-                  <div className="col-5">
-                    <input
-                      className="userGender"
-                      type="radio"
-                      name="userGender"
-                      id="male"
-                    />
-                    <label className="usergender" htmlFor="male">
-                      男生
-                    </label>
-                  </div>
-                  <div className="col-5">
-                    <input
-                      className="userGender"
-                      type="radio"
-                      name="userGender"
-                      id="female"
-                    />
-                    <label className="usergender" htmlFor="female">
-                      女生
-                    </label>
-                    <br />
-                  </div>
-                </div>
-              </div>
-
-              {/* 基本資料 - 生日 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userBirthday">生日：</label>
+                  <label htmlFor="email">電子郵件：</label>
                 </div>
                 <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="date"
-                    name="userBirthday"
-                    placeholder=""
-                    required
-                  />
-                  <br />
+                  <p>{user && user.email}</p>
                 </div>
+                <div className="col-2"></div>
+              </div>
+
+              {/* 性別 */}
+              <div className="row">
+                <div className="col-4" style={{ textAlign: "right" }}>
+                  <label htmlFor="gender">性別：</label>
+                </div>
+                <div className="col-6">
+                  <p>{user && (user.gender === "male" ? "男生" : "女生")}</p>
+                </div>
+                <div className="col-2"></div>
+              </div>
+
+              {/* 生日 */}
+              <div className="row">
+                <div className="col-4" style={{ textAlign: "right" }}>
+                  <label htmlFor="birthday">生日：</label>
+                </div>
+                <div className="col-6">
+                  <p>
+                    {user &&
+                      user.birthday &&
+                      new Date(user.birthday).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="col-2"></div>
               </div>
 
               {/* 基本資料 - 身高 */}
@@ -129,13 +181,18 @@ function MemberData() {
                   <label htmlFor="userHeight">身高：</label>
                 </div>
                 <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="text"
-                    name="userHeight"
-                    placeholder=""
-                    required
-                  />
+                  {isEditing ? (
+                    <input
+                      className="userInput"
+                      type="text"
+                      name="userHeight"
+                      value={userHeight}
+                      onChange={(e) => setUserHeight(e.target.value)}
+                      required
+                    />
+                  ) : (
+                    <p>{user && user.userHeight}</p>
+                  )}
                   <br />
                 </div>
               </div>
@@ -146,35 +203,22 @@ function MemberData() {
                   <label htmlFor="userWeight">體重：</label>
                 </div>
                 <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="text"
-                    name="userWeight"
-                    placeholder=""
-                    required
-                  />
+                  {isEditing ? (
+                    <input
+                      className="userInput"
+                      type="text"
+                      name="userWeight"
+                      value={userWeight}
+                      onChange={(e) => setUserWeight(e.target.value)}
+                      required
+                    />
+                  ) : (
+                    <p>{user && user.userWeight}</p>
+                  )}
                   <br />
                 </div>
               </div>
 
-              {/* 基本資料 - 信箱 */}
-              <div className="row">
-                <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userMail">信箱：</label>
-                </div>
-                <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="email"
-                    name="userMail"
-                    placeholder=""
-                    required
-                  />
-                  <br />
-                </div>
-              </div>
-
-              {/* 基本資料 - 運動頻率 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
                   <label style={{ minWidth: "80px" }} htmlFor="userSport">
@@ -182,54 +226,86 @@ function MemberData() {
                   </label>
                 </div>
                 <div className="col-6">
-                  <select>
-                    <option>幾乎不運動</option>
-                    <option>每週運動 1-3 天</option>
-                    <option>每週運動 3-5 天</option>
-                    <option>每週運動 6-7 天</option>
-                    <option>長時間運動或體力勞動工作</option>
-                  </select>
+                  {isEditing ? (
+                    <select
+                      className="userInput"
+                      name="exerciseLevel"
+                      value={exerciseLevel}
+                      onChange={(e) => setExerciseLevel(e.target.value)}
+                      required
+                    >
+                      <option value="1.2">幾乎不運動</option>
+                      <option value="1.375">每週運動 1-3 天</option>
+                      <option value="1.55">每週運動 3-5 天</option>
+                      <option value="1.72">每週運動 6-7 天</option>
+                      <option value="1.9">長時間運動或體力勞動工作</option>
+                    </select>
+                  ) : (
+                    <p>{user && user.exerciseLevel}</p>
+                  )}
                   <br />
                 </div>
               </div>
 
-              {/* 基本資料 - 電話 */}
+              {/* 聯絡電話 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userPhone">電話：</label>
+                  <label htmlFor="phone">聯絡電話：</label>
                 </div>
                 <div className="col-6">
-                  <input className="userInput" type="tel" name="userPhone" />
-                  <br />
+                  {isEditing ? (
+                    <input
+                      className="userInput"
+                      type="text"
+                      id="userPhone"
+                      name="phone"
+                      value={userPhone}
+                      onChange={(e) => setUserPhone(e.target.value)}
+                    />
+                  ) : (
+                    <p>{user && user.phone}</p>
+                  )}
                 </div>
+                <div className="col-2"></div>
               </div>
 
-              {/* 基本資料 - 地址 */}
+              {/* 地址 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userAddress">地址：</label>
+                  <label htmlFor="address">地址：</label>
                 </div>
                 <div className="col-6">
-                  <input
-                    className="userInput"
-                    type="text"
-                    name="userAddress"
-                    placeholder=""
-                    required
-                  />
-                  <br />
+                  {isEditing ? (
+                    <input
+                      className="userInput"
+                      type="text"
+                      id="address"
+                      name="address"
+                      value={userAddress}
+                      onChange={(e) => setUserAddress(e.target.value)}
+                    />
+                  ) : (
+                    <p>{user && user.address}</p>
+                  )}
                 </div>
+                <div className="col-2"></div>
               </div>
-              {isEditing && (
-                <div>
-                  <button id="upDateBtn" onClick={handleSave}>
-                    SAVE
-                  </button>
-                  <button id="upDateBtn" onClick={handleCancel}>
-                    CANCEL
-                  </button>
+
+              {/* 操作按鈕 */}
+              {isEditing ? (
+                <div className="row">
+                  <div className="col-4"></div>
+                  <div className="col-6">
+                    <button id="upDateBtn" onClick={handleSave}>
+                      SAVE
+                    </button>
+                    <button id="upDateBtn" onClick={handleCancel}>
+                      CANCEL
+                    </button>
+                  </div>
+                  <div className="col-2"></div>
                 </div>
-              )}
+              ) : null}
             </form>
           </div>
         </div>
@@ -237,4 +313,5 @@ function MemberData() {
     </div>
   );
 }
+
 export default MemberData;
