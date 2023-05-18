@@ -99,7 +99,7 @@ function Article() {
         const comments = res.data.comments.map((comment) => {
           return {
             ...comment,
-            created_at: commentDate(comment.created_at),
+            comment_time: commentDate(comment.comment_time),
             updated_at: commentDate(comment.updated_at),
           };
         });
@@ -115,7 +115,7 @@ function Article() {
   const sendMessage = async () => {
     try {
       const jwtToken =
-        "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MjkwMzE0NDkzOSwiaWF0IjoxNjg0MjYzMTQ0fQ.0rqyEJW3OezJoiu43udQ1tK8m9rKuCzkTIyxwGKG_0M";
+        "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY";
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/article_comments/article_id=${id}`,
         {
@@ -262,7 +262,7 @@ function Article() {
                           {commentsList.user.username}
                         </span>
                         <span className="d-flex ms-auto commentTime">
-                          {commentsList.created_at}
+                          {commentsList.comment_time}
                         </span>
                         {/* <button className="btn btn-dark ms-auto">回覆</button> */}
                       </div>

@@ -3,6 +3,7 @@ import "../styles/blog.css";
 import axios from "axios";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { GrNext, GrPrevious } from "react-icons/gr";
+
 function Blog() {
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
@@ -275,13 +276,13 @@ function Blog() {
         <div className="articlelist">
           <div className="row g-0  tab-content d-flex flex-column">
             <div
-              className="col-lg-8 col-md-12  fade tab-pane show active flex-wrap"
-              id="HEALTHY"
+              className="col-lg-8 col-md-12   tab-pane show active flex-wrap"
+              
             >
               {articles.map((article) => (
                 <div
                   key={article.article_id}
-                  className="article  d-flex flex-row"
+                  className="article  d-flex flex-row "
                 >
                   <div className="  article-img">
                     <div>
