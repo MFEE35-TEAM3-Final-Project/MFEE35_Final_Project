@@ -17,11 +17,13 @@ import FoodRecordNumber from "./pages/FoodRecordNumber";
 import AdminBoard from "./pages/admin/AdminBoard";
 import BackStage from "./pages/admin/BackStage";
 import MemberLoginPage from "./pages/MemberLoginPage";
-import MemberRegister1 from "./pages/MemberRegister1.jsx";
+import MemberRegister1 from "./pages/MemberRegister1";
 import MemberRegister2 from "./pages/MemberRegister2";
 import MemberHomePage from "./pages/user/MemberHomePage";
 import MemberChartList from "./pages/user/MemberChartList";
+import MemberFav from "./pages/user/MemberFav";
 import MemberData from "./pages/user/MemberData";
+import MemberOrders from "./pages/user/MemberOrders";
 
 // SCSS生成的CSS
 import "./styles/all.css";
@@ -36,6 +38,8 @@ function App() {
   return (
     <div>
       <Nav />
+      <ScrollTop />
+
       <div>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -59,6 +63,8 @@ function App() {
           <Route path="/MemberRegister2" element={<MemberRegister2 />} />
           <Route path="/MemberChartList" element={<MemberChartList />} />
           <Route path="/MemberData" element={<MemberData />} />
+          <Route path="/MemberFav" element={<MemberFav />} />
+          <Route path="/MemberOrders" element={<MemberOrders />} />
         </Routes>
       </div>
       {isBack ? "" : <Footer />}

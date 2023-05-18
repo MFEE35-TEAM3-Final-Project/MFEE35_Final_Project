@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import MemberHeader from "../components/member/MemberHeader";
+import Cookies from "js-cookie";
+
+import "../styles/member/main.css";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [token, setToken] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 检查是否存在令牌，如果存在则执行验证方法
-    if (token) {
-      verifyToken();
+    const authToken = Cookies.get("authToken");
+    if (authToken) {
+      verifyToken(authToken);
     }
-  }, [token]);
+  }, []);
 
-  const handleSubmit = async (e, data) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -32,6 +35,8 @@ const UserLogin = () => {
       if (response.data.success) {
         const authToken = response.data.token;
         setToken(authToken);
+        Cookies.set("authToken", authToken, { expires: 7 }); // 將 Token 存放在 Cookies 中，有效期為 7 天
+        navigate("/MemberHomePage");
       } else {
         setErrorMessage(response.data.message);
       }
@@ -41,45 +46,42 @@ const UserLogin = () => {
     }
   };
 
-  const verifyToken = async () => {
+  const verifyToken = async (token) => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/user/check`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: token,
-          },
-        }
+      axios.defaults.headers.common["Authorization"] = token;
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/user/check`
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("令牌验证成功");
-        console.log(data.user); // 可以根据需要处理用户信息
-        navigate("/MemberHomePage");
+      if (response.data.success) {
+        console.log("請求成功:", response.data);
+        const data = response.data;
+        console.log("已驗證 Token");
+        console.log(data.user);
+        // 可以根據需要處理使用者資訊
       } else {
-        const errorData = await response.json();
-        console.log("令牌验证失败");
-        console.log(errorData.message); // 显示错误消息或执行其他错误处理
+        console.log("Token 錯誤，請重新登入");
+        console.log(response.data.message);
+        // 顯示錯誤訊息或執行其他錯誤處理
       }
     } catch (error) {
+      console.error("請求失敗:", error);
+
       console.error(error);
-      setErrorMessage("发生了一个错误，请稍后重试");
+      setErrorMessage("發生了一個錯誤，請稍後重試");
     }
   };
 
   return (
-    <div style={{ backgroundColor: "#F7F4E9" }}>
-      <MemberHeader />
-      <div className="wrapper">
+    <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
+      <div className="wrapper" style={{ backgroundColor: "#F7F4E9" }}>
         <div>
           <h3 id="titleH3">會員登入</h3>
         </div>
         <div style={{ margin: "20px" }}>
           <img id="logoimg" src="/image/logo/logo.png" alt="" />
         </div>
-
         <div className="container">
           <div className="userInfo row">
             <form id="loginForm" className="col-12" onSubmit={handleSubmit}>
@@ -122,6 +124,7 @@ const UserLogin = () => {
                     className="userInput"
                     type="text"
                     name="userName"
+                    placeholder="請輸入帳號(E-mail信箱)"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -141,6 +144,7 @@ const UserLogin = () => {
                     className="userInput"
                     type="password"
                     name="userName"
+                    placeholder="請輸入密碼(6~16位英數字)"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -171,5 +175,4 @@ const UserLogin = () => {
     </div>
   );
 };
-
 export default UserLogin;

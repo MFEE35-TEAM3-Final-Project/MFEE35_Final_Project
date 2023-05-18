@@ -1,0 +1,48 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
+
+
+
+
+.favorite_list {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    margin: 3% auto;
+    padding: 3%;
+    background-color: #DCDBD7;
+    border-radius: 20px;
+}
+
+.favorite_list .image {
+    flex: 0 0 20%;
+    height: 100%;
+}
+
+.favorite_list .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.favorite_list .info {
+    flex: 1;
+    padding-left: 2%;
+}
+
+.favorite_list .buttons {
+    display: flex;
+    justify-content: flex-end;
+    /* margin-top: 10px; */
+}
+
+.favorite_list .buttons button {
+    margin-left: 10px;
+}
+
+.favorite_nolist {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    background-color: #DCDBD7;
+}

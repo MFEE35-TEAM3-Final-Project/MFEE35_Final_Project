@@ -92,7 +92,9 @@ function Blog() {
                   <div className="carousel-item newimgbox">
                     <div className="carousel-imgtext-box">
                       <h1>減肥餐自己煮！5個低卡便當食譜公開!</h1>
-                      <span>烤雞腿、糖醋排骨通通有，熱量低又美味減肥超有感...</span>
+                      <span>
+                        烤雞腿、糖醋排骨通通有，熱量低又美味減肥超有感...
+                      </span>
                     </div>
                     <img
                       src={require("../image/blog/carousel2.jpg")}
@@ -275,8 +277,7 @@ function Blog() {
         </div>
         <div className="articlelist">
           <div className="row g-0  tab-content d-flex flex-column">
-            <div
-              className="col-lg-8 col-md-12   tab-pane show active flex-wrap">
+            <div className="col-lg-8 col-md-12   tab-pane show active flex-wrap">
               {articles.map((article) => (
                 <div
                   key={article.article_id}
@@ -314,28 +315,29 @@ function Blog() {
                 <nav className="" aria-label="Page navigation">
                   <ul className=" pagination">
                     <li className="">
-                    <button
-                        class={`${
-                           pagination.current_page === 1 ? "pagenone" : "pageButton-next"
+                      <button
+                        className={`${
+                          pagination.current_page === 1
+                            ? "pagenone"
+                            : "pageButton-next"
                         }`}
                         onClick={() =>
                           handleClickPage(pagination.current_page - 1)
                         }
                       >
-                        <GrPrevious/>
+                        <GrPrevious />
                       </button>
                     </li>
                     {Array.from(
                       { length: pagination.total_pages },
                       (item, index) => index + 1
                     ).map((pageNumber) => (
-                      <li
-                        key={pageNumber}
-                        className="pageButton-li "
-                      >
+                      <li key={pageNumber} className="pageButton-li ">
                         <button
                           className={`pageButton  ${
-                            pageNumber === pagination.current_page ? "pagefucus" : ""
+                            pageNumber === pagination.current_page
+                              ? "pagefucus"
+                              : ""
                           }`}
                           onClick={() => handleClickPage(pageNumber)}
                         >
@@ -344,16 +346,18 @@ function Blog() {
                       </li>
                     ))}
 
-                    <li class="">
+                    <li className="">
                       <button
-                       className={`${
-                        pagination.current_page === pagination.total_pages ? "pagenone" : "pageButton-next"
-                     }`}
+                        className={`${
+                          pagination.current_page === pagination.total_pages
+                            ? "pagenone"
+                            : "pageButton-next"
+                        }`}
                         onClick={() =>
                           handleClickPage(pagination.current_page + 1)
                         }
                       >
-                        <GrNext/>
+                        <GrNext />
                       </button>
                     </li>
                   </ul>

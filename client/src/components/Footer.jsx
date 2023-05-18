@@ -1,12 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import logo from "../image/logo/logo.png";
+import insta from "../image/footer/insta.webp";
+import fb from "../image/footer/fb.webp";
+import twitter from "../image/footer/twitter.png";
+import line from "../image/footer/line.png";
+
 const footer = () => {
   return (
     <div id="footer">
       <div className="footer">
         <div className="iconGroup">
-          <img className="logoPic" src="/img/footer/logo.png" alt="LOGO" />
+          <img className="logoPic" src={logo} alt="LOGO" />
           <div className="socialSite">
             <Link className="sitepicGroup" to="#">
               <img

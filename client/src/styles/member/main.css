@@ -54,9 +54,6 @@ button:hover {
     box-sizing: border-box;
 }
 
-.col-12>div {
-    margin: 20px;
-}
 
 #loginForm>div>.col-4 {
     text-align: right;
@@ -72,9 +69,5 @@ button:hover {
     border: none;
     background-color: #DCDBD7;
     margin-bottom: 20px;
-}
-
-body>div {
-    text-align: center;
 }
 
