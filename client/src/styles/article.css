@@ -176,6 +176,17 @@
    border-bottom: 1px solid #F2EBEB;
    
 }
+.userText-notlogin{
+    padding: 50px 0;
+    border-bottom: 1px solid #F2EBEB;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    /* filter: blur(30px); */
+ }
+
 .userName{
     font-size: 20px;
     
