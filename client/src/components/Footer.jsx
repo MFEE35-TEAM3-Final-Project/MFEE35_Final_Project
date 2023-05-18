@@ -9,20 +9,32 @@ const footer = () => {
           <img className="logoPic" src="/img/footer/logo.png" alt="LOGO" />
           <div className="socialSite">
             <Link className="sitepicGroup" to="#">
-              <img className="sitePic" src="/img/footer/insta.webp" alt="Ins" />
-            </Link>
-            <Link className="sitepicGroup" to="#">
-              <img className="sitePic" src="/img/footer/fb.webp" alt="FB" />
+              <img
+                className="sitePic"
+                src={require("../image/footer/insta.webp")}
+                alt="Ins"
+              />
             </Link>
             <Link className="sitepicGroup" to="#">
               <img
                 className="sitePic"
-                src="/img/footer/twitter.png"
+                src={require("../image/footer/fb.webp")}
+                alt="FB"
+              />
+            </Link>
+            <Link className="sitepicGroup" to="#">
+              <img
+                className="sitePic"
+                src={require("../image/footer/twitter.png")}
                 alt="Twitter"
               />
             </Link>
             <Link className="sitepicGroup" to="#">
-              <img className="sitePic" src="/img/footer/line.png" alt="Line" />
+              <img
+                className="sitePic"
+                src={require("../image/footer/line.png")}
+                alt="Line"
+              />
             </Link>
           </div>
         </div>
