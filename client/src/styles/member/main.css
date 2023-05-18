@@ -26,9 +26,10 @@
     border: 1px solid #000000;
     border-radius: 20px;
     width: 70%;
+
 }
 
-button:hover {
+.mysubmit:hover {
     opacity: 0.9;
 }
 
@@ -44,26 +45,30 @@ button:hover {
     margin: 30px 0px;
 }
 
-#loginForm #register1Form {
+#loginForm #registerForm {
     padding: 20px 0;
-
 }
 
 .userInput {
     border: 1px solid #ccc;
     box-sizing: border-box;
+    text-align: left;
+    width: 80%;
 }
 
+
+#loginForm>div {
+    margin: 20px;
+}
 
 #loginForm>div>.col-4 {
     text-align: right;
 }
 
-.userInput {
-    text-align: left;
-    width: 100%;
-}
 
+#registerForm>div>.col-4 {
+    text-align: right;
+}
 
 .userbtn {
     border: none;
@@ -71,3 +76,16 @@ button:hover {
     margin-bottom: 20px;
 }
 
+#registerForm>div {
+    margin: 20px 0;
+}
+
+
+
+.myMember>div {
+    text-align: center;
+}
+
+#exerciseSelect {
+    width: 80%;
+}

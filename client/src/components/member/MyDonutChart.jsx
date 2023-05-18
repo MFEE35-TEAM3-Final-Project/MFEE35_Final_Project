@@ -50,11 +50,11 @@ function MyDonutChart() {
     return () => {
       donutChart.destroy();
     };
-  }, []); 
+  }, []);
 
   return (
-    <div className="myBarChart col-6">
-      <canvas ref={donutChartRef} id="donutChart"></canvas>
+    <div className="memberBarChart col-6">
+      <canvas ref={donutChartRef} id="memberDonutChart"></canvas>
     </div>
   );
 }

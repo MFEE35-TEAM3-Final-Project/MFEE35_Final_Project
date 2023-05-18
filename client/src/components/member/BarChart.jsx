@@ -71,9 +71,9 @@ function MyBarChart() {
   }, []);
 
   return (
-    <div className="myBarChart col-9">
+    <div className="memberBarChart col-9">
       <div>112/04/24~112/04/30 熱量攝取</div>
-      <canvas ref={barChartRef} id="barChart"></canvas>
+      <canvas ref={barChartRef} id="memberBarChart"></canvas>
     </div>
   );
 }

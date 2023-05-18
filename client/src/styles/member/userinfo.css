@@ -1,8 +1,17 @@
 @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
 @import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
 
-#memberInfoForm>div{
+#userInfoForm {
+    text-align: left;
+}
+
+#memberInfoForm>div {
     text-align: right;
+}
+
+/* 待修 */
+#userInfoForm>div {
+    margin: 20px;
 }
 
 .userInfo {
@@ -26,11 +35,13 @@
     min-width: 40px;
 }
 
-select {
+/* 待修 */
+#exerciseSelect {
     width: 80%;
 }
 
-form {
+/* 待修 */
+#userInfoForm {
     padding: 20px 0;
 }
 
@@ -51,7 +62,12 @@ form {
 
 }
 
-button:hover {
+/* 待改 */
+.infoupdateBtn:hover {
+    opacity: 0.9;
+}
+
+#upDateBtn:hover {
     opacity: 0.9;
 }
 
@@ -61,7 +77,7 @@ button:hover {
     box-sizing: border-box;
 }
 
-#upDateBtn{
+#upDateBtn {
     box-sizing: border-box;
     display: block;
     flex-direction: row;

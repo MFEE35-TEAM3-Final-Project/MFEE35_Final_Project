@@ -148,9 +148,9 @@ const UserRegistration = () => {
 
         <div className="container">
           <div className="userInfo row">
-            <form id="register1Form" className="col-12" onSubmit={handleSubmit}>
-              <div className="row myMember row">
-                <div className="col-6">
+            <form id="registerForm" className="col-12" onSubmit={handleSubmit}>
+              <div className="row myMember">
+                <div className="col-6" style={{ textAlign: "center" }}>
                   <Link
                     to="/LoginPage"
                     className="userbtn"
@@ -163,7 +163,7 @@ const UserRegistration = () => {
                     會員登入
                   </Link>
                 </div>
-                <div className="col-6">
+                <div className="col-6" style={{ textAlign: "center" }}>
                   <Link
                     to="/MemberRegister1"
                     className="userbtn"
@@ -362,6 +362,7 @@ const UserRegistration = () => {
                 </div>
                 <div className="col-6">
                   <select
+                    id="exerciseSelect"
                     name="userSport"
                     value={userSport}
                     onChange={handleChange}
@@ -378,7 +379,7 @@ const UserRegistration = () => {
               </div>
 
               <div className="row">
-                <div>
+                <div style={{ textAlign: "center" }}>
                   <button
                     type="submit"
                     className="mysubmit"

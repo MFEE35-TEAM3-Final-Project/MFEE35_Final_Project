@@ -25,7 +25,7 @@ function MemberHomePage() {
           <div className="row memberInfo">
             <form id="memberHomeForm" className="col-12" action="">
               <div className="row">
-                <div className="col-4">
+                <div className="col-4 memberHomePageInfo">
                   <p style={{ minWidth: "80px" }} htmlFor="userNumber">
                     會員編號：
                   </p>
@@ -38,7 +38,10 @@ function MemberHomePage() {
                     運動頻率：
                   </p>
                 </div>
-                <div className="col-4" style={{ textAlign: "left" }}>
+                <div
+                  className="col-4 memberHomePageInfo"
+                  style={{ textAlign: "left" }}
+                >
                   <p>20230425-001</p>
                   <p>皮卡丘</p>
                   <p>男性</p>
@@ -130,13 +133,13 @@ function MemberHomePage() {
               </div>
             </div>
 
-            <div className="myBtn">
+            <div className="memberHomePageBtn">
               <button className="foodRecordBtn">紀錄飲食 GO</button>
             </div>
 
             <BarChart />
 
-            <div className="myBtn">
+            <div className="memberHomePageBtn">
               <Link to="/MemberChartList">
                 <button className="foodRecordBtn">查看更多數據</button>
               </Link>

@@ -34,14 +34,54 @@ function MemberData() {
         }
       );
 
+      console.log(response.data);
+
       if (response.data.success) {
         const userData = response.data.user;
         setUser(userData);
-        setUserHeight(userData.userHeight);
-        setUserWeight(userData.userWeight);
-        setExerciseLevel(userData.exerciseLevel);
+        // setUserHeight(userData.Height);
+        // setUserWeight(userData.userWeight);
+        // setExerciseLevel(userData.exerciseLevel);
         setUserPhone(userData.phone);
         setUserAddress(userData.address);
+
+        console.log(userHeight); // 检查是否有正确的身高值
+
+        // GET請求獲得運動紀錄數據
+        const recordsResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+          {
+            params: {
+              start_date: "2023-05-18",
+              end_date: "2023-05-18",
+            },
+            headers: {
+              Authorization: jwtToken,
+            },
+          }
+        );
+
+        console.log(recordsResponse.data);
+
+        if (recordsResponse.data.success) {
+          const records = recordsResponse.data.records;
+          // 處理紀錄數據，例如：
+          records.forEach((record) => {
+            const weight = record.weight;
+            const height = record.height;
+            const exerciseLevel = record.exercise_level;
+
+            // console.log(`Weight: ${weight}`);
+            // console.log(`Height: ${height}`);
+            // console.log(`Exercise Level: ${exerciseLevel}`);
+
+            setUserHeight(height);
+            setUserWeight(weight);
+            setExerciseLevel(exerciseLevel);
+          });
+        } else {
+          console.error(recordsResponse.data.message);
+        }
       } else {
         console.error(response.data.message);
       }
@@ -56,9 +96,6 @@ function MemberData() {
 
   const handleSave = async () => {
     try {
-      // 處理保存邏輯
-
-      // 將保存後的數據更新到後端
       const updatedData = {
         userHeight,
         userWeight,
@@ -73,7 +110,7 @@ function MemberData() {
       );
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/user/update`,
+        `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
         updatedData,
         {
           headers: {
@@ -99,7 +136,7 @@ function MemberData() {
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
       <MemberHeader />
-      <div className="wapper">
+      <div className="wrapper">
         <div className="memberTitle">
           <h3 id="titleH3">會員資料</h3>
         </div>
@@ -107,7 +144,7 @@ function MemberData() {
         {/* 表單 */}
         <div className="container">
           <div className="userInfo row">
-            <form className="col-12" action="">
+            <form className="col-12" action="" id="userInfoForm">
               {/* 會員編號 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
@@ -191,9 +228,8 @@ function MemberData() {
                       required
                     />
                   ) : (
-                    <p>{user && user.userHeight}</p>
+                    <p>{user && userHeight} cm</p>
                   )}
-                  <br />
                 </div>
               </div>
 
@@ -213,9 +249,8 @@ function MemberData() {
                       required
                     />
                   ) : (
-                    <p>{user && user.userWeight}</p>
+                    <p>{user && userWeight} Kg</p>
                   )}
-                  <br />
                 </div>
               </div>
 
@@ -229,6 +264,7 @@ function MemberData() {
                   {isEditing ? (
                     <select
                       className="userInput"
+                      id="exerciseSelect"
                       name="exerciseLevel"
                       value={exerciseLevel}
                       onChange={(e) => setExerciseLevel(e.target.value)}
@@ -241,9 +277,16 @@ function MemberData() {
                       <option value="1.9">長時間運動或體力勞動工作</option>
                     </select>
                   ) : (
-                    <p>{user && user.exerciseLevel}</p>
+                    <p>
+                      {user && exerciseLevel === 1.2 && "幾乎不運動"}
+                      {user && exerciseLevel === 1.375 && "每週運動 1-3 天"}
+                      {user && exerciseLevel === 1.55 && "每週運動 3-5 天"}
+                      {user && exerciseLevel === 1.72 && "每週運動 6-7 天"}
+                      {user &&
+                        exerciseLevel === 1.9 &&
+                        "長時間運動或體力勞動工作"}
+                    </p>
                   )}
-                  <br />
                 </div>
               </div>
 

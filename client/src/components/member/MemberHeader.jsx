@@ -54,22 +54,22 @@ function MemberHeader() {
           <Link to="/calculator">
             <li>計算機</li>
           </Link>
-          <Link to="/diet-record">
+          <Link to="/foodRecord">
             <li>飲食紀錄</li>
           </Link>
           <Link to="/MemberChartList">
             <li>數據圖表</li>
           </Link>
-          <Link to="/tracking-list">
+          <Link to="/MemberFav">
             <li>追蹤清單</li>
           </Link>
-          <Link to="/order-history">
+          <Link to="/MemberOrders">
             <li>訂單查詢</li>
           </Link>
           <Link to="/blog">
             <li>部落格</li>
           </Link>
-          <Link to="/shop">
+          <Link to="/store">
             <li>商城</li>
           </Link>
         </div>
