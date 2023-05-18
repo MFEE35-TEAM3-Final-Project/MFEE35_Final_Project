@@ -136,22 +136,45 @@
 }
 
 .goodsName {
-    font-size: 40px;
-    padding-bottom: 40px;
-    margin-bottom: -10px;
-    color: #707D90;
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: -5px;
+    color: #3e454f;
 }
 
 .goodsDes {
     font-size: 16px;
     margin-bottom: 40px;
 }
+.goodsTitle{
+    display: flex;
+    align-items: center;
+}
+
+.activityTitle{
+    font-size: 2vw;
+    color: #936109;
+    margin-right: 1vw;
+}
+
+.activityName{
+    font-size: 2vw;
+    color: #000000;
+}
 
 .goodsPrice {
-    font-size: 40px;
+    font-size: 4vw;
     margin-bottom: 5px;
     font-family: 'Allura', cursive;
+    margin-right: 1vw;
+}
 
+.goodsSPrice {
+    font-size: 2vw;
+    margin-bottom: 5px;
+    font-family: 'Allura', cursive;
+    color: #C5A188;
+    text-decoration: line-through;
 }
 
 .bigGroup {
@@ -246,8 +269,17 @@
     text-decoration: none;
 }
 
-.mycardPrice {
+.mycardSPrice {
     color: black;
+    font-family: 'Allura', cursive;
+    margin-right: 1vw;
+    font-size: 2vw;
+}
+
+.mycardPrice {
+    color: #C5A188;
+    text-decoration: line-through;
+    font-family: 'Allura', cursive;
 }
 
 .footer {

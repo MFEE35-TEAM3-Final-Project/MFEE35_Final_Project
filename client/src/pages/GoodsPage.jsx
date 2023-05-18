@@ -3,23 +3,32 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import DoughnutComponent from "../components/DoughnutChart";
+import Cookies from "js-cookie";
 import "../styles/goods.css";
-// axios.defaults.headers.common["Authorization"] =
-//   "JWT " +
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI0MTUyNjA3ODcyIiwiZW1haWwiOiJBQUFBQUFrYWthQHRlc3QuY29tIiwiZXhwIjoxNjkyNDMwNjQxNTg2LCJpYXQiOjE2ODM3OTA2NDF9.u2OHIdFXKuYtXzhbib35iLVwarUZa39zMcEFCBJ82pg";
 
 const GoodsPage = () => {
-  const { productId, foodId } = useParams();
+  // 設定取得的商品ID、食物ID
+  const { productid, foodId } = useParams();
+  // 設定取得的商品
   const [onlyOneProducts, setOnlyOneProducts] = useState([]);
-  const [ImageList, setImageList] = useState([]);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  // 設定取得的食物成份
   const [onlyOneFoods, setOnlyOneFoods] = useState([]);
+  // 設定可點選的4張圖片陣列
+  const [ImageList, setImageList] = useState([]);
+  // 設定圖片陣列的index
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  // 設定加入購物車的數量
   const [quantity, setQuantity] = useState(1);
+  // 設定推薦商品
   const [promotionGoods, setPromotionGood] = useState([]);
+  // 將推薦商品設定為亂數
+  const shuffledGoods = promotionGoods.sort(() => Math.random() - 0.5); //亂數
+  // 捨定cookie的值
+  const [cartData, setCartData] = useState([]);
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/product/getProductsById?productId=${productId}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProductsById?productId=${productid}`
       )
       .then((res) => {
         // console.log(res);
@@ -42,12 +51,16 @@ const GoodsPage = () => {
       .get(`${process.env.REACT_APP_API_URL}/api/product/getProducts`)
       .then((res) => {
         // console.log(res);
-        setPromotionGood(res.data.results.slice(0, 4));
+        setPromotionGood(res.data.results);
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
+  useEffect(() => {
+    setQuantity(1);
+  }, [productid]);
+
   const prevButtonHandler = () => {
     setActiveImageIndex((prevIndex) => {
       let newIndex = prevIndex - 1;
@@ -56,6 +69,86 @@ const GoodsPage = () => {
       }
       return newIndex;
     });
+  };
+
+  // const handleAddToCart = async () => {
+  //   try {
+  //     const token =
+  //       "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+  //     axios.defaults.headers.common["Authorization"] = `${token}`;
+  //     const response = await axios.post(
+  //       `${process.env.REACT_APP_API_URL}/api/user/cart/add`,
+  //       {
+  //         productid: productid,
+  //         quantity: quantity,
+  //       }
+  //     );
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  const handleAddToCart = () => {
+    const token =
+      "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+    axios.defaults.headers.common["Authorization"] = `${token}`;
+    let x = axios.defaults.headers.common["Authorization"];
+    if (x) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
+          productid: productid,
+          quantity: quantity,
+        })
+        .then((res) => {
+          // console.log(res);
+          alert("已成功加入購物車");
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      const expires = 7;
+
+      // 從 cookies 取得之前的購物車資料
+      const cartDataFromCookie = Cookies.get("cartData");
+      let existingCartData = [];
+      if (cartDataFromCookie) {
+        existingCartData = JSON.parse(cartDataFromCookie);
+      }
+
+      // 將新的資料加入進去
+      const addingCartData = {
+        productid: productid,
+        quantity: quantity,
+      };
+      existingCartData.push(addingCartData);
+
+      // 將整個購物車資料更新回 cookies
+      Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
+      setCartData(existingCartData);
+    }
+  };
+  const handleAddToFavorite = () => {
+    const token =
+      "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+    axios.defaults.headers.common["Authorization"] = `${token}`;
+    let x = axios.defaults.headers.common["Authorization"];
+    if (x) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/user/favorite`, {
+          productid: productid,
+        })
+        .then((res) => {
+          // console.log(res);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      alert("請先登入");
+    }
   };
 
   const nextButtonHandler = () => {
@@ -86,24 +179,11 @@ const GoodsPage = () => {
       setQuantity(value);
     }
   };
-  // const addingCartData = {
-  //   productid: { productId },
-  //   quantity: { quantity },
-  //   // productid: "123",
-  //   // quantity: "2",
-  // };
 
-  // axios
-  //   .post(
-  //     `${process.env.REACT_APP_API_URL}/api/userRoutes/cart/add`,
-  //     addingCartData
-  //   )
-  //   .then((res) => {
-  //     console.log(res.data); // 處理回傳的資料
-  //   })
-  //   .catch((err) => {
-  //     console.error(err); // 處理錯誤訊息
-  //   });
+  // const handleDeleteCartData = () => {
+  //   Cookies.remove("cartData");
+  //   setCartData([]);
+  // };
 
   return (
     <div>
@@ -113,9 +193,12 @@ const GoodsPage = () => {
           rel="stylesheet"
         />
       </Helmet>
-      <h1>
-        商品頁面 - 商品 ID：{productId} 跟 食物 ID{foodId}
-      </h1>
+      {/* <h1>
+        商品頁面 - 商品 ID：{productid} 跟 食物 ID{foodId}
+      </h1> */}
+      {/* <h1>
+        <button onClick={handleDeleteCartData}>刪除購物車資料</button>
+      </h1> */}
       <div className="goodstype">
         <div className="diet">
           <a href="http://localhost:3000/goods" className="myDiet">
@@ -164,9 +247,30 @@ const GoodsPage = () => {
           </div>
           <div className="goodsText">
             <div className="gGroup">
-              <h2 className="goodsName">建議售價</h2>
-              <p className="goodsPrice">{onlyOneProduct.price}</p>
-              {/* <p className="goodsPrice">1200</p> */}
+              {onlyOneProducts.activityId !== "" ? (
+                <div>
+                  <div className="goodsTitle">
+                    <span className="activityTitle">活動商品:</span>
+                    <span className="activityName">{onlyOneProduct.name}</span>
+                  </div>
+                  <h2 className="goodsName">建議售價</h2>
+                  <span className="goodsPrice">
+                    NT$ {onlyOneProduct.afterPrice}
+                  </span>
+
+                  <span className="goodsSPrice">
+                    NT$ {onlyOneProduct.price}
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <p>{onlyOneProduct.name}</p>
+                  <h2 className="goodsName">建議售價</h2>
+                  <span className="goodsSPrice">
+                    NT$ {onlyOneProduct.price}
+                  </span>
+                </div>
+              )}
             </div>
             <button id="deBtn" className="increaseBtn" onClick={handleDecrease}>
               一
@@ -185,13 +289,24 @@ const GoodsPage = () => {
             <br />
             <br />
             <div className="addingGroup">
-              <button className="cartIn">加入購物車</button>
-              <button className="buyIn">立即購買</button>
+              <button className="cartIn" onClick={handleAddToCart}>
+                加入購物車
+              </button>
+              <Link
+                to={"/cart"}
+                rel="stylesheet"
+                className="buyIn"
+                onClick={handleAddToCart}
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                立即購買
+              </Link>
+              {/* <button className="buyIn" onClick={handleAddToCart}>立即購買</button> */}
             </div>
             <br />
             <br />
-            <button className="joinFollow">
-              <img src="../../public/image/goods/heart.png" alt="最愛" />
+            <button className="joinFollow" onClick={handleAddToFavorite}>
+              <img src={require("../image/goods/heart.png")} alt="最愛" />
               加入最愛
             </button>
           </div>
@@ -221,7 +336,7 @@ const GoodsPage = () => {
       <br />
       <br />
       <div className="myGoodscontain nutriChart">
-        <DoughnutComponent foodId={foodId} productId={productId} />
+        <DoughnutComponent foodId={foodId} productId={productid} />
       </div>
       <br />
       <br />
@@ -246,18 +361,33 @@ const GoodsPage = () => {
       <br />
       <br />
       <div className="recommendBar">
-        {promotionGoods.map((promotionGood, indexD) => (
-          <div key={indexD} className="myGoodscontain recomGoods">
-            <Link
-              to={`http://localhost:3000/goods/${promotionGood.productid}/${promotionGood.activityId}/${promotionGood.food_id}`}
-              className="jumpPage"
-            >
-              <img id="myGoodCard" src={promotionGood.image[0]} alt="推播圖1" />
-              <p className="fw-semibold cardTopic">{promotionGood.name}</p>
-              <span className="mycardPrice">{promotionGood.price}</span>
-            </Link>
-          </div>
-        ))}
+        {shuffledGoods
+          .map((promotionGood, indexD) => (
+            <div key={indexD} className="myGoodscontain recomGoods">
+              <Link
+                to={`http://localhost:3000/goods/${promotionGood.productid}/${promotionGood.activityId}/${promotionGood.food_id}`}
+                className="jumpPage"
+              >
+                <img
+                  id="myGoodCard"
+                  src={promotionGood.image[0]}
+                  alt="推播圖1"
+                />
+                <p className="fw-semibold cardTopic">{promotionGood.name}</p>
+                {promotionGood.activityId !== "" ? (
+                  <div>
+                    <span className="mycardSPrice">
+                      NT$ {promotionGood.afterPrice}
+                    </span>
+                    <span className="mycardPrice">{promotionGood.price}</span>
+                  </div>
+                ) : (
+                  <span className="mycardPrice">NT$ {promotionGood.price}</span>
+                )}
+              </Link>
+            </div>
+          ))
+          .slice(0, 4)}
       </div>
     </div>
   );

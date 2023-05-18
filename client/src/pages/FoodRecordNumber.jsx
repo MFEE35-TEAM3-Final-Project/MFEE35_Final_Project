@@ -205,7 +205,6 @@ function FoodRecordNumber() {
         brProtein += protein * qty;
         brSaturatedFat += saturated_fat * qty;
         brSodium += sodium * qty;
-        setBrTotalCalories(brCalories);
         setBrTotalCarbohydrate(brCarbohydrate);
         setBrTotalProtein(brProtein);
         setBrTotalSaturatedFat(brSaturatedFat);

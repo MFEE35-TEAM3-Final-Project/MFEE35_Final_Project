@@ -147,7 +147,10 @@
     text-decoration: none;
 }
 
-
+.storePriceStyle{
+    display: flex;
+    justify-content: center;
+}
 
 .cardPrice {
     color: #C5A188;
@@ -159,6 +162,7 @@
     color: black;
     font-family: 'Allura', cursive;
     font-size: 2vw;
+    margin-right: 2vw;
 }
 
 .squareBtn,
@@ -308,4 +312,9 @@
 .magnifierBlock>img{
     width: 40px;
     height: 40px;
+}
+
+.storePageSelect{
+    color: burlywood;
+    font-weight: bolder;
 }

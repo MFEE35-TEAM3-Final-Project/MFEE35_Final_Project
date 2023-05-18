@@ -64,10 +64,10 @@ const StorePage = () => {
 
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
       )
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         setProducts(res.data.results);
         setTotalPage(res.data.totalPages);
       })
@@ -93,7 +93,7 @@ const StorePage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProducts?&activityId=${currentActivity}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProducts?&activityId=${currentActivity}&category=${currentCategory}`
         // 動態生成頁數
       )
       .then((res) => {
@@ -119,7 +119,7 @@ const StorePage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
         // 動態生成頁數
       )
       .then((res) => {
@@ -133,19 +133,23 @@ const StorePage = () => {
   }, [currentPage]);
   const allProductCategory = () => {
     setCurrentCategory("");
+    setCurrentActivity("");
     setUserSelectWay("全站商品");
   };
   const wheyProteinCategory = () => {
-    setCurrentCategory(1);
+    setCurrentCategory("乳清蛋白");
+    setCurrentActivity("");
     setUserSelectWay("乳清蛋白");
   };
   const gainMuscleCategory = () => {
-    setCurrentCategory(2);
+    setCurrentCategory("雞胸肉");
+    setCurrentActivity("");
     setUserSelectWay("增肌減脂套餐");
   };
   const changeActivityID = () => {
     setCurrentActivity({ second }.second);
     setUserSelectWay(eventTitles[second - 1]);
+    setCurrentCategory("");
   };
 
   return (
@@ -240,14 +244,14 @@ const StorePage = () => {
             >
               <img
                 className="squareImg"
-                src="./image/store/changebtn1.png"
+                src={require("../image/store/changebtn1.png")}
                 alt="squarebtn"
               />
             </button>
             <button id="cardBl" className="listBtn" onClick={handleCardBlClick}>
               <img
                 className="listImg"
-                src="./image/store/changebtn2.webp"
+                src={require("../image/store/changebtn2.webp")}
                 alt="listbtn"
               />
             </button>
@@ -267,7 +271,7 @@ const StorePage = () => {
             <div>
               <img
                 className="arrowImg"
-                src="./image/store/backToTop.png"
+                src={require("../image/store/backToTop.png")}
                 alt="箭頭"
               />
             </div>
@@ -281,21 +285,24 @@ const StorePage = () => {
       <br />
       <div className="container">
         <div className="row">
-          <h2>
+          <h2 className="storePageSelect">
             篩選條件:
             {userSelectWay}
           </h2>
           {products.map((product) => (
             <div key={product.productid} className={columnClass}>
               <Link
-                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
                 <div className="mycardIcon">
                   <img id="myCard" src={product.image[0]} alt="商品大圖" />
                   <span className="hiddenIcon">
                     <div className="magnifierBlock">
-                      <img src="./image/store/ magnifier.png" alt="放大鏡" />
+                      <img
+                        src={require("../image/store/magnifier.png")}
+                        alt="放大鏡"
+                      />
                     </div>
                   </span>
                 </div>
@@ -303,9 +310,14 @@ const StorePage = () => {
 
               <br />
               <Link
-                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
+                {product.activityId !== "0" ? (
+                  <p className="storePageSelect">活動商品</p>
+                ) : (
+                  ""
+                )}
                 <div>
                   <p className="fw-semibold cardTopic">{product.name}</p>
                   <p className="cardText">{product.description}</p>
@@ -313,11 +325,19 @@ const StorePage = () => {
               </Link>
 
               <Link
-                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
-                <span className="cardSprice">{product.price}</span>
-                {/* <span className="cardPrice">{goodPrices}</span> */}
+                {product.activityId !== "" ? (
+                  <div className="storePriceStyle">
+                    <span className="cardSprice">NT$ {product.afterPrice}</span>
+                    <span className="cardPrice">NT$ {product.price}</span>
+                  </div>
+                ) : (
+                  <div className="storePriceStyle">
+                    <span className="cardSprice">NT$ {product.price}</span>
+                  </div>
+                )}
               </Link>
             </div>
           ))}
