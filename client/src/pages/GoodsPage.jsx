@@ -102,7 +102,7 @@ const GoodsPage = () => {
           quantity: quantity,
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
         })
         .catch((err) => {
           console.error(err);
@@ -138,10 +138,9 @@ const GoodsPage = () => {
       axios
         .post(`${process.env.REACT_APP_API_URL}/api/user/favorite`, {
           productid: productid,
-          // quantity: quantity,
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
         })
         .catch((err) => {
           console.error(err);
@@ -247,9 +246,30 @@ const GoodsPage = () => {
           </div>
           <div className="goodsText">
             <div className="gGroup">
-              <h2 className="goodsName">建議售價</h2>
-              <p className="goodsPrice">{onlyOneProduct.price}</p>
-              {/* <p className="goodsPrice">1200</p> */}
+              {onlyOneProducts.activityId !== "" ? (
+                <div>
+                  <div className="goodsTitle">
+                    <span className="activityTitle">活動商品:</span>
+                    <span className="activityName">{onlyOneProduct.name}</span>
+                  </div>
+                  <h2 className="goodsName">建議售價</h2>
+                  <span className="goodsPrice">
+                    NT$ {onlyOneProduct.afterPrice}
+                  </span>
+
+                  <span className="goodsSPrice">
+                    NT$ {onlyOneProduct.price}
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <p>{onlyOneProduct.name}</p>
+                  <h2 className="goodsName">建議售價</h2>
+                  <span className="goodsSPrice">
+                    NT$ {onlyOneProduct.price}
+                  </span>
+                </div>
+              )}
             </div>
             <button id="deBtn" className="increaseBtn" onClick={handleDecrease}>
               一
@@ -276,6 +296,7 @@ const GoodsPage = () => {
                 rel="stylesheet"
                 className="buyIn"
                 onClick={handleAddToCart}
+                style={{ textDecoration: "none", color: "white" }}
               >
                 立即購買
               </Link>
@@ -352,7 +373,16 @@ const GoodsPage = () => {
                   alt="推播圖1"
                 />
                 <p className="fw-semibold cardTopic">{promotionGood.name}</p>
-                <span className="mycardPrice">{promotionGood.price}</span>
+                {promotionGood.activityId !== "" ? (
+                  <div>
+                    <span className="mycardSPrice">
+                      NT$ {promotionGood.afterPrice}
+                    </span>
+                    <span className="mycardPrice">{promotionGood.price}</span>
+                  </div>
+                ) : (
+                  <span className="mycardPrice">NT$ {promotionGood.price}</span>
+                )}
               </Link>
             </div>
           ))

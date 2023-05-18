@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 import "../styles/shoppingcart.css";
@@ -97,7 +97,7 @@ const ShoppingcartPage = () => {
 
   useEffect(() => {
     const allAddress = selectedCity + selectedTownship + detailAddress;
-    console.log(allAddress);
+    // console.log(allAddress);
     if (allAddress) {
       order.shipping_address = allAddress;
     }
@@ -114,21 +114,160 @@ const ShoppingcartPage = () => {
       order.total_quantity = allQuantity;
       order.total_price = allPrice;
       order.order_details = eachData;
-      // console.log(eachData);
     }
   }, [incomingDatas]);
-  const handleDelete = async (id) => {
-    try {
-      console.log(id);
-      const res = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`
+
+  const [userAddingCartInformation, setUserAddingCartInformation] = useState(0);
+  const [userAddingCartPrice, setUserAddingCartPrice] = useState(0);
+  const [userAddingCartDiscount, setUserAddingCartDiscount] = useState(0);
+  const [userAddingCartOgPrice, setUserAddingCartOgPrice] = useState(0);
+
+  useEffect(() => {
+    // 測試
+    // 折扣後金額
+    let checkingActivityPrice = 0;
+    let totalCheckingActivityPrice = 0;
+    // 已折扣金額
+    let totalDiscount = 0;
+    let checkDiscount = 0;
+    // 元價格
+    let totalOgPrice = 0;
+    let checkOgPrice = 0;
+
+    const meowmm = incomingDatas.map((incomingData, index) => {
+      if (!incomingData.activityId == 0) {
+        checkingActivityPrice = incomingData.afterPrice * incomingData.quantity;
+        checkDiscount = incomingData.discountedPrice * incomingData.quantity;
+        checkOgPrice = incomingData.afterPrice * incomingData.quantity;
+      } else {
+        checkingActivityPrice =
+          parseInt(incomingData.price) * incomingData.quantity;
+        checkOgPrice = incomingData.price * incomingData.quantity;
+      }
+      totalCheckingActivityPrice += checkingActivityPrice;
+      totalDiscount += checkDiscount;
+      totalOgPrice += checkOgPrice;
+      setUserAddingCartDiscount(totalDiscount);
+      setUserAddingCartPrice(totalCheckingActivityPrice);
+      setUserAddingCartOgPrice(totalOgPrice);
+      return (
+        <Fragment key={index}>
+          <div>
+            <div className="goodGroup">
+              <div>
+                <img
+                  className="goodPic"
+                  src={incomingData.image[0]}
+                  alt="第一個商品圖"
+                />
+              </div>
+
+              {incomingData.activityId !== "0" ? (
+                <div className="goodText">
+                  <br />
+                  <span className="inActivityTitle">活動商品</span>
+                  <p className="goodName">{incomingData.name}</p>
+                  <br />
+                  <br />
+                  <span className="goodPrice">
+                    NT$ {incomingData.afterPrice}
+                  </span>
+                  <span className="goodSprice">NT$ {incomingData.price}</span>
+                </div>
+              ) : (
+                <div className="goodText">
+                  <br />
+                  <p className="goodName">{incomingData.name}</p>
+                  <br />
+                  <br />
+                  <p className="goodPrice">NT$ {incomingData.price}</p>
+                </div>
+              )}
+
+              <div className="buttonGroup">
+                <div>
+                  <button
+                    id="decreaseBtn"
+                    onClick={() =>
+                      handleQuantityChange(
+                        incomingData.cart_id,
+                        incomingData.quantity - 1,
+                        incomingData.productid
+                      )
+                    }
+                  >
+                    一
+                  </button>
+                  <input
+                    type="text"
+                    defaultValue={incomingData.quantity}
+                    id="addingGoods"
+                  />
+                  <button
+                    id="increaseBtn"
+                    onClick={() =>
+                      handleQuantityChange(
+                        incomingData.cart_id,
+                        incomingData.quantity + 1,
+                        incomingData.productid
+                      )
+                    }
+                  >
+                    十
+                  </button>
+                </div>
+                <p className="bigPrice">
+                  NT$
+                  <span id="addingGoodsPrice">
+                    {incomingData.activityId !== 0
+                      ? `${incomingData.afterPrice * incomingData.quantity}`
+                      : ` ${
+                          parseInt(incomingData.price) * incomingData.quantity
+                        }`}
+                  </span>
+                </p>
+                {incomingData.activityId !== 0 ? (
+                  <p>
+                    已折扣 NT$
+                    {incomingData.discountedPrice * incomingData.quantity}
+                  </p>
+                ) : (
+                  ""
+                )}
+                {couponInfo ? (
+                  <p>
+                    已使用優惠券
+                    {couponInfo.code}
+                    已折扣 NT$
+                    {parseInt(incomingData.price) -
+                      parseInt(
+                        Math.round(
+                          incomingData.price *
+                            parseFloat(couponInfo.discount_rate)
+                        )
+                      )}
+                  </p>
+                ) : (
+                  ""
+                )}
+              </div>
+              <div>
+                <button
+                  className="deBtn"
+                  onClick={() => handleDelete(incomingData.cart_id)}
+                >
+                  X
+                </button>
+              </div>
+            </div>
+            <hr className="myhr" />
+          </div>
+        </Fragment>
       );
-      console.log(res.data);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    });
+    setUserAddingCartInformation(meowmm);
+  }, [incomingDatas]);
+  //測試
 
   // 釣魚台
   useEffect(() => {
@@ -137,6 +276,25 @@ const ShoppingcartPage = () => {
     setSelectedCityData(selectedCityData);
   }, [selectedCity, cityList]);
 
+  useEffect(() => {
+    if (callCouponApi && !couponApplied) {
+      findCoupon();
+    }
+  }, [callCouponApi, couponApplied]);
+
+  const handleDelete = async (id) => {
+    try {
+      // console.log(id);
+      const res = await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`
+      );
+      // console.log(res.data);
+      alert("已刪除該商品");
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const renderedOptions = selectedCityData.AreaList
     ? selectedCityData.AreaList.map((township, index) => (
         <option key={index} value={township.AreaName}>
@@ -158,11 +316,6 @@ const ShoppingcartPage = () => {
         console.error(error);
       });
   };
-  useEffect(() => {
-    if (callCouponApi && !couponApplied) {
-      findCoupon();
-    }
-  }, [callCouponApi, couponApplied]);
 
   // 發送訂單詳情
   const userPushOrder = () => {
@@ -180,6 +333,8 @@ const ShoppingcartPage = () => {
         })
         .then((res) => {
           console.log(res);
+          alert("已送出訂單");
+          window.location.reload();
         })
         .catch((error) => {
           // console.error(error);
@@ -208,6 +363,7 @@ const ShoppingcartPage = () => {
       } else {
         setCoupons([...coupons, res.data.message]);
         setCouponApplied(true);
+        console.log(res);
       }
     } catch (error) {
       // console.log(error);
@@ -303,20 +459,42 @@ const ShoppingcartPage = () => {
       <div className="goods">
         <p className="smallTopic">商品明細</p>
 
-        {incomingDatas.map((incomingData, index) => (
+        {userAddingCartInformation}
+        {/* {dog} */}
+        {/* {incomingDatas.map((incomingData, index) => (
+          // console.log("ok");
           <div key={index}>
             <div className="goodGroup">
               <div>
                 <img
                   className="goodPic"
-                  src={incomingData.image}
+                  src={incomingData.image[0]}
                   alt="第一個商品圖"
                 />
               </div>
-              <div className="goodText">
-                <p className="goodName">{incomingData.name}</p>
-                <p className="goodPrice">{incomingData.price}</p>
-              </div>
+
+              {incomingData.activityId !== "0" ? (
+                <div className="goodText">
+                  <br />
+                  <span className="inActivityTitle">活動商品</span>
+                  <p className="goodName">{incomingData.name}</p>
+                  <br />
+                  <br />
+                  <span className="goodPrice">
+                    NT$ {incomingData.afterPrice}
+                  </span>
+                  <span className="goodSprice">NT$ {incomingData.price}</span>
+                </div>
+              ) : (
+                <div className="goodText">
+                  <br />
+                  <p className="goodName">{incomingData.name}</p>
+                  <br />
+                  <br />
+                  <p className="goodPrice">NT$ {incomingData.price}</p>
+                </div>
+              )}
+
               <div className="buttonGroup">
                 <div>
                   <button
@@ -352,9 +530,37 @@ const ShoppingcartPage = () => {
                 <p className="bigPrice">
                   NT$
                   <span id="addingGoodsPrice">
-                    {incomingData.price * incomingData.quantity}
+                    {incomingData.activityId !== 0
+                      ? `${incomingData.afterPrice * incomingData.quantity}`
+                      : ` ${
+                          parseInt(incomingData.price) * incomingData.quantity
+                        }`}
                   </span>
                 </p>
+                {incomingData.activityId !== 0 ? (
+                  <p>
+                    已折扣 NT$
+                    {incomingData.discountedPrice * incomingData.quantity}
+                  </p>
+                ) : (
+                  ""
+                )}
+                {couponInfo ? (
+                  <p>
+                    已使用優惠券
+                    {couponInfo.code}
+                    已折扣 NT$
+                    {parseInt(incomingData.price) -
+                      parseInt(
+                        Math.round(
+                          incomingData.price *
+                            parseFloat(couponInfo.discount_rate)
+                        )
+                      )}
+                  </p>
+                ) : (
+                  ""
+                )}
               </div>
               <div>
                 <button
@@ -367,25 +573,18 @@ const ShoppingcartPage = () => {
             </div>
             <hr className="myhr" />
           </div>
-        ))}
+        ))} */}
 
         <p className="smallTopic goodQtys">
           合計有
-          <span id="addingTotalQty">
-            {incomingDatas.reduce((accumulator, currentItem) => {
-              return accumulator + currentItem.quantity;
-            }, 0)}
-          </span>
+          {incomingDatas.reduce((accumulator, currentItem) => {
+            return accumulator + currentItem.quantity;
+          }, 0)}
           項商品
         </p>
         <p className="smallTopic goodQtys totalQty">
-          {/* <p className="smallTopic goodQtys"> */}
           總計 NT$
-          <span id="addingTotalQty">
-            {incomingDatas.reduce((acc, { quantity, price }) => {
-              return acc + parseFloat(quantity) * parseFloat(price);
-            }, 0)}
-          </span>
+          {userAddingCartPrice}
         </p>
       </div>
 
@@ -740,23 +939,47 @@ const ShoppingcartPage = () => {
           <button className="vIcon" onClick={openDiscount}>
             <img src={require("../image/shoppingcart/letter-v.png")} alt="V" />
           </button>
-          <p>-NT$0</p>
+          <p className={`${hideDiscount ? "" : "discountFamily"}`}>
+            -NT$
+            {couponInfo
+              ? userAddingCartDiscount +
+                userAddingCartOgPrice -
+                Math.floor(userAddingCartPrice * couponInfo.discount_rate)
+              : userAddingCartDiscount}
+          </p>
         </div>
         <div
           id="myDiscountDiv"
           className={`${hideDiscount ? "discountFamily" : ""}`}
         >
           <div className="discountGroup">
-            <div className="discount">活動：</div>
-            <div className="discount">-NT$0</div>
+            <div className="discount">活動折扣：</div>
+
+            <div className="discount">-NT${userAddingCartDiscount}</div>
           </div>
           <div className="discountGroup">
-            <div className="discount">優惠券：</div>
-            <div className="discount">-NT$0</div>
+            <div className="discount">優惠券折扣：</div>
+            <div className="discount">
+              <div className="discount">
+                -NT$
+                {couponInfo
+                  ? userAddingCartOgPrice -
+                    Math.floor(userAddingCartPrice * couponInfo.discount_rate)
+                  : "0"}
+                {/* -NT$0 */}
+              </div>
+            </div>
           </div>
           <div className="discountGroup">
             <div className="discountTotal">合計：</div>
-            <div className="discountTotal">-NT$0</div>
+            <div className="discountTotal">
+              -NT$
+              {couponInfo
+                ? userAddingCartDiscount +
+                  userAddingCartOgPrice -
+                  Math.floor(userAddingCartPrice * couponInfo.discount_rate)
+                : userAddingCartDiscount}
+            </div>
           </div>
         </div>
         <hr className="myhr" />
@@ -768,8 +991,7 @@ const ShoppingcartPage = () => {
         <div className="typingIv">
           <p>總計</p>
           <div>
-            <p className="totalQty">NT$320</p>
-            <div>(再買NT$680及享有免費優惠)</div>
+            <p className="totalQty">NT${userAddingCartPrice}</p>
           </div>
         </div>
       </div>
@@ -802,7 +1024,7 @@ const ShoppingcartPage = () => {
                 {incomingData.quantity}
               </div>
               <div className="myShopping">
-                {incomingData.price * incomingData.quantity}
+                NT$ {incomingData.price * incomingData.quantity}
               </div>
             </div>
           </div>
@@ -812,7 +1034,7 @@ const ShoppingcartPage = () => {
 
         <div className="typingIv">
           <p>
-            合計有
+            合計有 $
             {incomingDatas.reduce((accumulator, currentItem) => {
               return accumulator + currentItem.quantity;
             }, 0)}

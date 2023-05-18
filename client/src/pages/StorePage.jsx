@@ -137,12 +137,12 @@ const StorePage = () => {
     setUserSelectWay("全站商品");
   };
   const wheyProteinCategory = () => {
-    setCurrentCategory(1);
+    setCurrentCategory("乳清蛋白");
     setCurrentActivity("");
     setUserSelectWay("乳清蛋白");
   };
   const gainMuscleCategory = () => {
-    setCurrentCategory(2);
+    setCurrentCategory("雞胸肉");
     setCurrentActivity("");
     setUserSelectWay("增肌減脂套餐");
   };
@@ -313,6 +313,11 @@ const StorePage = () => {
                 to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
+                {product.activityId !== "0" ? (
+                  <p style={{ color: "black" }}>活動商品</p>
+                ) : (
+                  ""
+                )}
                 <div>
                   <p className="fw-semibold cardTopic">{product.name}</p>
                   <p className="cardText">{product.description}</p>
@@ -324,12 +329,14 @@ const StorePage = () => {
                 className="whereUsergo"
               >
                 {product.activityId !== "" ? (
-                  <div>
-                    <span className="cardSprice">{product.price}</span>
-                    <span className="cardPrice">1600</span>
+                  <div className="storePriceStyle">
+                    <span className="cardSprice">NT$ {product.afterPrice}</span>
+                    <span className="cardPrice">NT$ {product.price}</span>
                   </div>
                 ) : (
-                  <span className="cardSprice">{product.price}</span>
+                  <div className="storePriceStyle">
+                    <span className="cardSprice">NT$ {product.price}</span>
+                  </div>
                 )}
               </Link>
             </div>
