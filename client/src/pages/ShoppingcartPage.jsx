@@ -238,10 +238,13 @@ const ShoppingcartPage = () => {
                 <p className="bigPrice">
                   NT$
                   <span id="addingGoodsPrice">
-                    {incomingData.activityId !== 0
-                      ? incomingData.afterPrice * incomingData.quantity -
-                        totalCouponPrice
-                      : parseInt(incomingData.price) * incomingData.quantity}
+                    {couponInfo
+                      ? Math.round(
+                          userAddingCartPrice * couponInfo.discount_rate
+                        )
+                      : incomingData.activityId !== 0
+                      ? incomingData.afterPrice * incomingData.quantity
+                      : incomingData.price * incomingData.quantity}
                   </span>
                 </p>
                 {incomingData.activityId !== 0 ? (
@@ -282,7 +285,7 @@ const ShoppingcartPage = () => {
       );
     });
     setUserAddingCartInformation(meowmm);
-  }, [incomingDatas]);
+  }, [incomingDatas, couponInfo]);
   //測試
 
   // 釣魚台
@@ -600,7 +603,9 @@ const ShoppingcartPage = () => {
         </p>
         <p className="smallTopic goodQtys totalQty">
           總計 NT$
-          {userAddingCartOgPrice - finalTotalDiscount}
+          {couponInfo
+            ? userAddingCartOgPrice - finalTotalDiscount
+            : userAddingCartPrice}
         </p>
       </div>
 
@@ -946,8 +951,11 @@ const ShoppingcartPage = () => {
       <div className="counter">
         <hr className="myhr" />
         <div className="typingIv">
-          <p>商品小計</p>
-          <p>{userAddingCartOgPrice}</p>
+          <p>商品原價</p>
+          <p>
+            NT$
+            {userAddingCartOgPrice}
+          </p>
         </div>
         <hr className="myhr" />
         <div className="typingIv">
@@ -1011,7 +1019,7 @@ const ShoppingcartPage = () => {
               NT$
               {couponInfo
                 ? userAddingCartOgPrice - finalTotalDiscount
-                : userAddingCartDiscount}
+                : userAddingCartPrice}
             </p>
           </div>
         </div>
@@ -1044,9 +1052,9 @@ const ShoppingcartPage = () => {
                 {incomingData.name}&nbsp;&nbsp;X&nbsp;&nbsp;
                 {incomingData.quantity}
               </div>
-              <div className="myShopping">
+              {/* <div className="myShopping">
                 NT$ {incomingData.price * incomingData.quantity}
-              </div>
+              </div> */}
             </div>
           </div>
         ))}
@@ -1055,7 +1063,7 @@ const ShoppingcartPage = () => {
 
         <div className="typingIv">
           <p>
-            合計有 $
+            合計有
             {incomingDatas.reduce((accumulator, currentItem) => {
               return accumulator + currentItem.quantity;
             }, 0)}
