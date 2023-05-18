@@ -1,22 +1,22 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUser, FaShoppingCart, FaCaretRight } from "react-icons/fa";
 import "../styles/Nav.css";
 import axios from "axios";
 function Nav() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState()
+  const [username, setUsername] = useState();
   useEffect(() => {
-    const jwtToken = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY"
-    
+    const jwtToken =
+      "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY";
+
     axios.defaults.headers.common["Authorization"] = jwtToken;
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
       .then((res) => {
         console.log(res.data);
         setIsAuthenticated(true);
-        setUsername(res.data.user.username)
-        localStorage.setItem("username",res.data.user.username)
-        
+        setUsername(res.data.user.username);
+        localStorage.setItem("username", res.data.user.username);
       })
       .catch((err) => {
         setIsAuthenticated(false);
@@ -49,11 +49,13 @@ function Nav() {
 
           {isAuthenticated ? (
             <li className="d-flex">
-              <a href="/" >
+              <a href="/">
                 <FaUser className="me-2" />
-                {username} 
+                {username}
               </a>
-              <a className=" ms-auto logout" href="#" onClick={handleLogout}>登出</a>
+              <a className=" ms-auto logout" href="#" onClick={handleLogout}>
+                登出
+              </a>
             </li>
           ) : (
             <li>
@@ -64,7 +66,7 @@ function Nav() {
             </li>
           )}
 
-          <a href="#">
+          <a href="/cart">
             <li>
               <FaShoppingCart className="me-2" />
               購物車
@@ -89,7 +91,7 @@ function Nav() {
               />
             </li>
           </a>
-          <a href="#">
+          <a href="/store">
             <li className="me-auto" style={{ position: "relative" }}>
               商城
               <FaCaretRight
