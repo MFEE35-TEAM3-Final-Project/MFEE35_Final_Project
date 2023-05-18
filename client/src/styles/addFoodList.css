@@ -204,6 +204,7 @@
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
+  color: #000;
 }
 
 .recommendItem:hover {
@@ -221,7 +222,7 @@
   display: flex;
 }
 
-.recommendText > table > thead > tr {
+.recommendText > table > thead > tr > td {
   font-size:  30px;
   white-space: nowrap;
 }

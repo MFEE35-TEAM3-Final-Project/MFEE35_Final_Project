@@ -5,30 +5,63 @@ function Header() {
   useEffect(() => {
     /* Set the width of the side navigation to 250px */
     function openNav() {
-      document.getElementById("mySidenav").style.width = "250px";
+      const mySidenav = document.getElementById("mySidenav");
+      if (mySidenav) {
+        mySidenav.style.width = "250px";
+      }
     }
 
     /* Set the width of the side navigation to 0 */
     let closeNav = () => {
-      document.getElementById("mySidenav").style.width = "0";
+      const mySidenav = document.getElementById("mySidenav");
+      if (mySidenav) {
+        mySidenav.style.width = "0";
+      }
     };
 
-    document.getElementById("openNavBtn").addEventListener("click", openNav);
-    document
-      .getElementById("mySidenav")
-      .querySelector(".closebtn")
-      .addEventListener("click", closeNav);
+    const openNavBtn = document.getElementById("openNavBtn");
+    const closeBtn = document.querySelector("#mySidenav .closebtn");
+
+    if (openNavBtn && closeBtn) {
+      openNavBtn.addEventListener("click", openNav);
+      closeBtn.addEventListener("click", closeNav);
+    }
 
     return () => {
-      document
-        .getElementById("openNavBtn")
-        .removeEventListener("click", openNav);
-      document
-        .getElementById("mySidenav")
-        .querySelector(".closebtn")
-        .removeEventListener("click", closeNav);
+      if (openNavBtn && closeBtn) {
+        openNavBtn.removeEventListener("click", openNav);
+        closeBtn.removeEventListener("click", closeNav);
+      }
     };
   }, []);
+
+  // useEffect(() => {
+  //   /* Set the width of the side navigation to 250px */
+  //   function openNav() {
+  //     document.getElementById("mySidenav").style.width = "250px";
+  //   }
+
+  //   /* Set the width of the side navigation to 0 */
+  //   let closeNav = () => {
+  //     document.getElementById("mySidenav").style.width = "0";
+  //   };
+
+  //   document.getElementById("openNavBtn").addEventListener("click", openNav);
+  //   document
+  //     .getElementById("mySidenav")
+  //     .querySelector(".closebtn")
+  //     .addEventListener("click", closeNav);
+
+  //   return () => {
+  //     document
+  //       .getElementById("openNavBtn")
+  //       .removeEventListener("click", openNav);
+  //     document
+  //       .getElementById("mySidenav")
+  //       .querySelector(".closebtn")
+  //       .removeEventListener("click", closeNav);
+  //   };
+  // }, []);
 
   return (
     <div className="header">

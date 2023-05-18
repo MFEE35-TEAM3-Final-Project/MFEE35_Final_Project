@@ -19,7 +19,7 @@ const GoodsPage = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/products/getProductsById?productId=${productId}`
+        `${process.env.REACT_APP_API_URL}/api/product/getProductsById?productId=${productId}`
       )
       .then((res) => {
         // console.log(res);
@@ -39,7 +39,7 @@ const GoodsPage = () => {
         console.error(err);
       });
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/products/getProducts`)
+      .get(`${process.env.REACT_APP_API_URL}/api/product/getProducts`)
       .then((res) => {
         // console.log(res);
         setPromotionGood(res.data.results.slice(0, 4));

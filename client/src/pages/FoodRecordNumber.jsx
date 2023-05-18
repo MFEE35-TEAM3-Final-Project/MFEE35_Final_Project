@@ -553,7 +553,7 @@ function FoodRecordNumber() {
 
   const changeWord = (caloriesCanEat) => {
     const displayText = isNaN(caloriesCanEat)
-      ? "數值無效"
+      ? "請輸入飲食紀錄"
       : caloriesCanEat > 0
       ? "還可以吃"
       : "已超標";

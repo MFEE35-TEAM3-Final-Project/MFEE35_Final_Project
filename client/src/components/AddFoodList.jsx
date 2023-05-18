@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import "../styles/addFoodList.css";
+import { Link } from "react-router-dom";
 import FoodDetailsNutrients from "./FoodDetailsNutrients";
 
 function AddFoodList({ onCancelButtonClick, foodSection }) {
@@ -67,6 +68,11 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
   }, [FoodProductInfo]);
 
   useEffect(() => {
+    // 移除背景黑圖
+    function cancelModalOpen() {
+      document.body.classList.remove("modal-open");
+    }
+
     console.log(FoodIdNutrients);
     const combinedDatas = FoodIdNutrients.map((nutrient, index) => ({
       nutrient: nutrient,
@@ -75,45 +81,101 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
     // setCombinedData(combinedDatas);
     const recommendCombinedData = combinedDatas.map((combinedData, index) => {
       console.log(combinedData);
+      let x = combinedData.product.productid;
+      let y = combinedData.product.activityId;
+      let z = combinedData.product.food_id;
 
       return (
         <Fragment key={index}>
-          <div className="recommendItem">
-            <div className="recommendImg">
-              <img src={combinedData.product.image[0]} alt="" />
+          <Link
+            to={`http://localhost:3000/goods/${x}/${y}/${z}`}
+            style={{ textDecoration: "none" }}
+            onClick={cancelModalOpen}
+          >
+            <div className="recommendItem">
+              <div className="recommendImg">
+                <img src={combinedData.product.image[0]} alt="" />
+              </div>
+              <div className="recommendText">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style={{ fontSize: "30px", whiteSpace: "nowrap" }}>
+                        {combinedData.nutrient.sample_name}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <span>{combinedData.nutrient.Calories_adjusted}</span>
+                        <span> 卡路里</span>
+                      </td>
+                      <td>
+                        <span>{combinedData.nutrient.sodium}</span>
+                        <span> 鈉</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <span>{combinedData.nutrient.carbohydrate}</span>
+                        <span> 碳水化合物</span>
+                      </td>
+                      <td>
+                        <span>{combinedData.nutrient.crude_protein}</span>
+                        <span> 蛋白質</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div className="recommendText">
-              <table>
-                <thead>
-                  <tr>{combinedData.nutrient.sample_name}</tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <span>{combinedData.nutrient.Calories_adjusted}</span>
-                      <span> 卡路里</span>
-                    </td>
-                    <td>
-                      <span>{combinedData.nutrient.sodium}</span>
-                      <span> 鈉</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <span>{combinedData.nutrient.carbohydrate}</span>
-                      <span> 碳水化合物</span>
-                    </td>
-                    <td>
-                      <span>{combinedData.nutrient.crude_protein}</span>
-                      <span> 蛋白質</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          </Link>
         </Fragment>
       );
+
+      // return (
+      //   <Fragment key={index}>
+      //     <Link href="https://www.google.com.tw/" rel="stylesheet">
+      //       <div className="recommendItem">
+      //         <div className="recommendImg">
+      //           <img src={combinedData.product.image[0]} alt="" />
+      //         </div>
+      //         <div className="recommendText">
+      //           <table>
+      //             <thead>
+      //               <tr>
+      //                 <td>{combinedData.nutrient.sample_name}</td>
+      //               </tr>
+      //             </thead>
+      //             <tbody>
+      //               <tr>
+      //                 <td>
+      //                   <span>{combinedData.nutrient.Calories_adjusted}</span>
+      //                   <span> 卡路里</span>
+      //                 </td>
+      //                 <td>
+      //                   <span>{combinedData.nutrient.sodium}</span>
+      //                   <span> 鈉</span>
+      //                 </td>
+      //               </tr>
+      //               <tr>
+      //                 <td>
+      //                   <span>{combinedData.nutrient.carbohydrate}</span>
+      //                   <span> 碳水化合物</span>
+      //                 </td>
+      //                 <td>
+      //                   <span>{combinedData.nutrient.crude_protein}</span>
+      //                   <span> 蛋白質</span>
+      //                 </td>
+      //               </tr>
+      //             </tbody>
+      //           </table>
+      //         </div>
+      //       </div>
+      //     </Link>
+      //   </Fragment>
+      // );
     });
     setRecommendCombinedRow(recommendCombinedData);
   }, [FoodIdNutrients]);
