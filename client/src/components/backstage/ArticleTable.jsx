@@ -9,7 +9,8 @@ import {
   Radio,
   Image,
   Select,
-  message
+  message,
+  Space
 } from "antd";
 import {
   CheckCircleOutlined,
@@ -17,7 +18,8 @@ import {
   CloseCircleOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
-  SyncOutlined
+  SyncOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
 import ArticleModal from "./ArticleModal";
 
@@ -49,7 +51,7 @@ const ArticleTable = () => {
           return (
             <Tag
               className="status_tag p-2"
-              icon={<CheckCircleOutlined />}
+              icon={<CheckCircleOutlined style={{ verticalAlign: "0.1rem" }} />}
               color="success"
             >
               公開中
@@ -59,7 +61,11 @@ const ArticleTable = () => {
           return (
             <Tag
               className="status_tag p-2"
-              icon={<ExclamationCircleOutlined />}
+              icon={
+                <ExclamationCircleOutlined
+                  style={{ verticalAlign: "0.1rem" }}
+                />
+              }
               color="error"
             >
               未發布
@@ -91,9 +97,24 @@ const ArticleTable = () => {
       title: "操作",
       key: "action",
       render: (_, article) => (
-        <Button type="primary" onClick={() => editArticle(article.article_id)}>
-          編輯
-        </Button>
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => editArticle(article.article_id)}
+          >
+            編輯
+          </Button>
+          <Button
+            // icon={<DeleteOutlined />}
+            type="primary"
+            danger
+            onClick={() => {
+              deleteModal(article.article_id, article.title);
+            }}
+          >
+            <DeleteOutlined style={{ verticalAlign: "0.1rem" }} />
+          </Button>
+        </Space>
       )
     }
   ];
@@ -107,6 +128,7 @@ const ArticleTable = () => {
   const [articleModalVisible, setArticleModalVisible] = useState(false);
   const [tempArticle, setTempArticle] = useState(null);
   const [tempArticleChange, setTempArticleChange] = useState(null);
+  const [delId, setDelId] = useState(null);
 
   const toLocalTime = (time) => {
     const date = new Date(time);
@@ -154,7 +176,6 @@ const ArticleTable = () => {
     axios
       .get(api)
       .then((res) => {
-        // console.log(tempArticle);
         setTempArticle(res.data.article);
         setTempArticleChange(res.data.article);
       })
@@ -166,6 +187,44 @@ const ArticleTable = () => {
     await getArticle(id);
     setArticleModalVisible(true);
   };
+  // 刪除文章
+  const deleteModal = (id, name) => {
+    Modal.error({
+      title: "刪除文章",
+      content: (
+        <>
+          <p className="fs-4 fw-bold">確定要刪除文章嗎?</p>
+          <p>ID: {id}</p>
+          <p>標題: {name}</p>
+        </>
+      ),
+      closable: true,
+      maskClosable: true,
+      okText: "刪除",
+      okButtonProps: {
+        danger: true,
+        type: "primary",
+        onClick: () => {
+          axios
+            .delete(`${process.env.REACT_APP_API_URL}/api/admin/article/${id}`)
+            .then((res) => {
+              Modal.destroyAll();
+              if (res.data.success) {
+                messageApi.success("文章刪除成功");
+              } else {
+                messageApi.error("文章更新失敗");
+              }
+              getArticleList(tempCategory);
+            })
+            .catch((err) => {
+              console.log(err);
+              messageApi.error("伺服器錯誤");
+            });
+        }
+      }
+    });
+  };
+
   // modal按下cancel
   const closeModal = () => {
     if (tempArticle === tempArticleChange) {
@@ -255,26 +314,34 @@ const ArticleTable = () => {
   return (
     <>
       {contextHolder}
-      <div className="article_table">
-        <p className="fs-4 fw-bold">
-          類別：
-          <Select
-            defaultValue="all"
-            style={{
-              width: 120
-            }}
-            onChange={(key) => {
-              setTempCategory(key);
-            }}
-            options={[
-              {
-                value: "all",
-                label: "All"
-              },
-              ...categories
-            ]}
-          />
-        </p>
+      <div className="article_table ">
+        <div className="row">
+          <div className="col">
+            <p className="fs-4 fw-bold">
+              類別：
+              <Select
+                defaultValue="all"
+                style={{
+                  width: 120
+                }}
+                onChange={(key) => {
+                  setTempCategory(key);
+                }}
+                options={[
+                  {
+                    value: "all",
+                    label: "All"
+                  },
+                  ...categories
+                ]}
+              />
+            </p>
+          </div>
+          <div className="col-2" style={{ paddingLeft: "5rem" }}>
+            <Button type="primary">新增文章</Button>
+          </div>
+        </div>
+        {/* 表格 */}
         <div>
           <Table
             dataSource={articleList}

@@ -51,7 +51,6 @@ const ArticleEditorModal = ({
     formHandler("is_published", newValue);
   };
   const imgChange = (url) => {
-    console.log("imgUrl", url);
     formHandler("cover_image", url);
   };
   const handleEditorChange = (event, editor) => {
@@ -146,11 +145,12 @@ const ArticleEditorModal = ({
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item
-                  label="是否發布"
-                  initialValue={articleData.is_published}
-                >
-                  <Switch name="is_published" onChange={switchOnChange} />
+                <Form.Item label="是否發布">
+                  <Switch
+                    checked={articleData.is_published === 1 ? true : false}
+                    name="is_published"
+                    onChange={switchOnChange}
+                  />
                 </Form.Item>
               </Col>
             </Row>

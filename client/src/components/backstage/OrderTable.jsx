@@ -153,7 +153,6 @@ const OrderManagement = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/admin/orders`)
       .then((res) => {
-        console.log(res);
         if (res.data.success) {
           setOrders(res.data.data);
         }
