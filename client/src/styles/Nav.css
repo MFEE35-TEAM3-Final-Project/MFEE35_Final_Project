@@ -8,7 +8,7 @@ body{
     position: absolute;
     top: 40px;
     left: 95vw;
-    /* z-index: 1; */
+    z-index: 1; 
     -webkit-user-select: none;
     user-select: none;
     

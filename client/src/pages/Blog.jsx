@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import "../styles/blog.css";
 import axios from "axios";
 import { FaRegCommentAlt } from "react-icons/fa";
+import { GrNext, GrPrevious } from "react-icons/gr";
+
 function Blog() {
   const [articles, setArticles] = useState([]);
   const [category, setCategory] = useState([]);
-
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState();
+  const [dataLoaded, setDataLoaded] = useState(false);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=10`)
+      .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=5`)
       .then((res) => {
         setArticles(res.data.articles);
       })
@@ -23,32 +27,44 @@ function Blog() {
     const day = date.getDate();
     return `${day} ${month} ${year}`;
   };
+  //分類
   useEffect(() => {
-    if (category) {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=10&category=${category}`
-        )
-        .then((res) => {
-          console.log(res.data.articles);
-          const formattedArticles = res.data.articles.map((article) => {
-            return {
-              ...article,
-              created_at: formatDate(article.created_at),
-              updated_at: formatDate(article.updated_at),
-            };
-          });
-          setArticles(formattedArticles);
-        })
-        .catch((err) => {
-          console.error(err);
+    axios
+
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/articles?page=${page}&per_page=5&category=${category}`
+      )
+      .then((res) => {
+        const formattedArticles = res.data.articles.map((article) => {
+          return {
+            ...article,
+            created_at: formatDate(article.created_at),
+            updated_at: formatDate(article.updated_at),
+          };
         });
-    }
-  }, [category]);
+        setArticles(formattedArticles);
+        setPagination(res.data.pagination);
+        console.log(res.data.pagination);
+        setDataLoaded(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [category, page]);
   const handleClickCategory = (category) => {
     setCategory(category);
   };
+  const handleClickPage = (page) => {
+    setPage(page);
+  };
 
+  useEffect(() => {
+    setPage(1);
+  }, [category]);
+
+  if (!dataLoaded) {
+    return <div>載入中..</div>;
+  }
   return (
     <div>
       <div className=" F-container mt-5">
@@ -64,33 +80,33 @@ function Blog() {
                 <div className="carousel-inner">
                   <div className="carousel-item active newimgbox">
                     <div className="carousel-imgtext-box">
-                      <h1>大標題</h1>
-                      <span>小標題</span>
+                      <h1>健康飲食怎麼吃？營養師曝「最佳飲食法」</h1>
+                      <span>民以食為天，飲食文化是各個國家都在關注的...</span>
                     </div>
                     <img
-                      src="/image/blog/carousel1.jpg"
+                      src={require("../image/blog/carousel1.jpg")}
                       className="d-block w-100 img-fluid"
                       alt="..."
                     />
                   </div>
                   <div className="carousel-item newimgbox">
                     <div className="carousel-imgtext-box">
-                      <h1>大標題</h1>
-                      <span>小標題</span>
+                      <h1>減肥餐自己煮！5個低卡便當食譜公開!</h1>
+                      <span>烤雞腿、糖醋排骨通通有，熱量低又美味減肥超有感...</span>
                     </div>
                     <img
-                      src="/image/blog/carousel2.jpg"
+                      src={require("../image/blog/carousel2.jpg")}
                       className="d-block w-100 img-fluid"
                       alt="..."
                     />
                   </div>
                   <div className="carousel-item newimgbox">
                     <div className="carousel-imgtext-box">
-                      <h1>大標題</h1>
-                      <span>小標題</span>
+                      <h1>把握3招4式，外食族也能吃出健康與滿足！</h1>
+                      <span>面對忙碌的生活，外食方便與快速的特性...</span>
                     </div>
                     <img
-                      src="/image/blog/carousel3.jpg"
+                      src={require("../image/blog/carousel3.jpg")}
                       className="d-block w-100 img-fluid"
                       alt="..."
                     />
@@ -130,7 +146,7 @@ function Blog() {
                 <div className="col-12 d-flex flex-md-row ">
                   <div className="popular-img  me-md-3">
                     <img
-                      src="/image/blog/popular1.jpg"
+                      src={require("../image/blog/popular1.jpg")}
                       alt=""
                       className="img-fluid"
                     />
@@ -147,7 +163,7 @@ function Blog() {
                 <div className="col-12  d-flex flex-md-row popular-img-pad">
                   <div className="popular-img  me-md-3">
                     <img
-                      src="/image/blog/popular2.jpg"
+                      src={require("../image/blog/popular2.jpg")}
                       alt=""
                       className="img-fluid"
                     />
@@ -162,13 +178,13 @@ function Blog() {
                 <div className="col-12 d-flex flex-md-row">
                   <div className="popular-img me-md-3">
                     <img
-                      src="/image/blog/popular3.jpg"
+                      src={require("../image/blog/popular3.jpg")}
                       alt=""
                       className="img-fluid"
                     />
                   </div>
                   <div className="popular-text">
-                    <h5>靠TDEE與基礎代謝率BMR計算機就能減肥？</h5>
+                    <h5>靠tdee與基礎代謝率BMR計算機就能減肥？</h5>
                     <span>
                       其實快速減肥的方法有好多種，生酮、低醣（低碳）飲食、間歇性斷食⋯
                     </span>
@@ -180,7 +196,7 @@ function Blog() {
         </div>
         <div className="Title">.Category</div>
         <div className="classify row g-0 nav nav-tabs" role="tablist">
-          <div className="classify-img col-md-1 col-12">
+          <div className="classify-img col-md-3 col-12">
             <a
               className="active"
               data-bs-toggle="tab"
@@ -191,11 +207,15 @@ function Blog() {
               tabIndex="0"
               onClick={() => handleClickCategory([])}
             >
-              <img src="/image/blog/all.jpg" className="img-fluid" alt="" />
+              <img
+                src={require("../image/blog/all.jpg")}
+                className="img-fluid"
+                alt=""
+              />
               <div>ALL</div>
             </a>
           </div>
-          <div className="classify-img col-md-1 col-12">
+          <div className="classify-img col-md-3 col-12">
             <a
               className="active"
               data-bs-toggle="tab"
@@ -206,11 +226,15 @@ function Blog() {
               tabIndex="0"
               onClick={() => handleClickCategory("HEALTHY")}
             >
-              <img src="/image/blog/healthy.png" className="img-fluid" alt="" />
+              <img
+                src={require("../image/blog/healthy.png")}
+                className="img-fluid"
+                alt=""
+              />
               <div>HEALTHY</div>
             </a>
           </div>
-          <div className="classify-img col-md-1 col-12">
+          <div className="classify-img col-md-3 col-12">
             <a
               className=""
               data-bs-toggle="tab"
@@ -222,14 +246,14 @@ function Blog() {
               onClick={() => handleClickCategory("FITNESS")}
             >
               <img
-                src="/image/blog/fitness.jpg"
+                src={require("../image/blog/fitness.jpg")}
                 className="img-fluid "
                 alt=""
               />
               <div>FITNESS</div>
             </a>
           </div>
-          <div className="classify-img col-md-1 col-12">
+          <div className="classify-img col-md-3 col-12">
             <a
               className=""
               data-bs-toggle="tab"
@@ -241,7 +265,7 @@ function Blog() {
               onClick={() => handleClickCategory("NUTRITION")}
             >
               <img
-                src="/image/blog/nutrition.jpg"
+                src={require("../image/blog/nutrition.jpg")}
                 className="img-fluid"
                 alt=""
               />
@@ -250,25 +274,28 @@ function Blog() {
           </div>
         </div>
         <div className="articlelist">
-          <div className="row g-0  tab-content">
+          <div className="row g-0  tab-content d-flex flex-column">
             <div
-              className="col-lg-8 col-md-12 flex-column fade tab-pane show active"
-              id="HEALTHY"
+              className="col-lg-8 col-md-12   tab-pane show active flex-wrap"
+              
             >
               {articles.map((article) => (
-                <div key={article.article_id} className="article  d-flex row">
-                  <div className=" col-md-6 col-12 article-img">
+                <div
+                  key={article.article_id}
+                  className="article  d-flex flex-row "
+                >
+                  <div className="  article-img">
                     <div>
                       <a href={`/article/${article.article_id}`}>
                         <img
-                          src={article.cover_image}
+                          src={`${article.cover_image}.jpeg`}
                           alt=""
                           className="img-fluid"
                         />
                       </a>
                     </div>
                   </div>
-                  <div className="col-md-6 col-12 article-text ms-5 d-flex flex-column">
+                  <div className=" article-text ms-5 d-flex flex-column">
                     <div>
                       <a href={`/article/${article.article_id}`}>
                         <span>{article.created_at}</span>
@@ -279,12 +306,61 @@ function Blog() {
                     <div className=" d-flex mt-auto">
                       <span className="ms-auto">
                         <FaRegCommentAlt value={{ className: "react-icons" }} />
-                        <span className="ms-2">{article.is_published}</span>
+                        <span className="ms-2">0</span>
                       </span>
                     </div>
                   </div>
                 </div>
               ))}
+              <div className="pageNav">
+                <nav className="" aria-label="Page navigation">
+                  <ul className=" pagination">
+                    <li className="">
+                    <button
+                        class={`${
+                           pagination.current_page === 1 ? "pagenone" : "pageButton-next"
+                        }`}
+                        onClick={() =>
+                          handleClickPage(pagination.current_page - 1)
+                        }
+                      >
+                        <GrPrevious/>
+                      </button>
+                    </li>
+                    {Array.from(
+                      { length: pagination.total_pages },
+                      (item, index) => index + 1
+                    ).map((pageNumber) => (
+                      <li
+                        key={pageNumber}
+                        className="pageButton-li "
+                      >
+                        <button
+                          className={`pageButton  ${
+                            pageNumber === pagination.current_page ? "pagefucus" : ""
+                          }`}
+                          onClick={() => handleClickPage(pageNumber)}
+                        >
+                          {pageNumber}
+                        </button>
+                      </li>
+                    ))}
+
+                    <li class="">
+                      <button
+                       className={`${
+                        pagination.current_page === pagination.total_pages ? "pagenone" : "pageButton-next"
+                     }`}
+                        onClick={() =>
+                          handleClickPage(pagination.current_page + 1)
+                        }
+                      >
+                        <GrNext/>
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
             </div>
           </div>
         </div>

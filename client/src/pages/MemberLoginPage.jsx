@@ -25,7 +25,7 @@ const UserLogin = () => {
         `${process.env.REACT_APP_API_URL}/api/user/login`,
         {
           email,
-          password
+          password,
         }
       );
 
@@ -48,8 +48,8 @@ const UserLogin = () => {
         {
           method: "POST",
           headers: {
-            Authorization: token
-          }
+            Authorization: token,
+          },
         }
       );
 
@@ -91,7 +91,7 @@ const UserLogin = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px"
+                      fontSize: "25px",
                     }}
                   >
                     會員登入
@@ -104,7 +104,7 @@ const UserLogin = () => {
                     style={{
                       textDecoration: "none",
                       color: "black",
-                      fontSize: "25px"
+                      fontSize: "25px",
                     }}
                   >
                     會員註冊

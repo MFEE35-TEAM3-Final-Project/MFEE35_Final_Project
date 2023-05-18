@@ -26,11 +26,13 @@ function Calculator() {
             ? [3.5, 1.5, 2]
             : result2 >= 2000
             ? [3, 1, 2]
-            : result2 >= 1800
+            : result2 >= 1800 
             ? [3, 1, 2]
-            : result2 <= 1500 && result2 >= 1200
+            : result2 >= 1500
             ? [2.5, 1, 1.5]
-            : [1.5, 1, 0.5],
+            : result2 >= 1200?
+            [1.5, 1, 0.5]:
+            [1.5, 1, 0.5],
         meat:
           result2 >= 2700
             ? 8
@@ -38,20 +40,21 @@ function Calculator() {
             ? 7
             : result2 <= 2200 && result2 >= 2000
             ? 6
-            : result2 >= 1800
+            : result2 >= 1800 
             ? 5
-            : result2 <= 1500 && result2 >= 1200
+            : result2 >= 1500  
             ? 4
-            : 3,
+            : result2 >= 1200 
+            ? 3 : 3,
         milk: result2 >= 2700 ? 2 : 1.5,
         vegetable:
-          result2 >= 2500 ? 5 : result2 <= 2200 && result2 >= 2000 ? 4 : 3,
+          result2 >= 2500 ? 5 : result2 >= 2200  ? 4 : result2 >= 2000 ? 3 : 3,
         fruit:
           result2 >= 2700
             ? 4
             : result2 >= 2500
             ? 4
-            : result2 <= 2200
+            : result2 >= 2200
             ? 3.5
             : result2 >= 2000
             ? 3
@@ -61,7 +64,7 @@ function Calculator() {
             ? [8, 7, 1]
             : result2 >= 2500
             ? [7, 6, 1]
-            : result2 >= 2200 && result2 <= 2000
+            : result2 >= 2200 && result2 >= 2000
             ? [6, 5, 1]
             : result2 >= 1800
             ? [5, 4, 1]
@@ -99,7 +102,8 @@ function Calculator() {
     setGender(parseInt(event.target.value));
   };
   function getResult() {
-    if (!userAge || !userHeight || !userWeight || !userSports || !gender) {
+    console.log(gender)
+    if (!userAge || !userHeight || !userWeight || !userSports || gender==undefined) {
       alert("尚未填寫完資料");
       return;
     }
@@ -142,6 +146,7 @@ function Calculator() {
                   id="flexRadioDefault1"
                   value="1"
                   onChange={genderSelect}
+                  
                 />
                 <label class="form-check-label" for="flexRadioDefault1">
                   男生
@@ -155,6 +160,7 @@ function Calculator() {
                   id="flexRadioDefault2"
                   value="0"
                   onChange={genderSelect}
+                 
                 />
                 <label class="form-check-label" for="flexRadioDefault2">
                   女生
@@ -168,6 +174,7 @@ function Calculator() {
                 pattern="[0-100]"
                 value={userAge}
                 onChange={InputuserAge}
+                required
               />
               <label for="height">身高:</label>
               <input
@@ -177,6 +184,7 @@ function Calculator() {
                 pattern="[0-200]"
                 value={userHeight}
                 onChange={InputuserHeight}
+                required
               />
               <label for="weight">體重:</label>
               <input
@@ -186,6 +194,7 @@ function Calculator() {
                 pattern="[0-300]"
                 value={userWeight}
                 onChange={InputuserWeight}
+                required
               />
             </div>
             <span class="annotation">
@@ -206,7 +215,7 @@ function Calculator() {
                   <input
                     name="image1"
                     type="image"
-                    src="/image/tdee/1.png"
+                    src={require("../image/tdee/1.png")}
                     data-value="1.2"
                     onClick={ImageClick}
                     alt=""
@@ -223,7 +232,7 @@ function Calculator() {
                   <input
                     name="image2"
                     type="image"
-                    src="/image/tdee/2.png"
+                    src={require("../image/tdee/2.png")}
                     data-value="1.375"
                     onClick={ImageClick}
                     alt=""
@@ -240,7 +249,7 @@ function Calculator() {
                   <input
                     name="image3"
                     type="image"
-                    src="/image/tdee/3.png"
+                    src={require("../image/tdee/3.png")}
                     data-value="1.55"
                     onClick={ImageClick}
                     alt=""
@@ -257,7 +266,7 @@ function Calculator() {
                   <input
                     name="image4"
                     type="image"
-                    src="/image/tdee/4.png"
+                    src={require("../image/tdee/4.png")}
                     data-value="1.72"
                     onClick={ImageClick}
                     alt=""
@@ -274,7 +283,7 @@ function Calculator() {
                   <input
                     name="image5"
                     type="image"
-                    src="/image/tdee/5.png"
+                    src={require("../image/tdee/5.png")}
                     data-value="1.9"
                     onClick={ImageClick}
                     alt=""
@@ -289,7 +298,7 @@ function Calculator() {
             </div>
             <div>
               <button onClick={getResult} class="custom-btn btn-3">
-                <span>開始計算</span>
+                <span >開始計算</span>
               </button>
             </div>
           </div>
@@ -319,7 +328,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/rice.png" alt="" />
+                      <img src={require("../image/tdee/rice.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -337,7 +346,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/meat.png" alt="" />
+                      <img src={require("../image/tdee/meat.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -349,7 +358,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/milk.png" alt="" />
+                      <img src={require("../image/tdee/milk.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -361,7 +370,10 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/vegertable.png" alt="" />
+                      <img
+                        src={require("../image/tdee/vegertable.png")}
+                        alt=""
+                      />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -373,7 +385,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/fruit.png" alt="" />
+                      <img src={require("../image/tdee/fruit.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
@@ -385,7 +397,7 @@ function Calculator() {
                 <div class=" col-lg-2 col-md-6 justify-contant-center">
                   <div class="foodlist">
                     <div class="foodlist-img">
-                      <img src="/image/tdee/bean.png" alt="" />
+                      <img src={require("../image/tdee/bean.png")} alt="" />
                     </div>
                     <div class="">
                       <span class="foodlist-text">
