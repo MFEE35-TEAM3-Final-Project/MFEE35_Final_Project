@@ -6,12 +6,15 @@ import cityCountryData from "../json/CityCountyData.json";
 // import Cookies from "js-cookie";
 
 const ShoppingcartPage = () => {
+  const token =
+    "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjg3Njc3MDQ2OSwiaWF0IjoxNjg0MjM2NzcwfQ.-0tcgFPi-RYhmnS2LLZJe5W3ahaPr6HNFAMuRreyCcs";
   // const [cartData, setCartData] = useState(null);
   const [isConvenient, setIsConvenient] = useState(true);
   const [activeButton, setActiveButton] = useState(true);
   const [invoiceClass, setInvoiceClass] = useState(1);
   const [perInvoice, setPerInvoice] = useState(1);
   const [incomingDatas, setIncomingData] = useState([]);
+  const [eachData, setEachData] = useState([]);
 
   const [code, setCode] = useState("");
   const [coupons, setCoupons] = useState([]);
@@ -24,6 +27,30 @@ const ShoppingcartPage = () => {
   const [selectedCity, setSelectedCity] = useState("請選擇縣市");
   const [selectedTownship, setSelectedTownship] = useState("請先選擇縣市");
   const [selectedCityData, setSelectedCityData] = useState({});
+  const [detailAddress, setDetailAddress] = useState("");
+
+  const [hideDiscount, setHideDiscount] = useState(true);
+  const [hideShoppingCart, setHideShoppingCart] = useState(true);
+
+  const [order, setOrder] = useState({
+    phone: "",
+    name: "",
+    email: "",
+    coupon_code: "",
+    total_quantity: 0,
+    total_price: 0,
+    payment_method: "信用卡付款",
+    shipping_address: "",
+    ship_store: "導入超商介面",
+    order_details: null,
+  });
+  const updateOrder = (event) => {
+    const { name, value } = event.target;
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      [name]: value,
+    }));
+  };
 
   const handleCityChange = (event) => {
     setSelectedCity(event.target.value);
@@ -48,14 +75,48 @@ const ShoppingcartPage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         setIncomingData(res.data.data);
+        setEachData(
+          res.data.data.map(({ productid, quantity, price }) => ({
+            productid,
+            quantity,
+            price: parseFloat(price),
+          }))
+        );
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
+  useEffect(() => {
+    if (couponInfo) {
+      order.coupon_code = couponInfo.code;
+    }
+  }, [couponInfo]);
 
+  useEffect(() => {
+    const allAddress = selectedCity + selectedTownship + detailAddress;
+    console.log(allAddress);
+    if (allAddress) {
+      order.shipping_address = allAddress;
+    }
+  }, [selectedCity, selectedTownship, detailAddress]);
+  // orderdata
+  useEffect(() => {
+    if (incomingDatas) {
+      const allQuantity = incomingDatas.reduce((accumulator, currentItem) => {
+        return accumulator + currentItem.quantity;
+      }, 0);
+      const allPrice = incomingDatas.reduce((acc, { quantity, price }) => {
+        return acc + parseFloat(quantity) * parseFloat(price);
+      }, 0);
+      order.total_quantity = allQuantity;
+      order.total_price = allPrice;
+      order.order_details = eachData;
+      // console.log(eachData);
+    }
+  }, [incomingDatas]);
   const handleDelete = async (id) => {
     try {
       console.log(id);
@@ -69,6 +130,7 @@ const ShoppingcartPage = () => {
     }
   };
 
+  // 釣魚台
   useEffect(() => {
     const selectedCityData =
       cityList.find((city) => city.CityName === selectedCity) || {};
@@ -76,8 +138,8 @@ const ShoppingcartPage = () => {
   }, [selectedCity, cityList]);
 
   const renderedOptions = selectedCityData.AreaList
-    ? selectedCityData.AreaList.map((township) => (
-        <option key={township.AreaName} value={township.AreaName}>
+    ? selectedCityData.AreaList.map((township, index) => (
+        <option key={index} value={township.AreaName}>
           {township.AreaName}
         </option>
       ))
@@ -102,6 +164,33 @@ const ShoppingcartPage = () => {
     }
   }, [callCouponApi, couponApplied]);
 
+  // 發送訂單詳情
+  const userPushOrder = () => {
+    if (
+      order.phone !== "" &&
+      order.name !== "" &&
+      order.email !== "" &&
+      order.order_details !== null
+    ) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/user/orders`, order, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          // console.error(error);
+          console.log(error);
+          console.log(order);
+        });
+    } else {
+      alert("資料尚未完整填入");
+    }
+  };
+
   const findCoupon = async () => {
     setCallCouponApi(true);
     try {
@@ -113,14 +202,13 @@ const ShoppingcartPage = () => {
         (coupon) => coupon.coupon_id === res.data.message.coupon_id
       );
       if (isExist) {
-        // console.log("此折價券已儲存");
+        console.log("此折價券已儲存");
         setCouponApplied(false);
         return;
       } else {
         setCoupons([...coupons, res.data.message]);
         setCouponApplied(true);
       }
-      // setCallCouponApi(false);
     } catch (error) {
       // console.log(error);
       setCouponApplied(false);
@@ -168,6 +256,21 @@ const ShoppingcartPage = () => {
   const closePop = () => {
     setPopCuppon(true);
     setCallCouponApi(false);
+  };
+
+  const openDiscount = () => {
+    if (hideDiscount) {
+      setHideDiscount(false);
+    } else {
+      setHideDiscount(true);
+    }
+  };
+  const openShoppingCart = () => {
+    if (hideShoppingCart) {
+      setHideShoppingCart(false);
+    } else {
+      setHideShoppingCart(true);
+    }
   };
 
   return (
@@ -277,7 +380,7 @@ const ShoppingcartPage = () => {
         </p>
         <p className="smallTopic goodQtys totalQty">
           {/* <p className="smallTopic goodQtys"> */}
-          總計
+          總計 NT$
           <span id="addingTotalQty">
             {incomingDatas.reduce((acc, { quantity, price }) => {
               return acc + parseFloat(quantity) * parseFloat(price);
@@ -299,7 +402,14 @@ const ShoppingcartPage = () => {
           <span className="remindText">登入會員管理訂單更加方便</span>
           <div>
             <p className="fillRemind"> 購買人聯絡方式</p>
-            <input type="text" className="fillFrame" placeholder="聯絡信箱" />
+            <input
+              type="text"
+              className="fillFrame"
+              placeholder="聯絡信箱"
+              name="email"
+              value={order.email}
+              onChange={updateOrder}
+            />
           </div>
           <span className="remindText">
             訂單通知會寄到此信箱, 請您務必填入正確的E-MAIL
@@ -311,7 +421,14 @@ const ShoppingcartPage = () => {
           <div>
             <p className="fillRemind"> 取件人資訊</p>
             <p className="takingName"> 姓名</p>
-            <input type="text" className="fillFrame" placeholder="購買人姓名" />
+            <input
+              type="text"
+              className="fillFrame"
+              placeholder="購買人姓名"
+              name="name"
+              value={order.name}
+              onChange={updateOrder}
+            />
           </div>
           <span className="remindText">
             *超商取貨時請使用本名, 並記得攜帶身分證前往取貨
@@ -323,6 +440,9 @@ const ShoppingcartPage = () => {
               type="text"
               className="fillFrame"
               placeholder="購買人聯絡電話,例: 0911222333"
+              name="phone"
+              value={order.phone}
+              onChange={updateOrder}
             />
           </div>
           <span className="remindText">
@@ -345,7 +465,9 @@ const ShoppingcartPage = () => {
             <p className="fillRemind"> 優惠券/優惠碼</p>
             <button type="button" className="specOff" onClick={showPop}>
               {couponInfo
-                ? `Special Offer $ ${couponInfo.discount_rate * 100}% OFF`
+                ? `Special Offer $ ${
+                    100 - couponInfo.discount_rate * 100
+                  }% OFF ${couponInfo.code}`
                 : "選擇優惠券或輸入優惠碼"}
             </button>
           </div>
@@ -439,16 +561,17 @@ const ShoppingcartPage = () => {
                   onChange={handleTownshipChange}
                 >
                   <option defaultValue="" disabled>
-                    請選擇鄉鎮市區
+                    請先選擇縣市
                   </option>
                   {renderedOptions}
-                  {/* {holymama} */}
                 </select>
               </div>
               <input
                 type="text"
                 className="addressText"
                 placeholder="請輸入地址"
+                value={detailAddress}
+                onChange={(e) => setDetailAddress(e.target.value)}
               />
             </div>
           </div>
@@ -614,15 +737,15 @@ const ShoppingcartPage = () => {
         <hr className="myhr" />
         <div className="typingIv">
           <p>折扣</p>
-          <button
-            className="vIcon"
-            // onclick="showDiscount()"
-          >
-            <img src="./image/shoppingcart/letter-v.png" alt="V" />
+          <button className="vIcon" onClick={openDiscount}>
+            <img src={require("../image/shoppingcart/letter-v.png")} alt="V" />
           </button>
           <p>-NT$0</p>
         </div>
-        <div id="myDiscountDiv" className="discountFamily">
+        <div
+          id="myDiscountDiv"
+          className={`${hideDiscount ? "discountFamily" : ""}`}
+        >
           <div className="discountGroup">
             <div className="discount">活動：</div>
             <div className="discount">-NT$0</div>
@@ -658,39 +781,48 @@ const ShoppingcartPage = () => {
         <hr className="myhr" />
         <div className="typingIv">
           <p>購物車內容</p>
-          <button
-            className="bigvIcon"
-            // onclick="showmyShopping()"
-          >
+          <button className="bigvIcon" onClick={openShoppingCart}>
             <img
               className="vImage"
-              src="./image/shoppingcart/letter-v.png"
+              src={require("../image/shoppingcart/letter-v.png")}
               alt="V"
             />
           </button>
         </div>
-        <div id="myShoppingList" className="myShoppingFamily">
-          <div className="myShoppingGroup">
-            <div className="myShopping">
-              波波明太子舒肥雞腿餐盒&nbsp;&nbsp;X&nbsp;&nbsp;1
+
+        {incomingDatas.map((incomingData, index) => (
+          <div
+            id="myShoppingList"
+            key={index}
+            className={`${hideShoppingCart ? "myShoppingFamily" : ""}`}
+          >
+            <div className="myShoppingGroup">
+              <div className="myShopping">
+                {incomingData.name}&nbsp;&nbsp;X&nbsp;&nbsp;
+                {incomingData.quantity}
+              </div>
+              <div className="myShopping">
+                {incomingData.price * incomingData.quantity}
+              </div>
             </div>
-            <div className="myShopping">NT$ 160</div>
           </div>
-          <div className="myShoppingGroup">
-            <div className="myShopping">
-              波波明太子舒肥雞腿餐盒&nbsp;&nbsp;X&nbsp;&nbsp;1
-            </div>
-            <div className="myShopping">NT$ 160</div>
-          </div>
-        </div>
+        ))}
+
         <hr className="myhr" />
+
         <div className="typingIv">
-          <p>合計有2項商品</p>
+          <p>
+            合計有
+            {incomingDatas.reduce((accumulator, currentItem) => {
+              return accumulator + currentItem.quantity;
+            }, 0)}
+            項商品
+          </p>
         </div>
       </div>
 
       <div className="rNow">
-        <button type="button" className="shopBtn">
+        <button type="button" className="shopBtn" onClick={userPushOrder}>
           <div>立即結帳</div>
         </button>
       </div>
@@ -705,6 +837,7 @@ const ShoppingcartPage = () => {
                 type="text"
                 className="attText"
                 placeholder="請輸入優惠碼"
+                name="coupon_code"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
               />
@@ -715,8 +848,8 @@ const ShoppingcartPage = () => {
             {callCouponApi && !couponApplied && (
               <h4 style={{ color: "red" }}>無效的折扣碼</h4>
             )}
-            {coupons.map((coupon) => (
-              <div key={coupon.id}>
+            {coupons.map((coupon, index) => (
+              <div key={index}>
                 <div className="cupponGroup">
                   <div className="borderLine">
                     <img
@@ -727,7 +860,7 @@ const ShoppingcartPage = () => {
                   </div>
                   <div className="cupponDec">
                     <div>Special Offer</div>
-                    <div>$ {coupon.discount_rate * 100} OFF</div>
+                    <div>$ {100 - coupon.discount_rate * 100} OFF </div>
                   </div>
                   <div className="cupponBtn">
                     <button

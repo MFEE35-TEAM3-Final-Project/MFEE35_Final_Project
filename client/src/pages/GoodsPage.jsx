@@ -129,6 +129,27 @@ const GoodsPage = () => {
       setCartData(existingCartData);
     }
   };
+  const handleAddToFavorite = () => {
+    const token =
+      "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+    axios.defaults.headers.common["Authorization"] = `${token}`;
+    let x = axios.defaults.headers.common["Authorization"];
+    if (x) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/user/favorite`, {
+          productid: productid,
+          // quantity: quantity,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      alert("請先登入");
+    }
+  };
 
   const nextButtonHandler = () => {
     setActiveImageIndex((prevIndex) => {
@@ -250,11 +271,19 @@ const GoodsPage = () => {
               <button className="cartIn" onClick={handleAddToCart}>
                 加入購物車
               </button>
-              <button className="buyIn">立即購買</button>
+              <Link
+                to={"/cart"}
+                rel="stylesheet"
+                className="buyIn"
+                onClick={handleAddToCart}
+              >
+                立即購買
+              </Link>
+              {/* <button className="buyIn" onClick={handleAddToCart}>立即購買</button> */}
             </div>
             <br />
             <br />
-            <button className="joinFollow">
+            <button className="joinFollow" onClick={handleAddToFavorite}>
               <img src={require("../image/goods/heart.png")} alt="最愛" />
               加入最愛
             </button>

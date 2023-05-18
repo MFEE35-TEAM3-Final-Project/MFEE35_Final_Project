@@ -67,7 +67,7 @@ const StorePage = () => {
         `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
       )
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         setProducts(res.data.results);
         setTotalPage(res.data.totalPages);
       })
@@ -133,19 +133,23 @@ const StorePage = () => {
   }, [currentPage]);
   const allProductCategory = () => {
     setCurrentCategory("");
+    setCurrentActivity("");
     setUserSelectWay("全站商品");
   };
   const wheyProteinCategory = () => {
     setCurrentCategory(1);
+    setCurrentActivity("");
     setUserSelectWay("乳清蛋白");
   };
   const gainMuscleCategory = () => {
     setCurrentCategory(2);
+    setCurrentActivity("");
     setUserSelectWay("增肌減脂套餐");
   };
   const changeActivityID = () => {
     setCurrentActivity({ second }.second);
     setUserSelectWay(eventTitles[second - 1]);
+    setCurrentCategory("");
   };
 
   return (
@@ -288,7 +292,7 @@ const StorePage = () => {
           {products.map((product) => (
             <div key={product.productid} className={columnClass}>
               <Link
-                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
                 <div className="mycardIcon">
@@ -306,7 +310,7 @@ const StorePage = () => {
 
               <br />
               <Link
-                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
                 <div>
@@ -316,11 +320,17 @@ const StorePage = () => {
               </Link>
 
               <Link
-                to={`http://localhost:3000/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
-                <span className="cardSprice">{product.price}</span>
-                {/* <span className="cardPrice">{goodPrices}</span> */}
+                {product.activityId !== "" ? (
+                  <div>
+                    <span className="cardSprice">{product.price}</span>
+                    <span className="cardPrice">1600</span>
+                  </div>
+                ) : (
+                  <span className="cardSprice">{product.price}</span>
+                )}
               </Link>
             </div>
           ))}
