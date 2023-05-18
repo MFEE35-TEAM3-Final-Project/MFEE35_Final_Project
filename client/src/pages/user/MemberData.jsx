@@ -136,7 +136,7 @@ function MemberData() {
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
       <MemberHeader />
-      <div className="wapper">
+      <div className="wrapper">
         <div className="memberTitle">
           <h3 id="titleH3">會員資料</h3>
         </div>

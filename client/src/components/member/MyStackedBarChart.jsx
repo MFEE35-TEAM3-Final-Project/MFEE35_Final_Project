@@ -66,7 +66,7 @@ function MyStackedBarChart() {
   return (
     <div className="myStackedBarChart">
       <div>巨量營養素</div>
-      <canvas ref={stackedBarRef} id="stackedBarChart"></canvas>
+      <canvas ref={stackedBarRef} id="memberStackedBarChart"></canvas>
     </div>
   );
 }

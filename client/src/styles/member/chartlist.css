@@ -3,14 +3,14 @@
 
 
 
-.myBarChart {
+.memberBarChart {
     height: 100%;
     margin: 20px auto
 }
 
 
 
-.chartInfo {
+.memberChartInfo {
     position: relative;
     width: 100%;
     height: 100%;
@@ -24,6 +24,6 @@
 }
 
 
-#stackedBarChart {
+#memberStackedBarChart {
     margin-bottom: 50px;
 }

@@ -7,7 +7,7 @@ import MemberHeader from "../../components/member/MemberHeader";
 import MyDonutChart from "../../components/member/MyDonutChart";
 import MyStackedBarChart from "../../components/member/MyStackedBarChart";
 
-// import "../../styles/member/chartlist.css";
+import "../../styles/member/chartlist.css";
 
 function ChartListPage() {
   useEffect(() => {
@@ -23,18 +23,18 @@ function ChartListPage() {
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
       <MemberHeader />
-      <div className="wapper">
+      <div className="wrapper">
         <div className="memberTitle">
           <h3 id="titleH3">數據圖表</h3>
         </div>
       </div>
       <div className="container">
-        <div className="row chartInfo">
+        <div className="row memberChartInfo">
           <div className="col-12">
             <div className="row">
               <MyBarChart />
               <MyDonutChart />
-              <div className="myBarChart col-6">
+              <div className="memberBarChart col-6">
                 <MyStackedBarChart />
                 <div className="row">
                   <div className="col-6" style={{ textAlign: "left" }}>
