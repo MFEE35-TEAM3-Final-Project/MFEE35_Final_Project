@@ -144,3 +144,6 @@ body{
 #menuToggle input:checked~ul {
     transform: none;
 }
+/* .logout{
+    border: 2px solid black;
+} */

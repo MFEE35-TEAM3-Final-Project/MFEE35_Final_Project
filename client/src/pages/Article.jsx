@@ -2,7 +2,7 @@ import "../styles/article.css";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { BiMessageEdit } from "react-icons/bi";
+import { BiMessageEdit, BiMessageAlt } from "react-icons/bi";
 
 function Article() {
   const [article, setArticle] = useState([]);
@@ -12,6 +12,7 @@ function Article() {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [nextArticleId, setNextArticleId] = useState(""); //下一篇文章
   const [comments, setComments] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   // const [isAuthorization, setIsAuthorization] = useState(false)
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -64,7 +65,7 @@ function Article() {
           };
         });
         setArticles(formattedArticles);
-        console.log(formattedArticles)
+        console.log(formattedArticles);
       })
       .catch((err) => {
         console.error(err);
@@ -111,7 +112,20 @@ function Article() {
       });
   }, []);
   //判斷會員
-
+  useEffect(() => {
+    const jwtToken = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY"
+    
+    axios.defaults.headers.common["Authorization"] = jwtToken;
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
+      .then((res) => {
+        console.log(res.data);
+        setIsAuthenticated(true);
+      })
+      .catch((err) => {
+        setIsAuthenticated(false);
+      });
+  });
   const sendMessage = async () => {
     try {
       const jwtToken =
@@ -221,7 +235,8 @@ function Article() {
                 </h1>
               </div>
               <div>
-                <div className="userText ">
+                {isAuthenticated ? (
+                  <div className="userText ">
                   <div className="">
                     <label htmlFor="content-textarea">
                       嗨囉!
@@ -246,6 +261,7 @@ function Article() {
                     </button>
                   </div>
                 </div>
+                ):(<div className="userText-notlogin"><BiMessageAlt/><div>請先<a href="/LoginPage">登入</a>，開啟留言功能</div></div>)}
                 {comments.length === 0 ? (
                   <div className="nocomment">尚無留言</div>
                 ) : (
@@ -254,7 +270,11 @@ function Article() {
                       <div className="d-flex align-items-center mt-3">
                         <div className="headimg">
                           <img
-                           src={commentsList.user.avatar ? commentsList.user.avatar : require("../image/article/userhead.png")}
+                            src={
+                              commentsList.user.avatar
+                                ? commentsList.user.avatar
+                                : require("../image/article/userhead.png")
+                            }
                             alt=""
                           />
                         </div>

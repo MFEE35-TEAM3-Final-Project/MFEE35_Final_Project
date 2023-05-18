@@ -276,9 +276,7 @@ function Blog() {
         <div className="articlelist">
           <div className="row g-0  tab-content d-flex flex-column">
             <div
-              className="col-lg-8 col-md-12   tab-pane show active flex-wrap"
-              
-            >
+              className="col-lg-8 col-md-12   tab-pane show active flex-wrap">
               {articles.map((article) => (
                 <div
                   key={article.article_id}

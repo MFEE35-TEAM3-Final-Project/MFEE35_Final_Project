@@ -190,7 +190,9 @@ export default function HomePage() {
         </div>
         <div className="L-text">Benefit</div>
         <div className="benefit-item d-flex justify-content-center">
-          <div className="item-box">
+          <div className="item-box"
+           data-aos="fade-up"
+           data-aos-duration="2000">
             <div className="item-box-img">
               <img src={require("../image/7.png")} />
             </div>
@@ -199,7 +201,9 @@ export default function HomePage() {
               <p>吃飯與健康息息相關，均衡比控制食量還重要!</p>
             </div>
           </div>
-          <div className="item-box">
+          <div className="item-box"
+           data-aos="fade-up"
+           data-aos-duration="2000">
             <div className="item-box-img">
               <img src={require("../image/8.png")} />
             </div>
@@ -210,7 +214,9 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          <div className="item-box">
+          <div className="item-box"
+           data-aos="fade-up"
+           data-aos-duration="2000">
             <div className="item-box-img">
               <img src={require("../image/6.png")} alt="" />
             </div>
@@ -223,7 +229,8 @@ export default function HomePage() {
           </div>
         </div>
         <div className="R-text">BeforeAfter</div>
-        <div className="BA-item">
+        <div className="BA-item"  data-aos="fade-up"
+        data-aos-duration="2000">
           <div className="BA-item-box">
             <img className="img-fluid" src={require("../image/beaf.jpg")} />
           </div>
@@ -246,7 +253,8 @@ export default function HomePage() {
           <span>Product</span>
         </div>
         <div style={{ height: "12vw" }}></div>
-        <div className="product-item  multiple-items">
+        <div className="product-item  multiple-items"
+        >
           <Slider {...settings}>
             <div className="P-item-box ">
               <a href="/">
