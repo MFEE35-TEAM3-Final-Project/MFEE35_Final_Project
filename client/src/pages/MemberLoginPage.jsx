@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Nav from "../components/Nav";
+// import Nav from "../components/Nav";
 import "../styles/member/main.css";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [token, setToken] = useState("");
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const authToken = Cookies.get("authToken");
-    if (authToken) {
-      verifyToken(authToken);
-    }
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,10 +25,11 @@ const UserLogin = () => {
       );
 
       if (response.data.success) {
+        console.log("成功");
         const authToken = response.data.token;
         const expDate = new Date(response.data.exp);
-        setToken(authToken);
         Cookies.set("jwtToken", authToken, { expires: expDate });
+        navigate("/MemberHomePage");
       } else {
         setErrorMessage(response.data.message);
       }
@@ -46,37 +39,9 @@ const UserLogin = () => {
     }
   };
 
-  const verifyToken = async (token) => {
-    try {
-      axios.defaults.headers.common["Authorization"] = token;
-
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/user/check`
-      );
-
-      if (response.data.success) {
-        console.log("請求成功:", response.data);
-        const data = response.data;
-        console.log("已驗證 Token");
-        console.log(data.user);
-        // 可以根據需要處理使用者資訊
-        navigate("/MemberHomePage");
-      } else {
-        console.log("Token 錯誤，請重新登入");
-        console.log(response.data.message);
-        // 顯示錯誤訊息或執行其他錯誤處理
-      }
-    } catch (error) {
-      console.error("請求失敗:", error);
-
-      console.error(error);
-      setErrorMessage("發生了一個錯誤，請稍後重試");
-    }
-  };
-
   return (
     <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
-      <Nav />
+      {/* <Nav /> */}
       <div className="wrapper" style={{ backgroundColor: "#F7F4E9" }}>
         <div>
           <h3 id="titleH3">會員登入</h3>

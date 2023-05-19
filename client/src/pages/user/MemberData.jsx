@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MemberHeader from "../../components/member/MemberHeader";
+// Cookie
+import Cookies from "js-cookie";
 
 import "../../styles/member/userinfo.css";
 
@@ -19,10 +21,7 @@ function MemberData() {
 
   const fetchMemberData = async () => {
     try {
-      const jwtToken = document.cookie.replace(
-        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
+      const jwtToken = Cookies.get("jwtToken");
 
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/check`,

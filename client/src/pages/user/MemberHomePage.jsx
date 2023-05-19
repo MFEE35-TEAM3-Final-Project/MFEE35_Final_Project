@@ -25,10 +25,7 @@ function MemberHomePage() {
 
   const fetchMemberHomePage = async () => {
     try {
-      const jwtToken = document.cookie.replace(
-        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
+      const jwtToken = Cookies.get("jwtToken");
 
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/check`,
