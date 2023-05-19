@@ -3,6 +3,7 @@ import "../styles/blog.css";
 import axios from "axios";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { GrNext, GrPrevious } from "react-icons/gr";
+import Nav from "../components/Nav";
 
 function Blog() {
   const [articles, setArticles] = useState([]);
@@ -67,6 +68,7 @@ function Blog() {
   }
   return (
     <div>
+      <Nav />
       <div className=" F-container mt-5">
         <div className="row g-5">
           <div className="col-lg-7 col-12">

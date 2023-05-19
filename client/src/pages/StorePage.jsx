@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import "../styles/store.css";
+import Nav from "../components/Nav";
 
 const StorePage = () => {
   // 設定初始圖片狀態
@@ -154,6 +155,7 @@ const StorePage = () => {
 
   return (
     <div>
+      <Nav />
       <Helmet>
         <link
           href="https://fonts.googleapis.com/css2?family=Allura&display=swap"

@@ -8,6 +8,7 @@ import "../styles/homepage.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.js";
+import Nav from "../components/Nav";
 
 export default function HomePage() {
   useEffect(() => {
@@ -65,6 +66,7 @@ export default function HomePage() {
 
   return (
     <div>
+      <Nav />
       <div className="Banner">
         <div className="decoration">
           <div className="Dtext">
@@ -120,7 +122,7 @@ export default function HomePage() {
             <div className="recommend-text">
               <div className="recommend-text-introduce">
                 <div className="more">
-                  <a href="/user/selfies">了解更多</a>
+                  <a href="/LoginPage">了解更多</a>
                 </div>
               </div>
               <div className="recommend-text-introduce">
@@ -190,9 +192,7 @@ export default function HomePage() {
         </div>
         <div className="L-text">Benefit</div>
         <div className="benefit-item d-flex justify-content-center">
-          <div className="item-box"
-           data-aos="fade-up"
-           data-aos-duration="2000">
+          <div className="item-box" data-aos="fade-up" data-aos-duration="2000">
             <div className="item-box-img">
               <img src={require("../image/7.png")} />
             </div>
@@ -201,9 +201,7 @@ export default function HomePage() {
               <p>吃飯與健康息息相關，均衡比控制食量還重要!</p>
             </div>
           </div>
-          <div className="item-box"
-           data-aos="fade-up"
-           data-aos-duration="2000">
+          <div className="item-box" data-aos="fade-up" data-aos-duration="2000">
             <div className="item-box-img">
               <img src={require("../image/8.png")} />
             </div>
@@ -214,9 +212,7 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          <div className="item-box"
-           data-aos="fade-up"
-           data-aos-duration="2000">
+          <div className="item-box" data-aos="fade-up" data-aos-duration="2000">
             <div className="item-box-img">
               <img src={require("../image/6.png")} alt="" />
             </div>
@@ -229,8 +225,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="R-text">BeforeAfter</div>
-        <div className="BA-item"  data-aos="fade-up"
-        data-aos-duration="2000">
+        <div className="BA-item" data-aos="fade-up" data-aos-duration="2000">
           <div className="BA-item-box">
             <img className="img-fluid" src={require("../image/beaf.jpg")} />
           </div>
@@ -253,11 +248,10 @@ export default function HomePage() {
           <span>Product</span>
         </div>
         <div style={{ height: "12vw" }}></div>
-        <div className="product-item  multiple-items"
-        >
+        <div className="product-item  multiple-items">
           <Slider {...settings}>
             <div className="P-item-box ">
-              <a href="/">
+              <a href="/store">
                 <div className="mask">
                   <p>可可風味能量棒</p>
                   <p>前往購買</p>
@@ -266,7 +260,7 @@ export default function HomePage() {
               </a>
             </div>
             <div className="P-item-box ">
-              <a href="/">
+              <a href="/store">
                 <div className="mask">
                   <p>抹茶豌豆蛋白粉</p>
                   <p>前往購買</p>
@@ -275,7 +269,7 @@ export default function HomePage() {
               </a>
             </div>
             <div className="P-item-box ">
-              <a href="/">
+              <a href="/store">
                 <div className="mask">
                   <p>低溫舒肥雞胸肉健康餐盒</p>
                   <p>前往購買</p>

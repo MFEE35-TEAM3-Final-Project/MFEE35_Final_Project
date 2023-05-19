@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 
 // Component
 import Nav from "./components/Nav";
@@ -34,9 +34,50 @@ function App() {
     setIsBack(currentPath.startsWith("/admin"));
   }, []);
 
+  // return (
+  //   <div>
+  //     <Nav />
+  //     <ScrollTop />
+
+  //     <div>
+  //       <Routes>
+  //         <Route path="/" element={<HomePage />} />
+  //         <Route path="/calculator" element={<Calculator />} />
+  //         <Route path="/blog" element={<Blog />} />
+  //         <Route path="/article/:id" element={<Article />} />
+  //         <Route path="/store" element={<StorePage />} />
+  //         <Route
+  //           path="/goods/:productid/:activityid/:foodId"
+  //           element={<GoodsPage />}
+  //         />
+  //         <Route path="/cart" element={<ShoppingcartPage />} />
+  //         <Route path="/foodRecord" element={<FoodRecordNumber />} />
+  //         <Route element={<AdminBoard />}>
+  //           <Route path="/admin/backstage" element={<BackStage />} />
+  //         </Route>
+  //         {/* user page */}
+  //         <Route path="/LoginPage" element={<MemberLoginPage />} />
+  //         <Route path="/MemberRegister" element={<MemberRegister />} />
+  //         {/* 不需要Nav */}
+  //         <Route>
+  //           <Route path="/MemberHomePage" element={<MemberHomePage />} />
+  //           <Route path="/MemberChartList" element={<MemberChartList />} />
+  //           <Route path="/MemberData" element={<MemberData />} />
+  //           <Route path="/MemberFav" element={<MemberFav />} />
+  //           <Route path="/MemberOrders" element={<MemberOrders />} />
+  //         </Route>
+  //         {/* 不需要Nav */}
+  //       </Routes>
+  //     </div>
+
+  //     {isBack ? "" : <Footer />}
+  //     <ScrollTop />
+  //   </div>
+  // );
+
   return (
     <div>
-      <Nav />
+      {/* <Nav /> */}
       <ScrollTop />
 
       <div>
@@ -51,7 +92,7 @@ function App() {
             element={<GoodsPage />}
           />
           <Route path="/cart" element={<ShoppingcartPage />} />
-          <Route path="/foodRecord" element={<FoodRecordNumber />} />
+
           <Route element={<AdminBoard />}>
             <Route path="/admin/backstage" element={<BackStage />} />
           </Route>
@@ -59,11 +100,13 @@ function App() {
           <Route path="/LoginPage" element={<MemberLoginPage />} />
           <Route path="/MemberRegister" element={<MemberRegister />} />
           {/* 不需要Nav */}
+          <Route path="/foodRecord" element={<FoodRecordNumber />} />
           <Route path="/MemberHomePage" element={<MemberHomePage />} />
           <Route path="/MemberChartList" element={<MemberChartList />} />
           <Route path="/MemberData" element={<MemberData />} />
           <Route path="/MemberFav" element={<MemberFav />} />
           <Route path="/MemberOrders" element={<MemberOrders />} />
+
           {/* 不需要Nav */}
         </Routes>
       </div>

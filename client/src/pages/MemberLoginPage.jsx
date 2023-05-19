@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-
+import Nav from "../components/Nav";
 import "../styles/member/main.css";
 
 const UserLogin = () => {
@@ -75,6 +75,7 @@ const UserLogin = () => {
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
+      <Nav />
       <div className="wrapper" style={{ backgroundColor: "#F7F4E9" }}>
         <div>
           <h3 id="titleH3">會員登入</h3>

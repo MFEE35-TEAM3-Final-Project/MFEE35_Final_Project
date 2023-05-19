@@ -3,6 +3,7 @@ import axios from "axios";
 import { Helmet } from "react-helmet";
 import "../styles/shoppingcart.css";
 import cityCountryData from "../json/CityCountyData.json";
+import Nav from "../components/Nav";
 // import Cookies from "js-cookie";
 
 const ShoppingcartPage = () => {
@@ -450,6 +451,7 @@ const ShoppingcartPage = () => {
 
   return (
     <div className="mybody">
+      <Nav />
       <Helmet>
         <link
           href="https://fonts.googleapis.com/css2?family=Allura&display=swap"

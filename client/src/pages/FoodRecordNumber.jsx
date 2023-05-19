@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "../styles/userFoodRecord.css";
 // import Footer from "../components/Footer";
-import Header from "../components/Header";
+import MemberHeader from "../components/member/MemberHeader";
 import AddFoodList from "../components/AddFoodList";
 import axios from "axios";
 // 圖片區
@@ -205,6 +205,7 @@ function FoodRecordNumber() {
         brProtein += protein * qty;
         brSaturatedFat += saturated_fat * qty;
         brSodium += sodium * qty;
+        setBrTotalCalories(brCalories);
         setBrTotalCarbohydrate(brCarbohydrate);
         setBrTotalProtein(brProtein);
         setBrTotalSaturatedFat(brSaturatedFat);
@@ -641,7 +642,7 @@ function FoodRecordNumber() {
 
   return (
     <Fragment>
-      <Header />
+      <MemberHeader />
       <div className="foodRecordBgDiv">
         <div className="row foodRecordBg shadow p-3 mb-2 bg-body rounded">
           <div className="oneAndTwoAreaBg d-flex">

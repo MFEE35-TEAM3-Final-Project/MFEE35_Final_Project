@@ -49,7 +49,7 @@ function Nav() {
 
           {isAuthenticated ? (
             <li className="d-flex">
-              <a href="/">
+              <a href="/MemberHomePage">
                 <FaUser className="me-2" />
                 {username}
               </a>

@@ -4,6 +4,7 @@ import axios from "axios";
 
 import logo from "../image/logo/logo.png";
 import "../styles/member/main.css";
+import Nav from "../components/Nav";
 
 const UserRegistration = () => {
   const [formValues, setFormValues] = useState({
@@ -138,6 +139,7 @@ const UserRegistration = () => {
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", padding: "20px" }}>
+      <Nav />
       <div className="wrapper">
         <div>
           <h3 id="titleH3">會員註冊</h3>

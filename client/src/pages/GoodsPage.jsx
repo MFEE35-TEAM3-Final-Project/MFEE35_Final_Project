@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet";
 import DoughnutComponent from "../components/DoughnutChart";
 import Cookies from "js-cookie";
 import "../styles/goods.css";
+import Nav from "../components/Nav";
 
 const GoodsPage = () => {
   // 設定取得的商品ID、食物ID
@@ -187,6 +188,7 @@ const GoodsPage = () => {
 
   return (
     <div>
+      <Nav />
       <Helmet>
         <link
           href="https://fonts.googleapis.com/css2?family=Allura&display=swap"

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BiMessageEdit, BiMessageAlt } from "react-icons/bi";
+import Nav from "../components/Nav";
 
 function Article() {
   const [article, setArticle] = useState([]);
@@ -113,8 +114,9 @@ function Article() {
   }, []);
   //判斷會員
   useEffect(() => {
-    const jwtToken = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY"
-    
+    const jwtToken =
+      "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY";
+
     axios.defaults.headers.common["Authorization"] = jwtToken;
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
@@ -160,6 +162,7 @@ function Article() {
   }
   return (
     <div>
+      <Nav />
       <div className="A-article">
         <div className="row g-0">
           <div className="col-3 ">
@@ -237,31 +240,38 @@ function Article() {
               <div>
                 {isAuthenticated ? (
                   <div className="userText ">
-                  <div className="">
-                    <label htmlFor="content-textarea">
-                      嗨囉!
-                      <span className="userName ps-3 pe-3">登入抓使用者</span>
-                      留言分享你的想法吧！
-                    </label>
-                    <textarea
-                      id="userText"
-                      name="content"
-                      value={message}
-                      onChange={userTextMes}
-                      className="form-control"
-                      aria-label="With textarea"
-                    ></textarea>
+                    <div className="">
+                      <label htmlFor="content-textarea">
+                        嗨囉!
+                        <span className="userName ps-3 pe-3">登入抓使用者</span>
+                        留言分享你的想法吧！
+                      </label>
+                      <textarea
+                        id="userText"
+                        name="content"
+                        value={message}
+                        onChange={userTextMes}
+                        className="form-control"
+                        aria-label="With textarea"
+                      ></textarea>
+                    </div>
+                    <div className="d-flex">
+                      <button
+                        className="btn btn-dark ms-auto"
+                        onClick={sendMessage}
+                      >
+                        發送
+                      </button>
+                    </div>
                   </div>
-                  <div className="d-flex">
-                    <button
-                      className="btn btn-dark ms-auto"
-                      onClick={sendMessage}
-                    >
-                      發送
-                    </button>
+                ) : (
+                  <div className="userText-notlogin">
+                    <BiMessageAlt />
+                    <div>
+                      請先<a href="/LoginPage">登入</a>，開啟留言功能
+                    </div>
                   </div>
-                </div>
-                ):(<div className="userText-notlogin"><BiMessageAlt/><div>請先<a href="/LoginPage">登入</a>，開啟留言功能</div></div>)}
+                )}
                 {comments.length === 0 ? (
                   <div className="nocomment">尚無留言</div>
                 ) : (

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import "../styles/tdeecalculator.css";
+import Nav from "../components/Nav";
 
 function Calculator() {
   const [userAge, setUserAge] = useState("");
@@ -26,13 +27,13 @@ function Calculator() {
             ? [3.5, 1.5, 2]
             : result2 >= 2000
             ? [3, 1, 2]
-            : result2 >= 1800 
+            : result2 >= 1800
             ? [3, 1, 2]
             : result2 >= 1500
             ? [2.5, 1, 1.5]
-            : result2 >= 1200?
-            [1.5, 1, 0.5]:
-            [1.5, 1, 0.5],
+            : result2 >= 1200
+            ? [1.5, 1, 0.5]
+            : [1.5, 1, 0.5],
         meat:
           result2 >= 2700
             ? 8
@@ -40,15 +41,16 @@ function Calculator() {
             ? 7
             : result2 <= 2200 && result2 >= 2000
             ? 6
-            : result2 >= 1800 
+            : result2 >= 1800
             ? 5
-            : result2 >= 1500  
+            : result2 >= 1500
             ? 4
-            : result2 >= 1200 
-            ? 3 : 3,
+            : result2 >= 1200
+            ? 3
+            : 3,
         milk: result2 >= 2700 ? 2 : 1.5,
         vegetable:
-          result2 >= 2500 ? 5 : result2 >= 2200  ? 4 : result2 >= 2000 ? 3 : 3,
+          result2 >= 2500 ? 5 : result2 >= 2200 ? 4 : result2 >= 2000 ? 3 : 3,
         fruit:
           result2 >= 2700
             ? 4
@@ -102,8 +104,14 @@ function Calculator() {
     setGender(parseInt(event.target.value));
   };
   function getResult() {
-    console.log(gender)
-    if (!userAge || !userHeight || !userWeight || !userSports || gender==undefined) {
+    console.log(gender);
+    if (
+      !userAge ||
+      !userHeight ||
+      !userWeight ||
+      !userSports ||
+      gender == undefined
+    ) {
       alert("尚未填寫完資料");
       return;
     }
@@ -125,6 +133,7 @@ function Calculator() {
 
   return (
     <div>
+      <Nav />
       <div class="calculator">
         <div class="container">
           <div class="tdee-Banner"></div>
@@ -146,7 +155,6 @@ function Calculator() {
                   id="flexRadioDefault1"
                   value="1"
                   onChange={genderSelect}
-                  
                 />
                 <label class="form-check-label" for="flexRadioDefault1">
                   男生
@@ -160,7 +168,6 @@ function Calculator() {
                   id="flexRadioDefault2"
                   value="0"
                   onChange={genderSelect}
-                 
                 />
                 <label class="form-check-label" for="flexRadioDefault2">
                   女生
@@ -298,7 +305,7 @@ function Calculator() {
             </div>
             <div>
               <button onClick={getResult} class="custom-btn btn-3">
-                <span >開始計算</span>
+                <span>開始計算</span>
               </button>
             </div>
           </div>
