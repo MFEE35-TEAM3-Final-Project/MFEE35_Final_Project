@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import MemberHeader from "../../components/member/MemberHeader";
@@ -9,7 +9,21 @@ import "../../styles/member/memberHome.css";
 import target from "../../image/memberrecrod/target.png";
 import fork from "../../image/memberrecrod/fork.png";
 
+// Cookie
+import Cookies from "js-cookie";
+
 function MemberHomePage() {
+  useEffect(() => {
+    const authToken = Cookies.get("authToken");
+    if (authToken) {
+      console.log("取得的 authToken:", authToken);
+      // 在此處使用 authToken 進行相應的操作
+    } else {
+      console.log("找不到 authToken");
+      // 在找不到 authToken 的情況下執行其他邏輯
+    }
+  }, []);
+
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
       <MemberHeader />

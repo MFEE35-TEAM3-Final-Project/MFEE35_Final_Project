@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { FaUser, FaShoppingCart, FaCaretRight } from "react-icons/fa";
 import "../styles/Nav.css";
 import axios from "axios";
+import Cookies from "js-cookie";
 function Nav() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState();
   useEffect(() => {
-    const jwtToken =
-      "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY";
+    const jwtToken = Cookies.get("authToken");
 
     axios.defaults.headers.common["Authorization"] = jwtToken;
     axios
@@ -21,12 +21,11 @@ function Nav() {
       .catch((err) => {
         setIsAuthenticated(false);
       });
-  });
+  }, []);
   // const isAuthenticated = localStorage.getItem("token") !== null;
   const email = localStorage.getItem("email");
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    document.cookie = "jwtToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    Cookies.remove("authToken");
     window.location.reload();
   };
   const [isMenuOpen, setIsMenuOpen] = useState(false);

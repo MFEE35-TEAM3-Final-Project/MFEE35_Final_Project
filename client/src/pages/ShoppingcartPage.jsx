@@ -127,6 +127,9 @@ const ShoppingcartPage = () => {
   // 總共的折價金額 活動＋優惠
   const [finalTotalDiscount, setFinalTotalDiscount] = useState(0);
 
+  // 折扣後的商品價格 x 數量
+  const [checkingActivityPrice, setCheckingActivityPrice] = useState(0);
+
   useEffect(() => {
     // 測試
     // 折扣後金額
@@ -155,6 +158,7 @@ const ShoppingcartPage = () => {
       setUserAddingCartDiscount(totalDiscount);
       setUserAddingCartPrice(totalCheckingActivityPrice);
       setUserAddingCartOgPrice(totalOgPrice);
+      setCheckingActivityPrice(checkingActivityPrice);
 
       // 總共折價合計
       if (couponInfo) {
@@ -241,7 +245,7 @@ const ShoppingcartPage = () => {
                   <span id="addingGoodsPrice">
                     {couponInfo
                       ? Math.round(
-                          userAddingCartPrice * couponInfo.discount_rate
+                          checkingActivityPrice * couponInfo.discount_rate
                         )
                       : incomingData.activityId !== 0
                       ? incomingData.afterPrice * incomingData.quantity
