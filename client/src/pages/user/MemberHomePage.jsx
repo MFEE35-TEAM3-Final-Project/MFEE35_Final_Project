@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import MemberHeader from "../../components/member/MemberHeader";
 import BarChart from "../../components/member/BarChart.jsx";
@@ -13,16 +14,70 @@ import fork from "../../image/memberrecrod/fork.png";
 import Cookies from "js-cookie";
 
 function MemberHomePage() {
+  const [user, setUser] = useState(null);
+  const [userHeight, setUserHeight] = useState("");
+  const [userWeight, setUserWeight] = useState("");
+  const [exerciseLevel, setExerciseLevel] = useState("");
+
   useEffect(() => {
-    const authToken = Cookies.get("authToken");
-    if (authToken) {
-      console.log("取得的 authToken:", authToken);
-      // 在此處使用 authToken 進行相應的操作
-    } else {
-      console.log("找不到 authToken");
-      // 在找不到 authToken 的情況下執行其他邏輯
-    }
+    fetchMemberHomePage();
   }, []);
+
+  const fetchMemberHomePage = async () => {
+    try {
+      const jwtToken = document.cookie.replace(
+        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
+        "$1"
+      );
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/user/check`,
+        null,
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      );
+
+      console.log(response.data);
+
+      if (response.data.success) {
+        const userData = response.data.user;
+        setUser(userData);
+
+        const recordsResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+          {
+            headers: {
+              Authorization: jwtToken,
+            },
+          }
+        );
+
+        console.log(recordsResponse.data);
+        if (recordsResponse.data.success) {
+          const records = recordsResponse.data.records;
+          // 處理紀錄數據，例如：
+          records.forEach((record) => {
+            const weight = record.weight;
+            const height = record.height;
+            const exerciseLevel = record.exercise_level;
+
+            setUserHeight(height);
+            setUserWeight(weight);
+            setExerciseLevel(exerciseLevel);
+          });
+        } else {
+          console.error(recordsResponse.data.message);
+        }
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
@@ -45,7 +100,7 @@ function MemberHomePage() {
                   </p>
                   <p htmlFor="userName">姓名：</p>
                   <p htmlFor="userGender">性別：</p>
-                  <p htmlFor="userAge">年齡：</p>
+                  <p htmlFor="userAge">生日：</p>
                   <p htmlFor="userHeight">身高(cm)：</p>
                   <p htmlFor="userWeight">體重(kg)：</p>
                   <p style={{ minWidth: "80px" }} htmlFor="userSport">
@@ -56,13 +111,25 @@ function MemberHomePage() {
                   className="col-4 memberHomePageInfo"
                   style={{ textAlign: "left" }}
                 >
-                  <p>20230425-001</p>
-                  <p>皮卡丘</p>
-                  <p>男性</p>
-                  <p>36</p>
-                  <p>183</p>
-                  <p>85</p>
-                  <p>幾乎不運動</p>
+                  <p>{user && user.user_id}</p>
+                  <p>{user && user.username}</p>
+                  <p>{user && (user.gender === "male" ? "男生" : "女生")}</p>
+                  <p>
+                    {user &&
+                      user.birthday &&
+                      new Date(user.birthday).toLocaleDateString()}
+                  </p>
+                  <p>{user && userHeight} </p>
+                  <p>{user && userWeight} </p>
+                  <p>
+                    {user && exerciseLevel === 1.2 && "幾乎不運動"}
+                    {user && exerciseLevel === 1.375 && "每週運動 1-3 天"}
+                    {user && exerciseLevel === 1.55 && "每週運動 3-5 天"}
+                    {user && exerciseLevel === 1.72 && "每週運動 6-7 天"}
+                    {user &&
+                      exerciseLevel === 1.9 &&
+                      "長時間運動或體力勞動工作"}
+                  </p>
                 </div>
                 <div className="col-4">
                   <img src="/images/logo/logo.png" alt="" />

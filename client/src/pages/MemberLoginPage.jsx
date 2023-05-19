@@ -34,9 +34,9 @@ const UserLogin = () => {
 
       if (response.data.success) {
         const authToken = response.data.token;
+        const expDate = new Date(response.data.exp);
         setToken(authToken);
-        Cookies.set("authToken", authToken, { expires: 7 }); // 將 Token 存放在 Cookies 中，有效期為 7 天
-        navigate("/MemberHomePage");
+        Cookies.set("jwtToken", authToken, { expires: expDate });
       } else {
         setErrorMessage(response.data.message);
       }
@@ -60,6 +60,7 @@ const UserLogin = () => {
         console.log("已驗證 Token");
         console.log(data.user);
         // 可以根據需要處理使用者資訊
+        navigate("/MemberHomePage");
       } else {
         console.log("Token 錯誤，請重新登入");
         console.log(response.data.message);

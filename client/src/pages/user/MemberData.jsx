@@ -45,16 +45,12 @@ function MemberData() {
         setUserPhone(userData.phone);
         setUserAddress(userData.address);
 
-        console.log(userHeight); // 检查是否有正确的身高值
+        console.log(userHeight); // 檢查身高值
 
         // GET請求獲得運動紀錄數據
         const recordsResponse = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
           {
-            params: {
-              start_date: "2023-05-18",
-              end_date: "2023-05-18",
-            },
             headers: {
               Authorization: jwtToken,
             },
