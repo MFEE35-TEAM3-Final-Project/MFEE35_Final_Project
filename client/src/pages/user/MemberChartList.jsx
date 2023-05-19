@@ -20,6 +20,7 @@ function ChartListPage() {
         console.error(err);
       });
   }, []);
+
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
       <MemberHeader />
