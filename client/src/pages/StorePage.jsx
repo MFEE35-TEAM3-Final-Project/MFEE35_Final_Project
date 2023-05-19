@@ -40,7 +40,7 @@ const StorePage = () => {
   const onPageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
+  // 捨
   // 設定初始類別
   const [currentCategory, setCurrentCategory] = useState("");
   // 設定初始活動
