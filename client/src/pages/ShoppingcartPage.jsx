@@ -161,12 +161,12 @@ const ShoppingcartPage = () => {
         let finalTotalDiscount =
           userAddingCartDiscount +
           userAddingCartPrice -
-          Math.floor(userAddingCartPrice * couponInfo.discount_rate);
+          Math.round(userAddingCartPrice * couponInfo.discount_rate);
         setFinalTotalDiscount(finalTotalDiscount);
 
         let totalCouponPrice =
           userAddingCartPrice -
-          Math.floor(userAddingCartPrice * couponInfo.discount_rate);
+          Math.round(userAddingCartPrice * couponInfo.discount_rate);
         setTotalCouponPrice(totalCouponPrice);
       }
 
@@ -240,9 +240,17 @@ const ShoppingcartPage = () => {
                   NT$
                   <span id="addingGoodsPrice">
                     {couponInfo
-                      ? Math.round(
-                          userAddingCartPrice * couponInfo.discount_rate
-                        )
+                      ? incomingData.activityId !== 0
+                        ? Math.round(
+                            incomingData.afterPrice *
+                              incomingData.quantity *
+                              couponInfo.discount_rate
+                          )
+                        : Math.round(
+                            incomingData.price *
+                              incomingData.quantity *
+                              couponInfo.discount_rate
+                          )
                       : incomingData.activityId !== 0
                       ? incomingData.afterPrice * incomingData.quantity
                       : incomingData.price * incomingData.quantity}
@@ -263,7 +271,7 @@ const ShoppingcartPage = () => {
                     {couponInfo.code}
                     已折扣 NT$
                     {userAddingCartPrice -
-                      Math.floor(
+                      Math.round(
                         userAddingCartPrice * couponInfo.discount_rate
                       )}
                   </span>
@@ -970,7 +978,7 @@ const ShoppingcartPage = () => {
             {couponInfo
               ? userAddingCartDiscount +
                 userAddingCartPrice -
-                Math.floor(userAddingCartPrice * couponInfo.discount_rate)
+                Math.round(userAddingCartPrice * couponInfo.discount_rate)
               : userAddingCartDiscount}
           </p>
         </div>
@@ -990,7 +998,7 @@ const ShoppingcartPage = () => {
                 -NT$
                 {couponInfo
                   ? userAddingCartPrice -
-                    Math.floor(userAddingCartPrice * couponInfo.discount_rate)
+                    Math.round(userAddingCartPrice * couponInfo.discount_rate)
                   : "0"}
                 {/* -NT$0 */}
               </div>
@@ -1003,7 +1011,7 @@ const ShoppingcartPage = () => {
               {couponInfo
                 ? userAddingCartDiscount +
                   userAddingCartPrice -
-                  Math.floor(userAddingCartPrice * couponInfo.discount_rate)
+                  Math.round(userAddingCartPrice * couponInfo.discount_rate)
                 : userAddingCartDiscount}
             </div>
           </div>
