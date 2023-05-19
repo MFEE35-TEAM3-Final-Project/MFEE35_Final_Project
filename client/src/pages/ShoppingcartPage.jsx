@@ -141,13 +141,18 @@ const ShoppingcartPage = () => {
 
     const meowmm = incomingDatas.map((incomingData, index) => {
       if (!incomingData.activityId == 0) {
-        checkingActivityPrice = incomingData.afterPrice * incomingData.quantity;
-        checkDiscount = incomingData.discountedPrice * incomingData.quantity;
-        checkOgPrice = incomingData.price * incomingData.quantity;
+        checkingActivityPrice = Math.floor(
+          incomingData.afterPrice * incomingData.quantity
+        );
+        checkDiscount = Math.floor(
+          incomingData.discountedPrice * incomingData.quantity
+        );
+        checkOgPrice = Math.floor(incomingData.price * incomingData.quantity);
       } else {
-        checkingActivityPrice =
-          parseInt(incomingData.price) * incomingData.quantity;
-        checkOgPrice = incomingData.price * incomingData.quantity;
+        checkingActivityPrice = Math.floor(
+          parseInt(incomingData.price) * incomingData.quantity
+        );
+        checkOgPrice = Math.floor(incomingData.price * incomingData.quantity);
       }
       totalCheckingActivityPrice += checkingActivityPrice;
       totalDiscount += checkDiscount;
@@ -161,13 +166,13 @@ const ShoppingcartPage = () => {
         let finalTotalDiscount =
           userAddingCartDiscount +
           userAddingCartPrice -
-          Math.round(userAddingCartPrice * couponInfo.discount_rate);
+          Math.floor(userAddingCartPrice * couponInfo.discount_rate);
         setFinalTotalDiscount(finalTotalDiscount);
 
-        let totalCouponPrice =
+        let totalouponPrice =
           userAddingCartPrice -
-          Math.round(userAddingCartPrice * couponInfo.discount_rate);
-        setTotalCouponPrice(totalCouponPrice);
+          Math.ceil(userAddingCartPrice * couponInfo.discount_rate);
+        setTotalCouponPrice(totalouponPrice);
       }
 
       return (
@@ -241,12 +246,12 @@ const ShoppingcartPage = () => {
                   <span id="addingGoodsPrice">
                     {couponInfo
                       ? incomingData.activityId !== 0
-                        ? Math.round(
+                        ? Math.floor(
                             incomingData.afterPrice *
                               incomingData.quantity *
                               couponInfo.discount_rate
                           )
-                        : Math.round(
+                        : Math.floor(
                             incomingData.price *
                               incomingData.quantity *
                               couponInfo.discount_rate
@@ -270,10 +275,20 @@ const ShoppingcartPage = () => {
                     已使用優惠券
                     {couponInfo.code}
                     已折扣 NT$
-                    {userAddingCartPrice -
-                      Math.round(
-                        userAddingCartPrice * couponInfo.discount_rate
-                      )}
+                    {
+                      incomingData.activityId !== 0
+                        ? Math.ceil(
+                            incomingData.afterPrice * couponInfo.discount_rate
+                          )
+                        : Math.ceil(
+                            incomingData.price * couponInfo.discount_rate
+                          )
+                      // userAddingCartPrice
+                      // {userAddingCartPrice -
+                      //   Math.round(
+                      //     userAddingCartPrice * couponInfo.discount_rate
+                      //   )
+                    }
                   </span>
                 ) : (
                   ""
@@ -978,7 +993,7 @@ const ShoppingcartPage = () => {
             {couponInfo
               ? userAddingCartDiscount +
                 userAddingCartPrice -
-                Math.round(userAddingCartPrice * couponInfo.discount_rate)
+                Math.floor(userAddingCartPrice * couponInfo.discount_rate)
               : userAddingCartDiscount}
           </p>
         </div>
@@ -996,10 +1011,7 @@ const ShoppingcartPage = () => {
             <div className="discount">
               <div className="discount">
                 -NT$
-                {couponInfo
-                  ? userAddingCartPrice -
-                    Math.round(userAddingCartPrice * couponInfo.discount_rate)
-                  : "0"}
+                {couponInfo ? totalCouponPrice : "0"}
                 {/* -NT$0 */}
               </div>
             </div>
@@ -1009,9 +1021,7 @@ const ShoppingcartPage = () => {
             <div className="discountTotal">
               -NT$
               {couponInfo
-                ? userAddingCartDiscount +
-                  userAddingCartPrice -
-                  Math.round(userAddingCartPrice * couponInfo.discount_rate)
+                ? userAddingCartDiscount + totalCouponPrice
                 : userAddingCartDiscount}
             </div>
           </div>
@@ -1028,7 +1038,9 @@ const ShoppingcartPage = () => {
             <p className="totalQty">
               NT$
               {couponInfo
-                ? userAddingCartOgPrice - finalTotalDiscount
+                ? userAddingCartOgPrice -
+                  userAddingCartDiscount -
+                  totalCouponPrice
                 : userAddingCartPrice}
             </p>
           </div>
