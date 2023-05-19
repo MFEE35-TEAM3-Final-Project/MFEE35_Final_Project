@@ -3,13 +3,15 @@ import axios from "axios";
 import { Helmet } from "react-helmet";
 import "../styles/shoppingcart.css";
 import cityCountryData from "../json/CityCountyData.json";
-import Nav from "../components/Nav";
+import { Link } from "react-router-dom";
+// import Nav from "../components/Nav";
 // import Cookies from "js-cookie";
 
 const ShoppingcartPage = () => {
   const token =
     "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjg3Njc3MDQ2OSwiaWF0IjoxNjg0MjM2NzcwfQ.-0tcgFPi-RYhmnS2LLZJe5W3ahaPr6HNFAMuRreyCcs";
   // const [cartData, setCartData] = useState(null);
+  const [nothing, setNothing] = useState(true);
   const [isConvenient, setIsConvenient] = useState(true);
   const [activeButton, setActiveButton] = useState(true);
   const [invoiceClass, setInvoiceClass] = useState(1);
@@ -76,15 +78,20 @@ const ShoppingcartPage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
       .then((res) => {
-        console.log(res);
-        setIncomingData(res.data.data);
-        setEachData(
-          res.data.data.map(({ productid, quantity, price }) => ({
-            productid,
-            quantity,
-            price: parseFloat(price),
-          }))
-        );
+        if (res.data.data.length !== 0) {
+          console.log(res);
+          setIncomingData(res.data.data);
+          setEachData(
+            res.data.data.map(({ productid, quantity, price }) => ({
+              productid,
+              quantity,
+              price: parseFloat(price),
+            }))
+          );
+        } else {
+          alert("購物車沒有資料");
+          setNothing(false);
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -297,7 +304,9 @@ const ShoppingcartPage = () => {
               <div>
                 <button
                   className="deBtn"
-                  onClick={() => handleDelete(incomingData.cart_id)}
+                  onClick={() => {
+                    handleDelete(incomingData.cart_id);
+                  }}
                 >
                   X
                 </button>
@@ -327,17 +336,20 @@ const ShoppingcartPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      // console.log(id);
+      console.log(id);
       const res = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`
+        `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`,
+        { cart_id: id }
       );
       // console.log(res.data);
       alert("已刪除該商品");
       window.location.reload();
     } catch (error) {
+      console.log(id);
       console.log(error);
     }
   };
+
   const renderedOptions = selectedCityData.AreaList
     ? selectedCityData.AreaList.map((township, index) => (
         <option key={index} value={township.AreaName}>
@@ -352,8 +364,8 @@ const ShoppingcartPage = () => {
         quantity: newQuantity,
       })
       .then((res) => {
-        // console.log(res);
         window.location.reload();
+        alert("改數量囉");
       })
       .catch((error) => {
         console.error(error);
@@ -474,7 +486,7 @@ const ShoppingcartPage = () => {
 
   return (
     <div className="mybody">
-      <Nav />
+      {/* <Nav /> */}
       <Helmet>
         <link
           href="https://fonts.googleapis.com/css2?family=Allura&display=swap"
@@ -500,139 +512,35 @@ const ShoppingcartPage = () => {
         <p className="myTopicText">購物車內容</p>
       </div>
 
-      <div className="goods">
-        <p className="smallTopic">商品明細</p>
-
-        {userAddingCartInformation}
-        {/* {dog} */}
-        {/* {incomingDatas.map((incomingData, index) => (
-          // console.log("ok");
-          <div key={index}>
-            <div className="goodGroup">
-              <div>
-                <img
-                  className="goodPic"
-                  src={incomingData.image[0]}
-                  alt="第一個商品圖"
-                />
-              </div>
-
-              {incomingData.activityId !== "0" ? (
-                <div className="goodText">
-                  <br />
-                  <span className="inActivityTitle">活動商品</span>
-                  <p className="goodName">{incomingData.name}</p>
-                  <br />
-                  <br />
-                  <span className="goodPrice">
-                    NT$ {incomingData.afterPrice}
-                  </span>
-                  <span className="goodSprice">NT$ {incomingData.price}</span>
-                </div>
-              ) : (
-                <div className="goodText">
-                  <br />
-                  <p className="goodName">{incomingData.name}</p>
-                  <br />
-                  <br />
-                  <p className="goodPrice">NT$ {incomingData.price}</p>
-                </div>
-              )}
-
-              <div className="buttonGroup">
-                <div>
-                  <button
-                    id="decreaseBtn"
-                    onClick={() =>
-                      handleQuantityChange(
-                        incomingData.cart_id,
-                        incomingData.quantity - 1,
-                        incomingData.productid
-                      )
-                    }
-                  >
-                    一
-                  </button>
-                  <input
-                    type="text"
-                    defaultValue={incomingData.quantity}
-                    id="addingGoods"
-                  />
-                  <button
-                    id="increaseBtn"
-                    onClick={() =>
-                      handleQuantityChange(
-                        incomingData.cart_id,
-                        incomingData.quantity + 1,
-                        incomingData.productid
-                      )
-                    }
-                  >
-                    十
-                  </button>
-                </div>
-                <p className="bigPrice">
-                  NT$
-                  <span id="addingGoodsPrice">
-                    {incomingData.activityId !== 0
-                      ? `${incomingData.afterPrice * incomingData.quantity}`
-                      : ` ${
-                          parseInt(incomingData.price) * incomingData.quantity
-                        }`}
-                  </span>
-                </p>
-                {incomingData.activityId !== 0 ? (
-                  <p>
-                    已折扣 NT$
-                    {incomingData.discountedPrice * incomingData.quantity}
-                  </p>
-                ) : (
-                  ""
-                )}
-                {couponInfo ? (
-                  <p>
-                    已使用優惠券
-                    {couponInfo.code}
-                    已折扣 NT$
-                    {parseInt(incomingData.price) -
-                      parseInt(
-                        Math.round(
-                          incomingData.price *
-                            parseFloat(couponInfo.discount_rate)
-                        )
-                      )}
-                  </p>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div>
-                <button
-                  className="deBtn"
-                  onClick={() => handleDelete(incomingData.cart_id)}
-                >
-                  X
-                </button>
-              </div>
-            </div>
-            <hr className="myhr" />
+      {nothing ? (
+        <div className="goods">
+          <p className="smallTopic">商品明細</p>
+          {userAddingCartInformation}
+          <p className="smallTopic goodQtys">
+            合計有
+            {incomingDatas.reduce((accumulator, currentItem) => {
+              return accumulator + currentItem.quantity;
+            }, 0)}
+            項商品
+          </p>
+          <p className="smallTopic goodQtys totalQty">
+            總計 NT$
+            {couponInfo
+              ? userAddingCartOgPrice - finalTotalDiscount
+              : userAddingCartPrice}
+          </p>
+        </div>
+      ) : (
+        <div className="goods">
+          <p className="smallTopic">商品明細</p>
+          <div className="cartHasNothing">
+            <span>購物車內尚未有商品</span>
+            <Link to={`/store`} className="cartToStore">
+              點我進入商城
+            </Link>
           </div>
-        ))} */}
-
-        <p className="smallTopic goodQtys">
-          合計有
-          {incomingDatas.reduce((accumulator, currentItem) => {
-            return accumulator + currentItem.quantity;
-          }, 0)}
-          項商品
-        </p>
-        <p className="smallTopic goodQtys totalQty">
-          總計 NT$
-          {couponInfo
-            ? userAddingCartOgPrice - finalTotalDiscount
-            : userAddingCartPrice}
-        </p>
-      </div>
+        </div>
+      )}
 
       <div className="theTopic">
         <div className="circle">
