@@ -8,19 +8,20 @@ function Nav() {
   const [username, setUsername] = useState();
   useEffect(() => {
     const jwtToken = Cookies.get("authToken");
-
-    axios.defaults.headers.common["Authorization"] = jwtToken;
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
-      .then((res) => {
-        console.log(res.data);
-        setIsAuthenticated(true);
-        setUsername(res.data.user.username);
-        localStorage.setItem("username", res.data.user.username);
-      })
-      .catch((err) => {
-        setIsAuthenticated(false);
-      });
+    if (jwtToken) {
+      axios.defaults.headers.common["Authorization"] = jwtToken;
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
+        .then((res) => {
+          console.log(res.data);
+          setIsAuthenticated(true);
+          setUsername(res.data.user.username);
+          localStorage.setItem("username", res.data.user.username);
+        })
+        .catch((err) => {
+          setIsAuthenticated(false);
+        });
+    }
   }, []);
   // const isAuthenticated = localStorage.getItem("token") !== null;
   const email = localStorage.getItem("email");
