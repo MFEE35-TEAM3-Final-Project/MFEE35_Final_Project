@@ -14,6 +14,8 @@ function Article() {
   const [nextArticleId, setNextArticleId] = useState(""); //下一篇文章
   const [comments, setComments] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const Articlusername = localStorage.getItem("username");
+  console.log(Articlusername);
   // const [isAuthorization, setIsAuthorization] = useState(false)
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -122,6 +124,7 @@ function Article() {
       .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
       .then((res) => {
         console.log(res.data);
+
         setIsAuthenticated(true);
       })
       .catch((err) => {
@@ -243,7 +246,9 @@ function Article() {
                     <div className="">
                       <label htmlFor="content-textarea">
                         嗨囉!
-                        <span className="userName ps-3 pe-3">登入抓使用者</span>
+                        <span className="userName ps-3 pe-3">
+                          {Articlusername}
+                        </span>
                         留言分享你的想法吧！
                       </label>
                       <textarea
