@@ -1,4 +1,7 @@
+/* eslint-disable no-unused-vars */
+
 import React, { useState, useEffect } from "react";
+
 import { Routes, Route, Outlet } from "react-router-dom";
 
 // Component
@@ -20,12 +23,13 @@ import MemberLoginPage from "./pages/MemberLoginPage";
 import MemberRegister from "./pages/MemberRegister";
 import MemberHomePage from "./pages/user/MemberHomePage";
 import MemberChartList from "./pages/user/MemberChartList";
-import MemberFav from "./pages/user/MemberFav";
 import MemberData from "./pages/user/MemberData";
-import MemberOrders from "./pages/user/MemberOrders";
 
 // SCSS生成的CSS
 import "./styles/all.css";
+import CompoundedSpace from "antd/es/space";
+import Favorite from "./components/member/Favorite";
+import Orders from "./components/member/Orders";
 
 function App() {
   const [isBack, setIsBack] = useState(false);
@@ -33,47 +37,6 @@ function App() {
     const currentPath = window.location.pathname;
     setIsBack(currentPath.startsWith("/admin"));
   }, []);
-
-  // return (
-  //   <div>
-  //     <Nav />
-  //     <ScrollTop />
-
-  //     <div>
-  //       <Routes>
-  //         <Route path="/" element={<HomePage />} />
-  //         <Route path="/calculator" element={<Calculator />} />
-  //         <Route path="/blog" element={<Blog />} />
-  //         <Route path="/article/:id" element={<Article />} />
-  //         <Route path="/store" element={<StorePage />} />
-  //         <Route
-  //           path="/goods/:productid/:activityid/:foodId"
-  //           element={<GoodsPage />}
-  //         />
-  //         <Route path="/cart" element={<ShoppingcartPage />} />
-  //         <Route path="/foodRecord" element={<FoodRecordNumber />} />
-  //         <Route element={<AdminBoard />}>
-  //           <Route path="/admin/backstage" element={<BackStage />} />
-  //         </Route>
-  //         {/* user page */}
-  //         <Route path="/LoginPage" element={<MemberLoginPage />} />
-  //         <Route path="/MemberRegister" element={<MemberRegister />} />
-  //         {/* 不需要Nav */}
-  //         <Route>
-  //           <Route path="/MemberHomePage" element={<MemberHomePage />} />
-  //           <Route path="/MemberChartList" element={<MemberChartList />} />
-  //           <Route path="/MemberData" element={<MemberData />} />
-  //           <Route path="/MemberFav" element={<MemberFav />} />
-  //           <Route path="/MemberOrders" element={<MemberOrders />} />
-  //         </Route>
-  //         {/* 不需要Nav */}
-  //       </Routes>
-  //     </div>
-
-  //     {isBack ? "" : <Footer />}
-  //     <ScrollTop />
-  //   </div>
-  // );
 
   return (
     <div>
@@ -104,8 +67,8 @@ function App() {
           <Route path="/MemberHomePage" element={<MemberHomePage />} />
           <Route path="/MemberChartList" element={<MemberChartList />} />
           <Route path="/MemberData" element={<MemberData />} />
-          <Route path="/MemberFav" element={<MemberFav />} />
-          <Route path="/MemberOrders" element={<MemberOrders />} />
+          <Route path="/MemberFav" element={<Favorite />} />
+          <Route path="/MemberOrders" element={<Orders />} />
 
           {/* 不需要Nav */}
         </Routes>

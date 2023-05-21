@@ -7,7 +7,7 @@ function Nav() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState();
   useEffect(() => {
-    const jwtToken = Cookies.get("authToken");
+    const jwtToken = Cookies.get("jwtToken");
     if (jwtToken) {
       axios.defaults.headers.common["Authorization"] = jwtToken;
       axios
@@ -26,7 +26,7 @@ function Nav() {
   // const isAuthenticated = localStorage.getItem("token") !== null;
   const email = localStorage.getItem("email");
   const handleLogout = () => {
-    Cookies.remove("authToken");
+    Cookies.remove("jwtToken");
     window.location.reload();
   };
   const [isMenuOpen, setIsMenuOpen] = useState(false);

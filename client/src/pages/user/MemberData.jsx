@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { TotalCaloriesContext } from "../../App";
 import axios from "axios";
 import MemberHeader from "../../components/member/MemberHeader";
+
 // Cookie
 import Cookies from "js-cookie";
 
 import "../../styles/member/userinfo.css";
+import { useParams } from "react-router-dom";
 
 function MemberData() {
+  const { foodRecord } = useParams();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [userHeight, setUserHeight] = useState("");
@@ -43,8 +47,6 @@ function MemberData() {
         // setExerciseLevel(userData.exerciseLevel);
         setUserPhone(userData.phone);
         setUserAddress(userData.address);
-
-        console.log(userHeight); // 檢查身高值
 
         // GET請求獲得運動紀錄數據
         const recordsResponse = await axios.get(

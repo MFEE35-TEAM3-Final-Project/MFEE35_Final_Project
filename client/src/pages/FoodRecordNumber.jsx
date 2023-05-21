@@ -4,6 +4,8 @@ import "../styles/userFoodRecord.css";
 import MemberHeader from "../components/member/MemberHeader";
 import AddFoodList from "../components/AddFoodList";
 import axios from "axios";
+// Cookie
+import Cookies from "js-cookie";
 // 圖片區
 import target from "../image/target.png";
 import fork from "../image/fork.png";
@@ -17,8 +19,8 @@ import circleShape from "../image/circle-shape.png";
 
 function FoodRecordNumber() {
   // 帶會員驗證token;
-  const token =
-    "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjk4MTgzODAwNywiaWF0IjoxNjg0MzQxODM4fQ.YW0zlQPpESUGye583u6xZGSR3f-sbEyQGsj27eHgM6I";
+  const token = Cookies.get("jwtToken");
+  // "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjk4MTgzODAwNywiaWF0IjoxNjg0MzQxODM4fQ.YW0zlQPpESUGye583u6xZGSR3f-sbEyQGsj27eHgM6I";
 
   // 顯示正確的日期時間
   const [currentDate, setCurrentDate] = useState("");
@@ -156,8 +158,8 @@ function FoodRecordNumber() {
       };
 
       const [age, genderValue] = calculateAge(birthday, gender);
-      console.log(age); // 输出年龄
-      console.log(genderValue); // 输出性別代表的數字
+      // console.log(age); // 输出年龄
+      // console.log(genderValue); // 输出性別代表的數字
 
       const sum1 =
         9.99 * weight + 6.25 * height - 4.92 * age + (166 * genderValue - 161);
@@ -489,8 +491,10 @@ function FoodRecordNumber() {
       let totalCal =
         snTotalCalories + diTotalCalories + luTotalCalories + brTotalCalories;
       setAllNumberCaloriesPlus(totalCal);
+      console.log(totalCal);
+      localStorage.setItem("AllNumberCaloriesPlus", totalCal);
     }
-  });
+  }, [snTotalCalories, diTotalCalories, luTotalCalories, brTotalCalories]);
 
   // 總碳水化合物數值加總
   const [AllNumberCarbohydratePlus, setAllNumberCarbohydratePlus] = useState();
