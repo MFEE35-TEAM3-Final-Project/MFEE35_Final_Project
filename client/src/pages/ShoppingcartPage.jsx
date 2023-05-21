@@ -17,7 +17,13 @@ const ShoppingcartPage = () => {
   const [invoiceClass, setInvoiceClass] = useState(1);
   const [perInvoice, setPerInvoice] = useState(1);
   const [incomingDatas, setIncomingData] = useState([]);
+
+  // 訂單細節的金額需下判斷式
   const [eachData, setEachData] = useState([]);
+  const [allQuantity, setAllQuantity] = useState(null);
+
+  // 總金額需下判斷式
+  // const [allPrice, setAllPrice] = useState(null);
 
   const [code, setCode] = useState("");
   const [coupons, setCoupons] = useState([]);
@@ -26,12 +32,14 @@ const ShoppingcartPage = () => {
   const [popCuppon, setPopCuppon] = useState(true);
   const [couponInfo, setCouponInfo] = useState(null);
 
+  // 輸入地址select
   const [cityList, setCityList] = useState([]);
   const [selectedCity, setSelectedCity] = useState("請選擇縣市");
   const [selectedTownship, setSelectedTownship] = useState("請先選擇縣市");
   const [selectedCityData, setSelectedCityData] = useState({});
   const [detailAddress, setDetailAddress] = useState("");
 
+  // 頁面第四部分的隱藏選單
   const [hideDiscount, setHideDiscount] = useState(true);
   const [hideShoppingCart, setHideShoppingCart] = useState(true);
 
@@ -64,6 +72,7 @@ const ShoppingcartPage = () => {
     setSelectedTownship(event.target.value);
   };
 
+  // -----------------------------------------------------
   useEffect(() => {
     setCityList(cityCountryData);
     // const cookieCartData = Cookies.get("cartData");
@@ -80,14 +89,8 @@ const ShoppingcartPage = () => {
       .then((res) => {
         if (res.data.data.length !== 0) {
           console.log(res);
-          setIncomingData(res.data.data);
-          setEachData(
-            res.data.data.map(({ productid, quantity, price }) => ({
-              productid,
-              quantity,
-              price: parseFloat(price),
-            }))
-          );
+          setIncomingData(res.data.data); // 設定初始資料
+          // 設定訂單資料
         } else {
           alert("購物車沒有資料");
           setNothing(false);
@@ -97,90 +100,118 @@ const ShoppingcartPage = () => {
         console.error(err);
       });
   }, []);
-  useEffect(() => {
-    if (couponInfo) {
-      order.coupon_code = couponInfo.code;
-    }
-  }, [couponInfo]);
 
-  useEffect(() => {
-    const allAddress = selectedCity + selectedTownship + detailAddress;
-    // console.log(allAddress);
-    if (allAddress) {
-      order.shipping_address = allAddress;
-    }
-  }, [selectedCity, selectedTownship, detailAddress]);
-  // orderdata
+  // 當購物車更新時將訂單更新
   useEffect(() => {
     if (incomingDatas) {
-      const allQuantity = incomingDatas.reduce((accumulator, currentItem) => {
-        return accumulator + currentItem.quantity;
-      }, 0);
-      const allPrice = incomingDatas.reduce((acc, { quantity, price }) => {
-        return acc + parseFloat(quantity) * parseFloat(price);
-      }, 0);
-      order.total_quantity = allQuantity;
-      order.total_price = allPrice;
-      order.order_details = eachData;
+      // setEachData(
+      //   incomingDatas.map(({ productid, quantity, price }) => ({
+      //     productid,
+      //     quantity,
+      //     price: parseFloat(price),
+      //   }))
+      // );
+      setAllQuantity(
+        incomingDatas.reduce((accumulator, currentItem) => {
+          return accumulator + currentItem.quantity;
+        }, 0)
+      );
     }
-  }, [incomingDatas]);
+    let extractedData = incomingDatas.map((incomingData, index) => {
+      const { productid, quantity } = incomingData;
+      let price = 0;
 
+      if (incomingData.activityId !== "0") {
+        price = incomingData.afterPrice * incomingData.quantity;
+      } else {
+        price = incomingData.price * incomingData.quantity;
+      }
+
+      if (couponInfo) {
+        price *= couponInfo.discount_rate;
+      }
+
+      return {
+        productid,
+        quantity,
+        price: Math.floor(price),
+      };
+    });
+    console.log(extractedData);
+    setEachData(extractedData);
+  }, [incomingDatas, couponInfo]);
+
+  //  儲存get到的購物車物件 => map()
   const [userAddingCartInformation, setUserAddingCartInformation] = useState(0);
+  //  判斷是否有活動後 累加的總金額
   const [userAddingCartPrice, setUserAddingCartPrice] = useState(0);
+  // 活動折扣總金額
   const [userAddingCartDiscount, setUserAddingCartDiscount] = useState(0);
-  const [userAddingCartOgPrice, setUserAddingCartOgPrice] = useState(0);
-  // 優惠折價金額
+  // 優惠券折價金額
   const [totalCouponPrice, setTotalCouponPrice] = useState(0);
+  // 沒有活動也沒有優惠券的金額
+  const [userAddingCartOgPrice, setUserAddingCartOgPrice] = useState(0);
   // 總共的折價金額 活動＋優惠
   const [finalTotalDiscount, setFinalTotalDiscount] = useState(0);
 
   useEffect(() => {
     // 測試
-    // 折扣後金額
+    // 判斷是否有活動後的單項金額
     let checkingActivityPrice = 0;
+    // 判斷是否有活動後的總金額
     let totalCheckingActivityPrice = 0;
-    // 已折扣金額
-    let totalDiscount = 0;
+    // 活動已折扣的單項金額
     let checkDiscount = 0;
-    // 元價格
-    let totalOgPrice = 0;
+    // 活動已折扣的總金額
+    let totalDiscount = 0;
+    // 原始的單項價格
     let checkOgPrice = 0;
-
+    // 原始的總價格
+    let totalOgPrice = 0;
+    // 總共優惠券總計
+    let checkMapCouponPrice = 0;
+    let totalMapCouponPrice = 0;
+    // 活動折價+優惠券合計
+    let checkMapTotalDiscount = 0;
+    let finalMapTotalDiscount = 0;
     const meowmm = incomingDatas.map((incomingData, index) => {
-      if (!incomingData.activityId == 0) {
+      if (incomingData.activityId !== 0) {
+        // 如果有活動 -> 計算有活動價格*數量
         checkingActivityPrice = Math.floor(
           incomingData.afterPrice * incomingData.quantity
         );
         checkDiscount = Math.floor(
+          // 計算活動折扣金額*數量
           incomingData.discountedPrice * incomingData.quantity
         );
-        checkOgPrice = Math.floor(incomingData.price * incomingData.quantity);
-      } else {
+        checkOgPrice = Math.floor(incomingData.price * incomingData.quantity); // 計算原價
+      } else if (incomingData.activityId === 0) {
+        // 如果沒有活動->計算正常價格*數量
         checkingActivityPrice = Math.floor(
           parseInt(incomingData.price) * incomingData.quantity
         );
-        checkOgPrice = Math.floor(incomingData.price * incomingData.quantity);
+        checkOgPrice = Math.floor(incomingData.price * incomingData.quantity); // 計算原價
       }
       totalCheckingActivityPrice += checkingActivityPrice;
       totalDiscount += checkDiscount;
       totalOgPrice += checkOgPrice;
-      setUserAddingCartDiscount(totalDiscount);
-      setUserAddingCartPrice(totalCheckingActivityPrice);
-      setUserAddingCartOgPrice(totalOgPrice);
+      setUserAddingCartDiscount(totalDiscount); // 若是有活動的總折扣金額
+      setUserAddingCartPrice(totalCheckingActivityPrice); // 已判斷是否有活動的總金額
+      setUserAddingCartOgPrice(totalOgPrice); // 原始價格的總金額
 
-      // 總共折價合計
       if (couponInfo) {
-        let finalTotalDiscount =
-          userAddingCartDiscount +
-          userAddingCartPrice -
-          Math.floor(userAddingCartPrice * couponInfo.discount_rate);
-        setFinalTotalDiscount(finalTotalDiscount);
-
-        let totalouponPrice =
-          userAddingCartPrice -
-          Math.ceil(userAddingCartPrice * couponInfo.discount_rate);
-        setTotalCouponPrice(totalouponPrice);
+        checkMapCouponPrice =
+          checkingActivityPrice -
+          Math.floor(checkingActivityPrice * couponInfo.discount_rate);
+        checkMapTotalDiscount =
+          Math.floor(incomingData.discountedPrice * incomingData.quantity) +
+          checkingActivityPrice -
+          Math.floor(checkingActivityPrice * couponInfo.discount_rate);
       }
+      totalMapCouponPrice += checkMapCouponPrice;
+      finalMapTotalDiscount += checkMapTotalDiscount;
+      setTotalCouponPrice(totalMapCouponPrice);
+      setFinalTotalDiscount(finalMapTotalDiscount);
 
       return (
         <Fragment key={index}>
@@ -223,8 +254,7 @@ const ShoppingcartPage = () => {
                     onClick={() =>
                       handleQuantityChange(
                         incomingData.cart_id,
-                        incomingData.quantity - 1,
-                        incomingData.productid
+                        incomingData.quantity - 1
                       )
                     }
                   >
@@ -232,7 +262,7 @@ const ShoppingcartPage = () => {
                   </button>
                   <input
                     type="text"
-                    defaultValue={incomingData.quantity}
+                    value={incomingData.quantity}
                     id="addingGoods"
                   />
                   <button
@@ -240,8 +270,7 @@ const ShoppingcartPage = () => {
                     onClick={() =>
                       handleQuantityChange(
                         incomingData.cart_id,
-                        incomingData.quantity + 1,
-                        incomingData.productid
+                        incomingData.quantity + 1
                       )
                     }
                   >
@@ -252,26 +281,16 @@ const ShoppingcartPage = () => {
                   NT$
                   <span id="addingGoodsPrice">
                     {couponInfo
-                      ? incomingData.activityId !== 0
-                        ? Math.floor(
-                            incomingData.afterPrice *
-                              incomingData.quantity *
-                              couponInfo.discount_rate
-                          )
-                        : Math.floor(
-                            incomingData.price *
-                              incomingData.quantity *
-                              couponInfo.discount_rate
-                          )
-                      : incomingData.activityId !== 0
-                      ? incomingData.afterPrice * incomingData.quantity
-                      : incomingData.price * incomingData.quantity}
+                      ? Math.floor(
+                          checkingActivityPrice * couponInfo.discount_rate
+                        )
+                      : checkingActivityPrice}
                   </span>
                 </p>
                 {incomingData.activityId !== 0 ? (
                   <span className="inActivityTitle">
                     已折扣 NT$
-                    {incomingData.discountedPrice * incomingData.quantity}
+                    {checkDiscount}
                   </span>
                 ) : (
                   ""
@@ -282,20 +301,10 @@ const ShoppingcartPage = () => {
                     已使用優惠券
                     {couponInfo.code}
                     已折扣 NT$
-                    {
-                      incomingData.activityId !== 0
-                        ? Math.ceil(
-                            incomingData.afterPrice * couponInfo.discount_rate
-                          )
-                        : Math.ceil(
-                            incomingData.price * couponInfo.discount_rate
-                          )
-                      // userAddingCartPrice
-                      // {userAddingCartPrice -
-                      //   Math.round(
-                      //     userAddingCartPrice * couponInfo.discount_rate
-                      //   )
-                    }
+                    {checkingActivityPrice -
+                      Math.floor(
+                        checkingActivityPrice * couponInfo.discount_rate
+                      )}
                   </span>
                 ) : (
                   ""
@@ -319,7 +328,40 @@ const ShoppingcartPage = () => {
     });
     setUserAddingCartInformation(meowmm);
   }, [incomingDatas, couponInfo]);
-  //測試
+
+  useEffect(() => {
+    // 更新API POST order(訂單)
+    if (!couponInfo) {
+      order.total_quantity = allQuantity;
+      order.order_details = eachData;
+      order.total_price = userAddingCartPrice;
+      console.log("我有好好更新訂單資料");
+    } else {
+      order.coupon_code = couponInfo.code;
+      order.order_details = eachData;
+      console.log("我用優惠券後有好好更新訂單資料");
+    }
+  }, [allQuantity, userAddingCartPrice, eachData, couponInfo, incomingDatas]);
+
+  useEffect(() => {
+    if (couponInfo) {
+      order.coupon_code = couponInfo.code;
+    }
+  }, [couponInfo]);
+
+  useEffect(() => {
+    if (couponInfo) {
+      order.total_price = userAddingCartPrice - totalCouponPrice;
+    }
+  }, [totalCouponPrice]);
+
+  useEffect(() => {
+    const allAddress = selectedCity + selectedTownship + detailAddress;
+    // console.log(allAddress);
+    if (allAddress) {
+      order.shipping_address = allAddress;
+    }
+  }, [selectedCity, selectedTownship, detailAddress]);
 
   // 釣魚台
   useEffect(() => {
@@ -334,6 +376,40 @@ const ShoppingcartPage = () => {
     }
   }, [callCouponApi, couponApplied]);
 
+  // const handleDelete = async (id) => {
+  //   try {
+  //     console.log(id);
+  //     const res = await axios.delete(
+  //       `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`,
+  //       { cart_id: id }
+  //     );
+  //     // console.log(res.data);
+  //     alert("已刪除該商品");
+  //     // window.location.reload();
+
+  //       // 先找到原始陣列裡的目標index列資料
+  //       const targetIndex = incomingDatas.findIndex(
+  //         (item) => item.cart_id === id
+  //       );
+  //       console.log(targetIndex);
+  //       if (targetIndex !== -1) {
+  //         // 複製 incomingDatas 陣列
+  //         const updatedData = [...incomingDatas];
+
+  //         // 更新目標項目的 quantity
+  //         updatedData[targetIndex].quantity = newQuantity;
+  //         // console.log(updatedData);
+  //         // 更新狀態值
+  //         setIncomingData(updatedData);
+  //         console.log("我做完put的請求了");
+  //       }
+
+  //   } catch (error) {
+  //     console.log(id);
+  //     console.log(error);
+  //   }
+  // };
+
   const handleDelete = async (id) => {
     try {
       console.log(id);
@@ -341,9 +417,23 @@ const ShoppingcartPage = () => {
         `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`,
         { cart_id: id }
       );
-      // console.log(res.data);
       alert("已刪除該商品");
-      window.location.reload();
+
+      // 找到目标项的索引
+      const targetIndex = incomingDatas.findIndex(
+        (item) => item.cart_id === id
+      );
+
+      if (targetIndex !== -1) {
+        // 创建incomingDatas的副本
+        const updatedData = [...incomingDatas];
+
+        // 从updatedData中删除目标项
+        updatedData.splice(targetIndex, 1);
+
+        // 更新状态值
+        setIncomingData(updatedData);
+      }
     } catch (error) {
       console.log(id);
       console.log(error);
@@ -357,15 +447,31 @@ const ShoppingcartPage = () => {
         </option>
       ))
     : null;
-  const handleQuantityChange = (cart_id, newQuantity, productId) => {
+
+  //  card_id 為目標變更的cart_id 、newQuantity為已變更的數量了
+  const handleQuantityChange = (cart_id, newQuantity) => {
     axios
       .put(`${process.env.REACT_APP_API_URL}/api/user/cart/update`, {
         cart_id: cart_id,
         quantity: newQuantity,
       })
       .then((res) => {
-        window.location.reload();
-        alert("改數量囉");
+        // 先找到原始陣列裡的目標index列資料
+        const targetIndex = incomingDatas.findIndex(
+          (item) => item.cart_id === cart_id
+        );
+        // console.log(targetIndex);
+        if (targetIndex !== -1) {
+          // 複製 incomingDatas 陣列
+          const updatedData = [...incomingDatas];
+
+          // 更新目標項目的 quantity
+          updatedData[targetIndex].quantity = newQuantity;
+          // console.log(updatedData);
+          // 更新狀態值
+          setIncomingData(updatedData);
+          console.log("我做完put的請求了");
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -392,7 +498,6 @@ const ShoppingcartPage = () => {
           window.location.reload();
         })
         .catch((error) => {
-          // console.error(error);
           console.log(error);
           console.log(order);
         });
@@ -416,7 +521,7 @@ const ShoppingcartPage = () => {
         setCouponApplied(false);
         return;
       } else {
-        setCoupons([...coupons, res.data.message]);
+        setCoupons([...coupons, res.data.message]); // 在以新贈的優惠券上繼續新增
         setCouponApplied(true);
         console.log(res);
       }
@@ -526,7 +631,7 @@ const ShoppingcartPage = () => {
           <p className="smallTopic goodQtys totalQty">
             總計 NT$
             {couponInfo
-              ? userAddingCartOgPrice - finalTotalDiscount
+              ? userAddingCartPrice - totalCouponPrice
               : userAddingCartPrice}
           </p>
         </div>
@@ -928,9 +1033,7 @@ const ShoppingcartPage = () => {
             <div className="discountTotal">合計：</div>
             <div className="discountTotal">
               -NT$
-              {couponInfo
-                ? userAddingCartDiscount + totalCouponPrice
-                : userAddingCartDiscount}
+              {couponInfo ? finalTotalDiscount : userAddingCartDiscount}
             </div>
           </div>
         </div>
@@ -946,9 +1049,7 @@ const ShoppingcartPage = () => {
             <p className="totalQty">
               NT$
               {couponInfo
-                ? userAddingCartOgPrice -
-                  userAddingCartDiscount -
-                  totalCouponPrice
+                ? userAddingCartPrice - totalCouponPrice
                 : userAddingCartPrice}
             </p>
           </div>
