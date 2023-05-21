@@ -14,41 +14,16 @@ function MemberData() {
   const [exerciseLevel, setExerciseLevel] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [userAddress, setUserAddress] = useState("");
+  const [userId, setUserId] = useState(""); // 新增userId状态
 
   useEffect(() => {
-    fetchMemberData();
-  }, []);
+    const fetchMemberData = async () => {
+      try {
+        const jwtToken = Cookies.get("jwtToken");
 
-  const fetchMemberData = async () => {
-    try {
-      const jwtToken = Cookies.get("jwtToken");
-
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/user/check`,
-        null,
-        {
-          headers: {
-            Authorization: jwtToken,
-          },
-        }
-      );
-
-      console.log(response.data);
-
-      if (response.data.success) {
-        const userData = response.data.user;
-        setUser(userData);
-        // setUserHeight(userData.Height);
-        // setUserWeight(userData.userWeight);
-        // setExerciseLevel(userData.exerciseLevel);
-        setUserPhone(userData.phone);
-        setUserAddress(userData.address);
-
-        console.log(userHeight); // 檢查身高值
-
-        // GET請求獲得運動紀錄數據
-        const recordsResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/user/check`,
+          null,
           {
             headers: {
               Authorization: jwtToken,
@@ -56,57 +31,89 @@ function MemberData() {
           }
         );
 
-        console.log(recordsResponse.data);
+        console.log(response.data);
 
-        if (recordsResponse.data.success) {
-          const records = recordsResponse.data.records;
-          // 處理紀錄數據，例如：
-          records.forEach((record) => {
-            const weight = record.weight;
-            const height = record.height;
-            const exerciseLevel = record.exercise_level;
+        if (response.data.success) {
+          const userData = response.data.user;
+          setUser(userData);
+          setUserPhone(userData.phone || "");
+          setUserAddress(userData.address || "");
 
-            // console.log(`Weight: ${weight}`);
-            // console.log(`Height: ${height}`);
-            // console.log(`Exercise Level: ${exerciseLevel}`);
+          // GET請求獲得運動紀錄數據
+          const recordsResponse = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+            {
+              headers: {
+                Authorization: jwtToken,
+              },
+            }
+          );
 
-            setUserHeight(height);
-            setUserWeight(weight);
-            setExerciseLevel(exerciseLevel);
-          });
+          console.log(recordsResponse.data);
+
+          if (recordsResponse.data.success) {
+            const records = recordsResponse.data.records;
+            // 處理紀錄數據
+            records.forEach((record) => {
+              const weight = record.weight;
+              const height = record.height;
+              const exerciseLevel = record.exercise_level;
+
+              // console.log(`Weight: ${weight}`);
+              // console.log(`Height: ${height}`);
+              // console.log(`Exercise Level: ${exerciseLevel}`);
+
+              setUserHeight(height);
+              setUserWeight(weight);
+              setExerciseLevel(exerciseLevel);
+              setUserId(userData.user_id);
+
+              console.log("身高值：" + height);
+            });
+          } else {
+            console.error(recordsResponse.data.message);
+          }
         } else {
-          console.error(recordsResponse.data.message);
+          console.error(response.data.message);
         }
-      } else {
-        console.error(response.data.message);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
+
+    fetchMemberData();
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
+    // const handleSave = async (e) => {
+    //   e.preventDefault();
     try {
-      const updatedData = {
-        userHeight,
-        userWeight,
-        exerciseLevel,
-        phone: userPhone,
-        address: userAddress,
-      };
+      const jwtToken = Cookies.get("jwtToken");
 
-      const jwtToken = document.cookie.replace(
-        /(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/,
-        "$1"
-      );
+      console.log(jwtToken);
 
-      const response = await axios.post(
+      const currentDate = new Date(); // 取得當前日期
+      const formattedDate = currentDate.toISOString().slice(0, 10); // 只保留日期部分
+
+      const formattedBirthday = new Date(user.birthday)
+        .toISOString()
+        .slice(0, 10);
+
+      // 更新運動紀錄
+      const exerciseRecordsResponse = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
-        updatedData,
+        {
+          gender: user.gender,
+          birthday: formattedBirthday,
+          weight: userWeight,
+          height: userHeight,
+          exercise_level: exerciseLevel,
+          record_date: formattedDate, // 設定為當前日期
+        },
         {
           headers: {
             Authorization: jwtToken,
@@ -114,12 +121,47 @@ function MemberData() {
         }
       );
 
-      if (response.data.success) {
-        setIsEditing(false);
+      if (exerciseRecordsResponse.data.success) {
+        console.log("成功");
       } else {
-        console.error(response.data.message);
+        console.error(exerciseRecordsResponse.data);
       }
     } catch (error) {
+      console.log("失敗");
+      console.error(error);
+    }
+
+    // 更新電話、地址
+    console.log(userId);
+    try {
+      const jwtToken = Cookies.get("jwtToken");
+
+      const formattedBirthday = new Date(user.birthday)
+        .toISOString()
+        .slice(0, 10);
+
+      const userNewData = await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/user/edit/id=${userId}`,
+        {
+          gender: user.gender,
+          username: user.username,
+          birthday: formattedBirthday,
+          phone: userPhone,
+          address: userAddress,
+        },
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      );
+      if (userNewData.data.success) {
+        console.log("成功");
+      } else {
+        console.error(userNewData.data);
+      }
+    } catch (error) {
+      console.log("失敗");
       console.error(error);
     }
   };
