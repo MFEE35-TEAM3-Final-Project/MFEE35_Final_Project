@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import "../styles/addFoodItem.css";
+// Cookie
+import Cookies from "js-cookie";
 
 // 帶token
 // 帶會員驗證token;
-const token =
-  "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjk4MTgzODAwNywiaWF0IjoxNjg0MzQxODM4fQ.YW0zlQPpESUGye583u6xZGSR3f-sbEyQGsj27eHgM6I";
+const token = Cookies.get("jwtToken");
 
 function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
   const [grams, setGrams] = useState(100);

@@ -16,10 +16,12 @@ import sun from "../image/sun.png";
 import moon from "../image/moon.png";
 import sunrise from "../image/sunrise.png";
 import circleShape from "../image/circle-shape.png";
+import { BiCoinStack } from "react-icons/bi";
 
 function FoodRecordNumber() {
   // 帶會員驗證token;
   const token = Cookies.get("jwtToken");
+
   // "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjk4MTgzODAwNywiaWF0IjoxNjg0MzQxODM4fQ.YW0zlQPpESUGye583u6xZGSR3f-sbEyQGsj27eHgM6I";
 
   // 顯示正確的日期時間
@@ -181,7 +183,8 @@ function FoodRecordNumber() {
   useEffect(() => {
     if (!loading) {
       // console.log(resMemberData);
-      const memberData = resMemberData.data.records;
+      const memberData = resMemberData.data.groupedResults[0].records;
+      console.log(memberData);
       const memberBreakfasts = memberData.filter(
         (meal) => meal.meal_type === "breakfast"
       );
@@ -261,7 +264,8 @@ function FoodRecordNumber() {
   useEffect(() => {
     if (!loading) {
       // console.log(resMemberData);
-      const memberData = resMemberData.data.records;
+      // const memberData = resMemberData.data.records;
+      const memberData = resMemberData.data.groupedResults[0].records;
       const memberlunchs = memberData.filter(
         (meal) => meal.meal_type === "lunch"
       );
@@ -338,7 +342,8 @@ function FoodRecordNumber() {
   useEffect(() => {
     if (!loading) {
       // console.log(resMemberData);
-      const memberData = resMemberData.data.records;
+      // const memberData = resMemberData.data.records;
+      const memberData = resMemberData.data.groupedResults[0].records;
       const memberDinners = memberData.filter(
         (meal) => meal.meal_type === "dinner"
       );
@@ -416,7 +421,8 @@ function FoodRecordNumber() {
   useEffect(() => {
     if (!loading) {
       // console.log(resMemberData);
-      const memberData = resMemberData.data.records;
+      // const memberData = resMemberData.data.records;
+      const memberData = resMemberData.data.groupedResults[0].records;
       const memberSnacks = memberData.filter(
         (meal) => meal.meal_type === "snack"
       );

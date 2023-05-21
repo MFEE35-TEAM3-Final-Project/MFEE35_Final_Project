@@ -3,11 +3,12 @@ import axios from "axios";
 import "../styles/addFoodList.css";
 import { Link } from "react-router-dom";
 import FoodDetailsNutrients from "./FoodDetailsNutrients";
+// Cookie
+import Cookies from "js-cookie";
 
 function AddFoodList({ onCancelButtonClick, foodSection }) {
   // 帶會員驗證token;
-  const token =
-    "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjk4MTgzODAwNywiaWF0IjoxNjg0MzQxODM4fQ.YW0zlQPpESUGye583u6xZGSR3f-sbEyQGsj27eHgM6I";
+  const token = Cookies.get("jwtToken");
 
   // 點擊 "推薦食品" 隱藏 食品的div們
   const [isThirdAreaVisible, setIsThirdAreaVisible] = useState(true);

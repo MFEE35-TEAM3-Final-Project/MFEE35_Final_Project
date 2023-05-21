@@ -8,6 +8,7 @@ import "../styles/goods.css";
 import Nav from "../components/Nav";
 
 const GoodsPage = () => {
+  const token = Cookies.get("jwtToken");
   // 設定取得的商品ID、食物ID
   const { productid, foodId } = useParams();
   // 設定取得的商品
@@ -91,8 +92,8 @@ const GoodsPage = () => {
   // };
 
   const handleAddToCart = () => {
-    const token =
-      "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+    // const token =
+    //   "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
     axios.defaults.headers.common["Authorization"] = `${token}`;
     let x = axios.defaults.headers.common["Authorization"];
     if (x) {
@@ -132,8 +133,8 @@ const GoodsPage = () => {
     }
   };
   const handleAddToFavorite = () => {
-    const token =
-      "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+    // const token =
+    //   "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
     axios.defaults.headers.common["Authorization"] = `${token}`;
     let x = axios.defaults.headers.common["Authorization"];
     if (x) {
@@ -143,6 +144,7 @@ const GoodsPage = () => {
         })
         .then((res) => {
           // console.log(res);
+          alert("已加入最愛清單");
         })
         .catch((err) => {
           console.error(err);

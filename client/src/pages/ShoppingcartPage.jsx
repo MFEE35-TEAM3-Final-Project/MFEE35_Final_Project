@@ -4,12 +4,13 @@ import { Helmet } from "react-helmet";
 import "../styles/shoppingcart.css";
 import cityCountryData from "../json/CityCountyData.json";
 import { Link } from "react-router-dom";
+// Cookie
+import Cookies from "js-cookie";
 // import Nav from "../components/Nav";
 // import Cookies from "js-cookie";
 
 const ShoppingcartPage = () => {
-  const token =
-    "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5Mjg3Njc3MDQ2OSwiaWF0IjoxNjg0MjM2NzcwfQ.-0tcgFPi-RYhmnS2LLZJe5W3ahaPr6HNFAMuRreyCcs";
+  const token = Cookies.get("jwtToken");
   // const [cartData, setCartData] = useState(null);
   const [nothing, setNothing] = useState(true);
   const [isConvenient, setIsConvenient] = useState(true);
@@ -81,8 +82,8 @@ const ShoppingcartPage = () => {
     //   setCartData(JSON.parse(cookieCartData));
     // }
     // 當使用者=會員時 呼叫API傳入訂單資料
-    const token =
-      "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
+    // const token =
+    //   "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
     axios.defaults.headers.common["Authorization"] = `${token}`;
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
