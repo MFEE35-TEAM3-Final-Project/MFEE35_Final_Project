@@ -89,8 +89,7 @@ function MemberData() {
   };
 
   const handleSave = async () => {
-    // const handleSave = async (e) => {
-    //   e.preventDefault();
+    // e.preventDefault();
     try {
       const jwtToken = Cookies.get("jwtToken");
 
@@ -343,7 +342,7 @@ function MemberData() {
                       onChange={(e) => setUserPhone(e.target.value)}
                     />
                   ) : (
-                    <p>{user && user.phone}</p>
+                    <p>{userPhone}</p>
                   )}
                 </div>
                 <div className="col-2"></div>
@@ -365,7 +364,7 @@ function MemberData() {
                       onChange={(e) => setUserAddress(e.target.value)}
                     />
                   ) : (
-                    <p>{user && user.address}</p>
+                    <p>{userAddress}</p>
                   )}
                 </div>
                 <div className="col-2"></div>
