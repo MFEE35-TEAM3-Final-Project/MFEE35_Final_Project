@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Form,
-  Input,
-  Switch,
-  Select,
-  Row,
-  Col,
-  Descriptions,
-  Button
-} from "antd";
+import { Modal, Form, Input, Switch, Select, Row, Col, Button } from "antd";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import "@ckeditor/ckeditor5-build-classic/build/translations/zh.js";
+
 import ImageUploader from "../ImageUploader";
 
 const { Option } = Select;
 
 const ArticleEditorModal = ({
+  isNew,
   articleDataOld,
   articleData,
   setArticleData,
@@ -25,7 +18,6 @@ const ArticleEditorModal = ({
   onCancel,
   onSave
 }) => {
-  const [form] = Form.useForm();
   const [dataOrigin, setDataOrigin] = useState(null);
 
   //設定原本資料
@@ -85,32 +77,41 @@ const ArticleEditorModal = ({
         </Button>
       ]}
     >
-      <Form className="mt-5" form={form} layout="vertical">
-        <Form.Item>
-          <Row gutter={16}>
-            <Col span={8}>
-              <div className="px-1">
-                <p className="fw-bold text-secondary">文章ID</p>
-                {articleData && <p>{articleData.article_id}</p>}
-              </div>
-            </Col>
-            <Col span={8}>
-              <div className="px-1">
-                <p className="fw-bold text-secondary">上個編輯者</p>
-                {articleData && <p>{articleData.admin_id}</p>}
-              </div>
-            </Col>
-            <Col span={8}>
-              <div className="px-1">
-                <p className="fw-bold text-secondary">更新時間</p>
-                {articleData && <p>{toLocalTime(articleData.updated_at)}</p>}
-              </div>
-            </Col>
-          </Row>
-        </Form.Item>
+      <Form className="mt-3" layout="vertical">
+        {!isNew && (
+          <Form.Item className="my-3">
+            <Row gutter={16}>
+              <Col span={8}>
+                <div className="px-1">
+                  <p className="fw-bold text-secondary">文章ID</p>
+                  {articleData && <p>{articleData.article_id}</p>}
+                </div>
+              </Col>
+              <Col span={8}>
+                <div className="px-1">
+                  <p className="fw-bold text-secondary">上個編輯者</p>
+                  {articleData && <p>{articleData.admin_id}</p>}
+                </div>
+              </Col>
+              <Col span={8}>
+                <div className="px-1">
+                  <p className="fw-bold text-secondary">更新時間</p>
+                  {articleData && <p>{toLocalTime(articleData.updated_at)}</p>}
+                </div>
+              </Col>
+            </Row>
+          </Form.Item>
+        )}
         <Row gutter={16}>
           <Col span={8}>
-            <Form.Item name="cover_image" label="封面圖片">
+            <Form.Item
+              name="cover_image"
+              label={
+                <p className="m-0">
+                  <span className="text-danger">* </span>封面圖片
+                </p>
+              }
+            >
               <div>
                 <ImageUploader
                   getImg={imgChange}
@@ -126,12 +127,11 @@ const ArticleEditorModal = ({
                   name="category"
                   label="文章分類"
                   rules={[{ required: true, message: "請選擇分類" }]}
-                  initialValue={articleData.category}
+                  initialValue={articleData && articleData.category}
                 >
                   <Select
                     placeholder="請選擇分類"
                     name="category"
-                    value={articleData && articleData.category}
                     onChange={(e) => {
                       formHandler("category", e);
                     }}
@@ -145,8 +145,15 @@ const ArticleEditorModal = ({
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="是否發布">
+                <Form.Item
+                  label={
+                    <p className="m-0">
+                      <span className="text-danger">* </span>是否發布
+                    </p>
+                  }
+                >
                   <Switch
+                    className="ms-2"
                     checked={articleData.is_published === 1 ? true : false}
                     name="is_published"
                     onChange={switchOnChange}
@@ -188,7 +195,11 @@ const ArticleEditorModal = ({
         </Row>
 
         <Form.Item
-          label="文章內容"
+          label={
+            <p className="m-0">
+              <span className="text-danger">* </span>文章內容
+            </p>
+          }
           rules={[{ required: true, message: "請輸入內容" }]}
         >
           <CKEditor

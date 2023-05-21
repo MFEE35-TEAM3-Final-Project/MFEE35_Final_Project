@@ -14,11 +14,7 @@ import {
 } from "antd";
 import {
   CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
   ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  SyncOutlined,
   DeleteOutlined
 } from "@ant-design/icons";
 import ArticleModal from "./ArticleModal";
@@ -100,7 +96,7 @@ const ArticleTable = () => {
         <Space>
           <Button
             type="primary"
-            onClick={() => editArticle(article.article_id)}
+            onClick={() => editArticle(false, article.article_id)}
           >
             編輯
           </Button>
@@ -118,6 +114,15 @@ const ArticleTable = () => {
       )
     }
   ];
+  // 元物件
+  const originArticleData = {
+    title: "",
+    sub_title: "",
+    category: "",
+    cover_image: "",
+    content: "",
+    is_published: 0
+  };
   // context hook
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -126,9 +131,10 @@ const ArticleTable = () => {
   const [tempCategory, setTempCategory] = useState("");
   const [articleList, setArticleList] = useState([]);
   const [articleModalVisible, setArticleModalVisible] = useState(false);
+
   const [tempArticle, setTempArticle] = useState(null);
   const [tempArticleChange, setTempArticleChange] = useState(null);
-  const [delId, setDelId] = useState(null);
+  const [isNewArticle, setIsNewArticle] = useState(false);
 
   const toLocalTime = (time) => {
     const date = new Date(time);
@@ -172,20 +178,33 @@ const ArticleTable = () => {
   };
   // 取得特定文章
   const getArticle = (id) => {
-    const api = `${process.env.REACT_APP_API_URL}/api/articles/id=${id}`;
-    axios
-      .get(api)
-      .then((res) => {
-        setTempArticle(res.data.article);
-        setTempArticleChange(res.data.article);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    return new Promise((resolve, reject) => {
+      const api = `${process.env.REACT_APP_API_URL}/api/articles/id=${id}`;
+      axios
+        .get(api)
+        .then((res) => {
+          resolve(res.data.article);
+        })
+        .catch((err) => {
+          console.log(err);
+          reject(err);
+        });
+    });
   };
-  const editArticle = async (id) => {
-    await getArticle(id);
-    setArticleModalVisible(true);
+  const editArticle = async (isNew, id) => {
+    if (isNew) {
+      setIsNewArticle(true);
+      setTempArticle(originArticleData);
+      setTempArticleChange(originArticleData);
+
+      setArticleModalVisible(true);
+    } else {
+      setIsNewArticle(false);
+      const articleData = await getArticle(id);
+      setTempArticle(articleData);
+      setTempArticleChange(articleData);
+      setArticleModalVisible(true);
+    }
   };
   // 刪除文章
   const deleteModal = (id, name) => {
@@ -230,16 +249,25 @@ const ArticleTable = () => {
     if (tempArticle === tempArticleChange) {
       setTempArticle(null);
       setTempArticleChange(null);
+
+      Modal.destroyAll();
+
       setArticleModalVisible(false);
     } else {
       confirmWarning();
     }
   };
   // modal按下OK
-  const saveArticle = () => {
+  const saveArticle = (isNew = isNewArticle) => {
+    let status;
+    if (isNew) {
+      status = "新增";
+    } else {
+      status = "更新";
+    }
     Modal.success({
-      title: "更新文章",
-      content: "確定要更新文章嗎?",
+      title: `${status}文章`,
+      content: `確定要${status}文章嗎?`,
       closable: true,
       maskClosable: true,
       okText: "確定",
@@ -271,7 +299,6 @@ const ArticleTable = () => {
   };
   // 確認更新
   const confirmUpdate = () => {
-    const articleId = tempArticleChange.article_id;
     const { title, sub_title, category, cover_image, content, is_published } =
       tempArticleChange;
     const data = {
@@ -282,21 +309,29 @@ const ArticleTable = () => {
       content,
       is_published
     };
-    axios
-      .put(
-        `${process.env.REACT_APP_API_URL}/api/admin/article/${articleId}`,
-        data
-      )
+    let reqMethod;
+    let api;
+
+    if (isNewArticle) {
+      api = `${process.env.REACT_APP_API_URL}/api/admin/article`;
+      reqMethod = "post";
+    } else {
+      const articleId = tempArticleChange.article_id;
+      api = `${process.env.REACT_APP_API_URL}/api/admin/article/${articleId}`;
+      reqMethod = "put";
+    }
+    axios[reqMethod](api, data)
       .then((res) => {
         setTempArticle(null);
         setTempArticleChange(null);
         getArticleList(tempCategory);
         Modal.destroyAll();
         setArticleModalVisible(false);
+
         if (res.data.success) {
-          messageApi.success("文章更新成功");
+          messageApi.success(`文章${isNewArticle ? "新增" : "更新"}成功`);
         } else {
-          messageApi.error("文章更新失敗");
+          messageApi.error(`文章${isNewArticle ? "新增" : "更新"}失敗`);
         }
       })
       .catch((err) => {
@@ -311,6 +346,7 @@ const ArticleTable = () => {
   useEffect(() => {
     getArticleList(tempCategory);
   }, [tempCategory]);
+
   return (
     <>
       {contextHolder}
@@ -338,7 +374,14 @@ const ArticleTable = () => {
             </p>
           </div>
           <div className="col-2" style={{ paddingLeft: "5rem" }}>
-            <Button type="primary">新增文章</Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                editArticle(true);
+              }}
+            >
+              新增文章
+            </Button>
           </div>
         </div>
         {/* 表格 */}
@@ -349,6 +392,7 @@ const ArticleTable = () => {
             rowKey="article_id"
           />
           <ArticleModal
+            isNew={isNewArticle}
             articleDataOld={tempArticle}
             articleData={tempArticleChange}
             setArticleData={setTempArticleChange}

@@ -44,7 +44,17 @@ const Backstage = () => {
     {
       key: "article",
       icon: <ReadOutlined />,
-      label: "文章管理"
+      label: "文章管理",
+      children: [
+        {
+          key: "article_edit",
+          label: "文章列表"
+        },
+        {
+          key: "article_create",
+          label: "新增文章"
+        }
+      ]
     },
     {
       key: "food",
@@ -71,7 +81,7 @@ const Backstage = () => {
 
   // data
   const [collapsed, setCollapsed] = useState(false);
-  const [siderSelected, setSiderSelected] = useState("article");
+  const [siderSelected, setSiderSelected] = useState("article_edit");
   // function
   const selectedItem = (e) => {
     setSiderSelected(e.key);
@@ -120,7 +130,7 @@ const Backstage = () => {
           >
             {siderSelected === "user" && <UserTable />}
             {siderSelected === "order" && <OrderTable />}
-            {siderSelected === "article" && <ArticleTable />}
+            {siderSelected === "article_edit" && <ArticleTable />}
           </Content>
           <Footer>Fooooooter</Footer>
         </Layout>
