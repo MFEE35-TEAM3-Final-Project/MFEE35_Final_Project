@@ -20,6 +20,7 @@ import {
   SyncOutlined,
   DeleteOutlined
 } from "@ant-design/icons";
+import CouponModal from "./CouponModal";
 
 // status config
 const statusConfig = (status) => {
@@ -134,6 +135,9 @@ const CouponManagement = () => {
       title: "結束日期",
       dataIndex: "end_date",
       key: "end_date",
+      sorter: {
+        compare: (a, b) => a.end_date - b.end_date
+      },
       render: (time) => {
         const localTime = toLocalTime(time);
         return <p>{localTime}</p>;
@@ -144,10 +148,7 @@ const CouponManagement = () => {
       key: "action",
       render: (_, coupon) => (
         <Space>
-          <Button
-            type="primary"
-            onClick={() => handleEdit(false, coupon.coupon_id)}
-          >
+          <Button type="primary" onClick={() => handleEdit(false, coupon)}>
             編輯
           </Button>
           <Button
@@ -182,30 +183,25 @@ const CouponManagement = () => {
     const date = new Date(time);
     return date.toLocaleString();
   };
-  const handleEdit = (coupon) => {
-    setSelectedCoupon(coupon);
-    setSelectedCouponChange(coupon);
-    setIsModalVisible(true);
+  const handleEdit = (isNew, coupon) => {
+    if (isNew) {
+      setSelectedCoupon(null);
+      setSelectedCouponChange(null);
+      setIsModalVisible(true);
+    } else {
+      setSelectedCoupon(coupon);
+      setSelectedCouponChange(coupon);
+      setIsModalVisible(true);
+    }
   };
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
   const deleteModal = () => {
     console.log("dellllll!");
   };
-  const handleModalCancel = () => {
-    if (selectedCoupon === selectedCouponChange) {
-      setSelectedCoupon(null);
-      setSelectedCouponChange(null);
-      setIsModalVisible(false);
-    } else {
-      warningModal();
-    }
-  };
 
-  const orderStatusChange = (e) => {
-    setSelectedCouponChange({
-      ...selectedCouponChange,
-      status: e.target.value
-    });
-  };
   // 確認離開
   const confirmClose = () => {
     setSelectedCoupon(null);
@@ -293,7 +289,16 @@ const CouponManagement = () => {
   }, []);
   return (
     <div className="coupon_table">
+      <button className="btn btn-primary" onClick={handleEdit}>
+        编辑优惠券
+      </button>
       <Table dataSource={coupons} columns={columns} rowKey="coupon_id" />
+      <CouponModal
+        visible={isModalVisible}
+        onCancel={closeModal}
+        couponData={selectedCouponChange}
+        setCouponData={setSelectedCouponChange}
+      />
     </div>
   );
 };
