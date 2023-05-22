@@ -19,29 +19,4 @@
   height: 4rem;
   width: 100%;
   background-color: aqua;
-}
-#backstage .order_table .status_tag {
-  padding: 0.5rem;
-}
-#backstage .order_table .status_tag .anticon {
-  vertical-align: 0.1rem;
-}
-
-.detail_list .detail_item > div {
-  display: flex;
-}
-.detail_list .detail_item > div > div {
-  flex: 3;
-}
-.detail_list .detail_item > div .img_container {
-  flex: 1;
-}
-
-.ck-editor__editable_inline {
-  min-height: 300px;
-}
-
-#cover_image .cover_img_container .ant-image {
-  border: 2px dashed;
-  padding: 5px;
 }/*# sourceMappingURL=all.css.map */

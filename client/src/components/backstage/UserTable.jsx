@@ -1,12 +1,11 @@
-import { Table, Spin, Avatar, Pagination, Space } from "antd";
+import { Table, Spin, Avatar, Pagination } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 const UserTable = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [userData, setUserData] = useState([]);
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-  const [totalQty, setTotalQty] = useState(0); // 新增總頁數的狀態變數
 
   const columns = [
     {
@@ -88,11 +87,11 @@ const UserTable = () => {
     const age = currentYear - birthYear;
     return age;
   };
-
   const getUsers = (page = 1) => {
+    setIsLoading(true);
     axios
       .get(
-        `${process.env.REACT_APP_API_URL}/api/admin/user_list?per_page=${perPage}&page=${page}`
+        `${process.env.REACT_APP_API_URL}/api/admin/user_list?per_page=10&page=${page}`
       )
       .then((res) => {
         console.log(res);
@@ -110,36 +109,30 @@ const UserTable = () => {
           };
         });
         setUserData(data);
-        // 更新總頁數的狀態
-        setTotalQty(res.data.user_qty);
-        setPerPage(res.data.paginations.per_page);
+
+        setIsLoading(false);
       })
       .catch((err) => {
         console.error(err);
       });
   };
-
   const pageChange = (newPage) => {
     setPage(newPage);
-    getUsers(newPage);
-    // 在頁碼改變時重新呼叫 getUsers 函式
   };
 
   useEffect(() => {
     getUsers(1);
-  }, []);
+  }, [page]);
 
   return (
     <div>
-      <Table columns={columns} dataSource={userData} pagination={false} />
-      <div className="m-3 d-flex justify-content-end">
-        <Pagination
-          current={page}
-          pageSize={perPage}
-          total={totalQty}
-          onChange={pageChange}
-        />
-      </div>
+      {isLoading ? (
+        <Spin tip="Loading..." size="large">
+          <div className="p-5" />
+        </Spin>
+      ) : (
+        <Table columns={columns} dataSource={userData} pagination={false} />
+      )}
     </div>
   );
 };

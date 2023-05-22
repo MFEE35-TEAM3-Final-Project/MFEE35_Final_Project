@@ -18,6 +18,7 @@ const AdminBoard = () => {
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/admin/check`)
       .then((res) => {
+        console.log(res);
         setAuthenticated(true);
         return res.data;
       })
