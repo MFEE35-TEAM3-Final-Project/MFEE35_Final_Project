@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+// import { format } from "date-fns";
 
 import MemberHeader from "../../components/member/MemberHeader";
 import BarChart from "../../components/member/BarChart.jsx";
@@ -15,33 +16,17 @@ function MemberHomePage() {
   const [userHeight, setUserHeight] = useState("");
   const [userWeight, setUserWeight] = useState("");
   const [exerciseLevel, setExerciseLevel] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
 
+  //取得會員資料
   useEffect(() => {
-    fetchMemberHomePage();
-  }, []);
+    const fetchMemberHomePage = async () => {
+      try {
+        const jwtToken = Cookies.get("jwtToken");
 
-  const fetchMemberHomePage = async () => {
-    try {
-      const jwtToken = Cookies.get("jwtToken");
-
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/user/check`,
-        null,
-        {
-          headers: {
-            Authorization: jwtToken,
-          },
-        }
-      );
-
-      console.log(response.data);
-
-      if (response.data.success) {
-        const userData = response.data.user;
-        setUser(userData);
-
-        const recordsResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/user/check`,
+          null,
           {
             headers: {
               Authorization: jwtToken,
@@ -49,29 +34,78 @@ function MemberHomePage() {
           }
         );
 
-        console.log(recordsResponse.data);
-        if (recordsResponse.data.success) {
-          const records = recordsResponse.data.records;
-          // 處理紀錄數據，例如：
-          records.forEach((record) => {
-            const weight = record.weight;
-            const height = record.height;
-            const exerciseLevel = record.exercise_level;
+        console.log(response.data);
 
-            setUserHeight(height);
-            setUserWeight(weight);
-            setExerciseLevel(exerciseLevel);
-          });
+        if (response.data.success) {
+          const userData = response.data.user;
+          setUser(userData);
+
+          const recordsResponse = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+            {
+              headers: {
+                Authorization: jwtToken,
+              },
+            }
+          );
+
+          console.log(recordsResponse.data);
+          if (recordsResponse.data.success) {
+            const records = recordsResponse.data.records;
+            // 處理紀錄數據，例如：
+            records.forEach((record) => {
+              const weight = record.weight;
+              const height = record.height;
+              const exerciseLevel = record.exercise_level;
+
+              setUserHeight(height);
+              setUserWeight(weight);
+              setExerciseLevel(exerciseLevel);
+            });
+          } else {
+            console.error(recordsResponse.data.message);
+          }
         } else {
-          console.error(recordsResponse.data.message);
+          console.error(response.data.message);
         }
-      } else {
-        console.error(response.data.message);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
+    fetchMemberHomePage();
+  }, []);
+
+  // 取得當前日期
+  useEffect(() => {
+    const getCurrentDate = () => {
+      const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+      const currentDate = new Date();
+
+      const formattedDate = `星期${weekdays[currentDate.getDay()]}, ${
+        currentDate.getMonth() + 1
+      }月 ${currentDate.getDate()}日`;
+
+      setCurrentDate(formattedDate);
+    };
+
+    getCurrentDate();
+  }, []);
+
+  useEffect(() => {
+    const jwtToken = Cookies.get("jwtToken");
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
+        headers: {
+          Authorization: jwtToken,
+        },
+      })
+      .then((res) => {
+        console.log(res.data.groupedResults[0].total_calories);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
@@ -160,7 +194,7 @@ function MemberHomePage() {
                 <div className="oneAndTwoAreaBg d-flex">
                   {/* 第一區 - 目標值與已攝取區 */}
                   <div className="w-50 position-relative">
-                    <div>4月15日 週六</div>
+                    <div>{currentDate}</div>
                     {/* 目標量的Icon */}
                     <div className="oneAreaTarget">
                       <div>
@@ -224,11 +258,6 @@ function MemberHomePage() {
                     鈉
                     <hr />
                     <div>123</div>
-                  </div>
-                  <div>
-                    醣
-                    <hr />
-                    <div>239</div>
                   </div>
                 </div>
               </div>

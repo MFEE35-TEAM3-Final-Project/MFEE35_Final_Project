@@ -50,7 +50,7 @@ const UserLogin = () => {
           <img id="logoimg" src={require("../image/logo/logo.png")} alt="" />
         </div>
         <div className="container">
-          <div className="userInfo row">
+          <div className="userInfo row" style={{ width: "50%" }}>
             <form id="loginForm" className="col-12" onSubmit={handleSubmit}>
               <div className="row myMember">
                 <div
@@ -132,10 +132,6 @@ const UserLogin = () => {
                   SIGN IN
                 </button>
                 <br />
-              </div>
-              <div style={{ textAlign: "center" }}>
-                <input id="userRem" type="checkbox" />
-                <label htmlFor="userRem">Remember me</label>
               </div>
 
               <div style={{ textAlign: "center" }}>

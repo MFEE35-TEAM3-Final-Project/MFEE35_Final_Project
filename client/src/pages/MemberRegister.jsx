@@ -149,7 +149,7 @@ const UserRegistration = () => {
         </div>
 
         <div className="container">
-          <div className="userInfo row">
+          <div style={{ width: "50%" }} className="userInfo row">
             <form id="registerForm" className="col-12" onSubmit={handleSubmit}>
               <div className="row myMember">
                 <div className="col-6" style={{ textAlign: "center" }}>
@@ -167,7 +167,7 @@ const UserRegistration = () => {
                 </div>
                 <div className="col-6" style={{ textAlign: "center" }}>
                   <Link
-                    to="/MemberRegister1"
+                    to="/MemberRegister"
                     className="userbtn"
                     style={{
                       textDecoration: "none",
