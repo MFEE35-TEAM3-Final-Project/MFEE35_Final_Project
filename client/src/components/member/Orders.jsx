@@ -4,15 +4,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/member/orders.css";
 import MemberHeader from "./MemberHeader";
-
 // Cookie
 import Cookies from "js-cookie";
 
-// import MemberHeader from './MemberHeader';
 
 function Orders() {
   const [data, setData] = useState([]);
-  const [expandedOrderId, setExpandedOrderId] = useState(null); // 追踪展开的订单ID
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [error, setError] = useState(null);
   const [hasFetched, setHasFetched] = useState(false);
 
@@ -35,7 +33,7 @@ function Orders() {
       );
       console.log(response);
       setData(response.data.data || []);
-      setExpandedOrderId(response.data.data[0]?.order_id || null); // 设置展开的订单ID为第一笔订单的ID
+      setExpandedOrderId(response.data.data[0]?.order_id || null);
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -55,13 +53,12 @@ function Orders() {
       {/* <MemberHeader/> */}
       <ToastContainer />
       {Array.isArray(data) && data.length > 0 ? (
-        <div className="order-container">
+        <div className="order-container row">
           {data.map((order, index) => (
             <div
               key={index}
-              className={`order-item ${
-                expandedOrderId === order.order_id ? "expanded" : ""
-              }`}
+              className={`order-item ${expandedOrderId === order.order_id ? "expanded" : ""
+                }`}
             >
               <div className="order-header">
                 {order.order_details.length > 0 && (
@@ -69,22 +66,28 @@ function Orders() {
                     <img
                       src={order.order_details[0].image[0]}
                       alt={order.order_details[0].name}
+                      className="col-3"
                     />
-                    <p>產品名稱：{order.order_details[0].name}</p>
-                    <p>數量：{order.order_details[0].quantity}</p>
+                    <div className="col-6">
+                      <p>產品名稱：{order.order_details[0].name}</p>
+                      <p>數量：{order.order_details[0].quantity}</p>
+                    </div>
+
                   </div>
                 )}
                 <div
-                  className={`order-details ${
-                    expandedOrderId === order.order_id ? "expanded" : ""
-                  }`}
+                  className={`order-details ${expandedOrderId === order.order_id ? "expanded row" : "row"
+                    }`}
                 >
                   {expandedOrderId === order.order_id &&
                     order.order_details.map((detail, detailIndex) => (
                       <div key={detailIndex} className="order-detail-item">
-                        <p>產品名稱：{detail.name}</p>
-                        <p>數量：{detail.quantity}</p>
-                        <img src={detail.image[0]} alt={detail.name} />
+
+                        <img className="col-3" src={detail.image[0]} alt={detail.name} />
+                        <div className="col-6">
+                          <p>產品名稱：{detail.name}</p>
+                          <p>數量：{detail.quantity}</p>
+                        </div>
                         {/* 顯示其他訂單詳細資訊 */}
                       </div>
                     ))}
