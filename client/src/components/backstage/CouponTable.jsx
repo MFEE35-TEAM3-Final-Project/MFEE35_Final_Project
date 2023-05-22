@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Table, Modal, Button, Descriptions, Tag, Radio, Image } from "antd";
+import {
+  Space,
+  Table,
+  Modal,
+  Button,
+  Progress,
+  Descriptions,
+  Tag,
+  Radio,
+  Image
+} from "antd";
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
-  SyncOutlined
+  SyncOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
 
 // status config
@@ -54,65 +65,107 @@ const statusConfig = (status) => {
 
 const CouponManagement = () => {
   const [coupons, setCoupons] = useState(null);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [selectedOrderChange, setSelectedOrderChange] = useState(null);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [selectedCouponChange, setSelectedCouponChange] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   // 表格欄位設定
   const columns = [
     {
-      title: "訂單編號",
-      dataIndex: "order_id",
-      key: "order_id"
+      title: "優惠券編號",
+      dataIndex: "coupon_id",
+      key: "coupon_id",
+      sorter: {
+        compare: (a, b) => a.coupon_id - b.coupon_id
+      }
     },
     {
-      title: "訂單日期",
-      dataIndex: "create_time",
-      key: "create_time",
+      title: "名稱",
+      dataIndex: "name",
+      key: "name"
+    },
+    {
+      title: "優惠碼",
+      dataIndex: "code",
+      key: "code"
+    },
+    {
+      title: "優惠券折數",
+      dataIndex: "discount_rate",
+      key: "discount_rate"
+    },
+    {
+      title: "使用數量",
+      dataIndex: "usage",
+      key: "usage",
+      width: "15%",
+
+      render: (_, coupon) => {
+        return (
+          <>
+            <div className="px-1 fw-bold d-flex justify-content-between">
+              <div>{coupon.usage_count}</div>
+              <div>{coupon.usage_limit}</div>
+            </div>
+            <Progress
+              status="active"
+              percent={coupon.usage_count / coupon.usage_limit}
+              showInfo={false}
+              strokeColor={{ "0%": "#ffeb3b", "100%": "#f44336" }}
+            />
+          </>
+        );
+      }
+    },
+    {
+      title: "開始日期",
+      dataIndex: "start_date",
+      key: "start_date",
+      sorter: {
+        compare: (a, b) => a.start_date - b.start_date
+      },
+
       render: (time) => {
         const localTime = toLocalTime(time);
         return <p>{localTime}</p>;
       }
     },
     {
-      title: "訂單狀態",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => {
-        const statusTag = statusConfig(status);
-        return (
-          <Tag
-            className="status_tag"
-            icon={statusTag.icon}
-            color={statusTag.color}
-          >
-            {statusTag.text}
-          </Tag>
-        );
+      title: "結束日期",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (time) => {
+        const localTime = toLocalTime(time);
+        return <p>{localTime}</p>;
       }
-    },
-    {
-      title: "優惠券",
-      dataIndex: "coupon_code",
-      key: "coupon_code"
-    },
-    {
-      title: "購買人",
-      dataIndex: "email",
-      key: "email"
     },
     {
       title: "操作",
       key: "action",
-      render: (_, record) => (
-        <Button type="primary" onClick={() => handleEdit(record)}>
-          編輯
-        </Button>
+      render: (_, coupon) => (
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleEdit(false, coupon.coupon_id)}
+          >
+            編輯
+          </Button>
+          <Button
+            // icon={<DeleteOutlined />}
+            type="primary"
+            danger
+            onClick={() => {
+              deleteModal(coupon.coupon_id, coupon.name);
+            }}
+          >
+            <DeleteOutlined style={{ verticalAlign: "0.1rem" }} />
+          </Button>
+        </Space>
       )
     }
   ];
 
-  const getOrder = () => {
+  const getCoupons = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/admin/coupon`)
       .then((res) => {
@@ -129,15 +182,18 @@ const CouponManagement = () => {
     const date = new Date(time);
     return date.toLocaleString();
   };
-  const handleEdit = (order) => {
-    setSelectedOrder(order);
-    setSelectedOrderChange(order);
+  const handleEdit = (coupon) => {
+    setSelectedCoupon(coupon);
+    setSelectedCouponChange(coupon);
     setIsModalVisible(true);
   };
+  const deleteModal = () => {
+    console.log("dellllll!");
+  };
   const handleModalCancel = () => {
-    if (selectedOrder === selectedOrderChange) {
-      setSelectedOrder(null);
-      setSelectedOrderChange(null);
+    if (selectedCoupon === selectedCouponChange) {
+      setSelectedCoupon(null);
+      setSelectedCouponChange(null);
       setIsModalVisible(false);
     } else {
       warningModal();
@@ -145,21 +201,21 @@ const CouponManagement = () => {
   };
 
   const orderStatusChange = (e) => {
-    setSelectedOrderChange({
-      ...selectedOrderChange,
+    setSelectedCouponChange({
+      ...selectedCouponChange,
       status: e.target.value
     });
   };
   // 確認離開
   const confirmClose = () => {
-    setSelectedOrder(null);
-    setSelectedOrderChange(null);
+    setSelectedCoupon(null);
+    setSelectedCouponChange(null);
     Modal.destroyAll();
     setIsModalVisible(false);
   };
 
   const confirmUpdate = () => {
-    const orderId = selectedOrderChange.order_id;
+    const couponId = selectedCouponChange.coupon_id;
     const {
       user_id,
       phone,
@@ -172,7 +228,7 @@ const CouponManagement = () => {
       shipping_address,
       ship_store,
       status
-    } = selectedOrderChange;
+    } = selectedCouponChange;
     const updateData = {
       user_id,
       phone,
@@ -189,17 +245,17 @@ const CouponManagement = () => {
     axios
       .put(`${process.env.REACT_APP_API_URL}/api/admin/coupon`, updateData)
       .then((res) => {
-        setSelectedOrder(null);
-        setSelectedOrderChange(null);
-        getOrder();
+        setSelectedCoupon(null);
+        setSelectedCouponChange(null);
+        getCoupons();
         Modal.destroyAll();
         setIsModalVisible(false);
       })
       .catch((err) => {
         console.error(err);
-        setSelectedOrder(null);
-        setSelectedOrderChange(null);
-        getOrder();
+        setSelectedCoupon(null);
+        setSelectedCouponChange(null);
+        getCoupons();
         Modal.destroyAll();
         setIsModalVisible(false);
       });
@@ -233,11 +289,11 @@ const CouponManagement = () => {
     });
   };
   useEffect(() => {
-    getOrder();
+    getCoupons();
   }, []);
   return (
-    <div className="order_table">
-      {/* <Table dataSource={orders} columns={columns} rowKey="order_id" /> */}
+    <div className="coupon_table">
+      <Table dataSource={coupons} columns={columns} rowKey="coupon_id" />
     </div>
   );
 };
