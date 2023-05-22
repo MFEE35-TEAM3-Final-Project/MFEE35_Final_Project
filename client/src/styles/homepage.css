@@ -500,6 +500,7 @@ button:hover .button-text {
 .item-box-img {
   height: 200px;
   text-align: top;
+  filter: brightness(60%);
 }
 
 .item-box-text {

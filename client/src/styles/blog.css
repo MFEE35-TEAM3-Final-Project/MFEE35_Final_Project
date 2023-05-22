@@ -199,6 +199,9 @@
 .article-text p {
     /* padding-top: 50px; */
 }
+.article-text span {
+    color: gray;
+}
 
 .Userfeedback {
     margin-top: 30px;
@@ -303,4 +306,31 @@
     color: rgb(255, 255, 255);
     border-radius: 50%;
     
+}
+.toppost{
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(212, 212, 212, 0.747);
+    margin-bottom: 10px;
+}
+.toppost img{
+    /* width: 100px;
+    height: 100px; */
+    max-width: 100px;
+}
+.toppost div{
+    padding: 40px;
+    font-weight: bold;
+}
+.sidebar{
+    margin-top: 50px;
+    position: relative;
+    
+}
+.s-post{
+   
+   
+    position: sticky;
+   top: 0;
 }

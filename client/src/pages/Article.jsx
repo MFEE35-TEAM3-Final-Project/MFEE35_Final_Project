@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BiMessageEdit, BiMessageAlt } from "react-icons/bi";
 import Nav from "../components/Nav";
-
+import Cookies from "js-cookie";
 function Article() {
   const [article, setArticle] = useState([]);
   const [articles, setArticles] = useState([]);
@@ -116,25 +116,24 @@ function Article() {
   }, []);
   //判斷會員
   useEffect(() => {
-    const jwtToken =
-      "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY";
+    const jwtToken = Cookies.get("jwtToken");
+    if (jwtToken) {
+      axios.defaults.headers.common["Authorization"] = jwtToken;
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
+        .then((res) => {
+          console.log(res.data);
 
-    axios.defaults.headers.common["Authorization"] = jwtToken;
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
-      .then((res) => {
-        console.log(res.data);
-
-        setIsAuthenticated(true);
-      })
-      .catch((err) => {
-        setIsAuthenticated(false);
-      });
+          setIsAuthenticated(true);
+        })
+        .catch((err) => {
+          setIsAuthenticated(false);
+        });
+    }
   });
   const sendMessage = async () => {
     try {
-      const jwtToken =
-        "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI3MjcxMjQyMzU0IiwiZW1haWwiOiJ0ZXN0MDUxNkB0ZXN0LmNvbSIsImV4cCI6MTY5MzAyMzA4MzgwMywiaWF0IjoxNjg0MzgzMDgzfQ.EnY2PeAYegAmAJCI-C7VP0vflHaTkkLwM1CPunjbRFY";
+      const jwtToken = Cookies.get("jwtToken");
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/user/article_comments/article_id=${id}`,
         {
@@ -324,7 +323,10 @@ function Article() {
                 id="cardforuser"
               >
                 <div className="card-img">
-                  <img src={`${articlelist.cover_image}.jpeg`} alt="" />
+                  <img 
+                  src={articlelist.cover_image}
+                  // src={`${articlelist.cover_image}.jpeg`} 
+                  alt="" />
                 </div>
                 <div className="card-body c-bodylink">
                   <a href={articlelist.article_id}>
