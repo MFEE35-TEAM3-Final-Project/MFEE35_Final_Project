@@ -9,18 +9,17 @@ import {
   ReadOutlined,
   CoffeeOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserTable from "../../components/backstage/UserTable";
+import OrderTable from "../../components/backstage/OrderTable";
+import ArticleTable from "../../components/backstage/ArticleTable";
 
 const Backstage = () => {
-  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
   const { Header, Sider, Content, Footer } = Layout;
+
   const items = [
     {
       key: "dashboard",
@@ -46,6 +45,16 @@ const Backstage = () => {
       key: "article",
       icon: <ReadOutlined />,
       label: "文章管理",
+      children: [
+        {
+          key: "article_edit",
+          label: "文章列表"
+        },
+        {
+          key: "article_create",
+          label: "新增文章"
+        }
+      ]
     },
     {
       key: "food",
@@ -70,8 +79,12 @@ const Backstage = () => {
     },
   ];
 
+  // data
+  const [collapsed, setCollapsed] = useState(false);
+  const [siderSelected, setSiderSelected] = useState("article_edit");
+  // function
   const selectedItem = (e) => {
-    console.log("click!", e.key);
+    setSiderSelected(e.key);
   };
 
   return (
@@ -82,7 +95,7 @@ const Backstage = () => {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["dashboard"]}
+            defaultSelectedKeys={[siderSelected]}
             items={items}
             onClick={(e) => {
               selectedItem(e);
@@ -112,11 +125,12 @@ const Backstage = () => {
           <Content
             style={{
               padding: 24,
-              minHeight: 500,
-              background: colorBgContainer,
+              minHeight: 800
             }}
           >
-            <UserTable />
+            {siderSelected === "user" && <UserTable />}
+            {siderSelected === "order" && <OrderTable />}
+            {siderSelected === "article_edit" && <ArticleTable />}
           </Content>
           <Footer>Fooooooter</Footer>
         </Layout>
