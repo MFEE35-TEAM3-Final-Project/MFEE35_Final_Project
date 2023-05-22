@@ -93,31 +93,34 @@ function Favorite() {
         <p>{error}</p>
       ) : data.length > 0 ? (
         data.map((item) => (
-          <div key={item.id} className="favorite_list">
-            <div className="image">
-              <img src={item.image[0]} alt="Product Image" />
-            </div>
-            <div className="info">
-              <p>商品名稱: {item.name}</p>
-              <p>商品描述: {item.description}</p>
-              <p>價格: ${item.price}</p>
-              <div className="buttons">
-                <button onClick={() => handleDelete(item.productid)}>
-                  刪除
-                </button>
-                <button onClick={() => handleAdd(item.productid)}>
-                  加入購物車
-                </button>
+          <div key={item.id} >
+            <a className="favorite_list">
+              <div className="image">
+                <img src={item.image[0]} alt="Product Image" />
               </div>
-            </div>
+              <div className="info">
+                <h1 className="productname"> {item.name}</h1>
+                <p> {item.description}</p>
+                <p> ${item.price}</p>
+                <div className="buttons">
+                  <button onClick={() => handleDelete(item.productid)}>
+                    刪除
+                  </button>
+                  <button onClick={() => handleAdd(item.productid)}>
+                    加入購物車
+                  </button>
+                </div>
+              </div>
+            </a>
           </div>
         ))
       ) : (
         <div className="favorite_nolist">
           <p>追蹤清單內沒有東西</p>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }
 

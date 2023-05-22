@@ -1,18 +1,13 @@
-@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
-@import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
-
-.head {
-    align-items: center;
-}
-
 .favorite_list {
     display: flex;
     align-items: center;
-    width: 80%;
     margin: 3% auto;
     padding: 3%;
     background-color: #DCDBD7;
     border-radius: 20px;
+    font-size: 24px;
+    text-decoration: none;
+    color: #000;
 }
 
 .favorite_list:hover {
@@ -32,18 +27,19 @@
 }
 
 .favorite_list .info {
-    flex: 1;
+    flex-grow: 1;
     align-items: flex-start;
     text-align: start;
     margin-left: 3%;
 }
 
+.productname {
+    font-weight: 700;
+}
 
 .favorite_list .buttons {
     display: flex;
     justify-content: flex-end;
-
-    /* margin-top: 10px; */
 }
 
 .favorite_list .buttons button {
@@ -51,18 +47,6 @@
     border-radius: 20px;
 }
 
-.favorite_list .buttons :hover {
+.favorite_list .buttons button:hover {
     background-color: rgb(255, 4, 4);
-}
-
-.favorite_nolist {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    background-color: #DCDBD7;
-}
-
-.itemname {
-    font-size: 24px;
-    font-weight: bold;
 }
