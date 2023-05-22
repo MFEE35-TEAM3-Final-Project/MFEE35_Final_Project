@@ -7,9 +7,6 @@ import BarChart from "../../components/member/BarChart.jsx";
 
 import "../../styles/member/memberHome.css";
 
-import target from "../../image/memberrecrod/target.png";
-import fork from "../../image/memberrecrod/fork.png";
-
 // Cookie
 import Cookies from "js-cookie";
 
@@ -92,15 +89,33 @@ function MemberHomePage() {
             <form id="memberHomeForm" className="col-12" action="">
               <div className="row">
                 <div className="col-4 memberHomePageInfo">
-                  <p style={{ minWidth: "80px" }} htmlFor="userNumber">
+                  <p
+                    className="memberDataGroup"
+                    style={{ minWidth: "80px" }}
+                    htmlFor="userNumber"
+                  >
                     會員編號：
                   </p>
-                  <p htmlFor="userName">姓名：</p>
-                  <p htmlFor="userGender">性別：</p>
-                  <p htmlFor="userAge">生日：</p>
-                  <p htmlFor="userHeight">身高(cm)：</p>
-                  <p htmlFor="userWeight">體重(kg)：</p>
-                  <p style={{ minWidth: "80px" }} htmlFor="userSport">
+                  <p className="memberDataGroup" htmlFor="userName">
+                    姓名：
+                  </p>
+                  <p className="memberDataGroup" htmlFor="userGender">
+                    性別：
+                  </p>
+                  <p className="memberDataGroup" htmlFor="userAge">
+                    生日：
+                  </p>
+                  <p className="memberDataGroup" htmlFor="userHeight">
+                    身高(cm)：
+                  </p>
+                  <p className="memberDataGroup" htmlFor="userWeight">
+                    體重(kg)：
+                  </p>
+                  <p
+                    className="memberDataGroup"
+                    style={{ minWidth: "80px" }}
+                    htmlFor="userSport"
+                  >
                     運動頻率：
                   </p>
                 </div>
@@ -108,17 +123,19 @@ function MemberHomePage() {
                   className="col-4 memberHomePageInfo"
                   style={{ textAlign: "left" }}
                 >
-                  <p>{user && user.user_id}</p>
-                  <p>{user && user.username}</p>
-                  <p>{user && (user.gender === "male" ? "男生" : "女生")}</p>
-                  <p>
+                  <p className="memberDataGroup">{user && user.user_id}</p>
+                  <p className="memberDataGroup">{user && user.username}</p>
+                  <p className="memberDataGroup">
+                    {user && (user.gender === "male" ? "男生" : "女生")}
+                  </p>
+                  <p className="memberDataGroup">
                     {user &&
                       user.birthday &&
                       new Date(user.birthday).toLocaleDateString()}
                   </p>
-                  <p>{user && userHeight} </p>
-                  <p>{user && userWeight} </p>
-                  <p>
+                  <p className="memberDataGroup">{user && userHeight} </p>
+                  <p className="memberDataGroup">{user && userWeight} </p>
+                  <p className="memberDataGroup">
                     {user && exerciseLevel === 1.2 && "幾乎不運動"}
                     {user && exerciseLevel === 1.375 && "每週運動 1-3 天"}
                     {user && exerciseLevel === 1.55 && "每週運動 3-5 天"}
@@ -129,7 +146,7 @@ function MemberHomePage() {
                   </p>
                 </div>
                 <div className="col-4">
-                  <img src="/images/logo/logo.png" alt="" />
+                  <img src={require("../../image/logo/logo.png")} alt="logo" />
                 </div>
               </div>
             </form>
@@ -147,7 +164,10 @@ function MemberHomePage() {
                     {/* 目標量的Icon */}
                     <div className="oneAreaTarget">
                       <div>
-                        <img src={target} alt="這是目標值" />
+                        <img
+                          src={require("../../image/memberrecrod/target.png")}
+                          alt="這是目標值"
+                        />
                       </div>
                       <div>目標值</div>
                     </div>
@@ -159,7 +179,10 @@ function MemberHomePage() {
                     {/* 已攝取量的Icon */}
                     <div className="oneAreaAlreadyEat">
                       <div>
-                        <img src={fork} alt="這是刀叉圖片" />
+                        <img
+                          src={require("../../image/memberrecrod/fork.png")}
+                          alt="這是刀叉圖片"
+                        />
                       </div>
                       <div>已攝取</div>
                     </div>
@@ -212,14 +235,18 @@ function MemberHomePage() {
             </div>
 
             <div className="memberHomePageBtn">
-              <button className="foodRecordBtn">紀錄飲食 GO</button>
+              <button className="foodRecordBtn" style={{ fontSize: "28px" }}>
+                紀錄飲食 GO
+              </button>
             </div>
 
             <BarChart />
 
             <div className="memberHomePageBtn">
               <Link to="/MemberChartList">
-                <button className="foodRecordBtn">查看更多數據</button>
+                <button className="foodRecordBtn" style={{ fontSize: "28px" }}>
+                  查看更多數據
+                </button>
               </Link>
             </div>
           </div>

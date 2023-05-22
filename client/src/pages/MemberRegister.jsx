@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-import logo from "../image/logo/logo.png";
+// import logo from "../image/logo/logo.png";
 import "../styles/member/main.css";
 import Nav from "../components/Nav";
 
@@ -145,7 +145,7 @@ const UserRegistration = () => {
           <h3 id="titleH3">會員註冊</h3>
         </div>
         <div style={{ margin: "20px" }}>
-          <img id="logoimg" src={logo} alt="" />
+          <img id="logoimg" src={require("../image/logo/logo.png")} alt="" />
         </div>
 
         <div className="container">

@@ -89,7 +89,7 @@ function Favorite() {
     <div>
       <MemberHeader />
       <ToastContainer />
-      <h2>會員追蹤清單</h2>
+      <h3 id="titleH3">會員追蹤清單</h3>
       {error ? (
         <p>{error}</p>
       ) : data.length > 0 ? (

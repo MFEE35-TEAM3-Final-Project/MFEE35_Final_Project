@@ -1,17 +1,43 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 
 function MyBarChart() {
   const barChartRef = useRef(null);
+  const [dateRange, setDateRange] = useState("");
 
   useEffect(() => {
     const barChartCanvas = barChartRef.current;
     const barChartCtx = barChartCanvas.getContext("2d");
 
+    const getCurrentWeekDates = () => {
+      const currentDate = new Date();
+      const firstDayOfWeek = new Date(
+        currentDate.setDate(currentDate.getDate() - currentDate.getDay())
+      );
+      const labels = [];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(firstDayOfWeek);
+        date.setDate(date.getDate() + i);
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const formattedDate = `${month < 10 ? "0" + month : month}/${
+          day < 10 ? "0" + day : day
+        }`;
+        labels.push(formattedDate);
+      }
+      const startDate = labels[0];
+      const endDate = labels[labels.length - 1];
+      const range = `${startDate}~${endDate}`;
+      setDateRange(range); // 更新日期範圍
+      return labels;
+    };
+
+    const labels = getCurrentWeekDates();
+
     const barChart = new Chart(barChartCtx, {
       type: "bar",
       data: {
-        labels: ["04/24", "04/25", "04/26", "04/27", "04/28", "04/29", "04/30"],
+        labels: labels,
         datasets: [
           {
             type: "bar",
@@ -72,7 +98,7 @@ function MyBarChart() {
 
   return (
     <div className="memberBarChart col-9">
-      <div>112/04/24~112/04/30 熱量攝取</div>
+      <div style={{ fontSize: "28px" }}>{dateRange} 熱量攝取</div>
       <canvas ref={barChartRef} id="memberBarChart"></canvas>
     </div>
   );

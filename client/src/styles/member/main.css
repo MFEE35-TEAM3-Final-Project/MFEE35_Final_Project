@@ -10,8 +10,8 @@
 #logoimg {
     display: block;
     margin: auto;
-    width: 200px;
-    height: 200px;
+    /* width: 200px;
+    height: 200px; */
 }
 
 .mysubmit {
