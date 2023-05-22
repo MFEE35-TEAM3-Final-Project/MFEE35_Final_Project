@@ -4,7 +4,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/member/favoritelist.css";
 import MemberHeader from "./MemberHeader";
-// Cookie
 import Cookies from "js-cookie";
 
 function Favorite() {
@@ -89,7 +88,7 @@ function Favorite() {
     <div>
       <MemberHeader />
       <ToastContainer />
-      <h2>會員追蹤清單</h2>
+      <h2 className="head">會員追蹤清單</h2>
       {error ? (
         <p>{error}</p>
       ) : data.length > 0 ? (

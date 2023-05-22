@@ -69,6 +69,16 @@ function App() {
           <Route path="/MemberHomePage" element={<MemberHomePage />} />
           <Route path="/MemberChartList" element={<MemberChartList />} />
           <Route path="/MemberData" element={<MemberData />} />
+
+          {/* admin page */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route element={<AdminBoard />}>
+            <Route path="/admin/backstage" element={<BackStage />} />
+          </Route>
+          <Route path="/MemberFav" element={<Favorite />} />
+          <Route path="/MemberOrders" element={<Orders />} />
+
+          {/* 不需要Nav */}
         </Routes>
       </div>
       {isBack ? "" : <Footer />}
