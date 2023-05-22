@@ -102,7 +102,7 @@ const UserTable = () => {
             userId: user.user_id,
             username: user.username,
             email: user.email,
-            avatar: "https://imgur.com/4TuQJDn.jpg",
+            avatar: user.avatar ? user.avatar : "https://imgur.com/QV2Rk8f.jpg",
             gender: user.gender,
             age: calculateAge(user.birthday),
             phone: user.phone,

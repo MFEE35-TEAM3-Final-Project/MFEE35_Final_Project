@@ -154,6 +154,7 @@ const OrderManagement = () => {
       .get(`${process.env.REACT_APP_API_URL}/api/admin/orders`)
       .then((res) => {
         if (res.data.success) {
+          console.log("order res",res);
           setOrders(res.data.data);
         }
       })
