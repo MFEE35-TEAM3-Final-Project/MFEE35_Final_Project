@@ -17,6 +17,7 @@ import StorePage from "./pages/StorePage";
 import GoodsPage from "./pages/GoodsPage";
 import ShoppingcartPage from "./pages/ShoppingcartPage";
 import FoodRecordNumber from "./pages/FoodRecordNumber";
+import AdminLogin from "./pages/admin/AdminLogin";
 import AdminBoard from "./pages/admin/AdminBoard";
 import BackStage from "./pages/admin/BackStage";
 import MemberLoginPage from "./pages/MemberLoginPage";
@@ -55,7 +56,7 @@ function App() {
             element={<GoodsPage />}
           />
           <Route path="/cart" element={<ShoppingcartPage />} />
-
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route element={<AdminBoard />}>
             <Route path="/admin/backstage" element={<BackStage />} />
           </Route>

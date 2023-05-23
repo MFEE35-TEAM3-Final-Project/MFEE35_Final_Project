@@ -119,8 +119,10 @@ const OrderManagement = () => {
         const statusTag = statusConfig(status);
         return (
           <Tag
-            className="status_tag"
-            icon={statusTag.icon}
+            className="status_tag p-2"
+            icon={React.cloneElement(statusTag.icon, {
+              style: { verticalAlign: "0.1rem" }
+            })}
             color={statusTag.color}
           >
             {statusTag.text}
@@ -154,7 +156,7 @@ const OrderManagement = () => {
       .get(`${process.env.REACT_APP_API_URL}/api/admin/orders`)
       .then((res) => {
         if (res.data.success) {
-          console.log("order res",res);
+          console.log("order res", res);
           setOrders(res.data.data);
         }
       })
