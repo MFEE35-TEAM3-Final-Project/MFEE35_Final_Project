@@ -49,11 +49,12 @@
   margin: 30px;
 }
 .sportList-img{
-  filter: brightness(60%) ;
+  filter: brightness(66%) ;
 }
 .sportList-img input:focus {
-  filter: invert(51%) sepia(12%) saturate(530%) hue-rotate(176deg)
-    brightness(100%) contrast(95%);
+  /* filter: invert(51%) sepia(12%) saturate(530%) hue-rotate(176deg)
+    brightness(100%) contrast(95%); */
+    filter: invert(50%) sepia(16%) saturate(457%) hue-rotate(176deg) brightness(130%) contrast(86%);
   /* border: 1px solid black; */
   transition: all 0.5s ease;
 }

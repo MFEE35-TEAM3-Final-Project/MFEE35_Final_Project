@@ -16,7 +16,7 @@ function Blog() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=25`)
       .then((res) => {
-        setAllarticles(res.data.articles);
+        setAllarticles(res.data.articles.sort(() => Math.random() - 0.5));
         console.log(allarticles)
       })
       .catch((err) => {
@@ -280,8 +280,8 @@ function Blog() {
           </div>
         </div>
         <div className="articlelist">
-          <div className="row g-4  tab-content d-flex ">
-            <div className="col-lg-8 col-md-12   tab-pane show active flex-wrap">
+          <div className="row g-4   d-flex ">
+            <div className="col-lg-8 col-md-12    flex-wrap">
               {articles.map((article) => (
                 <div
                   key={article.article_id}
@@ -372,14 +372,14 @@ function Blog() {
             <div className="col-lg-3 sidebar">
               <div className="s-post ">
                 <div className="B-Title">Today's Top Posts</div>
-                {allarticles.sort(() => Math.random() - 0.5).map((article) => (
-                <div className="toppost d-flex flex-row " key={article.article_id}>
+                {allarticles.map((allarticle) => (
+                <div className="toppost d-flex flex-row " key={allarticle.article_id}>
                   <img
-                    src={article.cover_image}
+                    src={allarticle.cover_image}
                     alt=""
                     className="img-fluid"
                   />
-                  <div>{article.title}</div>
+                  <div>{allarticle.title}</div>
                 </div>
                 )).slice(0, 3)}
               </div>
