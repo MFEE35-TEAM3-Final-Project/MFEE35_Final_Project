@@ -94,7 +94,7 @@ function Favorite() {
       ) : data.length > 0 ? (
         data.map((item) => (
           <div key={item.id} >
-            <a className="favorite_list">
+            <a className="favorite_list" href={`/goods/${item.productid}/${item.activityId}/${item.food_id}`}>
               <div className="image">
                 <img src={item.image[0]} alt="Product Image" />
               </div>
@@ -103,10 +103,16 @@ function Favorite() {
                 <p> {item.description}</p>
                 <p> ${item.price}</p>
                 <div className="buttons">
-                  <button onClick={() => handleDelete(item.productid)}>
+                  <button onClick={(event) => {
+                    handleDelete(item.productid);
+                    event.preventDefault();
+                  }}>
                     刪除
                   </button>
-                  <button onClick={() => handleAdd(item.productid)}>
+                  <button onClick={(event) => {
+                    handleAdd(item.productid);
+                    event.preventDefault();
+                  }}>
                     加入購物車
                   </button>
                 </div>
