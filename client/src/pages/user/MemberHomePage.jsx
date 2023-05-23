@@ -78,11 +78,31 @@ function MemberHomePage() {
     fetchMemberHomePage();
   }, []);
 
-  // 取得當前日期
+  // // 取得當前日期
+  // useEffect(() => {
+  //   const getCurrentDate = () => {
+  //     const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+  //     const currentDate = new Date();
+
+  //     const formattedDate = `星期${weekdays[currentDate.getDay()]}, ${
+  //       currentDate.getMonth() + 1
+  //     }月 ${currentDate.getDate()}日`;
+
+  //     setCurrentDate(formattedDate);
+  //   };
+
+  //   getCurrentDate();
+  // }, []);
+
+  //將日期設置在 112/06/03
   useEffect(() => {
     const getCurrentDate = () => {
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
       const currentDate = new Date();
+
+      // 將日期設定為 06/03
+      currentDate.setDate(3); // 設定日期為 3
+      currentDate.setMonth(5); // 設定月份為 6 (從 0 開始計算，所以是 5)
 
       const formattedDate = `星期${weekdays[currentDate.getDay()]}, ${
         currentDate.getMonth() + 1
@@ -94,37 +114,51 @@ function MemberHomePage() {
     getCurrentDate();
   }, []);
 
-  // useEffect(() => {
-  //   const jwtToken = Cookies.get("jwtToken");
-  //   axios
-  //     .get(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
-  //       headers: {
-  //         Authorization: jwtToken,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       if (res.data.groupedResults) {
-  //         const {
-  //           total_calories,
-  //           total_carbohydrate,
-  //           total_protein,
-  //           total_saturated_fat,
-  //           total_sodium,
-  //         } = res.data.groupedResults[1];
+  //取得 各營養數值
+  const [calories, setCalories] = useState(0);
+  const [carbohydrate, setCarbohydrate] = useState(0);
+  const [protein, setProtein] = useState(0);
+  const [saturatedFat, setSaturatedFat] = useState(0);
+  const [sodium, setSodium] = useState(0);
+  useEffect(() => {
+    const jwtToken = Cookies.get("jwtToken");
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
+        headers: {
+          Authorization: jwtToken,
+        },
+      })
+      .then((res) => {
+        if (res.data.groupedResults) {
+          const {
+            total_calories,
+            total_carbohydrate,
+            total_protein,
+            total_saturated_fat,
+            total_sodium,
+          } = res.data.groupedResults[7];
 
-  //         console.log(
-  //           total_calories,
-  //           total_carbohydrate,
-  //           total_protein,
-  //           total_saturated_fat,
-  //           total_sodium
-  //         );
-  //       } else {
-  //         // 处理 groupedResults 未定义的情况
-  //         console.log("groupedResults is undefined");
-  //       }
-  //     });
-  // }, []);
+          // 在需要更新状态的地方使用对应的setter函数
+          setCalories(total_calories);
+
+          setCarbohydrate(total_carbohydrate);
+          setProtein(total_protein);
+          setSaturatedFat(total_saturated_fat);
+          setSodium(total_sodium);
+
+          console.log(
+            total_calories,
+            total_carbohydrate,
+            total_protein,
+            total_saturated_fat,
+            total_sodium
+          );
+        } else {
+          // 处理 groupedResults 未定义的情况
+          console.log("groupedResults is undefined");
+        }
+      });
+  }, []);
 
   //計算 TDEE
   useEffect(() => {
@@ -210,32 +244,28 @@ function MemberHomePage() {
     }
   }, [exerciseRecords]);
 
-  // // 會員還有多少卡路里可以吃
+  // 會員還有多少卡路里可以吃
+  const [caloriesCanEat, setCaloriesCanEat] = useState(0);
 
-  // const [AllNumberCaloriesPlus, setAllNumberCaloriesPlus] = useState();
-  // const [caloriesCanEat, setCaloriesCanEat] = useState("");
+  useEffect(() => {
+    let caloriesReduce = parseInt(targetCal) - parseInt(calories);
+    setCaloriesCanEat(caloriesReduce);
+  }, [targetCal, calories]);
 
-  // useEffect(() => {
-  //   if (!loading) {
-  //     let caloriesReduce = targetCal - AllNumberCaloriesPlus;
-  //     setCaloriesCanEat(caloriesReduce);
-  //   }
-  // });
-  // // 根據多少卡路里的值是正或負來判斷div內的文字
-  // useEffect(() => {
-  //   if (!isNaN(caloriesCanEat)) {
-  //     changeWord(caloriesCanEat);
-  //   }
-  // }, [caloriesCanEat]);
+  useEffect(() => {
+    if (!isNaN(caloriesCanEat)) {
+      changeWord(caloriesCanEat);
+    }
+  }, [caloriesCanEat]);
 
-  // const changeWord = (caloriesCanEat) => {
-  //   const displayText = isNaN(caloriesCanEat)
-  //     ? "請輸入飲食紀錄"
-  //     : caloriesCanEat > 0
-  //     ? "還可以吃"
-  //     : "已超標";
-  //   return <div>{String(displayText)}</div>;
-  // };
+  const changeWord = (caloriesCanEat) => {
+    const displayText = isNaN(caloriesCanEat)
+      ? "請輸入飲食紀錄"
+      : caloriesCanEat > 0
+      ? "還可以吃"
+      : "已超標";
+    return <div>{String(displayText)}</div>;
+  };
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
@@ -352,7 +382,7 @@ function MemberHomePage() {
                     </div>
                     {/* 已攝取量 */}
                     <div className="oneAreaAlreadyEatValue">
-                      <div>1430</div>
+                      <div>{calories}</div>
                       <div>卡路里</div>
                     </div>
                   </div>
@@ -361,9 +391,15 @@ function MemberHomePage() {
                   <div className="howMuchLeftBgDiv w-50">
                     <img src="./images/memberrecrod/circle-shape.png" alt="" />
                     <div className="howMuchLeftValue">
-                      <div>還可以吃</div>
-                      <div>1570</div>
-                      <div>卡路里</div>
+                      {typeof caloriesCanEat === "number" ? (
+                        <>
+                          {changeWord(caloriesCanEat)}
+                          <div className="calories">
+                            {String(caloriesCanEat)}
+                          </div>
+                          <div>卡路里</div>
+                        </>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -372,22 +408,22 @@ function MemberHomePage() {
                   <div>
                     碳水化合物
                     <hr />
-                    <div>2149</div>
+                    <div>{carbohydrate}</div>
                   </div>
                   <div>
                     蛋白質
                     <hr />
-                    <div>51</div>
+                    <div>{protein}</div>
                   </div>
                   <div>
                     脂肪
                     <hr />
-                    <div>183</div>
+                    <div>{saturatedFat}</div>
                   </div>
                   <div>
                     鈉
                     <hr />
-                    <div>123</div>
+                    <div>{sodium}</div>
                   </div>
                 </div>
               </div>
