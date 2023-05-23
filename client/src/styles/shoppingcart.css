@@ -753,6 +753,7 @@
 .cartHasNothing{
     display: flex;
     justify-content: center;
+    height: 100%;
 }
 
 .cartHasNothing>span{
@@ -768,4 +769,8 @@
     text-decoration: none;
     padding: 0px 20px;
     border-radius: 20px;
+}
+
+.nothingBoxInCart{
+    padding-bottom:500px;
 }

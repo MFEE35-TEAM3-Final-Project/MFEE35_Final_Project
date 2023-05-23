@@ -58,6 +58,7 @@ const GoodsPage = () => {
         console.error(err);
       });
   }, []);
+
   useEffect(() => {
     setQuantity(1);
   }, [productid]);
@@ -143,9 +144,13 @@ const GoodsPage = () => {
         })
         .then((res) => {
           // console.log(res);
+          alert("已成功加入追蹤清單");
         })
         .catch((err) => {
-          console.error(err);
+          // console.error(err);
+          if (err.response.status === 400) {
+            alert("追蹤清單中已存在該商品");
+          }
         });
     } else {
       alert("請先登入");
@@ -249,7 +254,7 @@ const GoodsPage = () => {
           </div>
           <div className="goodsText">
             <div className="gGroup">
-              {onlyOneProducts.activityId !== "" ? (
+              {onlyOneProduct.activityId !== "" ? (
                 <div>
                   <div className="goodsTitle">
                     <span className="activityTitle">活動商品:</span>
@@ -369,6 +374,7 @@ const GoodsPage = () => {
               <Link
                 to={`http://localhost:3000/goods/${promotionGood.productid}/${promotionGood.activityId}/${promotionGood.food_id}`}
                 className="jumpPage"
+                target="_blank"
               >
                 <img
                   id="myGoodCard"
