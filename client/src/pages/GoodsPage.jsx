@@ -6,6 +6,7 @@ import DoughnutComponent from "../components/DoughnutChart";
 import Cookies from "js-cookie";
 import "../styles/goods.css";
 import Nav from "../components/Nav";
+import { ToastContainer, toast } from "react-toastify";
 
 const GoodsPage = () => {
   // 設定取得的商品ID、食物ID
@@ -26,6 +27,7 @@ const GoodsPage = () => {
   const shuffledGoods = promotionGoods.sort(() => Math.random() - 0.5); //亂數
   // 捨定cookie的值
   const [cartData, setCartData] = useState([]);
+
   useEffect(() => {
     axios
       .get(
@@ -103,12 +105,12 @@ const GoodsPage = () => {
           quantity: quantity,
         })
         .then((res) => {
-          // console.log(res);
-          alert("已成功加入購物車");
-          window.location.reload();
+          toast.success("已成功加入購物車");
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response.status === 400) {
+            toast.warning(err.response.data.message);
+          }
         });
     } else {
       const expires = 7;
@@ -143,13 +145,11 @@ const GoodsPage = () => {
           productid: productid,
         })
         .then((res) => {
-          // console.log(res);
-          alert("已成功加入追蹤清單");
+          toast.success("已成功加入追蹤清單");
         })
         .catch((err) => {
-          // console.error(err);
           if (err.response.status === 400) {
-            alert("追蹤清單中已存在該商品");
+            toast.warning("追蹤清單中已存在該商品");
           }
         });
     } else {
@@ -183,14 +183,13 @@ const GoodsPage = () => {
     const value = parseInt(event.target.value);
     if (!isNaN(value)) {
       setQuantity(value);
+      // console.log(typeof value);
     }
   };
 
-  // const handleDeleteCartData = () => {
-  //   Cookies.remove("cartData");
-  //   setCartData([]);
-  // };
-
+  const handleButtonClick = () => {
+    toast.success("Hello, World!");
+  };
   return (
     <div>
       <Nav />
@@ -200,12 +199,7 @@ const GoodsPage = () => {
           rel="stylesheet"
         />
       </Helmet>
-      {/* <h1>
-        商品頁面 - 商品 ID：{productid} 跟 食物 ID{foodId}
-      </h1> */}
-      {/* <h1>
-        <button onClick={handleDeleteCartData}>刪除購物車資料</button>
-      </h1> */}
+      <ToastContainer />
       <div className="goodstype">
         <div className="diet">
           <a href="http://localhost:3000/goods" className="myDiet">

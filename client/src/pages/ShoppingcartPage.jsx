@@ -4,6 +4,8 @@ import { Helmet } from "react-helmet";
 import "../styles/shoppingcart.css";
 import cityCountryData from "../json/CityCountyData.json";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+
 // import Nav from "../components/Nav";
 // import Cookies from "js-cookie";
 
@@ -92,7 +94,7 @@ const ShoppingcartPage = () => {
           setIncomingData(res.data.data); // 設定初始資料
           // 設定訂單資料
         } else {
-          alert("購物車沒有資料");
+          toast.warning("購物車沒有資料");
           setNothing(false);
         }
       })
@@ -402,7 +404,8 @@ const ShoppingcartPage = () => {
         `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`,
         { cart_id: id }
       );
-      alert("已刪除該商品");
+      // alert("已刪除該商品");
+      toast.warning("已成功加入購物車");
 
       // 找到目标项的索引
       const targetIndex = incomingDatas.findIndex(
@@ -486,7 +489,7 @@ const ShoppingcartPage = () => {
         })
         .then((res) => {
           console.log(res);
-          alert("已送出訂單");
+          toast.success("已送出訂單");
           window.location.reload();
         })
         .catch((error) => {
@@ -494,7 +497,7 @@ const ShoppingcartPage = () => {
           console.log(order);
         });
     } else {
-      alert("資料尚未完整填入");
+      toast.warning("資料尚未完整填入");
     }
   };
 
@@ -590,6 +593,7 @@ const ShoppingcartPage = () => {
           rel="stylesheet"
         />
       </Helmet>
+      <ToastContainer />
       <div className="main">
         <div className="cartHeader">
           <span className="hText">購物車</span>
