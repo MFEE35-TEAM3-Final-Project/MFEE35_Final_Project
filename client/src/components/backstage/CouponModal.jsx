@@ -60,23 +60,23 @@ const CouponModal = ({
     form
       .validateFields()
       .then((values) => {
-        const start_date = dayjs(values.validityPeriod[0])
+        const startDate = dayjs(values.validityPeriod[0])
           .tz("Asia/Taipei")
           .format("YYYY-MM-DD");
-        const end_date = dayjs(values.validityPeriod[1])
+        const endDate = dayjs(values.validityPeriod[1])
           .tz("Asia/Taipei")
           .format("YYYY-MM-DD");
-        const data = {
+        const updateData = {
           name: values.name,
           discount_algorithm: values.discount_algorithm,
           discount_rate: inputValue * 0.01,
-          start_date,
-          end_date,
+          start_date: startDate,
+          end_date: endDate,
           code: values.code,
           description: values.description,
           usage_limit: values.usage_limit
         };
-        setCouponData({ ...data });
+        setCouponData({ ...updateData });
         onSave();
       })
       .catch((error) => {
