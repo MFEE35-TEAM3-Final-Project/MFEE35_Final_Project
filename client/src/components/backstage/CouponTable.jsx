@@ -1,26 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Space,
-  Table,
-  Modal,
-  Button,
-  Progress,
-  message,
-  Descriptions,
-  Tag,
-  Radio,
-  Image
-} from "antd";
-import {
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
-  MinusCircleOutlined,
-  SyncOutlined,
-  DeleteOutlined
-} from "@ant-design/icons";
+import { Space, Table, Modal, Button, Progress, message } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 import CouponModal from "./CouponModal";
 
 const CouponManagement = () => {
@@ -30,12 +11,8 @@ const CouponManagement = () => {
   const [isCouponNew, setIsCouponNew] = useState(true);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [selectedCouponChange, setSelectedCouponChange] = useState(null);
-  const [finalCoupon, setFinalCoupon] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  useEffect(() => {
-    console.log("effect data", selectedCouponChange);
-    setFinalCoupon(selectedCouponChange);
-  }, [selectedCouponChange]);
+
   // 表格欄位設定
   const columns = [
     {
@@ -76,7 +53,7 @@ const CouponManagement = () => {
             </div>
             <Progress
               status="active"
-              percent={coupon.usage_count / coupon.usage_limit}
+              percent={(coupon.usage_count / coupon.usage_limit) * 100}
               showInfo={false}
               strokeColor={{ "0%": "#ffeb3b", "100%": "#f44336" }}
             />
@@ -164,9 +141,7 @@ const CouponManagement = () => {
   };
 
   // 按下ok
-  const saveModal = () => {
-    console.log("save", selectedCouponChange);
-
+  const saveModal = (updateData) => {
     let status;
     if (isCouponNew) {
       status = "新增";
@@ -182,66 +157,65 @@ const CouponManagement = () => {
       okText: "確定",
       okButtonProps: {
         onClick: () => {
-          confirmUpdate();
+          confirmUpdate(updateData);
         },
         type: "primary"
       }
     });
+
+    // 確認modal OK
+    const confirmUpdate = (finalCoupon) => {
+      const {
+        name,
+        code,
+        discount_rate,
+        discount_algorithm,
+        description,
+        usage_limit,
+        start_date,
+        end_date
+      } = finalCoupon;
+      const data = {
+        name: name,
+        code: code,
+        discount_rate: discount_rate,
+        discount_algorithm: discount_algorithm,
+        description: description,
+        usage_limit: usage_limit,
+        start_date: start_date,
+        end_date: end_date
+      };
+      let api = `${process.env.REACT_APP_API_URL}/api/admin/coupon`;
+      let reqMethod = "post";
+
+      if (!isCouponNew) {
+        const couponId = selectedCoupon.coupon_id;
+        api = `${process.env.REACT_APP_API_URL}/api/admin/coupon/${couponId}`;
+        reqMethod = "put";
+      }
+
+      axios[reqMethod](api, data)
+        .then((res) => {
+          setSelectedCoupon(null);
+          setSelectedCouponChange(null);
+          getCoupons();
+          Modal.destroyAll();
+          setIsModalVisible(false);
+          if (res.data.success) {
+            messageApi.success(`優惠券${isCouponNew ? "新增" : "更新"}成功`);
+          } else {
+            messageApi.error(`優惠券${isCouponNew ? "新增" : "更新"}失敗`);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          messageApi.error("伺服器錯誤");
+        });
+    };
   };
   // 按下cancel
   const closeModal = () => {
     setIsModalVisible(false);
-  };
-
-  // ok確認modal
-  const confirmUpdate = () => {
-    console.log("confirm", finalCoupon);
-    const {
-      name,
-      code,
-      discount_rate,
-      discount_algorithm,
-      description,
-      usage_limit,
-      start_date,
-      end_date
-    } = finalCoupon;
-    const data = {
-      name: name,
-      code: code,
-      discount_rate: discount_rate,
-      discount_algorithm: discount_algorithm,
-      description: description,
-      usage_limit: usage_limit,
-      start_date: start_date,
-      end_date: end_date
-    };
-    let api = `${process.env.REACT_APP_API_URL}/api/admin/coupon`;
-    let reqMethod = "post";
-
-    if (!isCouponNew) {
-      const couponId = selectedCoupon.coupon_id;
-      api = `${process.env.REACT_APP_API_URL}/api/admin/coupon/${couponId}`;
-      reqMethod = "put";
-    }
-
-    axios[reqMethod](api, data)
-      .then((res) => {
-        setSelectedCoupon(null);
-        setSelectedCouponChange(null);
-        getCoupons();
-        Modal.destroyAll();
-        setIsModalVisible(false);
-        if (res.data.success) {
-          messageApi.success(`優惠券${isCouponNew ? "新增" : "更新"}成功`);
-        } else {
-          messageApi.error(`優惠券${isCouponNew ? "新增" : "更新"}失敗`);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        messageApi.error("伺服器錯誤");
-      });
   };
 
   const deleteCoupon = (id, name, code) => {
@@ -282,6 +256,7 @@ const CouponManagement = () => {
       }
     });
   };
+
   useEffect(() => {
     getCoupons();
   }, []);
@@ -289,9 +264,11 @@ const CouponManagement = () => {
     <>
       {contextHolder}
       <div className="coupon_table">
-        <button className="btn btn-primary mb-2" onClick={handleEdit}>
-          新增優惠券
-        </button>
+        <div className="d-flex justify-content-end ">
+          <Button type="primary" className="mb-2 me-2" onClick={handleEdit}>
+            新增優惠券
+          </Button>
+        </div>
         <Table dataSource={coupons} columns={columns} rowKey="coupon_id" />
         <CouponModal
           visible={isModalVisible}

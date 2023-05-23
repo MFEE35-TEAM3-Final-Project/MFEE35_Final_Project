@@ -7,7 +7,8 @@ import {
   UserOutlined,
   PercentageOutlined,
   ReadOutlined,
-  CoffeeOutlined
+  CoffeeOutlined,
+  GiftOutlined
 } from "@ant-design/icons";
 import { Button, Layout, Menu } from "antd";
 import { useState } from "react";
@@ -16,6 +17,7 @@ import UserTable from "../../components/backstage/UserTable";
 import OrderTable from "../../components/backstage/OrderTable";
 import ArticleTable from "../../components/backstage/ArticleTable";
 import CouponTable from "../../components/backstage/CouponTable";
+import FoodTable from "../../components/backstage/FoodTable";
 
 const Backstage = () => {
   const navigate = useNavigate();
@@ -52,27 +54,16 @@ const Backstage = () => {
       icon: <CoffeeOutlined />,
       label: "食材管理"
     },
-
     {
-      key: "test",
-      icon: <ExperimentOutlined />,
-      label: "測試",
-      children: [
-        {
-          key: "test1",
-          label: "Team 1"
-        },
-        {
-          key: "test2",
-          label: "Team 2"
-        }
-      ]
+      key: "product",
+      icon: <GiftOutlined />,
+      label: "產品管理"
     }
   ];
 
   // data
   const [collapsed, setCollapsed] = useState(false);
-  const [siderSelected, setSiderSelected] = useState("coupon");
+  const [siderSelected, setSiderSelected] = useState("food");
   // function
   const selectedItem = (e) => {
     setSiderSelected(e.key);
@@ -123,6 +114,7 @@ const Backstage = () => {
             {siderSelected === "coupon" && <CouponTable />}
             {siderSelected === "order" && <OrderTable />}
             {siderSelected === "article" && <ArticleTable />}
+            {siderSelected === "food" && <FoodTable />}
           </Content>
           <Footer>Fooooooter</Footer>
         </Layout>

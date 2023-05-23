@@ -76,8 +76,9 @@ const CouponModal = ({
           description: values.description,
           usage_limit: values.usage_limit
         };
-        setCouponData({ ...updateData });
-        onSave();
+
+        setCouponData(updateData);
+        onSave(updateData);
       })
       .catch((error) => {
         console.log("Validation error:", error);
@@ -101,7 +102,11 @@ const CouponModal = ({
         >
           <Input />
         </Form.Item>
-        <Form.Item name="discount_algorithm" label="優惠種類">
+        <Form.Item
+          name="discount_algorithm"
+          label="優惠種類"
+          rules={[{ required: true, message: "請選擇優惠種類" }]}
+        >
           <Radio.Group>
             <Radio value="percentage">百分比折扣</Radio>
           </Radio.Group>
@@ -110,6 +115,7 @@ const CouponModal = ({
           <Row>
             <Col span={16}>
               <Slider
+                step={1}
                 min={1}
                 max={100}
                 onChange={handleSliderChange}
@@ -129,16 +135,28 @@ const CouponModal = ({
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item label="有效期間" name="validityPeriod">
+        <Form.Item
+          label="有效期間"
+          name="validityPeriod"
+          rules={[{ required: true, message: "請選擇有效期間" }]}
+        >
           <RangePicker />
         </Form.Item>
-        <Form.Item name="code" label="折扣代碼">
+        <Form.Item
+          name="code"
+          label="折扣代碼"
+          rules={[{ required: true, message: "請輸入代碼" }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item name="description" label="描述">
           <Input.TextArea />
         </Form.Item>
-        <Form.Item name="usage_limit" label="優惠券數量">
+        <Form.Item
+          name="usage_limit"
+          label="優惠券數量"
+          rules={[{ required: true, message: "設定優惠券數量" }]}
+        >
           <Input type="number" min={0} />
         </Form.Item>
       </Form>
