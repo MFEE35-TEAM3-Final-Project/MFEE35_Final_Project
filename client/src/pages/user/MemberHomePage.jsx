@@ -389,7 +389,10 @@ function MemberHomePage() {
 
                   {/* 第二區 - 還可以吃多少量 */}
                   <div className="howMuchLeftBgDiv w-50">
-                    <img src="./images/memberrecrod/circle-shape.png" alt="" />
+                    <img
+                      src={require("../../image/memberrecrod/circle-shape.png")}
+                      alt=""
+                    />
                     <div className="howMuchLeftValue">
                       {typeof caloriesCanEat === "number" ? (
                         <>
@@ -430,9 +433,11 @@ function MemberHomePage() {
             </div>
 
             <div className="memberHomePageBtn">
-              <button className="foodRecordBtn" style={{ fontSize: "28px" }}>
-                紀錄飲食 GO
-              </button>
+              <Link to="/foodRecord">
+                <button className="foodRecordBtn" style={{ fontSize: "28px" }}>
+                  紀錄飲食 GO
+                </button>
+              </Link>
             </div>
 
             <BarChart />
