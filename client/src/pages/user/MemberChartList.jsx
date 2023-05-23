@@ -11,25 +11,15 @@ import "../../styles/member/chartlist.css";
 
 // Cookie
 import Cookies from "js-cookie";
-const jwtToken = Cookies.get("jwtToken");
+
+// const jwtToken = Cookies.get("jwtToken");
 
 function ChartListPage() {
-  // 拿取總會員的卡路里
-  useEffect(() => {
-    const storedValue = localStorage.getItem("AllNumberCaloriesPlus");
-    console.log(storedValue);
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/articles`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+  // 拿取會員的卡路里
+  // useEffect(() => {
+  //   const storedValue = localStorage.getItem("AllNumberCaloriesPlus");
+  //   console.log(storedValue);
+  // }, []);
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>

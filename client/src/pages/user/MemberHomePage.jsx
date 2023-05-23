@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-// import { format } from "date-fns";
 
 import MemberHeader from "../../components/member/MemberHeader";
 import BarChart from "../../components/member/BarChart.jsx";
@@ -101,12 +100,18 @@ function MemberHomePage() {
       const currentDate = new Date();
 
       // 將日期設定為 06/03
-      currentDate.setDate(3); // 設定日期為 3
+      currentDate.setDate(4); // 設定日期為 4
       currentDate.setMonth(5); // 設定月份為 6 (從 0 開始計算，所以是 5)
 
-      const formattedDate = `星期${weekdays[currentDate.getDay()]}, ${
-        currentDate.getMonth() + 1
-      }月 ${currentDate.getDate()}日`;
+      const month = currentDate.getMonth() + 1;
+      const day = currentDate.getDate();
+
+      const formattedMonth = month < 10 ? "0" + month : month;
+      const formattedDay = day < 10 ? "0" + day : day;
+
+      const formattedDate = `星期${
+        weekdays[currentDate.getDay()]
+      }, ${formattedMonth}月 ${formattedDay}日`;
 
       setCurrentDate(formattedDate);
     };
@@ -138,9 +143,7 @@ function MemberHomePage() {
             total_sodium,
           } = res.data.groupedResults[7];
 
-          // 在需要更新状态的地方使用对应的setter函数
           setCalories(total_calories);
-
           setCarbohydrate(total_carbohydrate);
           setProtein(total_protein);
           setSaturatedFat(total_saturated_fat);
@@ -154,7 +157,7 @@ function MemberHomePage() {
             total_sodium
           );
         } else {
-          // 处理 groupedResults 未定义的情况
+          // 處理 groupedResults 未定義的情況
           console.log("groupedResults is undefined");
         }
       });
