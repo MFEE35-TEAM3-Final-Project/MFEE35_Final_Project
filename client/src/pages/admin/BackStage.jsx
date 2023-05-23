@@ -7,7 +7,7 @@ import {
   UserOutlined,
   PercentageOutlined,
   ReadOutlined,
-  CoffeeOutlined
+  CoffeeOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { useState } from "react";
@@ -18,42 +18,45 @@ import ArticleTable from "../../components/backstage/ArticleTable";
 import CouponTable from "../../components/backstage/CouponTable";
 
 const Backstage = () => {
+  // data
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const [siderSelected, setSiderSelected] = useState("coupon");
+
   const {
-    token: { colorBgContainer }
+    token: { colorBgContainer },
   } = theme.useToken();
   const { Header, Sider, Content, Footer } = Layout;
   const items = [
     {
       key: "dashboard",
       icon: <DashboardOutlined />,
-      label: "銷售狀況"
+      label: "銷售狀況",
     },
     {
       key: "user",
       icon: <UserOutlined />,
-      label: "會員管理"
+      label: "會員管理",
     },
     {
       key: "order",
       icon: <FileTextOutlined />,
-      label: "訂單管理"
+      label: "訂單管理",
     },
     {
       key: "coupon",
       icon: <PercentageOutlined />,
-      label: "優惠券管理"
+      label: "優惠券管理",
     },
     {
       key: "article",
       icon: <ReadOutlined />,
-      label: "文章管理"
+      label: "文章管理",
     },
     {
       key: "food",
       icon: <CoffeeOutlined />,
-      label: "食材管理"
+      label: "食材管理",
     },
 
     {
@@ -63,19 +66,16 @@ const Backstage = () => {
       children: [
         {
           key: "test1",
-          label: "Team 1"
+          label: "Team 1",
         },
         {
           key: "test2",
-          label: "Team 2"
-        }
-      ]
-    }
+          label: "Team 2",
+        },
+      ],
+    },
   ];
 
-  // data
-  const [collapsed, setCollapsed] = useState(false);
-  const [siderSelected, setSiderSelected] = useState("coupon");
   // function
   const selectedItem = (e) => {
     console.log("click!", e.key);
@@ -101,7 +101,7 @@ const Backstage = () => {
             className="header w-100"
             style={{
               padding: 0,
-              background: "#e4dcd1"
+              background: "#e4dcd1",
             }}
           >
             <Button
@@ -112,7 +112,7 @@ const Backstage = () => {
                 fontSize: "16px",
                 width: 64,
                 height: 64,
-                backgroundColor: "#e4dcd1"
+                backgroundColor: "#e4dcd1",
               }}
             />
           </Header>
@@ -120,7 +120,7 @@ const Backstage = () => {
             style={{
               padding: 24,
               minHeight: 500,
-              background: colorBgContainer
+              background: colorBgContainer,
             }}
           >
             {siderSelected === "user" && <UserTable />}
