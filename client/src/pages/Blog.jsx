@@ -294,7 +294,7 @@ function Blog() {
                           src={article.cover_image}
                           // src={`${article.cover_image}.jpeg`}
                           alt=""
-                          className="img-fluid"
+                          // className="img-fluid"
                         />
                       </a>
                     </div>

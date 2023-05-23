@@ -181,7 +181,10 @@
     padding-left: 0;
     padding-right: 0;
 }
-
+.article-img img{
+    min-width: 450px;
+    max-height: 300px;
+}
 .article-text {
     width: 425px;
     transition: all 0.3s ;
@@ -310,9 +313,9 @@
 .toppost{
     display: flex;
     align-items: center;
-    padding-bottom: 5px;
+    padding: 10px 0;
     border-bottom: 1px solid rgba(212, 212, 212, 0.747);
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
 }
 .toppost img{
     /* width: 100px;
@@ -320,7 +323,7 @@
     max-width: 100px;
 }
 .toppost div{
-    padding: 40px;
+    padding: 20px;
     font-weight: bold;
 }
 .sidebar{
