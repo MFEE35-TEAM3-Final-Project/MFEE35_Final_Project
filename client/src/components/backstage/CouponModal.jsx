@@ -17,9 +17,17 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 const { RangePicker } = DatePicker;
 
-const CouponModal = ({ visible, onCancel, couponData, setCouponData }) => {
+const CouponModal = ({
+  visible,
+  onCancel,
+  onSave,
+  couponDataOrigin,
+  couponData,
+  setCouponData
+}) => {
   const [form] = Form.useForm();
   const [inputValue, setInputValue] = useState(0);
+
   useEffect(() => {
     if (couponData) {
       form.setFieldsValue({
@@ -52,9 +60,13 @@ const CouponModal = ({ visible, onCancel, couponData, setCouponData }) => {
     form
       .validateFields()
       .then((values) => {
-        const start_date = values.validityPeriod[0].format("YYYY-MM-DD");
-        const end_date = values.validityPeriod[1].format("YYYY-MM-DD");
-        const couponData = {
+        const start_date = dayjs(values.validityPeriod[0])
+          .tz("Asia/Taipei")
+          .format("YYYY-MM-DD");
+        const end_date = dayjs(values.validityPeriod[1])
+          .tz("Asia/Taipei")
+          .format("YYYY-MM-DD");
+        const data = {
           name: values.name,
           discount_algorithm: values.discount_algorithm,
           discount_rate: inputValue * 0.01,
@@ -64,7 +76,8 @@ const CouponModal = ({ visible, onCancel, couponData, setCouponData }) => {
           description: values.description,
           usage_limit: values.usage_limit
         };
-        setCouponData(couponData);
+        setCouponData({ ...data });
+        onSave();
       })
       .catch((error) => {
         console.log("Validation error:", error);
@@ -84,7 +97,7 @@ const CouponModal = ({ visible, onCancel, couponData, setCouponData }) => {
         <Form.Item
           name="name"
           label="優惠券名稱"
-          rules={[{ required: true, message: "请输入名字" }]}
+          rules={[{ required: true, message: "請輸入優惠券名稱" }]}
         >
           <Input />
         </Form.Item>

@@ -27,7 +27,6 @@
     "dotenv": "^16.0.3",
     "jquery": "^3.6.4",
     "js-cookie": "^3.0.5",
-    "moment": "^2.29.4",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",

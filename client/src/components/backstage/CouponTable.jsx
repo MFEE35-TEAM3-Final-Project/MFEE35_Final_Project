@@ -6,6 +6,7 @@ import {
   Modal,
   Button,
   Progress,
+  message,
   Descriptions,
   Tag,
   Radio,
@@ -22,50 +23,11 @@ import {
 } from "@ant-design/icons";
 import CouponModal from "./CouponModal";
 
-// status config
-const statusConfig = (status) => {
-  switch (status) {
-    case "unpaid":
-      return {
-        icon: <ExclamationCircleOutlined />,
-        color: "default",
-        text: "未付款"
-      };
-    case "paid":
-      return {
-        icon: <ClockCircleOutlined />,
-        color: "warning",
-        text: "已付款 待出貨"
-      };
-    case "shipping":
-      return {
-        icon: <SyncOutlined spin />,
-        color: "processing",
-        text: "已出貨"
-      };
-    case "completed":
-      return {
-        icon: <CheckCircleOutlined />,
-        color: "success",
-        text: "完成"
-      };
-    case "cancel":
-      return {
-        icon: <CloseCircleOutlined />,
-        color: "error",
-        text: "已取消"
-      };
-    default:
-      return {
-        icon: <MinusCircleOutlined />,
-        color: "default",
-        text: "錯誤"
-      };
-  }
-};
-
 const CouponManagement = () => {
+  // context hook
+  const [messageApi, contextHolder] = message.useMessage();
   const [coupons, setCoupons] = useState(null);
+  const [isCouponNew, setIsCouponNew] = useState(true);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [selectedCouponChange, setSelectedCouponChange] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -156,7 +118,7 @@ const CouponManagement = () => {
             type="primary"
             danger
             onClick={() => {
-              deleteModal(coupon.coupon_id, coupon.name);
+              deleteCoupon(coupon.coupon_id, coupon.name, coupon.code);
             }}
           >
             <DeleteOutlined style={{ verticalAlign: "0.1rem" }} />
@@ -165,7 +127,10 @@ const CouponManagement = () => {
       )
     }
   ];
-
+  const toLocalTime = (time) => {
+    const date = new Date(time);
+    return date.toLocaleString();
+  };
   const getCoupons = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/admin/coupon`)
@@ -179,108 +144,131 @@ const CouponManagement = () => {
         console.error(err);
       });
   };
-  const toLocalTime = (time) => {
-    const date = new Date(time);
-    return date.toLocaleString();
-  };
+
   const handleEdit = (isNew, coupon) => {
     if (isNew) {
+      setIsCouponNew(true);
       setSelectedCoupon(null);
       setSelectedCouponChange(null);
       setIsModalVisible(true);
     } else {
+      setIsCouponNew(false);
       setSelectedCoupon(coupon);
       setSelectedCouponChange(coupon);
       setIsModalVisible(true);
     }
   };
+
+  // 按下ok
+  const saveModal = () => {
+    let status;
+    if (isCouponNew) {
+      status = "新增";
+    } else {
+      status = "更新";
+    }
+    Modal.success({
+      title: `${status}優惠券`,
+      content: `確定要${status}優惠券嗎?`,
+      closable: true,
+      maskClosable: true,
+      okText: "確定",
+      okButtonProps: {
+        onClick: confirmUpdate,
+        type: "primary"
+      }
+    });
+  };
+  // 按下cancel
   const closeModal = () => {
     setIsModalVisible(false);
   };
 
-  const deleteModal = () => {
-    console.log("dellllll!");
-  };
-
-  // 確認離開
-  const confirmClose = () => {
-    setSelectedCoupon(null);
-    setSelectedCouponChange(null);
-    Modal.destroyAll();
-    setIsModalVisible(false);
-  };
-
+  // ok確認modal
   const confirmUpdate = () => {
-    const couponId = selectedCouponChange.coupon_id;
     const {
-      user_id,
-      phone,
       name,
-      coupon_code,
-      total_quantity,
-      total_price,
-      payment_method,
-      shipping_method,
-      shipping_address,
-      ship_store,
-      status
+      code,
+      discount_rate,
+      discount_algorithm,
+      description,
+      usage_limit,
+      start_date,
+      end_date
     } = selectedCouponChange;
-    const updateData = {
-      user_id,
-      phone,
-      name,
-      coupon_code,
-      total_quantity,
-      total_price,
-      payment_method,
-      shipping_method,
-      shipping_address,
-      ship_store,
-      status
+    const data = {
+      name: name,
+      code: code,
+      discount_rate: discount_rate,
+      discount_algorithm: discount_algorithm,
+      description: description,
+      usage_limit: usage_limit,
+      start_date: start_date,
+      end_date: end_date
     };
-    axios
-      .put(`${process.env.REACT_APP_API_URL}/api/admin/coupon`, updateData)
+    let api = `${process.env.REACT_APP_API_URL}/api/admin/coupon`;
+    let reqMethod = "post";
+
+    if (!isCouponNew) {
+      const couponId = selectedCoupon.coupon_id;
+      api = `${process.env.REACT_APP_API_URL}/api/admin/coupon/${couponId}`;
+      reqMethod = "put";
+    }
+
+    axios[reqMethod](api, data)
       .then((res) => {
         setSelectedCoupon(null);
         setSelectedCouponChange(null);
         getCoupons();
         Modal.destroyAll();
         setIsModalVisible(false);
+        if (res.data.success) {
+          messageApi.success(`優惠券${isCouponNew ? "新增" : "更新"}成功`);
+        } else {
+          messageApi.error(`優惠券${isCouponNew ? "新增" : "更新"}失敗`);
+        }
       })
       .catch((err) => {
-        console.error(err);
-        setSelectedCoupon(null);
-        setSelectedCouponChange(null);
-        getCoupons();
-        Modal.destroyAll();
-        setIsModalVisible(false);
+        console.log(err);
+        messageApi.error("伺服器錯誤");
       });
   };
 
-  const warningModal = () => {
-    Modal.warning({
-      title: "放棄更變",
-      content: "確定要放棄更變嗎?",
+  const deleteCoupon = (id, name, code) => {
+    Modal.error({
+      title: "刪除",
+      content: (
+        <>
+          <p className="fs-4 fw-bold">確定要刪除優惠券嗎?</p>
+          <p>
+            優惠代碼: <span className="text-danger">{code}</span>
+          </p>
+          <p>名稱: {name}</p>
+        </>
+      ),
       closable: true,
       maskClosable: true,
-      okText: "確認放棄",
+      okText: "刪除",
       okButtonProps: {
         danger: true,
-        onClick: confirmClose,
-        type: "primary"
-      }
-    });
-  };
-  const updateModal = () => {
-    Modal.success({
-      title: "更新資料",
-      content: "確定要更新資料嗎?",
-      closable: true,
-      maskClosable: true,
-      okText: "更新資料",
-      okButtonProps: {
-        onClick: confirmUpdate,
-        type: "primary"
+        type: "primary",
+        onClick: () => {
+          axios
+            .delete(`${process.env.REACT_APP_API_URL}/api/admin/coupon/${code}`)
+            .then((res) => {
+              Modal.destroyAll();
+              if (res.data.success) {
+                messageApi.success("優惠券刪除成功");
+              } else {
+                messageApi.error("優惠券刪除錯誤");
+              }
+              getCoupons();
+            })
+            .catch((err) => {
+              console.log(err);
+              messageApi.error("伺服器錯誤");
+            });
+        }
       }
     });
   };
@@ -288,18 +276,23 @@ const CouponManagement = () => {
     getCoupons();
   }, []);
   return (
-    <div className="coupon_table">
-      <button className="btn btn-primary" onClick={handleEdit}>
-        编辑优惠券
-      </button>
-      <Table dataSource={coupons} columns={columns} rowKey="coupon_id" />
-      <CouponModal
-        visible={isModalVisible}
-        onCancel={closeModal}
-        couponData={selectedCouponChange}
-        setCouponData={setSelectedCouponChange}
-      />
-    </div>
+    <>
+      {contextHolder}
+      <div className="coupon_table">
+        <button className="btn btn-primary mb-2" onClick={handleEdit}>
+          新增優惠券
+        </button>
+        <Table dataSource={coupons} columns={columns} rowKey="coupon_id" />
+        <CouponModal
+          visible={isModalVisible}
+          onCancel={closeModal}
+          onSave={saveModal}
+          couponDataOrigin={selectedCoupon}
+          couponData={selectedCouponChange}
+          setCouponData={setSelectedCouponChange}
+        />
+      </div>
+    </>
   );
 };
 
