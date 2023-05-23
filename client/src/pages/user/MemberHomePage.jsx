@@ -17,6 +17,9 @@ function MemberHomePage() {
   const [userWeight, setUserWeight] = useState("");
   const [exerciseLevel, setExerciseLevel] = useState("");
   const [currentDate, setCurrentDate] = useState("");
+  const [exerciseRecords, setExerciseRecords] = useState();
+  const [targetCal, setTargetCal] = useState();
+  const [formattedDate] = useState();
 
   //取得會員資料
   useEffect(() => {
@@ -91,21 +94,148 @@ function MemberHomePage() {
     getCurrentDate();
   }, []);
 
+  // useEffect(() => {
+  //   const jwtToken = Cookies.get("jwtToken");
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
+  //       headers: {
+  //         Authorization: jwtToken,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       if (res.data.groupedResults) {
+  //         const {
+  //           total_calories,
+  //           total_carbohydrate,
+  //           total_protein,
+  //           total_saturated_fat,
+  //           total_sodium,
+  //         } = res.data.groupedResults[1];
+
+  //         console.log(
+  //           total_calories,
+  //           total_carbohydrate,
+  //           total_protein,
+  //           total_saturated_fat,
+  //           total_sodium
+  //         );
+  //       } else {
+  //         // 处理 groupedResults 未定义的情况
+  //         console.log("groupedResults is undefined");
+  //       }
+  //     });
+  // }, []);
+
+  //計算 TDEE
   useEffect(() => {
     const jwtToken = Cookies.get("jwtToken");
+
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
-        headers: {
-          Authorization: jwtToken,
-        },
+      .get(
+        // `${process.env.REACT_APP_API_URL}/api/user/exercise_records?start_date=${formattedDate}&end_date=${formattedDate}`
+        `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
+        {
+          headers: {
+            Authorization: jwtToken,
+          },
+        }
+      )
+      .then((response) => {
+        setExerciseRecords(response);
       })
-      .then((res) => {
-        console.log(res.data.groupedResults[0].total_calories);
-      })
-      .catch((err) => {
-        console.error(err);
+      .catch((error) => {
+        console.log(error);
       });
-  }, []);
+  }, [formattedDate]);
+
+  // 若初始值為 undefined或 長度不 > 0 則不執行
+  useEffect(() => {
+    if (
+      exerciseRecords !== undefined &&
+      exerciseRecords.data.records.length > 0
+    ) {
+      console.log(exerciseRecords);
+
+      const sortedRecords = exerciseRecords.data.records.sort(
+        (a, b) => new Date(b.record_date) - new Date(a.record_date)
+      );
+      const { birthday, exercise_level, gender, height, weight, record_date } =
+        sortedRecords[0];
+      console.log({
+        birthday,
+        exercise_level,
+        gender,
+        height,
+        weight,
+        record_date,
+      });
+
+      // 計算今年的年紀 age就是年紀
+      const calculateAge = (birthday, gender) => {
+        const birthDate = new Date(birthday);
+        const currentDate = new Date();
+
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+        // 检查是否已经過了生日，若是，年龄减一
+        const currentMonth = currentDate.getMonth();
+        const birthMonth = birthDate.getMonth();
+        const currentDay = currentDate.getDate();
+        const birthDay = birthDate.getDate();
+
+        if (
+          currentMonth < birthMonth ||
+          (currentMonth === birthMonth && currentDay < birthDay)
+        ) {
+          age--;
+        }
+
+        let genderValue = 0;
+        if (gender === "male") {
+          genderValue = 1;
+        }
+
+        return [age, genderValue];
+      };
+
+      const [age, genderValue] = calculateAge(birthday, gender);
+      // console.log(age); // 输出年龄
+      // console.log(genderValue); // 输出性別代表的數字
+
+      const sum1 =
+        9.99 * weight + 6.25 * height - 4.92 * age + (166 * genderValue - 161);
+      // setResult1(Math.round(sum1));
+      const sum2 = Math.round(sum1) * exercise_level;
+      setTargetCal(Math.round(sum2));
+    }
+  }, [exerciseRecords]);
+
+  // // 會員還有多少卡路里可以吃
+
+  // const [AllNumberCaloriesPlus, setAllNumberCaloriesPlus] = useState();
+  // const [caloriesCanEat, setCaloriesCanEat] = useState("");
+
+  // useEffect(() => {
+  //   if (!loading) {
+  //     let caloriesReduce = targetCal - AllNumberCaloriesPlus;
+  //     setCaloriesCanEat(caloriesReduce);
+  //   }
+  // });
+  // // 根據多少卡路里的值是正或負來判斷div內的文字
+  // useEffect(() => {
+  //   if (!isNaN(caloriesCanEat)) {
+  //     changeWord(caloriesCanEat);
+  //   }
+  // }, [caloriesCanEat]);
+
+  // const changeWord = (caloriesCanEat) => {
+  //   const displayText = isNaN(caloriesCanEat)
+  //     ? "請輸入飲食紀錄"
+  //     : caloriesCanEat > 0
+  //     ? "還可以吃"
+  //     : "已超標";
+  //   return <div>{String(displayText)}</div>;
+  // };
 
   return (
     <div style={{ backgroundColor: "#F7F4E9", paddingBottom: "20px" }}>
@@ -194,7 +324,7 @@ function MemberHomePage() {
                 <div className="oneAndTwoAreaBg d-flex">
                   {/* 第一區 - 目標值與已攝取區 */}
                   <div className="w-50 position-relative">
-                    <div>{currentDate}</div>
+                    <div style={{ fontSize: "28px" }}>{currentDate}</div>
                     {/* 目標量的Icon */}
                     <div className="oneAreaTarget">
                       <div>
@@ -207,7 +337,7 @@ function MemberHomePage() {
                     </div>
                     {/* 目標值 */}
                     <div className="oneAreaTargetValue">
-                      <div>3000</div>
+                      <div>{targetCal}</div>
                       <div>卡路里</div>
                     </div>
                     {/* 已攝取量的Icon */}
