@@ -30,8 +30,12 @@ const CouponManagement = () => {
   const [isCouponNew, setIsCouponNew] = useState(true);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [selectedCouponChange, setSelectedCouponChange] = useState(null);
+  const [finalCoupon, setFinalCoupon] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  useEffect(() => {
+    console.log("effect data", selectedCouponChange);
+    setFinalCoupon(selectedCouponChange);
+  }, [selectedCouponChange]);
   // 表格欄位設定
   const columns = [
     {
@@ -136,7 +140,7 @@ const CouponManagement = () => {
       .get(`${process.env.REACT_APP_API_URL}/api/admin/coupon`)
       .then((res) => {
         if (res.data.success) {
-          console.log("coupon res", res);
+          console.log("coupon list res", res);
           setCoupons(res.data.data);
         }
       })
@@ -161,12 +165,15 @@ const CouponManagement = () => {
 
   // 按下ok
   const saveModal = () => {
+    console.log("save", selectedCouponChange);
+
     let status;
     if (isCouponNew) {
       status = "新增";
     } else {
       status = "更新";
     }
+
     Modal.success({
       title: `${status}優惠券`,
       content: `確定要${status}優惠券嗎?`,
@@ -174,7 +181,9 @@ const CouponManagement = () => {
       maskClosable: true,
       okText: "確定",
       okButtonProps: {
-        onClick: confirmUpdate,
+        onClick: () => {
+          confirmUpdate();
+        },
         type: "primary"
       }
     });
@@ -186,6 +195,7 @@ const CouponManagement = () => {
 
   // ok確認modal
   const confirmUpdate = () => {
+    console.log("confirm", finalCoupon);
     const {
       name,
       code,
@@ -195,7 +205,7 @@ const CouponManagement = () => {
       usage_limit,
       start_date,
       end_date
-    } = selectedCouponChange;
+    } = finalCoupon;
     const data = {
       name: name,
       code: code,
