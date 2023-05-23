@@ -7,20 +7,22 @@ import Nav from "../components/Nav";
 
 function Blog() {
   const [articles, setArticles] = useState([]);
+  const [allarticles,  setAllarticles] = useState();
   const [category, setCategory] = useState([]);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState();
   const [dataLoaded, setDataLoaded] = useState(false);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=5`)
+      .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=25`)
       .then((res) => {
-        setArticles(res.data.articles);
+        setAllarticles(res.data.articles.sort(() => Math.random() - 0.5));
+        console.log(allarticles)
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [setAllarticles]);
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const year = date.getFullYear();
@@ -278,8 +280,8 @@ function Blog() {
           </div>
         </div>
         <div className="articlelist">
-          <div className="row g-0  tab-content d-flex flex-column">
-            <div className="col-lg-8 col-md-12   tab-pane show active flex-wrap">
+          <div className="row g-4   d-flex ">
+            <div className="col-lg-8 col-md-12    flex-wrap">
               {articles.map((article) => (
                 <div
                   key={article.article_id}
@@ -289,7 +291,8 @@ function Blog() {
                     <div>
                       <a href={`/article/${article.article_id}`}>
                         <img
-                          src={`${article.cover_image}.jpeg`}
+                          src={article.cover_image}
+                          // src={`${article.cover_image}.jpeg`}
                           alt=""
                           className="img-fluid"
                         />
@@ -364,6 +367,21 @@ function Blog() {
                     </li>
                   </ul>
                 </nav>
+              </div>
+            </div>
+            <div className="col-lg-3 sidebar">
+              <div className="s-post ">
+                <div className="B-Title">Today's Top Posts</div>
+                {allarticles.map((allarticle) => (
+                <div className="toppost d-flex flex-row " key={allarticle.article_id}>
+                  <img
+                    src={allarticle.cover_image}
+                    alt=""
+                    className="img-fluid"
+                  />
+                  <div>{allarticle.title}</div>
+                </div>
+                )).slice(0, 3)}
               </div>
             </div>
           </div>

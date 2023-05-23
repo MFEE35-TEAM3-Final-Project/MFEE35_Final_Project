@@ -159,10 +159,24 @@
     line-height: 35px;
     min-height: 500px;
 }
-.content-h3{
+.content-p p{
+   padding: 20px 0;
+}
+.content-p li{
+    padding: 20px 0;
+}
+.content-p h1{
+    border-left: 6px solid #707d90;
+    font-weight: bold;
+    font-size: 36px;
+    margin: 20px 0;
+    padding: 20px 0;
+    line-height: 30px;
+}
+.content-p h2{
     font-weight: 700;
     font-size: 30px;
-    margin: 30px 0;
+    margin: 15px 0;
     line-height: 30px;
 }
 .content-h4{
