@@ -18,6 +18,7 @@ import OrderTable from "../../components/backstage/OrderTable";
 import ArticleTable from "../../components/backstage/ArticleTable";
 import CouponTable from "../../components/backstage/CouponTable";
 import FoodTable from "../../components/backstage/FoodTable";
+import ProductTable from "../../components/backstage/ProductTable";
 
 const Backstage = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const Backstage = () => {
 
   // data
   const [collapsed, setCollapsed] = useState(false);
-  const [siderSelected, setSiderSelected] = useState("food");
+  const [siderSelected, setSiderSelected] = useState("product");
   // function
   const selectedItem = (e) => {
     setSiderSelected(e.key);
@@ -115,6 +116,7 @@ const Backstage = () => {
             {siderSelected === "order" && <OrderTable />}
             {siderSelected === "article" && <ArticleTable />}
             {siderSelected === "food" && <FoodTable />}
+            {siderSelected === "product" && <ProductTable />}
           </Content>
           <Footer>Fooooooter</Footer>
         </Layout>
