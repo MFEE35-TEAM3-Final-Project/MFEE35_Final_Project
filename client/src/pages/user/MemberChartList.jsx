@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+// import axios from "axios";
 
 import MyBarChart from "../../components/member/BarChart";
 import MemberHeader from "../../components/member/MemberHeader";
@@ -10,7 +10,7 @@ import MyStackedBarChart from "../../components/member/MyStackedBarChart";
 import "../../styles/member/chartlist.css";
 
 // Cookie
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
 // const jwtToken = Cookies.get("jwtToken");
 

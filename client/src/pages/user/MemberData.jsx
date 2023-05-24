@@ -168,7 +168,9 @@ function MemberData() {
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (e) => {
+    e.preventDefault(); // 阻止表单的默认提交行为
+    // fetchMemberData(); // 重新获取会员数据
     setIsEditing(false);
   };
 
