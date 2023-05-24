@@ -131,10 +131,11 @@
     padding: 20px;
 }
 .card-img{
+    /* overflow: hidden; */
     
-    object-fit: cover;
 }
 .card-img img{
+    object-fit: cover;
     border-radius:5%;
     height: 250px;
     width: 300px;

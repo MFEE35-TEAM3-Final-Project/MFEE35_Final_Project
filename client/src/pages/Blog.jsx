@@ -1,28 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "../styles/blog.css";
 import axios from "axios";
-import { FaRegCommentAlt } from "react-icons/fa";
+import { HiShoppingBag, HiArrowNarrowRight } from "react-icons/hi";
 import { GrNext, GrPrevious } from "react-icons/gr";
 import Nav from "../components/Nav";
 
 function Blog() {
   const [articles, setArticles] = useState([]);
-  const [allarticles,  setAllarticles] = useState();
+  const [allarticles, setAllarticles] = useState();
   const [category, setCategory] = useState([]);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState();
   const [dataLoaded, setDataLoaded] = useState(false);
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=25`)
-      .then((res) => {
-        setAllarticles(res.data.articles.sort(() => Math.random() - 0.5));
-        console.log(allarticles)
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [setAllarticles]);
+  const [productlist, setProductlist] = useState([]);
+
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const year = date.getFullYear();
@@ -33,9 +24,8 @@ function Blog() {
   //分類
   useEffect(() => {
     axios
-
       .get(
-        `${process.env.REACT_APP_API_URL}/api/articles?page=${page}&per_page=5&category=${category}`
+        `${process.env.REACT_APP_API_URL}/api/articles?page=${page}&per_page=6&category=${category}`
       )
       .then((res) => {
         const formattedArticles = res.data.articles.map((article) => {
@@ -54,6 +44,31 @@ function Blog() {
         console.error(err);
       });
   }, [category, page]);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/articles?page=1&per_page=30`)
+      .then((res) => {
+        console.log(res.data.articles);
+
+        setAllarticles(res.data.articles.sort(() => Math.random() - 0.5));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [setAllarticles]);
+  //商品
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/api/product/getProducts`)
+      .then((res) => {
+        console.log(res.data.results.sort(() => Math.random() - 0.5));
+        setProductlist(res.data.results.sort(() => Math.random() - 0.5));
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
   const handleClickCategory = (category) => {
     setCategory(category);
   };
@@ -67,6 +82,9 @@ function Blog() {
 
   if (!dataLoaded) {
     return <div>載入中..</div>;
+  }
+  if (!articles) {
+    return <div>載入中...</div>;
   }
   return (
     <div>
@@ -309,8 +327,8 @@ function Blog() {
                     </div>
                     <div className=" d-flex mt-auto">
                       <span className="ms-auto">
-                        <FaRegCommentAlt value={{ className: "react-icons" }} />
-                        <span className="ms-2">0</span>
+                        {/* <FaRegCommentAlt value={{ className: "react-icons" }} /> */}
+                        {/* <span className="ms-2">0</span> */}
                       </span>
                     </div>
                   </div>
@@ -371,17 +389,63 @@ function Blog() {
             </div>
             <div className="col-lg-3 sidebar">
               <div className="s-post ">
-                <div className="B-Title">Today's Top Posts</div>
-                {allarticles.map((allarticle) => (
-                <div className="toppost d-flex flex-row " key={allarticle.article_id}>
-                  <img
-                    src={allarticle.cover_image}
-                    alt=""
-                    className="img-fluid"
-                  />
-                  <div>{allarticle.title}</div>
+                <div className="B-Title">.Today's Top Posts</div>
+                {allarticles
+                  .map((allarticle) => (
+                    <div
+                      className="toppost d-flex flex-row "
+                      key={allarticle.article_id}
+                    >
+                      <a href={`/article/${allarticle.article_id}`}>
+                        <img
+                          src={allarticle.cover_image}
+                          alt=""
+                          className="img-fluid"
+                        />
+                      </a>
+
+                      <div>
+                        <a href={`/article/${allarticle.article_id}`}>
+                          {allarticle.title}
+                        </a>
+                      </div>
+                    </div>
+                  ))
+                  .slice(0, 3)}
+                <div className="adboard">
+                  {productlist
+                    .map((product) => (
+                      <div className="adbox" key={product.productid}>
+                        <img src={product.image[0]} alt="" />
+                        <div className="adboxbuy">
+                          推薦商品
+                          <br />
+                          馬上看
+                        </div>
+                        <div className="overlay">
+                          <a
+                            href={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+                          >
+                            <div className="overlay-item">
+                              <div className="overlay-item-name">
+                                {product.name}
+                              </div>
+                              <div className="overlay-item-price">
+                                <span>$ {product.price}</span>
+                                <br />
+                                <span>$ {product.afterPrice} </span>
+                              </div>
+                              <div className="overlay-item-buy ">
+                                <HiShoppingBag /> 前往商品頁{" "}
+                                <HiArrowNarrowRight />
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    ))
+                    .slice(0, 1)}
                 </div>
-                )).slice(0, 3)}
               </div>
             </div>
           </div>
