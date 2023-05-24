@@ -93,7 +93,7 @@ function MemberHomePage() {
   //   getCurrentDate();
   // }, []);
 
-  //將日期設置在 112/06/03
+  //將日期設置在 112/06/04
   useEffect(() => {
     const getCurrentDate = () => {
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];

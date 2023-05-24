@@ -8,14 +8,21 @@ import Cookies from "js-cookie";
 function MyStackedBarChart() {
   const stackedBarRef = useRef(null);
   const [dateRange, setDateRange] = useState("");
-  // const [data, setData] = useState(() => {
-  //   const savedData = localStorage.getItem("chartData");
-  //   return savedData ? JSON.parse(savedData) : [];
-  // });
 
-  const [carbohydrateCaloriesData, setCarbohydrateCaloriesData] = useState([]);
-  const [proteinCaloriesData, setProteinCaloriesData] = useState([]);
-  const [fatCaloriesData, setFatCaloriesData] = useState([]);
+  const [carbohydrateCaloriesData, setCarbohydrateCaloriesData] = useState(
+    () => {
+      const savedData = localStorage.getItem("carbohydrateCaloriesData");
+      return savedData ? JSON.parse(savedData) : [];
+    }
+  );
+  const [proteinCaloriesData, setProteinCaloriesData] = useState(() => {
+    const savedData = localStorage.getItem("proteinCaloriesData");
+    return savedData ? JSON.parse(savedData) : [];
+  });
+  const [fatCaloriesData, setFatCaloriesData] = useState(() => {
+    const savedData = localStorage.getItem("fatCaloriesData");
+    return savedData ? JSON.parse(savedData) : [];
+  });
 
   useEffect(() => {
     const labels = getCurrentWeekDates();
@@ -96,6 +103,19 @@ function MyStackedBarChart() {
         setProteinCaloriesData(newProteinCaloriesData);
         setFatCaloriesData(newFatCaloriesData);
         // localStorage.setItem("chartData", JSON.stringify(newData));
+
+        localStorage.setItem(
+          "carbohydrateCaloriesData",
+          JSON.stringify(newCarbohydrateCaloriesData)
+        );
+        localStorage.setItem(
+          "proteinCaloriesData",
+          JSON.stringify(newProteinCaloriesData)
+        );
+        localStorage.setItem(
+          "fatCaloriesData",
+          JSON.stringify(newFatCaloriesData)
+        );
 
         console.log(newCarbohydrateData);
         console.log(newProteinData);
@@ -184,7 +204,7 @@ function MyStackedBarChart() {
   return (
     <div className="myStackedBarChart">
       <div style={{ fontSize: "28px", textAlign: "center" }}>
-        {dateRange} 營養攝取
+        {dateRange} 三大營養熱量攝取
       </div>
       <canvas ref={stackedBarRef} id="memberStackedBarChart"></canvas>
     </div>
