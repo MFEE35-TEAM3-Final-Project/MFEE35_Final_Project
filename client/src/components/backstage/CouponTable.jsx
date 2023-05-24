@@ -208,8 +208,12 @@ const CouponManagement = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
-          messageApi.error("伺服器錯誤");
+          console.log(err, err.response.data.message);
+          messageApi.error(
+            <>
+              伺服器錯誤 {<p className="mt-2">{err.response.data.message}</p>}
+            </>
+          );
         });
     };
   };
@@ -249,8 +253,14 @@ const CouponManagement = () => {
               getCoupons();
             })
             .catch((err) => {
-              console.log(err);
-              messageApi.error("伺服器錯誤");
+              console.log(err, err.response.data.message);
+
+              messageApi.error(
+                <>
+                  伺服器錯誤
+                  {<p className="mt-2">{err.response.data.message}</p>}
+                </>
+              );
             });
         }
       }
