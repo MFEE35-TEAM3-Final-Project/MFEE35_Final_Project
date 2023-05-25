@@ -13,6 +13,7 @@ import {
 import { Button, Layout, Menu } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logoImg from "../../image/logo-black.png";
 import UserTable from "../../components/backstage/UserTable";
 import OrderTable from "../../components/backstage/OrderTable";
 import ArticleTable from "../../components/backstage/ArticleTable";
@@ -25,11 +26,6 @@ const Backstage = () => {
   const { Header, Sider, Content, Footer } = Layout;
 
   const items = [
-    {
-      key: "dashboard",
-      icon: <DashboardOutlined />,
-      label: "銷售狀況"
-    },
     {
       key: "user",
       icon: <UserOutlined />,
@@ -74,7 +70,11 @@ const Backstage = () => {
     <div id="backstage">
       <Layout>
         <Sider className="sider" trigger={null} collapsed={collapsed}>
-          <div className="logo" />
+          <div className="logo justify-content-center d-flex p-1">
+            <div>
+              <img style={{ maxHeight: "90%" }} src={logoImg} alt="" />
+            </div>
+          </div>
           <Menu
             theme="dark"
             mode="inline"
