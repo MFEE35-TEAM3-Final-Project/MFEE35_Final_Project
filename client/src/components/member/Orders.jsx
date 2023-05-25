@@ -8,7 +8,6 @@ import MemberHeader from "./MemberHeader";
 // Cookie
 import Cookies from "js-cookie";
 
-
 function Orders() {
   const [data, setData] = useState([]);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
@@ -59,12 +58,11 @@ function Orders() {
           {data.map((order, index) => (
             <div
               key={index}
-              className={`order-item ${expandedOrderId === order.order_id ? "expanded " : ""
-                }`}
+              className={`order-item ${
+                expandedOrderId === order.order_id ? "expanded " : ""
+              }`}
             >
-
               {order.order_details.length > 0 && (
-
                 <div className="order-detail-item row">
                   <div className=" order-detail row">
                     <div className="col-4 ">
@@ -72,14 +70,16 @@ function Orders() {
                     </div>
                     <div className="col-8 ">
                       <h3>商品數量：{order.total_quantity}</h3>
-                      <h3>訂單金額：{order.total_price}</h3>
+                      <h3>訂單金額：{Math.floor(order.total_price)}</h3>
                     </div>
 
                     <div>
                       {expandedOrderId === order.order_id && (
                         <div className="order-item expanded mt-3">
                           <div className="row">
-                            <h3 className="col-9">寄送地址 : {order.shipping_address}</h3>
+                            <h3 className="col-9">
+                              寄送地址 : {order.shipping_address}
+                            </h3>
                           </div>
                           <div>
                             <h3>付款方式 : {order.payment_method}</h3>
@@ -88,9 +88,11 @@ function Orders() {
                         </div>
                       )}
                     </div>
-
                   </div>
-                  <a className=" order_list row" href={`/goods/${order.order_details[0].productid}/${order.order_details[0].activityId}/${order.order_details[0].food_id}`}>
+                  <a
+                    className=" order_list row"
+                    href={`/goods/${order.order_details[0].productid}/${order.order_details[0].activityId}/${order.order_details[0].food_id}`}
+                  >
                     <img
                       className="col-4"
                       src={order.order_details[0].image[0]}
@@ -99,52 +101,82 @@ function Orders() {
 
                     <div className="col-8 row">
                       <h2>{order.order_details[0].name}</h2>
-                      <h4>${order.order_details[0].price} x {order.order_details[0].quantity}</h4>
+                      <h4>
+                        ${order.order_details[0].price} x{" "}
+                        {order.order_details[0].quantity}
+                      </h4>
 
-                      <button onClick={(event) => {
-                        event.preventDefault();
-                      }}
-                        className="buybutton offset-8 col-3">再買一次</button>
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                        }}
+                        className="buybutton offset-8 col-3"
+                      >
+                        再買一次
+                      </button>
                     </div>
                   </a>
                   <div
-                    className={` ${expandedOrderId === order.order_id ? "expanded order-detail-item-product" : ""
-                      }`}
+                    className={` ${
+                      expandedOrderId === order.order_id
+                        ? "expanded order-detail-item-product"
+                        : ""
+                    }`}
                   >
                     {expandedOrderId === order.order_id &&
-                      order.order_details.slice(1).map((detail, detailIndex) => (
-                        <div key={detailIndex} className="row order-detail-item-product">
-                          <a className=" order_list row" href={`/goods/${detail.productid}/${detail.activityId}/${detail.food_id}`}>
-                            <img className="col-4" src={detail.image[0]} alt={detail.name} />
-                            <div className="col-8 row">
-                              <h2>{detail.name}</h2>
-                              <h4>${detail.price} x {detail.quantity}</h4>
-                              <button onClick={(event) => {
-                                event.preventDefault();
-                              }} className="buybutton offset-8 col-3">再買一次</button>
-                            </div>
-                          </a>
-                        </div>
-                      ))}
+                      order.order_details
+                        .slice(1)
+                        .map((detail, detailIndex) => (
+                          <div
+                            key={detailIndex}
+                            className="row order-detail-item-product"
+                          >
+                            <a
+                              className=" order_list row"
+                              href={`/goods/${detail.productid}/${detail.activityId}/${detail.food_id}`}
+                            >
+                              <img
+                                className="col-4"
+                                src={detail.image[0]}
+                                alt={detail.name}
+                              />
+                              <div className="col-8 row">
+                                <h2>{detail.name}</h2>
+                                <h4>
+                                  ${detail.price} x {detail.quantity}
+                                </h4>
+                                <button
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                  }}
+                                  className="buybutton offset-8 col-3"
+                                >
+                                  再買一次
+                                </button>
+                              </div>
+                            </a>
+                          </div>
+                        ))}
                   </div>
-                  {order.order_details.length > 1 ?
-                    <button className="expand-button" onClick={() => toggleOrderDetails(order.order_id)} >
-                      {expanded ? '收回細節' : '展開細節'}
-                    </button> : <span></span>}
+                  {order.order_details.length > 1 ? (
+                    <button
+                      className="expand-button"
+                      onClick={() => toggleOrderDetails(order.order_id)}
+                    >
+                      {expanded ? "收回細節" : "展開細節"}
+                    </button>
+                  ) : (
+                    <span></span>
+                  )}
                 </div>
-
-
               )}
             </div>
-
           ))}
         </div>
       ) : (
         <p>沒有可用的訂單資料。</p>
-      )
-      }
-    </div >
-
+      )}
+    </div>
   );
 }
 

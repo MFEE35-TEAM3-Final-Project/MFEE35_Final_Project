@@ -36,7 +36,7 @@ function Nav() {
   };
 
   return (
-    <nav className="navbar" role="navigation">
+    <nav className="navbarbar" role="navigation">
       <div id="menuToggle" onClick={handleMenuToggle}>
         <input type="checkbox" checked={isMenuOpen} readOnly />
         <span></span>
@@ -44,7 +44,9 @@ function Nav() {
         <span></span>
         <ul id="menu" className={isMenuOpen ? "open" : ""}>
           <li id="home-logo">
-            <a href="/"><img src={require("../image/logo-Nav.png")} alt="" /></a>
+            <a href="/">
+              <img src={require("../image/logo-Nav.png")} alt="" />
+            </a>
           </li>
 
           {isAuthenticated ? (

@@ -3,7 +3,7 @@ body{
     overflow-x: hidden;
 
 }
-.navbar{
+.navbarbar{
  position: fixed;
  z-index: 1;
 }
