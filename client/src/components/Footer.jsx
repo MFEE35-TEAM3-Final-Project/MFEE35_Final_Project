@@ -1,11 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import  "../styles/footer.css"
-import logo from "../image/logo/logo.png";
-import insta from "../image/footer/insta.webp";
-import fb from "../image/footer/fb.webp";
-import twitter from "../image/footer/twitter.png";
-import line from "../image/footer/line.png";
+
 
 const footer = () => {
   return (
