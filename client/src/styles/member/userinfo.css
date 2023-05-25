@@ -1,6 +1,13 @@
 @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
 @import url(https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400&display=swap);
 
+
+.memberDataGroup {
+    font-size: 28px;
+    font-weight: bold;
+    padding: 5px;
+}
+
 #userInfoForm {
     text-align: left;
 }
@@ -16,7 +23,7 @@
 
 .userInfo {
     position: relative;
-    width: 50%;
+    width: 80%;
     height: 100%;
     top: 50%;
     left: 50%;
@@ -89,6 +96,6 @@
     background: #707D90;
     border: 1px solid #000000;
     border-radius: 20px;
-    width: 80px;
+    width: 150px;
     margin-right: 20px;
 }

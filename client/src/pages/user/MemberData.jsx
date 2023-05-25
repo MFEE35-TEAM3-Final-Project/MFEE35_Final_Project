@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { TotalCaloriesContext } from "../../App";
 import axios from "axios";
 import MemberHeader from "../../components/member/MemberHeader";
 
@@ -169,7 +168,9 @@ function MemberData() {
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (e) => {
+    e.preventDefault(); // 阻止表单的默认提交行为
+    // fetchMemberData(); // 重新获取会员数据
     setIsEditing(false);
   };
 
@@ -188,17 +189,27 @@ function MemberData() {
               {/* 會員編號 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label style={{ minWidth: "80px" }} htmlFor="userNumber">
+                  <label
+                    className="memberDataGroup"
+                    style={{ minWidth: "80px" }}
+                    htmlFor="userNumber"
+                  >
                     會員編號：
                   </label>
                 </div>
                 <div className="col-6">
-                  <p>{user && user.user_id}</p>
+                  <p className="memberDataGroup">{user && user.user_id}</p>
                 </div>
                 <div className="col-2">
                   {!isEditing && (
-                    <button className="infoupdateBtn" onClick={handleEdit}>
-                      修改基本資料
+                    <button
+                      className="infoupdateBtn"
+                      onClick={handleEdit}
+                      style={{ fontSize: "26px" }}
+                    >
+                      修改
+                      <br />
+                      基本資料
                     </button>
                   )}
                 </div>
@@ -207,10 +218,12 @@ function MemberData() {
               {/* 姓名 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userName">姓名：</label>
+                  <label className="memberDataGroup" htmlFor="userName">
+                    姓名：
+                  </label>
                 </div>
                 <div className="col-6">
-                  <p>{user && user.username}</p>
+                  <p className="memberDataGroup">{user && user.username}</p>
                 </div>
                 <div className="col-2"></div>
               </div>
@@ -218,10 +231,12 @@ function MemberData() {
               {/* 電子郵件 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="email">電子郵件：</label>
+                  <label className="memberDataGroup" htmlFor="email">
+                    電子郵件：
+                  </label>
                 </div>
                 <div className="col-6">
-                  <p>{user && user.email}</p>
+                  <p className="memberDataGroup">{user && user.email}</p>
                 </div>
                 <div className="col-2"></div>
               </div>
@@ -229,10 +244,14 @@ function MemberData() {
               {/* 性別 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="gender">性別：</label>
+                  <label className="memberDataGroup" htmlFor="gender">
+                    性別：
+                  </label>
                 </div>
                 <div className="col-6">
-                  <p>{user && (user.gender === "male" ? "男生" : "女生")}</p>
+                  <p className="memberDataGroup">
+                    {user && (user.gender === "male" ? "男生" : "女生")}
+                  </p>
                 </div>
                 <div className="col-2"></div>
               </div>
@@ -240,10 +259,12 @@ function MemberData() {
               {/* 生日 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="birthday">生日：</label>
+                  <label className="memberDataGroup" htmlFor="birthday">
+                    生日：
+                  </label>
                 </div>
                 <div className="col-6">
-                  <p>
+                  <p className="memberDataGroup">
                     {user &&
                       user.birthday &&
                       new Date(user.birthday).toLocaleDateString()}
@@ -255,12 +276,15 @@ function MemberData() {
               {/* 基本資料 - 身高 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userHeight">身高：</label>
+                  <label className="memberDataGroup" htmlFor="userHeight">
+                    身高：
+                  </label>
                 </div>
                 <div className="col-6">
                   {isEditing ? (
                     <input
                       className="userInput"
+                      style={{ fontSize: "28px" }}
                       type="text"
                       name="userHeight"
                       value={userHeight}
@@ -268,7 +292,7 @@ function MemberData() {
                       required
                     />
                   ) : (
-                    <p>{user && userHeight} cm</p>
+                    <p className="memberDataGroup">{user && userHeight} cm</p>
                   )}
                 </div>
               </div>
@@ -276,12 +300,15 @@ function MemberData() {
               {/* 基本資料 - 體重 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="userWeight">體重：</label>
+                  <label className="memberDataGroup" htmlFor="userWeight">
+                    體重：
+                  </label>
                 </div>
                 <div className="col-6">
                   {isEditing ? (
                     <input
                       className="userInput"
+                      style={{ fontSize: "28px" }}
                       type="text"
                       name="userWeight"
                       value={userWeight}
@@ -289,14 +316,18 @@ function MemberData() {
                       required
                     />
                   ) : (
-                    <p>{user && userWeight} Kg</p>
+                    <p className="memberDataGroup">{user && userWeight} Kg</p>
                   )}
                 </div>
               </div>
 
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label style={{ minWidth: "80px" }} htmlFor="userSport">
+                  <label
+                    className="memberDataGroup"
+                    style={{ minWidth: "80px" }}
+                    htmlFor="userSport"
+                  >
                     運動頻率：
                   </label>
                 </div>
@@ -304,6 +335,7 @@ function MemberData() {
                   {isEditing ? (
                     <select
                       className="userInput"
+                      style={{ fontSize: "28px" }}
                       id="exerciseSelect"
                       name="exerciseLevel"
                       value={exerciseLevel}
@@ -317,7 +349,7 @@ function MemberData() {
                       <option value="1.9">長時間運動或體力勞動工作</option>
                     </select>
                   ) : (
-                    <p>
+                    <p className="memberDataGroup">
                       {user && exerciseLevel === 1.2 && "幾乎不運動"}
                       {user && exerciseLevel === 1.375 && "每週運動 1-3 天"}
                       {user && exerciseLevel === 1.55 && "每週運動 3-5 天"}
@@ -333,12 +365,15 @@ function MemberData() {
               {/* 聯絡電話 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="phone">聯絡電話：</label>
+                  <label className="memberDataGroup" htmlFor="phone">
+                    聯絡電話：
+                  </label>
                 </div>
                 <div className="col-6">
                   {isEditing ? (
                     <input
                       className="userInput"
+                      style={{ fontSize: "28px" }}
                       type="text"
                       id="userPhone"
                       name="phone"
@@ -346,7 +381,7 @@ function MemberData() {
                       onChange={(e) => setUserPhone(e.target.value)}
                     />
                   ) : (
-                    <p>{userPhone}</p>
+                    <p className="memberDataGroup">{userPhone}</p>
                   )}
                 </div>
                 <div className="col-2"></div>
@@ -355,20 +390,23 @@ function MemberData() {
               {/* 地址 */}
               <div className="row">
                 <div className="col-4" style={{ textAlign: "right" }}>
-                  <label htmlFor="address">地址：</label>
+                  <label className="memberDataGroup" htmlFor="address">
+                    地址：
+                  </label>
                 </div>
                 <div className="col-6">
                   {isEditing ? (
                     <input
-                      className="userInput"
+                      className="userInput memberDataGrou"
                       type="text"
+                      style={{ fontSize: "28px" }}
                       id="address"
                       name="address"
                       value={userAddress}
                       onChange={(e) => setUserAddress(e.target.value)}
                     />
                   ) : (
-                    <p>{userAddress}</p>
+                    <p className="memberDataGroup">{userAddress}</p>
                   )}
                 </div>
                 <div className="col-2"></div>
@@ -379,10 +417,18 @@ function MemberData() {
                 <div className="row">
                   <div className="col-4"></div>
                   <div className="col-6">
-                    <button id="upDateBtn" onClick={handleSave}>
+                    <button
+                      id="upDateBtn"
+                      onClick={handleSave}
+                      style={{ fontSize: "28px" }}
+                    >
                       SAVE
                     </button>
-                    <button id="upDateBtn" onClick={handleCancel}>
+                    <button
+                      id="upDateBtn"
+                      onClick={handleCancel}
+                      style={{ fontSize: "28px" }}
+                    >
                       CANCEL
                     </button>
                   </div>

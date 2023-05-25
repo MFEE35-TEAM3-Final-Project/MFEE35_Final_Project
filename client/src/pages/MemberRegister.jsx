@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-import logo from "../image/logo/logo.png";
+// import logo from "../image/logo/logo.png";
 import "../styles/member/main.css";
 import Nav from "../components/Nav";
 
@@ -145,11 +145,11 @@ const UserRegistration = () => {
           <h3 id="titleH3">會員註冊</h3>
         </div>
         <div style={{ margin: "20px" }}>
-          <img id="logoimg" src={logo} alt="" />
+          <img id="logoimg" src={require("../image/logo-black.png")} alt="" />
         </div>
 
         <div className="container">
-          <div className="userInfo row">
+          <div style={{ width: "50%" }} className="userInfo row">
             <form id="registerForm" className="col-12" onSubmit={handleSubmit}>
               <div className="row myMember">
                 <div className="col-6" style={{ textAlign: "center" }}>
@@ -167,7 +167,7 @@ const UserRegistration = () => {
                 </div>
                 <div className="col-6" style={{ textAlign: "center" }}>
                   <Link
-                    to="/MemberRegister1"
+                    to="/MemberRegister"
                     className="userbtn"
                     style={{
                       textDecoration: "none",

@@ -88,13 +88,16 @@ function Favorite() {
     <div>
       <MemberHeader />
       <ToastContainer />
-      <h2 className="head">會員追蹤清單</h2>
+      <h3 id="titleH3">會員追蹤清單</h3>
       {error ? (
         <p>{error}</p>
       ) : data.length > 0 ? (
         data.map((item) => (
-          <div key={item.id} >
-            <a className="favorite_list" href={`/goods/${item.productid}/${item.activityId}/${item.food_id}`}>
+          <div key={item.id}>
+            <a
+              className="favorite_list"
+              href={`/goods/${item.productid}/${item.activityId}/${item.food_id}`}
+            >
               <div className="image">
                 <img src={item.image[0]} alt="Product Image" />
               </div>
@@ -103,16 +106,20 @@ function Favorite() {
                 <p> {item.description}</p>
                 <p> ${item.price}</p>
                 <div className="buttons">
-                  <button onClick={(event) => {
-                    handleDelete(item.productid);
-                    event.preventDefault();
-                  }}>
+                  <button
+                    onClick={(event) => {
+                      handleDelete(item.productid);
+                      event.preventDefault();
+                    }}
+                  >
                     刪除
                   </button>
-                  <button onClick={(event) => {
-                    handleAdd(item.productid);
-                    event.preventDefault();
-                  }}>
+                  <button
+                    onClick={(event) => {
+                      handleAdd(item.productid);
+                      event.preventDefault();
+                    }}
+                  >
                     加入購物車
                   </button>
                 </div>
@@ -124,9 +131,8 @@ function Favorite() {
         <div className="favorite_nolist">
           <p>追蹤清單內沒有東西</p>
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }
 

@@ -34,7 +34,13 @@ function MemberHeader() {
   return (
     <div className="memberHeader">
       <div className="memberTopnav">
-        <a href="#">LOGO</a>
+        <Link to="/">
+          <img
+            src={require("../../image/logo-black.png")}
+            alt="logo"
+            id="memberNavLogo"
+          />
+        </Link>
       </div>
 
       <nav className="navbar">
@@ -46,35 +52,39 @@ function MemberHeader() {
             &times;
           </a>
           <Link to="/MemberHomePage">
-            <li>會員首頁</li>
+            <li className="memberNavList">會員首頁</li>
           </Link>
           <Link to="/MemberData">
-            <li>會員資料</li>
+            <li className="memberNavList">會員資料</li>
           </Link>
           <Link to="/calculator">
-            <li>計算機</li>
+            <li className="memberNavList">計算機</li>
           </Link>
           <Link to="/foodRecord">
-            <li>飲食紀錄</li>
+            <li className="memberNavList">飲食紀錄</li>
           </Link>
           <Link to="/MemberChartList">
-            <li>數據圖表</li>
+            <li className="memberNavList">數據圖表</li>
           </Link>
           <Link to="/MemberFav">
-            <li>追蹤清單</li>
+            <li className="memberNavList">追蹤清單</li>
           </Link>
           <Link to="/MemberOrders">
-            <li>訂單查詢</li>
+            <li className="memberNavList">訂單查詢</li>
           </Link>
           <Link to="/blog">
-            <li>部落格</li>
+            <li className="memberNavList">部落格</li>
           </Link>
           <Link to="/store">
-            <li>商城</li>
+            <li className="memberNavList">商城</li>
           </Link>
         </div>
         <div className="logout">
-          <button id="membersignoutBtn" onClick={handleLogout}>
+          <button
+            id="membersignoutBtn"
+            onClick={handleLogout}
+            style={{ fontSize: "28px" }}
+          >
             登出
           </button>
         </div>
