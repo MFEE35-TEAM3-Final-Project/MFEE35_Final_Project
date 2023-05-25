@@ -1,320 +1,360 @@
 .topicText {
-    font-size: 70px;
-    font-family: 'Allura', cursive;
-    padding-top: 190px;
-    text-align: center;
+  font-size: 70px;
+  font-family: "Allura", cursive;
+  padding-top: 190px;
+  text-align: center;
 }
 
 /* ------------- */
 
 .firstP {
-    background-color: #F8F9FB;
-    position: relative;
-    width: 100%;
-    height: 970px;
+  background-color: #f8f9fb;
+  position: relative;
+  width: 100%;
+  height: 970px;
 }
 
 .countdownContainer {
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .countingIcon {
-    position: relative;
-    border: 1px solid #C5A188;
-    width: 95px;
-    height: 95px;
-    border-radius: 50%;
-    margin-right: 30px;
+  position: relative;
+  border: 1px solid #c5a188;
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  margin-right: 30px;
 }
 
 .countingNumber {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 48px;
-    font-weight: lighter;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3.2vw;
+  font-weight: lighter;
+  font-family: "Allura", cursive;
 }
 
 .changingImg {
-    position: relative;
+  position: relative;
 }
 
 .chPic {
-    width: 1190px;
-    height: 580px;
-    object-fit: cover;
+  width: 1190px;
+  height: 580px;
+  object-fit: cover;
 }
 
 .event {
-    writing-mode: vertical-lr;
-    text-orientation: upright;
-    text-decoration: overline;
-    color: black;
-    position: relative;
-    font-size: 32px;
-    letter-spacing: 0.2em;
-    margin-left: 20px;
+  writing-mode: vertical-lr;
+  text-decoration: overline;
+  color: black;
+  position: relative;
+  font-size: 32px;
+  letter-spacing: 0.2em;
+  margin-left: 20px;
+  padding: 30px 5px;
+  cursor: pointer;
 }
 
+.event:hover {
+  color: white;
+  background-color: #707d90;
+  text-decoration: none;
+  border-radius: 3px;
+}
 
 .goodsPge {
-    display: flex;
-    padding-left: 255px;
-    padding-right: 255px;
+  display: flex;
+  padding-left: 255px;
+  padding-right: 255px;
 }
 
-.drinkgoodsPge,
-.dietgoodsPge {
-    flex: 1;
-    text-align: center;
+.theGoodsSelectWay {
+  flex: 1;
+  text-align: center;
 }
 
+.theGoodsSelectDetail {
+  color: black;
+  text-decoration: none;
+  font-size: 32px;
+  border-radius: 3px;
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+}
 
-.a,
-.b,
-.c {
-    color: black;
-    text-decoration: none;
-    font-size: 32px;
+.theGoodsSelectDetail::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 10px;
+  width: 0;
+  height: 2px;
+  background-color: #ffffff;
+  transition: width 0.5s ease;
+  transform: translateX(50%);
+}
 
+.theGoodsSelectDetail:hover::after {
+  width: 50%;
+}
+
+.theGoodsSelectDetail:hover {
+  color: white;
+  background-color: #c5a188;
+  text-decoration: none;
+  font-size: 32px;
 }
 
 .mycontain {
-    width: 85%;
-    padding-left: 235px;
+  width: 85%;
+  padding-left: 235px;
 }
 
 .selectS {
-    border-left: 1px solid black;
-    display: flex;
-    justify-content: space-between;
-    padding-left: 40px;
+  border-left: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 40px;
+  align-items: center;
 }
 
-.allGoods>p {
-    flex: 0.5;
-    font-size: 24px;
-
+.allGoods > p {
+  flex: 0.5;
+  font-size: 24px;
 }
 
-.goodsQty>p {
-    flex: 0.5;
-    font-size: 24px;
+.goodsQty {
+  font-size: 24px;
+  margin: 0px;
 }
 
 .howMuchGoods {
-    width: 40px;
+  width: 40px;
 }
 
 .whereUsergo {
-    text-decoration: none;
-}
-
-#myCard {
-    height: 320px;
-    width: 330px;
-    object-fit: cover;
-    padding: 20px;
+  text-decoration: none;
 }
 
 .cardTopic {
-    text-align: center;
-    color: black;
-    text-decoration: dotted;
+  text-align: center;
+  color: black;
+  text-decoration: dotted;
 }
 
 .cardText {
-    text-align: center;
-    color: black;
-    text-decoration: none;
-    padding-left: 10px;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+  padding-left: 10px;
 }
 
 .cardColumn {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .jumpPage {
-    text-decoration: none;
+  text-decoration: none;
 }
 
-.storePriceStyle{
-    display: flex;
-    justify-content: center;
+.storePriceStyle {
+  display: flex;
+  justify-content: center;
 }
 
 .cardPrice {
-    color: #C5A188;
-    font-family: 'Allura', cursive;
-    text-decoration: line-through;
+  color: #c5a188;
+  font-family: "Allura", cursive;
+  text-decoration: line-through;
 }
 
 .cardSprice {
-    color: black;
-    font-family: 'Allura', cursive;
-    font-size: 2vw;
-    margin-right: 2vw;
+  color: black;
+  font-family: "Allura", cursive;
+  font-size: 2vw;
+  margin-right: 2vw;
 }
 
 .squareBtn,
 .listBtn {
-    border: 0px;
-    background-color: white;
-    cursor: pointer;
+  border: 0px;
+  background-color: white;
+  cursor: pointer;
 }
 
 .squareImg {
-    width: 50px;
-    height: 50px;
+  width: 50px;
+  height: 50px;
 }
 
-.listImg{
-    width: 64px;
-    height: 64px;
+.listImg {
+  width: 64px;
+  height: 64px;
 }
 
 .footer {
-    background-color: #DCDBD7;
-    color: black;
-    padding: 100px;
-    text-align: center;
-    display: flex;
-    font-size: 20px;
+  background-color: #dcdbd7;
+  color: black;
+  padding: 100px;
+  text-align: center;
+  display: flex;
+  font-size: 20px;
 }
 
-.iconGroup{
-    width: 40%;
+.iconGroup {
+  width: 40%;
 }
 
-.socialSite{
-    text-decoration: none;
-    color: #000;
+.socialSite {
+  text-decoration: none;
+  color: #000;
 }
 
-.siteMap{
-    width: 80%;
+.siteMap {
+  width: 80%;
 }
 
-.siteSmalltitle{
-    text-align: start;
-    padding: 10px 0px;
+.siteSmalltitle {
+  text-align: start;
+  padding: 10px 0px;
 }
 
-.siteText{
-    text-decoration: none;
-    color: #000;
-    padding: 0px 20px;
+.siteText {
+  text-decoration: none;
+  color: #000;
+  padding: 0px 20px;
 }
 
-.sitePic{
-    width: 40px;
-    height: 40px;
+.sitePic {
+  width: 40px;
+  height: 40px;
 }
 
-.sitepicGroup{
-    text-decoration: none;
-    color: #000;
-    padding-left: 10px;
-    padding-right: 10px;
+.sitepicGroup {
+  text-decoration: none;
+  color: #000;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.footerSelection{
-    text-align: center;
-    padding-top: 15px;
+.footerSelection {
+  text-align: center;
+  padding-top: 15px;
 }
 
-.logoPic{
-    width: 100px;
-    height: 100px;
-    padding-bottom: 20px;
+.logoPic {
+  width: 100px;
+  height: 100px;
+  padding-bottom: 20px;
 }
 
 .nextPage {
-    display: flex;
-    justify-content: center;
-    font-size: 40px;
-    font-family: 'Allura', cursive;
+  display: flex;
+  justify-content: center;
+  font-size: 40px;
+  font-family: "Allura", cursive;
 }
 
 .nextOne {
-    text-decoration: none;
-    padding: 0px 10px;
-    margin: 0px 10px;
-    color: black;
-    border-bottom: 1px black solid;
+  text-decoration: none;
+  padding: 0px 10px;
+  margin: 0px 10px;
+  color: black;
+  border-bottom: 1px black solid;
 }
 
 .nextTwo,
 .nextThree {
-    text-decoration: none;
-    padding: 0px 10px;
-    margin: 0px 10px;
-    color: #D9D9D9;
-    border-bottom: 1px #D9D9D9 solid;
+  text-decoration: none;
+  padding: 0px 10px;
+  margin: 0px 10px;
+  color: #d9d9d9;
+  border-bottom: 1px #d9d9d9 solid;
 }
 
 .gotopBtn {
-    position: fixed;
-    bottom: 20px;
-    right: 3%;
+  position: fixed;
+  bottom: 20px;
+  right: 3%;
 }
 
 .gotopBtn {
-    text-decoration: none;
-    color: #707D90;
+  text-decoration: none;
+  color: #707d90;
 }
 
 .backGroup {
-    display: inline;
-    text-align: center;
+  display: inline;
+  text-align: center;
 }
 
 .arrowImg {
-    width: 20px;
-    height: 70px;
+  width: 20px;
+  height: 70px;
 }
 
-.backGroup>span {
-    font-family: 'Allura', cursive;
-    font-size: 1vw;
+.backGroup > span {
+  font-family: "Allura", cursive;
+  font-size: 1vw;
 }
 
 .mycardIcon {
-    position: relative;
+  position: relative;
 }
 
 .hiddenIcon {
-    position: absolute;
-    top: 50%;
-    left: 55%;
-    transform: translate(-50%, -50%);
-    display: none;
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  display: none;
 }
 
 .mycardIcon:hover .hiddenIcon {
-    display: block;
+  display: block;
 }
 
-.magnifierBlock{
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 40px;
+.magnifierBlock {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 40px;
 }
 
-.magnifierBlock>img{
-    width: 40px;
-    height: 40px;
+.magnifierBlock > img {
+  width: 40px;
+  height: 40px;
 }
 
-.storePageSelect{
-    color: burlywood;
-    font-weight: bolder;
+.mycardIcon:hover #myCard {
+  filter: brightness(40%);
+}
+
+#myCard {
+  height: 320px;
+  width: 330px;
+  object-fit: cover;
+  padding: 20px;
+  transition: filter 0.3s ease;
+}
+
+.storePageSelectOne {
+  color: burlywood;
+  font-weight: bolder;
+}
+
+.storePageSelectTwo {
+  color: #5ba07a;
+  font-weight: bolder;
 }

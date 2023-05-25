@@ -5,7 +5,10 @@ import { Helmet } from "react-helmet";
 import DoughnutComponent from "../components/DoughnutChart";
 import Cookies from "js-cookie";
 import "../styles/goods.css";
-import Nav from "../components/Nav";
+import "../styles/cartPromptBox.css";
+// import Nav from "../components/Nav";
+import { ToastContainer, toast } from "react-toastify";
+import { FaHeart } from "react-icons/fa";
 
 const GoodsPage = () => {
   const token = Cookies.get("jwtToken");
@@ -27,6 +30,7 @@ const GoodsPage = () => {
   const shuffledGoods = promotionGoods.sort(() => Math.random() - 0.5); //亂數
   // 捨定cookie的值
   const [cartData, setCartData] = useState([]);
+
   useEffect(() => {
     axios
       .get(
@@ -52,13 +56,56 @@ const GoodsPage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/product/getProducts`)
       .then((res) => {
-        // console.log(res);
-        setPromotionGood(res.data.results);
+        console.log(res);
+        // setPromotionGood(res.data.results);
+        const testGood = res.data.results;
+        const carolId = res.data.results.map((food_id) => food_id.food_id);
+        console.log(carolId);
+
+        const updatedData = [];
+        const promises = [];
+
+        carolId.forEach((foodId) => {
+          const promise = axios
+            .get(
+              `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`
+            )
+            .then((res) => {
+              const updatedFood = {
+                Calories_adjusted: res.data.Calories_adjusted,
+              };
+              updatedData.push(updatedFood);
+              console.log(updatedData);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+
+          promises.push(promise);
+        });
+
+        Promise.all(promises)
+          .then(() => {
+            console.log(testGood);
+            const myNewData = testGood.map((foodId, index) => {
+              return {
+                ...foodId,
+                Calories_adjusted: updatedData[index].Calories_adjusted,
+              };
+            });
+
+            console.log(myNewData);
+            setPromotionGood(myNewData);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       })
       .catch((err) => {
         console.error(err);
       });
   }, []);
+
   useEffect(() => {
     setQuantity(1);
   }, [productid]);
@@ -73,24 +120,6 @@ const GoodsPage = () => {
     });
   };
 
-  // const handleAddToCart = async () => {
-  //   try {
-  //     const token =
-  //       "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
-  //     axios.defaults.headers.common["Authorization"] = `${token}`;
-  //     const response = await axios.post(
-  //       `${process.env.REACT_APP_API_URL}/api/user/cart/add`,
-  //       {
-  //         productid: productid,
-  //         quantity: quantity,
-  //       }
-  //     );
-  //     console.log(response);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const handleAddToCart = () => {
     // const token =
     //   "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
@@ -102,13 +131,55 @@ const GoodsPage = () => {
           productid: productid,
           quantity: quantity,
         })
-        .then((res) => {
-          // console.log(res);
-          alert("已成功加入購物車");
-          window.location.reload();
+        .then(() => {
+          toast.success("已成功加入購物車");
+          // axios
+          //   .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
+          //   .then((res) => {
+          //     console.log(res);
+          //     const cartInfoElements = res.data.data.map((cartInfo, index) => (
+          //       <div key={index}>
+          //         <div>
+          //           <img
+          //             className="goodPic"
+          //             src={cartInfo.image[0]}
+          //             alt="第一個商品圖"
+          //           />
+          //         </div>
+          //         {cartInfo.activityId !== "0" ? (
+          //           <div className="goodText">
+          //             <br />
+          //             <span className="inActivityTitle">活動商品</span>
+          //             <p className="goodName">{cartInfo.name}</p>
+          //             <br />
+          //             <br />
+          //             <span className="goodPrice">
+          //               NT$ {cartInfo.afterPrice}
+          //             </span>
+          //             <span className="goodSprice">NT$ {cartInfo.price}</span>
+          //           </div>
+          //         ) : (
+          //           <div className="goodText">
+          //             <br />
+          //             <p className="goodName">{cartInfo.name}</p>
+          //             <br />
+          //             <br />
+          //             <p className="goodPrice">NT$ {cartInfo.price}</p>
+          //           </div>
+          //         )}
+          //         <Link to={`/store`}>點我進入商城</Link>
+          //       </div>
+          //     ));
+          //     toast.info(<React.Fragment>{cartInfoElements}</React.Fragment>);
+          //   })
+          //   .catch((err) => {
+          //     console.error(err);
+          //   });
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response.status === 400) {
+            toast.warning(err.response.data.message);
+          }
         });
     } else {
       const expires = 7;
@@ -143,11 +214,12 @@ const GoodsPage = () => {
           productid: productid,
         })
         .then((res) => {
-          // console.log(res);
-          alert("已加入最愛清單");
+          toast.success("已成功加入追蹤清單");
         })
         .catch((err) => {
-          console.error(err);
+          if (err.response.status === 400) {
+            toast.warning("追蹤清單中已存在該商品");
+          }
         });
     } else {
       alert("請先登入");
@@ -180,29 +252,23 @@ const GoodsPage = () => {
     const value = parseInt(event.target.value);
     if (!isNaN(value)) {
       setQuantity(value);
+      // console.log(typeof value);
     }
   };
 
-  // const handleDeleteCartData = () => {
-  //   Cookies.remove("cartData");
-  //   setCartData([]);
-  // };
-
+  const handleButtonClick = () => {
+    toast.success("Hello, World!");
+  };
   return (
     <div>
-      <Nav />
+      {/* <Nav /> */}
       <Helmet>
         <link
           href="https://fonts.googleapis.com/css2?family=Allura&display=swap"
           rel="stylesheet"
         />
       </Helmet>
-      {/* <h1>
-        商品頁面 - 商品 ID：{productid} 跟 食物 ID{foodId}
-      </h1> */}
-      {/* <h1>
-        <button onClick={handleDeleteCartData}>刪除購物車資料</button>
-      </h1> */}
+      <ToastContainer />
       <div className="goodstype">
         <div className="diet">
           <a href="http://localhost:3000/goods" className="myDiet">
@@ -251,11 +317,13 @@ const GoodsPage = () => {
           </div>
           <div className="goodsText">
             <div className="gGroup">
-              {onlyOneProducts.activityId !== "" ? (
+              {onlyOneProduct.activityId === "1" ? (
                 <div>
                   <div className="goodsTitle">
-                    <span className="activityTitle">活動商品:</span>
-                    <span className="activityName">{onlyOneProduct.name}</span>
+                    <div>
+                      <p className="activityTitleOne">活動商品:畢業歡送季節</p>
+                      <p className="activityName">{onlyOneProduct.name}</p>
+                    </div>
                   </div>
                   <h2 className="goodsName">建議售價</h2>
                   <span className="goodsPrice">
@@ -268,28 +336,39 @@ const GoodsPage = () => {
                 </div>
               ) : (
                 <div>
-                  <p>{onlyOneProduct.name}</p>
+                  <div className="goodsTitle">
+                    <div>
+                      <p className="activityTitleTwo">
+                        活動商品:買一送三買一送三
+                      </p>
+                      <p className="activityName">{onlyOneProduct.name}</p>
+                    </div>
+                  </div>
                   <h2 className="goodsName">建議售價</h2>
+                  <span className="goodsPrice">
+                    NT$ {onlyOneProduct.afterPrice}
+                  </span>
+
                   <span className="goodsSPrice">
                     NT$ {onlyOneProduct.price}
                   </span>
                 </div>
               )}
             </div>
-            <button id="deBtn" className="increaseBtn" onClick={handleDecrease}>
-              一
-            </button>
-            <div className="addingQty">
+            <div className="chooseTheGoodQuantity">
+              <button className="increaseBtn" onClick={handleDecrease}>
+                一
+              </button>
               <input
+                className="addingQty"
                 type="text"
-                id="addGoods"
                 value={quantity}
                 onChange={handleChange}
               />
+              <button className="increaseBtn" onClick={handleIncrease}>
+                十
+              </button>
             </div>
-            <button id="inBtn" className="increaseBtn" onClick={handleIncrease}>
-              十
-            </button>
             <br />
             <br />
             <div className="addingGroup">
@@ -301,17 +380,15 @@ const GoodsPage = () => {
                 rel="stylesheet"
                 className="buyIn"
                 onClick={handleAddToCart}
-                style={{ textDecoration: "none", color: "white" }}
               >
                 立即購買
               </Link>
-              {/* <button className="buyIn" onClick={handleAddToCart}>立即購買</button> */}
             </div>
             <br />
             <br />
             <button className="joinFollow" onClick={handleAddToFavorite}>
-              <img src={require("../image/goods/heart.png")} alt="最愛" />
-              加入最愛
+              <FaHeart className="heartIcon" />
+              &nbsp;&nbsp; 加入最愛
             </button>
           </div>
         </div>
@@ -371,12 +448,19 @@ const GoodsPage = () => {
               <Link
                 to={`http://localhost:3000/goods/${promotionGood.productid}/${promotionGood.activityId}/${promotionGood.food_id}`}
                 className="jumpPage"
+                target="_blank"
               >
-                <img
-                  id="myGoodCard"
-                  src={promotionGood.image[0]}
-                  alt="推播圖1"
-                />
+                <div className="cardContainerInGoodPage">
+                  <img
+                    id="myGoodCard"
+                    src={promotionGood.image[0]}
+                    alt="推播圖1"
+                  />
+                  <p className="theCarolInPicture">
+                    卡路里:&nbsp;{promotionGood.Calories_adjusted}
+                    &nbsp;col
+                  </p>
+                </div>
                 <p className="fw-semibold cardTopic">{promotionGood.name}</p>
                 {promotionGood.activityId !== "" ? (
                   <div>
