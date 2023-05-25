@@ -4,6 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../../styles/member/orders.css";
 import MemberHeader from "./MemberHeader";
+
 // Cookie
 import Cookies from "js-cookie";
 
@@ -13,6 +14,7 @@ function Orders() {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [error, setError] = useState(null);
   const [hasFetched, setHasFetched] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (!hasFetched) {
@@ -45,6 +47,7 @@ function Orders() {
     setExpandedOrderId((prevOrderId) =>
       prevOrderId === orderId ? null : orderId
     );
+    setExpanded(!expanded);
   };
 
   return (
@@ -63,15 +66,29 @@ function Orders() {
               {order.order_details.length > 0 && (
 
                 <div className="order-detail-item row">
-                  <div className="col-12 order-detail">
-                    <h1 className="status">訂單狀態：{order.status}</h1>
-                    <p>商品數量：{order.total_quantity}</p>
-                    <p>訂單金額：{order.total_price}</p>
-                    {expandedOrderId === order.order_id && (
-                      <div className="order-item expanded">
-                        <p>寄送資訊</p>
-                      </div>
-                    )}
+                  <div className=" order-detail row">
+                    <div className="col-4 ">
+                      <h1 className="status">{order.status}</h1>
+                    </div>
+                    <div className="col-8 ">
+                      <h3>商品數量：{order.total_quantity}</h3>
+                      <h3>訂單金額：{order.total_price}</h3>
+                    </div>
+
+                    <div>
+                      {expandedOrderId === order.order_id && (
+                        <div className="order-item expanded mt-3">
+                          <div className="row">
+                            <h3 className="col-9">寄送地址 : {order.shipping_address}</h3>
+                          </div>
+                          <div>
+                            <h3>付款方式 : {order.payment_method}</h3>
+                            <h3>訂單編號 : {order.order_id}</h3>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                   </div>
                   <a className=" order_list row" href={`/goods/${order.order_details[0].productid}/${order.order_details[0].activityId}/${order.order_details[0].food_id}`}>
                     <img
@@ -80,11 +97,14 @@ function Orders() {
                       alt={order.order_details[0].name}
                     />
 
-                    <div className="col-8">
+                    <div className="col-8 row">
                       <h2>{order.order_details[0].name}</h2>
-                      <p>x{order.order_details[0].quantity}</p>
-                      <p>${order.order_details[0].price}</p>
-                      <button>再買一次</button>
+                      <h4>${order.order_details[0].price} x {order.order_details[0].quantity}</h4>
+
+                      <button onClick={(event) => {
+                        event.preventDefault();
+                      }}
+                        className="buybutton offset-8 col-3">再買一次</button>
                     </div>
                   </a>
                   <div
@@ -96,18 +116,21 @@ function Orders() {
                         <div key={detailIndex} className="row order-detail-item-product">
                           <a className=" order_list row" href={`/goods/${detail.productid}/${detail.activityId}/${detail.food_id}`}>
                             <img className="col-4" src={detail.image[0]} alt={detail.name} />
-                            <div className="col-8">
+                            <div className="col-8 row">
                               <h2>{detail.name}</h2>
-                              <p>x{detail.quantity}</p>
-                              <p>${detail.price}</p>
-                              <button>再買一次</button>
+                              <h4>${detail.price} x {detail.quantity}</h4>
+                              <button onClick={(event) => {
+                                event.preventDefault();
+                              }} className="buybutton offset-8 col-3">再買一次</button>
                             </div>
                           </a>
                         </div>
                       ))}
                   </div>
-                  {order.order_details.length > 1 ? <button className="order-detail-item expand-button" onClick={() => toggleOrderDetails(order.order_id)} > 展開
-                  </button> : <span></span>}
+                  {order.order_details.length > 1 ?
+                    <button className="expand-button" onClick={() => toggleOrderDetails(order.order_id)} >
+                      {expanded ? '收回細節' : '展開細節'}
+                    </button> : <span></span>}
                 </div>
 
 

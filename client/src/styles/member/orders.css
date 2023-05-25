@@ -29,7 +29,6 @@
 }
 
 .order-detail-item-product.image {
-
     flex: 0 0 40%;
     height: 100%;
 }
@@ -46,4 +45,18 @@
     background-color: #d05723;
     border-radius: 20px;
     text-align: center;
+}
+
+.buybutton {
+    border-radius: 20px;
+    font-size: 24px;
+}
+
+.buybutton:hover {
+    background-color: #d05723;
+}
+
+.expand-button {
+    margin: 1%;
+    border-radius: 10px;
 }

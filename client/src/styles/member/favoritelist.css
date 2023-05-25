@@ -1,5 +1,6 @@
 .favorite_list {
     display: flex;
+    width: 80%;
     align-items: center;
     margin: 3% auto;
     padding: 3%;
@@ -43,10 +44,19 @@
 }
 
 .favorite_list .buttons button {
-    margin-left: 10px;
+    padding: 10px;
+    margin-left: 2%;
     border-radius: 20px;
 }
 
 .favorite_list .buttons button:hover {
-    background-color: rgb(255, 4, 4);
+    background-color: rgb(255, 125, 4);
+}
+
+.head {
+    align-items: center;
+}
+
+.h3 {
+    line-height: 4;
 }

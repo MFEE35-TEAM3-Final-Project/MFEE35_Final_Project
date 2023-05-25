@@ -103,8 +103,8 @@ function Favorite() {
               </div>
               <div className="info">
                 <h1 className="productname"> {item.name}</h1>
-                <p> {item.description}</p>
-                <p> ${item.price}</p>
+                <h3> {item.description}</h3>
+                <h3> ${item.price}</h3>
                 <div className="buttons">
                   <button
                     onClick={(event) => {
