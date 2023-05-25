@@ -74,7 +74,7 @@ function App() {
           {/* 不需要Nav */}
         </Routes>
       </div>
-      {isBack ? "" : <Footer />}
+      {isBack ? <Footer /> : <Footer />}
       <ScrollTop />
     </div>
   );
