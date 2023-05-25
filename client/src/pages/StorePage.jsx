@@ -195,10 +195,10 @@ const StorePage = () => {
       <br />
       <br />
       <div className="goodsPge">
-        <span className="drinkgoodsPge">
+        <span className="theGoodsSelectWay">
           <Link
             to=""
-            className="a"
+            className="theGoodsSelectDetail"
             onClick={() => {
               allProductCategory();
             }}
@@ -206,10 +206,10 @@ const StorePage = () => {
             全站商品
           </Link>
         </span>
-        <span className="drinkgoodsPge">
+        <span className="theGoodsSelectWay">
           <Link
             to=""
-            className="a"
+            className="theGoodsSelectDetail"
             onClick={() => {
               wheyProteinCategory();
             }}
@@ -217,10 +217,10 @@ const StorePage = () => {
             乳清蛋白
           </Link>
         </span>
-        <span className="dietgoodsPge">
+        <span className="theGoodsSelectWay">
           <Link
             to=""
-            className="b"
+            className="theGoodsSelectDetail"
             onClick={() => {
               gainMuscleCategory();
             }}
@@ -236,7 +236,8 @@ const StorePage = () => {
       <div className="mycontain">
         <div className="selectS">
           <span className="goodsQty">
-            <p>共12件商品</p>
+            共12件商品
+            {/* <p>共12件商品</p> */}
           </span>
           <span className="changegoodsWay">
             <button
@@ -315,8 +316,13 @@ const StorePage = () => {
                 to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
                 className="whereUsergo"
               >
-                {product.activityId !== "0" ? (
-                  <p className="storePageSelect">活動商品</p>
+                {product.activityId === "1" ? (
+                  <p className="storePageSelectOne">活動商品:畢業歡送季節</p>
+                ) : (
+                  ""
+                )}
+                {product.activityId === "2" ? (
+                  <p className="storePageSelectTwo">活動商品:買一送三</p>
                 ) : (
                   ""
                 )}

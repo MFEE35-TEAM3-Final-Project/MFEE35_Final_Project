@@ -35,7 +35,7 @@ const DoughnutChart = ({ mydata }) => {
         position: "bottom",
         labels: {
           font: {
-            size: 45, // 設定字體大小
+            size: 40, // 設定字體大小
           },
         },
       },

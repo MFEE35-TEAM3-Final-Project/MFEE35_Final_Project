@@ -188,10 +188,12 @@ const ShoppingcartPage = () => {
                 />
               </div>
 
-              {incomingData.activityId !== "0" ? (
+              {incomingData.activityId === "1" ? (
                 <div className="goodText">
                   <br />
-                  <span className="inActivityTitle">活動商品</span>
+                  <span className="goodInActivityTitleOne">
+                    活動商品:畢業歡送季節
+                  </span>
                   <p className="goodName">{incomingData.name}</p>
                   <br />
                   <br />
@@ -203,10 +205,16 @@ const ShoppingcartPage = () => {
               ) : (
                 <div className="goodText">
                   <br />
+                  <span className="goodInActivityTitleTwo">
+                    活動商品:買一送三買一送三
+                  </span>
                   <p className="goodName">{incomingData.name}</p>
                   <br />
                   <br />
-                  <p className="goodPrice">NT$ {incomingData.price}</p>
+                  <span className="goodPrice">
+                    NT$ {incomingData.afterPrice}
+                  </span>
+                  <span className="goodSprice">NT$ {incomingData.price}</span>
                 </div>
               )}
 
@@ -226,6 +234,8 @@ const ShoppingcartPage = () => {
                   <input
                     type="text"
                     value={incomingData.quantity}
+                    // onChange={handleQuantityChange}
+                    readOnly
                     id="addingGoods"
                   />
                   <button
@@ -241,7 +251,7 @@ const ShoppingcartPage = () => {
                   </button>
                 </div>
                 <p className="bigPrice">
-                  NT$
+                  NT$ &nbsp;
                   <span id="addingGoodsPrice">
                     {couponInfo
                       ? Math.floor(
@@ -251,23 +261,31 @@ const ShoppingcartPage = () => {
                   </span>
                 </p>
                 {incomingData.activityId !== 0 ? (
-                  <span className="inActivityTitle">
-                    已折扣 NT$
-                    {checkDiscount}
+                  <span className="inActivity">
+                    {/* <span className="inActivityTitle"> */}
+                    已折扣
+                    <span className="cartDiscount">
+                      &nbsp; NT$&nbsp;
+                      {checkDiscount}&nbsp;
+                    </span>
                   </span>
                 ) : (
                   ""
                 )}
                 <br />
                 {couponInfo ? (
-                  <span className="inActivityTitle">
-                    已使用優惠券
+                  <span className="inCouponTitle">
+                    已使用優惠券&nbsp;
                     {couponInfo.code}
-                    已折扣 NT$
-                    {checkingActivityPrice -
-                      Math.floor(
-                        checkingActivityPrice * couponInfo.discount_rate
-                      )}
+                    &nbsp;已折扣&nbsp;
+                    <span className="cartCoupon">
+                      NT$&nbsp;
+                      {checkingActivityPrice -
+                        Math.floor(
+                          checkingActivityPrice * couponInfo.discount_rate
+                        )}
+                      &nbsp;
+                    </span>
                   </span>
                 ) : (
                   ""
@@ -341,28 +359,6 @@ const ShoppingcartPage = () => {
     console.log("我有好好更新訂單資料");
     console.log(incomingDatas);
   }, [incomingDatas, couponInfo, userAddingCartInformation]);
-  // useEffect(() => {
-  //   // 更新API POST order(訂單)
-  //   if (!couponInfo) {
-  //     console.log(incomingDatas);
-
-  //     // order.total_quantity = allQuantity;
-  //     // order.order_details = eachData;
-  //     // order.total_price = userAddingCartPrice;
-  //     // console.log("我有好好更新訂單資料");
-  //   } else {
-  //     order.coupon_code = couponInfo.code;
-  //     order.order_details = eachData;
-  //     console.log("我用優惠券後有好好更新訂單資料");
-  //   }
-  // }, [
-  //   allQuantity,
-  //   userAddingCartPrice,
-  //   eachData,
-  //   couponInfo,
-  //   incomingDatas,
-  //   nothing,
-  // ]);
 
   useEffect(() => {
     if (couponInfo) {
@@ -405,7 +401,7 @@ const ShoppingcartPage = () => {
         { cart_id: id }
       );
       // alert("已刪除該商品");
-      toast.warning("已成功加入購物車");
+      toast.warning("已刪除該商品");
 
       // 找到目标项的索引
       const targetIndex = incomingDatas.findIndex(
@@ -450,7 +446,7 @@ const ShoppingcartPage = () => {
         quantity: newQuantity,
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         // 先找到原始陣列裡的目標index列資料
         const targetIndex = incomingDatas.findIndex(
           (item) => item.cart_id === cart_id
@@ -465,7 +461,7 @@ const ShoppingcartPage = () => {
           // console.log(updatedData);
           // 更新狀態值
           setIncomingData(updatedData);
-          console.log("我做完put的請求了");
+          // console.log("我做完put的請求了");
         }
       })
       .catch((error) => {
@@ -488,9 +484,10 @@ const ShoppingcartPage = () => {
           },
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           toast.success("已送出訂單");
-          window.location.reload();
+          // window.location.reload();
+          // setNothing(true);
         })
         .catch((error) => {
           console.log(error);
@@ -512,8 +509,9 @@ const ShoppingcartPage = () => {
         (coupon) => coupon.coupon_id === res.data.message.coupon_id
       );
       if (isExist) {
-        console.log("此折價券已儲存");
+        // console.log("此折價券已儲存");
         setCouponApplied(false);
+        toast.warning("已儲存此折價券");
         return;
       } else {
         setCoupons([...coupons, res.data.message]); // 在以新贈的優惠券上繼續新增
@@ -618,17 +616,22 @@ const ShoppingcartPage = () => {
           <p className="smallTopic">商品明細</p>
           {userAddingCartInformation}
           <p className="smallTopic goodQtys">
-            合計有
-            {incomingDatas.reduce((accumulator, currentItem) => {
-              return accumulator + currentItem.quantity;
-            }, 0)}
-            項商品
+            合計有&nbsp;
+            <span className="cartTotalQuantity">
+              {incomingDatas.reduce((accumulator, currentItem) => {
+                return accumulator + currentItem.quantity;
+              }, 0)}
+            </span>
+            &nbsp;項商品
           </p>
           <p className="smallTopic goodQtys totalQty">
-            總計 NT$
-            {couponInfo
-              ? userAddingCartPrice - totalCouponPrice
-              : userAddingCartPrice}
+            總計
+            <span className="cartTotalPrice">
+              &nbsp;NT$&nbsp;
+              {couponInfo
+                ? userAddingCartPrice - totalCouponPrice
+                : userAddingCartPrice}
+            </span>
           </p>
         </div>
       ) : (
@@ -779,7 +782,7 @@ const ShoppingcartPage = () => {
                     onClick={sevenEleven}
                   >
                     <span className="sText">7-11取貨(先付款)</span>
-                    <span>NT$60</span>
+                    <span className="cartDeliveryCost">NT$&nbsp;60</span>
                   </button>
                   <button
                     name="cChoose"
@@ -788,7 +791,7 @@ const ShoppingcartPage = () => {
                     onClick={familyMart}
                   >
                     <span className="sText">全家取貨(先付款)</span>
-                    <span>NT$60</span>
+                    <span className="cartDeliveryCost">NT$&nbsp;60</span>
                   </button>
                   <button type="button" className="selectSeven">
                     請選擇取貨門市
@@ -1002,8 +1005,8 @@ const ShoppingcartPage = () => {
             <hr className="myhr" />
             <div className="typingIv">
               <p>商品原價</p>
-              <p>
-                NT$
+              <p className="theLastPartPrice">
+                NT$&nbsp;
                 {userAddingCartOgPrice}
               </p>
             </div>
@@ -1017,12 +1020,14 @@ const ShoppingcartPage = () => {
                 />
               </button>
               <p className={`${hideDiscount ? "" : "discountFamily"}`}>
-                -NT$
-                {couponInfo
-                  ? userAddingCartDiscount +
-                    userAddingCartPrice -
-                    Math.floor(userAddingCartPrice * couponInfo.discount_rate)
-                  : userAddingCartDiscount}
+                <span className="theLastPartPrice">
+                  -NT$&nbsp;
+                  {couponInfo
+                    ? userAddingCartDiscount +
+                      userAddingCartPrice -
+                      Math.floor(userAddingCartPrice * couponInfo.discount_rate)
+                    : userAddingCartDiscount}
+                </span>
               </p>
             </div>
             <div
@@ -1032,13 +1037,15 @@ const ShoppingcartPage = () => {
               <div className="discountGroup">
                 <div className="discount">活動折扣：</div>
 
-                <div className="discount">-NT${userAddingCartDiscount}</div>
+                <div className="discount theLastPartPrice">
+                  -NT$&nbsp;{userAddingCartDiscount}
+                </div>
               </div>
               <div className="discountGroup">
                 <div className="discount">優惠券折扣：</div>
                 <div className="discount">
-                  <div className="discount">
-                    -NT$
+                  <div className="discount theLastPartPrice">
+                    -NT$&nbsp;
                     {couponInfo ? totalCouponPrice : "0"}
                     {/* -NT$0 */}
                   </div>
@@ -1046,8 +1053,8 @@ const ShoppingcartPage = () => {
               </div>
               <div className="discountGroup">
                 <div className="discountTotal">合計：</div>
-                <div className="discountTotal">
-                  -NT$
+                <div className="discountTotal theLastPartPrice">
+                  -NT$&nbsp;
                   {couponInfo ? finalTotalDiscount : userAddingCartDiscount}
                 </div>
               </div>
@@ -1055,14 +1062,14 @@ const ShoppingcartPage = () => {
             <hr className="myhr" />
             <div className="typingIv">
               <p>運費</p>
-              <p>-NT$0</p>
+              <p className="theLastPartPrice">-NT$&nbsp;0</p>
             </div>
             <hr className="myhr" />
             <div className="typingIv">
               <p>總計</p>
               <div>
-                <p className="totalQty">
-                  NT$
+                <p className="totalQty theLastPartPrice">
+                  NT$&nbsp;
                   {couponInfo
                     ? userAddingCartPrice - totalCouponPrice
                     : userAddingCartPrice}
@@ -1109,11 +1116,13 @@ const ShoppingcartPage = () => {
 
             <div className="typingIv">
               <p>
-                合計有
-                {incomingDatas.reduce((accumulator, currentItem) => {
-                  return accumulator + currentItem.quantity;
-                }, 0)}
-                項商品
+                合計有&nbsp;
+                <span className="theLastPartPrice">
+                  {incomingDatas.reduce((accumulator, currentItem) => {
+                    return accumulator + currentItem.quantity;
+                  }, 0)}
+                </span>
+                &nbsp;項商品
               </p>
             </div>
           </div>
@@ -1157,7 +1166,7 @@ const ShoppingcartPage = () => {
                       </div>
                       <div className="cupponDec">
                         <div>Special Offer</div>
-                        <div>$ {100 - coupon.discount_rate * 100} OFF </div>
+                        <div> {100 - coupon.discount_rate * 100} OFF </div>
                       </div>
                       <div className="cupponBtn">
                         <button
