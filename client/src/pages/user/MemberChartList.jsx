@@ -152,9 +152,35 @@ function ChartListPage() {
 
                   <div className="col-3" style={{ fontSize: "28px" }}>
                     <p>總數</p>
-                    <p>{carbohydratePercentage}%</p>
-                    <p>{fatPercentage}%</p>
-                    <p>{proteinPercentage}%</p>
+                    <div className="col-3" style={{ fontSize: "28px" }}>
+                      <p
+                        style={{
+                          fontWeight:
+                            carbohydratePercentage > 50 ? "bold" : "normal",
+                          color:
+                            carbohydratePercentage > 50 ? "red" : "inherit",
+                        }}
+                      >
+                        {carbohydratePercentage}%
+                      </p>
+                      <p
+                        style={{
+                          fontWeight: fatPercentage > 30 ? "bold" : "normal",
+                          color: fatPercentage > 30 ? "red" : "inherit",
+                        }}
+                      >
+                        {fatPercentage}%
+                      </p>
+                      <p
+                        style={{
+                          fontWeight:
+                            proteinPercentage > 20 ? "bold" : "normal",
+                          color: proteinPercentage > 20 ? "red" : "inherit",
+                        }}
+                      >
+                        {proteinPercentage}%
+                      </p>
+                    </div>
                   </div>
 
                   <div className="col-3" style={{ fontSize: "28px" }}>

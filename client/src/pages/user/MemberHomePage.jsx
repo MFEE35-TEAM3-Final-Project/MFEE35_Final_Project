@@ -343,7 +343,7 @@ function MemberHomePage() {
                   </p>
                 </div>
                 <div className="col-4">
-                  <img src={require("../../image/logo/logo.png")} alt="logo" />
+                  <img src={require("../../image/logo-black.png")} alt="logo" />
                 </div>
               </div>
             </form>

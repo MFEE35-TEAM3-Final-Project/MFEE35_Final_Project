@@ -36,7 +36,7 @@ function MemberHeader() {
       <div className="memberTopnav">
         <Link to="/">
           <img
-            src={require("../../image/logo/logo.png")}
+            src={require("../../image/logo-black.png")}
             alt="logo"
             id="memberNavLogo"
           />

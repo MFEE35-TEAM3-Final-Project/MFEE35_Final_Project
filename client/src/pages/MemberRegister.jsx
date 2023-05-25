@@ -145,7 +145,7 @@ const UserRegistration = () => {
           <h3 id="titleH3">會員註冊</h3>
         </div>
         <div style={{ margin: "20px" }}>
-          <img id="logoimg" src={require("../image/logo/logo.png")} alt="" />
+          <img id="logoimg" src={require("../image/logo-black.png")} alt="" />
         </div>
 
         <div className="container">

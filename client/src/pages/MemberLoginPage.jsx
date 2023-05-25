@@ -47,7 +47,7 @@ const UserLogin = () => {
           <h3 id="titleH3">會員登入</h3>
         </div>
         <div style={{ margin: "20px" }}>
-          <img id="logoimg" src={require("../image/logo/logo.png")} alt="" />
+          <img id="logoimg" src={require("../image/logo-black.png")} alt="" />
         </div>
         <div className="container">
           <div className="userInfo row" style={{ width: "50%" }}>
