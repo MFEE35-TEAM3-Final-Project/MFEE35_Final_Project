@@ -244,7 +244,7 @@ function Article() {
                   <div className="userText ">
                     <div className="">
                       <label htmlFor="content-textarea">
-                        嗨囉!
+                        哈囉!
                         <span className="userName ps-3 pe-3">
                           {Articlusername}
                         </span>
