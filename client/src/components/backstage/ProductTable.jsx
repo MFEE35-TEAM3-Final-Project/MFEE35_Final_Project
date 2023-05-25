@@ -149,7 +149,7 @@ const ProductList = () => {
           </div>
         </div>
         <div>
-          <Table dataSource={products} columns={columns} />
+          <Table dataSource={products} columns={columns} rowKey="productid" />
         </div>
       </div>
     </>

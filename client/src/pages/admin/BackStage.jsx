@@ -60,7 +60,7 @@ const Backstage = () => {
 
   // data
   const [collapsed, setCollapsed] = useState(false);
-  const [siderSelected, setSiderSelected] = useState("product");
+  const [siderSelected, setSiderSelected] = useState("user");
   // function
   const selectedItem = (e) => {
     setSiderSelected(e.key);

@@ -73,6 +73,9 @@ const ArticleTable = () => {
       title: "更新時間",
       dataIndex: "updated_at",
       key: "updated_at",
+      sorter: {
+        compare: (a, b) => a.updated_at - b.updated_at
+      },
       render: (time) => {
         const localTime = toLocalTime(time);
         return <p>{localTime}</p>;
@@ -82,6 +85,9 @@ const ArticleTable = () => {
       title: "建立時間",
       dataIndex: "created_at",
       key: "created_at",
+      sorter: {
+        compare: (a, b) => a.created_at - b.created_at
+      },
       render: (time) => {
         const localTime = toLocalTime(time);
         return <p>{localTime}</p>;
