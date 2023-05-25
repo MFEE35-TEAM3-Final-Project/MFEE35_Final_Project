@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import  "../styles/footer.css"
 import logo from "../image/logo/logo.png";
 import insta from "../image/footer/insta.webp";
 import fb from "../image/footer/fb.webp";
@@ -12,7 +12,7 @@ const footer = () => {
     <div id="footer">
       <div className="footer">
         <div className="iconGroup">
-          <img className="logoPic" src={logo} alt="LOGO" />
+          <img className="logopng" src={require("../image/logo-black.png")} alt="LOGO" />
           <div className="socialSite">
             <Link className="sitepicGroup" to="#">
               <img

@@ -83,7 +83,7 @@ function Blog() {
   if (!dataLoaded) {
     return <div>載入中..</div>;
   }
-  if (!articles) {
+  if (!articles || !allarticles) {
     return <div>載入中...</div>;
   }
   return (
