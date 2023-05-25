@@ -88,7 +88,7 @@ function Favorite() {
     <div>
       <MemberHeader />
       <ToastContainer />
-      <h2 className="head">會員追蹤清單</h2>
+      <h1 className="head">會員追蹤清單</h1>
       {error ? (
         <p>{error}</p>
       ) : data.length > 0 ? (
@@ -100,8 +100,8 @@ function Favorite() {
               </div>
               <div className="info">
                 <h1 className="productname"> {item.name}</h1>
-                <p> {item.description}</p>
-                <p> ${item.price}</p>
+                <h3> {item.description}</h3>
+                <h3> ${item.price}</h3>
                 <div className="buttons">
                   <button onClick={(event) => {
                     handleDelete(item.productid);
