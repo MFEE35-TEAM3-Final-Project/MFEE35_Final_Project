@@ -337,9 +337,7 @@ const OrderManagement = () => {
             <Descriptions.Item label="優惠券">
               {selectedOrderChange.coupon_code || "未使用"}
             </Descriptions.Item>
-            <Descriptions.Item label="discount">
-              還沒想到要填啥
-            </Descriptions.Item>
+            <Descriptions.Item label="折扣金額">-</Descriptions.Item>
             <Descriptions.Item label="總金額">
               <span className="text-danger">
                 $ {parseInt(selectedOrderChange.total_price, 10)}
@@ -351,25 +349,22 @@ const OrderManagement = () => {
                   <div className="detail_item" key={product.detail_id}>
                     <div>
                       <div className="img_container">
-                        <Image
-                          width={150}
-                          src="https://picsum.photos/400/400?random=1"
-                        />
+                        <Image width={150} src={product.image[0]} />
                       </div>
                       <div>
                         <p>名稱: {product.name}</p>
                         <p>
-                          數量:{" "}
+                          數量:
                           <span className="fw-bold">{product.quantity}</span>
                         </p>
                         <p>
-                          單價:{" "}
+                          單價:
                           <span className="fw-bold">
                             {parseInt(product.price)}
-                          </span>{" "}
+                          </span>
                         </p>
                         <p>
-                          總價:{" "}
+                          總價:
                           <span className="fw-bold text-danger">
                             {product.price * product.quantity}
                           </span>

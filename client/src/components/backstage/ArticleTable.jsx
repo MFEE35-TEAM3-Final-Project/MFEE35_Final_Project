@@ -4,7 +4,6 @@ import {
   Table,
   Modal,
   Button,
-  Descriptions,
   Tag,
   Radio,
   Image,
@@ -74,6 +73,9 @@ const ArticleTable = () => {
       title: "更新時間",
       dataIndex: "updated_at",
       key: "updated_at",
+      sorter: {
+        compare: (a, b) => a.updated_at - b.updated_at
+      },
       render: (time) => {
         const localTime = toLocalTime(time);
         return <p>{localTime}</p>;
@@ -83,6 +85,9 @@ const ArticleTable = () => {
       title: "建立時間",
       dataIndex: "created_at",
       key: "created_at",
+      sorter: {
+        compare: (a, b) => a.created_at - b.created_at
+      },
       render: (time) => {
         const localTime = toLocalTime(time);
         return <p>{localTime}</p>;
@@ -353,25 +358,23 @@ const ArticleTable = () => {
       <div className="article_table ">
         <div className="row">
           <div className="col">
-            <p className="fs-4 fw-bold">
-              類別：
-              <Select
-                defaultValue="all"
-                style={{
-                  width: 120
-                }}
-                onChange={(key) => {
-                  setTempCategory(key);
-                }}
-                options={[
-                  {
-                    value: "all",
-                    label: "All"
-                  },
-                  ...categories
-                ]}
-              />
-            </p>
+            <p className="fs-4 fw-bold">類別：</p>
+            <Select
+              defaultValue="all"
+              style={{
+                width: 120
+              }}
+              onChange={(key) => {
+                setTempCategory(key);
+              }}
+              options={[
+                {
+                  value: "all",
+                  label: "All"
+                },
+                ...categories
+              ]}
+            />
           </div>
           <div className="col-2" style={{ paddingLeft: "5rem" }}>
             <Button

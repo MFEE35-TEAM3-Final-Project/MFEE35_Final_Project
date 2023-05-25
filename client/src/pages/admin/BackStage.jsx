@@ -7,26 +7,25 @@ import {
   UserOutlined,
   PercentageOutlined,
   ReadOutlined,
-  CoffeeOutlined
+  CoffeeOutlined,
+  GiftOutlined
 } from "@ant-design/icons";
 import { Button, Layout, Menu } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logoImg from "../../image/logo-black.png";
 import UserTable from "../../components/backstage/UserTable";
 import OrderTable from "../../components/backstage/OrderTable";
 import ArticleTable from "../../components/backstage/ArticleTable";
 import CouponTable from "../../components/backstage/CouponTable";
+import FoodTable from "../../components/backstage/FoodTable";
+import ProductTable from "../../components/backstage/ProductTable";
 
 const Backstage = () => {
   const navigate = useNavigate();
   const { Header, Sider, Content, Footer } = Layout;
 
   const items = [
-    {
-      key: "dashboard",
-      icon: <DashboardOutlined />,
-      label: "銷售狀況"
-    },
     {
       key: "user",
       icon: <UserOutlined />,
@@ -52,27 +51,16 @@ const Backstage = () => {
       icon: <CoffeeOutlined />,
       label: "食材管理"
     },
-
     {
-      key: "test",
-      icon: <ExperimentOutlined />,
-      label: "測試",
-      children: [
-        {
-          key: "test1",
-          label: "Team 1"
-        },
-        {
-          key: "test2",
-          label: "Team 2"
-        }
-      ]
+      key: "product",
+      icon: <GiftOutlined />,
+      label: "產品管理"
     }
   ];
 
   // data
   const [collapsed, setCollapsed] = useState(false);
-  const [siderSelected, setSiderSelected] = useState("coupon");
+  const [siderSelected, setSiderSelected] = useState("user");
   // function
   const selectedItem = (e) => {
     setSiderSelected(e.key);
@@ -82,7 +70,11 @@ const Backstage = () => {
     <div id="backstage">
       <Layout>
         <Sider className="sider" trigger={null} collapsed={collapsed}>
-          <div className="logo" />
+          <div className="logo justify-content-center d-flex p-1">
+            <div>
+              <img style={{ maxHeight: "90%" }} src={logoImg} alt="" />
+            </div>
+          </div>
           <Menu
             theme="dark"
             mode="inline"
@@ -123,6 +115,8 @@ const Backstage = () => {
             {siderSelected === "coupon" && <CouponTable />}
             {siderSelected === "order" && <OrderTable />}
             {siderSelected === "article" && <ArticleTable />}
+            {siderSelected === "food" && <FoodTable />}
+            {siderSelected === "product" && <ProductTable />}
           </Content>
           <Footer>Fooooooter</Footer>
         </Layout>

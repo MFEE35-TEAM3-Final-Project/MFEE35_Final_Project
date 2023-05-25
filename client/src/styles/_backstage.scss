@@ -3,10 +3,39 @@
     .logo {
       height: 4rem;
       width: 100%;
-      background-color: aqua;
+      background-color: #e4dcd1;
     }
   }
-  // .header {
-  //   background-color: #e4dcd1;
-  // }
+  .order_table {
+    //table
+    .status_tag {
+      padding: 0.5rem;
+      .anticon {
+        vertical-align: 0.1rem;
+      }
+    }
+  }
+}
+
+.detail_list {
+  .detail_item > div {
+    display: flex;
+    & > div {
+      flex: 3;
+    }
+    .img_container {
+      flex: 1;
+    }
+  }
+}
+.ck-editor__editable_inline {
+  min-height: 300px;
+}
+#cover_image {
+  .cover_img_container {
+    .ant-image {
+      border: 2px dashed;
+      padding: 5px;
+    }
+  }
 }

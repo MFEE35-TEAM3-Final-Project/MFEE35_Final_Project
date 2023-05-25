@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Checkbox, Form, Input, message, Alert } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import adminLogo from "../../image/icon-admin.png";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -39,13 +40,13 @@ const AdminLogin = () => {
   };
 
   return (
-    <div id="admin_login">
+    <div id="admin_login" style={{ backgroundColor: "#e4dcd1" }}>
       <div className="login_pic">
-        <div>
-          <img src="https://picsum.photos/200/200?random=1" alt="" />
+        <div style={{ backgroundColor: "white" }}>
+          <img className="w-100" src={adminLogo} alt="" />
         </div>
       </div>
-      <div>
+      <div className="">
         {contextHolder}
         <Form
           name="basic"

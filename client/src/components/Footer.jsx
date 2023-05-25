@@ -62,9 +62,9 @@ const footer = () => {
             <Link className="siteText" to="#">
               會員專區
             </Link>
-            <Link className="siteText" to="/admin/backstage">
+            <a className="siteText" href="/admin/backstage">
               管理員專區
-            </Link>
+            </a>
           </div>
         </div>
       </div>
