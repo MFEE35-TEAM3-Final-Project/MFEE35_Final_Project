@@ -469,7 +469,7 @@ button:hover .button-text {
   font-size: 9vw;
   text-align: right;
   text-transform: capitalize;
-  color: rgba(197, 161, 136, 0.2);
+  color: rgba(197, 161, 136, 1);
 }
 
 .L-text {
@@ -480,7 +480,7 @@ button:hover .button-text {
   font-size: 9vw;
   text-align: left;
   text-transform: capitalize;
-  color: rgba(197, 161, 136, 0.2);
+  color: rgba(197, 161, 136, 1);
 }
 .benefit {
   background-color: white;
@@ -553,7 +553,7 @@ button:hover .button-text {
   font-size: 9vw;
   text-align: left;
   text-transform: capitalize;
-  color: rgba(197, 161, 136, 0.2);
+  color: rgba(197, 161, 136, 1);
 }
 
 .product {

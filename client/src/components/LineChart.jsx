@@ -33,7 +33,7 @@ function LineChart() {
             label: "",
             data: dataList2,
             fill: false,
-            borderColor: "pink",
+            borderColor: "#7A3D3D",
             borderWidth: 1
           }
         ]
