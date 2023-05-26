@@ -8,6 +8,11 @@ const UserTable = () => {
   const [perPage, setPerPage] = useState(10);
   const [totalQty, setTotalQty] = useState(0); // 新增總頁數的狀態變數
 
+  useEffect(() => {
+    getUsers();
+    console.log("user", userData);
+  }, []);
+
   const columns = [
     {
       title: "Avatar",
@@ -15,14 +20,18 @@ const UserTable = () => {
       key: "avatar",
       render: (avatarUrl) => (
         <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-          <Avatar size={64} src={avatarUrl} />
+          {avatarUrl ? (
+            <Avatar size={64} src={avatarUrl} />
+          ) : (
+            <Avatar size={64} src="https://imgur.com/QV2Rk8f.jpg" />
+          )}
         </div>
       )
     },
     {
       title: "會員ID",
-      dataIndex: "userId",
-      key: "userId",
+      dataIndex: "user_id",
+      key: "user_id",
       sorter: {
         compare: (a, b) => a.userId - b.userId
       }
@@ -96,20 +105,20 @@ const UserTable = () => {
       )
       .then((res) => {
         console.log(res);
-        const data = res.data.users.map((user, index) => {
-          return {
-            key: user.user_id,
-            userId: user.user_id,
-            username: user.username,
-            email: user.email,
-            avatar: user.avatar ? user.avatar : "https://imgur.com/QV2Rk8f.jpg",
-            gender: user.gender,
-            age: calculateAge(user.birthday),
-            phone: user.phone,
-            address: user.address
-          };
-        });
-        setUserData(data);
+        // const data = res.data.users.map((user, index) => {
+        //   return {
+        //     key: user.user_id,
+        //     userId: user.user_id,
+        //     username: user.username,
+        //     email: user.email,
+        //     avatar: user.avatar ? user.avatar : "https://imgur.com/QV2Rk8f.jpg",
+        //     gender: user.gender,
+        //     age: calculateAge(user.birthday),
+        //     phone: user.phone,
+        //     address: user.address
+        //   };
+        // });
+        setUserData(res.data.users);
         // 更新總頁數的狀態
         setTotalQty(res.data.user_qty);
         setPerPage(res.data.paginations.per_page);
@@ -125,21 +134,28 @@ const UserTable = () => {
     // 在頁碼改變時重新呼叫 getUsers 函式
   };
 
-  useEffect(() => {
-    getUsers(1);
-  }, []);
-
   return (
     <div>
-      <Table columns={columns} dataSource={userData} pagination={false} />
-      <div className="m-3 d-flex justify-content-end">
-        <Pagination
-          current={page}
-          pageSize={perPage}
-          total={totalQty}
-          onChange={pageChange}
-        />
-      </div>
+      {userData.length > 0 ? (
+        <>
+          <Table
+            rowKey="user_id"
+            columns={columns}
+            dataSource={userData}
+            pagination={false}
+          />
+          <div className="m-3 d-flex justify-content-end">
+            <Pagination
+              current={page}
+              pageSize={perPage}
+              total={totalQty}
+              onChange={pageChange}
+            />
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

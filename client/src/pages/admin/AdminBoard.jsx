@@ -23,9 +23,8 @@ const AdminBoard = () => {
         return res.data;
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setAuthenticated(false);
-        return err.response.data;
       });
   }
 
