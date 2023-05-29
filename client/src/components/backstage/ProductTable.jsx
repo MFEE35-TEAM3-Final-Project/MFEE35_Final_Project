@@ -2,25 +2,34 @@ import React, { useEffect, useState } from "react";
 import { Table, Image, Tag, Space, Button, Select, message } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
+import ProductModal from "./ProductModal";
 
 const ProductList = () => {
-  const [products, setProducts] = useState([]);
   // context hook
   const [messageApi, contextHolder] = message.useMessage();
+  const [products, setProducts] = useState([]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [showProductModal, setShowProductModal] = useState(false);
+
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(1);
   }, []);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (page) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/product/getProducts`
+        `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${page}`
       ); // 替换为实际的 API URL
       console.log(response);
       setProducts(response.data.results);
+      setTotalPage(response.data.totalPages);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
+  };
+
+  const closeModal = () => {
+    setShowProductModal(false);
   };
 
   const columns = [
@@ -142,6 +151,7 @@ const ProductList = () => {
               type="primary"
               onClick={() => {
                 console.log("add product");
+                setShowProductModal(true);
               }}
             >
               新增產品
@@ -149,9 +159,21 @@ const ProductList = () => {
           </div>
         </div>
         <div>
-          <Table dataSource={products} columns={columns} rowKey="productid" />
+          <Table
+            dataSource={products}
+            columns={columns}
+            rowKey="productid"
+            pagination={{
+              pageSize: 12,
+              total: 12 * totalPage,
+              onChange: (e) => {
+                fetchProducts(e);
+              }
+            }}
+          />
         </div>
       </div>
+      <ProductModal openModal={showProductModal} onCancel={closeModal} />
     </>
   );
 };

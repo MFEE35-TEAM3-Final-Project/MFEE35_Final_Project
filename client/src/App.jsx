@@ -56,8 +56,8 @@ function App() {
             element={<GoodsPage />}
           />
           <Route path="/cart" element={<ShoppingcartPage />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route element={<AdminBoard />}>
-            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/backstage" element={<BackStage />} />
           </Route>
           {/* user page */}
