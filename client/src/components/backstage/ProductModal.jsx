@@ -9,7 +9,7 @@ import {
   List,
   Image
 } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+
 import axios from "axios";
 const { Option } = Select;
 
@@ -32,18 +32,18 @@ const ProductModal = ({ openModal, onCancel }) => {
     }
   };
 
-  const onFinish = async (values) => {
+  const onFinish = async () => {
     try {
       const values = await productForm.validateFields();
       console.log(values);
-
+      const imgListStr = imgList.join(",");
       const productData = {
         name: values.name,
         category: values.category,
         description: values.description,
         price: values.price,
         stock: values.stock,
-        image: imgList
+        image: imgListStr
       };
       console.log("data", productData);
 
@@ -84,9 +84,12 @@ const ProductModal = ({ openModal, onCancel }) => {
       open={openModal}
       onCancel={onCancel}
       destroyOnClose={true}
+      onOk={() => {
+        onFinish();
+      }}
     >
       <div className="mt-3">
-        <Form form={productForm} onFinish={onFinish}>
+        <Form form={productForm}>
           <Form.Item
             name="name"
             label="商品名稱"
@@ -154,9 +157,10 @@ const ProductModal = ({ openModal, onCancel }) => {
                 grid={{ gutter: 16, column: 4 }}
                 dataSource={imgList}
                 renderItem={(item, index) => (
-                  <List.Item className="d-flex justify-content-center">
+                  <List.Item className="d-flex flex-column align-items-center ">
                     <Image src={item} />
                     <Button
+                      className="mt-2 me-1 align-self-end"
                       type="primary"
                       danger
                       onClick={() => {
