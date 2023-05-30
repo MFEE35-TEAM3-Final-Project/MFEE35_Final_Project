@@ -1,17 +1,34 @@
-import React, { useState } from "react";
-import { Modal, Form, Input, InputNumber, Button, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Modal,
+  Form,
+  Input,
+  InputNumber,
+  Button,
+  Select,
+  List,
+  Image
+} from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
 const { Option } = Select;
 
 const ProductModal = ({ openModal, onCancel }) => {
   const [productForm] = Form.useForm();
   const [imgList, setImgList] = useState([]);
+  useEffect(() => {
+    console.log("img list", imgList);
+  }, [imgList]);
 
   // methods
-  const imgArray = (method, url, position) => {
+  const imgArray = (method, arr, position) => {
     if (method === "add") {
       console.log("addImg");
-      setImgList([...imgList, url]);
+      setImgList([...imgList, ...arr]);
+    } else if (method === "delete") {
+      console.log("deleteImg");
+      const updatedImgList = imgList.filter((_, index) => index !== position);
+      setImgList(updatedImgList);
     }
   };
 
@@ -26,7 +43,7 @@ const ProductModal = ({ openModal, onCancel }) => {
         description: values.description,
         price: values.price,
         stock: values.stock,
-        image: []
+        image: imgList
       };
       console.log("data", productData);
 
@@ -39,6 +56,26 @@ const ProductModal = ({ openModal, onCancel }) => {
     } finally {
     }
   };
+  const openWidget = () => {
+    console.log("in widget");
+    const imgArr = [];
+    const widget = window.cloudinary.openUploadWidget(
+      {
+        cloud_name: "ddh6e9dad",
+        upload_preset: "joold_test",
+        multiple: true,
+        resource_type: "image",
+        max_files: 5,
+        max_file_size: 5242880 // 5MB
+      },
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          imgArr.push(result.info.secure_url);
+          imgArray("add", imgArr);
+        }
+      }
+    );
+  };
 
   return (
     <Modal
@@ -46,7 +83,6 @@ const ProductModal = ({ openModal, onCancel }) => {
       width={1000}
       open={openModal}
       onCancel={onCancel}
-      footer={null}
       destroyOnClose={true}
     >
       <div className="mt-3">
@@ -101,31 +137,38 @@ const ProductModal = ({ openModal, onCancel }) => {
               </Option>
             </Select>
           </Form.Item>
-          {/* 假设您已经正确配置了Cloudinary */}
+
           <Form.Item name="image" label="圖片的雲端URL">
             <Button
               onClick={() => {
-                window.cloudinary.openUploadWidget(
-                  {
-                    cloud_name: "ddh6e9dad",
-                    upload_preset: "joold_test"
-                  },
-                  (error, result) => {
-                    if (!error && result && result.event === "success") {
-                      imgArray("add", result.info.secure_url);
-                      console.log("imgList", imgList);
-                    }
-                  }
-                );
+                openWidget();
               }}
             >
               上傳圖片
             </Button>
           </Form.Item>
+
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              新增產品
-            </Button>
+            <div>
+              <List
+                grid={{ gutter: 16, column: 4 }}
+                dataSource={imgList}
+                renderItem={(item, index) => (
+                  <List.Item className="d-flex justify-content-center">
+                    <Image src={item} />
+                    <Button
+                      type="primary"
+                      danger
+                      onClick={() => {
+                        imgArray("delete", null, index);
+                      }}
+                    >
+                      刪除
+                    </Button>
+                  </List.Item>
+                )}
+              />
+            </div>
           </Form.Item>
         </Form>
       </div>
