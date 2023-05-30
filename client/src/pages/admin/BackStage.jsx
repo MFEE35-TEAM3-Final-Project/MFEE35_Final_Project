@@ -23,7 +23,7 @@ import ProductTable from "../../components/backstage/ProductTable";
 
 const Backstage = () => {
   const navigate = useNavigate();
-  const { Header, Sider, Content, Footer } = Layout;
+  const { Header, Sider, Content } = Layout;
 
   const items = [
     {
@@ -118,7 +118,6 @@ const Backstage = () => {
             {siderSelected === "food" && <FoodTable />}
             {siderSelected === "product" && <ProductTable />}
           </Content>
-          <Footer>Fooooooter</Footer>
         </Layout>
       </Layout>
     </div>
