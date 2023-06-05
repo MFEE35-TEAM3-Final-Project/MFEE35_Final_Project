@@ -72,7 +72,7 @@ const GoodsPage = () => {
             )
             .then((res) => {
               const updatedFood = {
-                Calories_adjusted: res.data.Calories_adjusted,
+                Calories_adjusted: res.data.Calories_adjusted
               };
               updatedData.push(updatedFood);
               console.log(updatedData);
@@ -90,7 +90,7 @@ const GoodsPage = () => {
             const myNewData = testGood.map((foodId, index) => {
               return {
                 ...foodId,
-                Calories_adjusted: updatedData[index].Calories_adjusted,
+                Calories_adjusted: updatedData[index].Calories_adjusted
               };
             });
 
@@ -129,7 +129,7 @@ const GoodsPage = () => {
       axios
         .post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
           productid: productid,
-          quantity: quantity,
+          quantity: quantity
         })
         .then(() => {
           toast.success("已成功加入購物車");
@@ -194,7 +194,7 @@ const GoodsPage = () => {
       // 將新的資料加入進去
       const addingCartData = {
         productid: productid,
-        quantity: quantity,
+        quantity: quantity
       };
       existingCartData.push(addingCartData);
 
@@ -211,7 +211,7 @@ const GoodsPage = () => {
     if (x) {
       axios
         .post(`${process.env.REACT_APP_API_URL}/api/user/favorite`, {
-          productid: productid,
+          productid: productid
         })
         .then((res) => {
           toast.success("已成功加入追蹤清單");
@@ -271,12 +271,12 @@ const GoodsPage = () => {
       <ToastContainer />
       <div className="goodstype">
         <div className="diet">
-          <a href="http://localhost:3000/goods" className="myDiet">
+          <a href="http://localhost:3000/store" className="myDiet">
             增肌減脂餐盒
           </a>
         </div>
         <div className="drink">
-          <a href="http://localhost:3000/goods" className="myDrink">
+          <a href="http://localhost:3000/store" className="myDrink">
             乳清蛋白
           </a>
         </div>

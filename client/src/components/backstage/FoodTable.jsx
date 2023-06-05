@@ -28,6 +28,10 @@ const FoodSearch = () => {
   const [tempFood, setTempFood] = useState("");
   const [createFood, setCreateFood] = useState(false);
 
+  useEffect(() => {
+    console.log(tempFood);
+  }, [tempFood]);
+
   //取得 category列表
   useEffect(() => {
     axios
@@ -68,6 +72,7 @@ const FoodSearch = () => {
   };
 
   const updateFood = (isNew, foodData, foodId) => {
+    console.log(isNew, foodData, foodId);
     let status;
     if (isNew) {
       status = "新增";
@@ -108,6 +113,7 @@ const FoodSearch = () => {
           if (res.data.success) {
             messageApi.success(`食物資訊${status}成功`);
           } else {
+            console.log(res);
             messageApi.error(`食物資訊${status}失敗`);
           }
           setTempFood("");
@@ -116,6 +122,7 @@ const FoodSearch = () => {
           fetchFoods(tempCategory, maxResultQty, keyword);
         })
         .catch((err) => {
+          console.log(err);
           messageApi.error(
             <>
               伺服器錯誤 {<p className="mt-2">{err.response.data.message}</p>}
@@ -243,6 +250,11 @@ const FoodSearch = () => {
         <Collapse accordion>
           {foods.map((food) => (
             <Panel header={food.sample_name} key={food.food_id}>
+              <div>
+                <p className="fs-5">
+                  ID： <span className="text-danger">{food.food_id}</span>
+                </p>
+              </div>
               <Form
                 initialValues={{
                   category: food.category,
@@ -251,8 +263,8 @@ const FoodSearch = () => {
                   common_name: food.common_name,
                   unit: food.unit,
                   popularity: food.popularity,
-                  calories: food.Calories,
-                  calories_adjusted: food.Calories_adjusted,
+                  calories: food.calories,
+                  calories_adjusted: food.calories_adjusted,
                   water: food.water,
                   crude_protein: food.crude_protein,
                   crude_fat: food.crude_fat,

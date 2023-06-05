@@ -28,13 +28,15 @@ function Blog() {
         `${process.env.REACT_APP_API_URL}/api/articles?page=${page}&per_page=6&category=${category}`
       )
       .then((res) => {
-        const formattedArticles = res.data.articles.map((article) => {
-          return {
-            ...article,
-            created_at: formatDate(article.created_at),
-            updated_at: formatDate(article.updated_at),
-          };
-        });
+        const formattedArticles = res.data.articles
+          .filter((article) => article.is_published === 1)
+          .map((article) => {
+            return {
+              ...article,
+              created_at: formatDate(article.created_at),
+              updated_at: formatDate(article.updated_at)
+            };
+          });
         setArticles(formattedArticles);
         setPagination(res.data.pagination);
         console.log(res.data.pagination);

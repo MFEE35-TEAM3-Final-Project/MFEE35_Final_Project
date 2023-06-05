@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table, Image, Tag, Space, Button, Select, message } from "antd";
+import { Table, Image, Tag, Space, Button, Select, message, Modal } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
 import ProductModal from "./ProductModal";
@@ -9,7 +9,10 @@ const ProductList = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [products, setProducts] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
+  const [tempPage, setTempPage] = useState(1);
   const [showProductModal, setShowProductModal] = useState(false);
+  const [isNewProduct, setIsNewProduct] = useState(true);
+  const [tempProduct, setTempProduct] = useState(null);
 
   useEffect(() => {
     fetchProducts(1);
@@ -19,7 +22,7 @@ const ProductList = () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${page}`
-      ); // 替换为实际的 API URL
+      );
       console.log(response);
       setProducts(response.data.results);
       setTotalPage(response.data.totalPages);
@@ -27,8 +30,191 @@ const ProductList = () => {
       console.error("Error fetching products:", error);
     }
   };
+  // 取得特定產品營養成分
+  const getFoodData = (foodId) => {
+    return new Promise((resolve, reject) => {
+      const api = `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`;
+      axios
+        .get(api)
+        .then((res) => {
+          resolve(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          reject(err);
+        });
+    });
+  };
+  // open modal
+  const handleEdit = async (isNew, product) => {
+    if (isNew) {
+      setIsNewProduct(true);
+      setTempProduct(null);
+      setShowProductModal(true);
+    } else {
+      const food_info = await getFoodData(product.food_id);
+      setIsNewProduct(false);
+      setTempProduct({ ...product, food_info });
+      setShowProductModal(true);
+    }
+  };
+
+  // 按下ok
+  const saveProduct = (updateData) => {
+    let status;
+    if (isNewProduct) {
+      status = "新增";
+    } else {
+      status = "更新";
+    }
+
+    Modal.success({
+      title: `${status}產品`,
+      content: `確定要${status}產品嗎?`,
+      closable: true,
+      maskClosable: true,
+      okText: "確定",
+      okButtonProps: {
+        onClick: () => {
+          confirmUpdate(updateData);
+        },
+        type: "primary"
+      }
+    });
+
+    // 確認modal OK
+    const confirmUpdate = async (finalData) => {
+      try {
+        const foodData = finalData.nutrient;
+
+        const {
+          activityId,
+          name,
+          category,
+          description,
+          storage_method,
+          price,
+          stock,
+          image
+        } = finalData.product;
+        let productData = {
+          activityId: activityId,
+          name: name,
+          category: category,
+          description: description,
+          storage_method: storage_method,
+          price: price,
+          stock: stock,
+          image: image
+        };
+        let foodApi = `${process.env.REACT_APP_API_URL}/api/admin/food`;
+        let productApi = `${process.env.REACT_APP_API_URL}/api/admin/addProducts`;
+        let reqMethod = "post";
+
+        if (isNewProduct) {
+          const foodRes = await axios[reqMethod](foodApi, foodData);
+          if (!foodRes.data.success) {
+            messageApi.error("產品營養成分新增失敗");
+            throw new Error("產品營養成分新增失敗");
+          }
+          const foodId = foodRes.data.food_id;
+          productData = {
+            ...productData,
+            food_id: foodId
+          };
+          // 發送product data
+          const productRes = await axios[reqMethod](productApi, productData);
+          if (productRes.data.success) {
+            messageApi.success("產品新增成功");
+          } else {
+            messageApi.error("產品新增失敗");
+          }
+        } else {
+          const productId = tempProduct.productid;
+          const foodId = tempProduct.food_id;
+          productApi = `${process.env.REACT_APP_API_URL}/api/admin/products/${productId}`;
+          foodApi = `${process.env.REACT_APP_API_URL}/api/admin/food/food_id=${foodId}`;
+          reqMethod = "put";
+
+          const foodRes = await axios[reqMethod](foodApi, foodData);
+          if (!foodRes.data.success) {
+            messageApi.error("產品營養成分更新失敗");
+            throw new Error("產品營養成分更新失敗");
+          }
+
+          productData = {
+            ...productData,
+            food_id: foodId
+          };
+
+          // 發送product data
+          const productRes = await axios[reqMethod](productApi, productData);
+
+          if (productRes.data.success) {
+            messageApi.success("產品更新成功");
+          } else {
+            messageApi.error("產品更新失敗");
+          }
+        }
+        setIsNewProduct(true);
+        setTempProduct(null);
+        fetchProducts(tempPage);
+        Modal.destroyAll();
+        setShowProductModal(false);
+      } catch (err) {
+        console.error(err, err.response.data.message);
+        messageApi.error(
+          <>伺服器錯誤 {<p className="mt-2">{err.response.data.message}</p>}</>
+        );
+        throw err;
+      }
+    };
+  };
+
+  const deleteProduct = (id, name) => {
+    Modal.error({
+      title: "刪除",
+      content: (
+        <>
+          <p className="fs-4 fw-bold">確定要刪除產品嗎?</p>
+          <p>名稱: {name}</p>
+        </>
+      ),
+      closable: true,
+      maskClosable: true,
+      okText: "刪除",
+      okButtonProps: {
+        danger: true,
+        type: "primary",
+        onClick: () => {
+          axios
+            .delete(`${process.env.REACT_APP_API_URL}/api/admin/products/${id}`)
+            .then((res) => {
+              Modal.destroyAll();
+              if (res.data.success) {
+                messageApi.success("產品刪除成功");
+              } else {
+                messageApi.error("產品刪除錯誤");
+              }
+              fetchProducts(tempPage);
+            })
+            .catch((err) => {
+              console.log(err, err.response.data.message);
+
+              messageApi.error(
+                <>
+                  伺服器錯誤
+                  {<p className="mt-2">{err.response.data.message}</p>}
+                </>
+              );
+            });
+        }
+      }
+    });
+  };
 
   const closeModal = () => {
+    setTempProduct(null);
     setShowProductModal(false);
   };
 
@@ -93,17 +279,16 @@ const ProductList = () => {
           <Button
             type="primary"
             onClick={() => {
-              console.log("edit product");
+              handleEdit(false, product);
             }}
           >
             編輯
           </Button>
           <Button
-            // icon={<DeleteOutlined />}
             type="primary"
             danger
             onClick={() => {
-              console.log("del product");
+              deleteProduct(product.productid, product.name);
             }}
           >
             <DeleteOutlined style={{ verticalAlign: "0.1rem" }} />
@@ -150,8 +335,7 @@ const ProductList = () => {
             <Button
               type="primary"
               onClick={() => {
-                console.log("add product");
-                setShowProductModal(true);
+                handleEdit(true);
               }}
             >
               新增產品
@@ -167,13 +351,22 @@ const ProductList = () => {
               pageSize: 12,
               total: 12 * totalPage,
               onChange: (e) => {
+                setTempPage(e);
                 fetchProducts(e);
               }
             }}
           />
         </div>
       </div>
-      <ProductModal openModal={showProductModal} onCancel={closeModal} />
+      <ProductModal
+        destroyOnClose={true}
+        openModal={showProductModal}
+        onCancel={closeModal}
+        isNew={isNewProduct}
+        tempProduct={tempProduct}
+        setTempProduct={setTempProduct}
+        onSave={saveProduct}
+      />
     </>
   );
 };

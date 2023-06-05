@@ -26,6 +26,13 @@
 #backstage .order_table .status_tag .anticon {
   vertical-align: 0.1rem;
 }
+#backstage .navbar_admin {
+  transition: all 0.5s;
+}
+#backstage .navbar_admin:hover {
+  background-color: #cfcfcf;
+  cursor: pointer;
+}
 
 .detail_list .detail_item > div {
   display: flex;

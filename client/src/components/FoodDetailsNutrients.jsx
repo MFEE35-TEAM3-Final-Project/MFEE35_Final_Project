@@ -29,12 +29,12 @@ function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
           meal_type: foodSection,
           meal_date: formattedDate,
           food_id: selected,
-          food_qty: gramsInKilo,
+          food_qty: gramsInKilo
         },
         {
           headers: {
-            Authorization: token,
-          },
+            Authorization: token
+          }
         }
       )
       .then((response) => {
@@ -58,8 +58,8 @@ function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
         `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${selected}`,
         {
           headers: {
-            Authorization: token,
-          },
+            Authorization: token
+          }
         }
       )
       .then((res) => {
@@ -131,7 +131,7 @@ function FoodDetailsNutrients({ cancelButtonClick, selected, foodSection }) {
         <div className="storeDataDetailCalories">
           <div>卡路里</div>
           <div>
-            {Math.round(food.Calories_adjusted * (grams / 100)).toString()}
+            {Math.round(food.calories_adjusted * (grams / 100)).toString()}
           </div>
         </div>
       </div>

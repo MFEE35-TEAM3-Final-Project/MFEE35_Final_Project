@@ -6,7 +6,7 @@ const data = {
   labels: ["基礎代謝率", "運動量", "消化代謝"],
   datasets: [
     {
-      label: "My First Dataset",
+      label: " ",
       data: [70, 20, 10],
       backgroundColor: ["#C5A188", "#F2F2F2", "#929292"],
       hoverOffset: 4

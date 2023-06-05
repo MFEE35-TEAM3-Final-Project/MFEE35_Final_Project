@@ -8,17 +8,17 @@ const DoughnutChart = ({ mydata }) => {
     labels: ["碳水化合物", "脂肪", "蛋白質", "鈉含量"], // 設定圓餅圖的標籤
     datasets: [
       {
-        label: "My First Dataset",
+        label: "",
         data: [
           mydata.carbohydrate,
           mydata.crude_fat,
           mydata.crude_protein,
-          mydata.sodium / 1000,
+          mydata.sodium / 1000
         ], // 設定圓餅圖的數據
         backgroundColor: ["#C5A188", "#F2F2F2", "#929292", "#707D90"], // 設定圓餅圖各區塊的顏色
-        hoverOffset: 4, // 設定游標移到圓餅圖上時的偏移量
-      },
-    ],
+        hoverOffset: 4 // 設定游標移到圓餅圖上時的偏移量
+      }
+    ]
   };
   // 納的單位為毫克 => /1000
   const options = {
@@ -28,18 +28,26 @@ const DoughnutChart = ({ mydata }) => {
     rotation: -90,
 
     animation: {
-      duration: 3000,
+      duration: 3000
     },
     plugins: {
+      tooltip: {
+        titleFont: {
+          size: 24 // 設定標題字體大小
+        },
+        bodyFont: {
+          size: 24 // 設定內容字體大小
+        }
+      },
       legend: {
         position: "bottom",
         labels: {
           font: {
-            size: 40, // 設定字體大小
-          },
-        },
-      },
-    },
+            size: 40 // 設定字體大小
+          }
+        }
+      }
+    }
   };
 
   return (

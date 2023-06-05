@@ -31,8 +31,8 @@ function MemberHomePage() {
           null,
           {
             headers: {
-              Authorization: jwtToken,
-            },
+              Authorization: jwtToken
+            }
           }
         );
 
@@ -46,8 +46,8 @@ function MemberHomePage() {
             `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
             {
               headers: {
-                Authorization: jwtToken,
-              },
+                Authorization: jwtToken
+              }
             }
           );
 
@@ -130,17 +130,18 @@ function MemberHomePage() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
         headers: {
-          Authorization: jwtToken,
-        },
+          Authorization: jwtToken
+        }
       })
       .then((res) => {
+        console.log(res);
         if (res.data.groupedResults) {
           const {
             total_calories,
             total_carbohydrate,
             total_protein,
             total_saturated_fat,
-            total_sodium,
+            total_sodium
           } = res.data.groupedResults[7];
 
           setCalories(total_calories);
@@ -173,8 +174,8 @@ function MemberHomePage() {
         `${process.env.REACT_APP_API_URL}/api/user/exercise_records`,
         {
           headers: {
-            Authorization: jwtToken,
-          },
+            Authorization: jwtToken
+          }
         }
       )
       .then((response) => {
@@ -204,7 +205,7 @@ function MemberHomePage() {
         gender,
         height,
         weight,
-        record_date,
+        record_date
       });
 
       // 計算今年的年紀 age就是年紀

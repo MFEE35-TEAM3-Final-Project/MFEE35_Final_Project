@@ -10,7 +10,6 @@ const UserTable = () => {
 
   useEffect(() => {
     getUsers();
-    console.log("user", userData);
   }, []);
 
   const columns = [
@@ -118,6 +117,7 @@ const UserTable = () => {
         //     address: user.address
         //   };
         // });
+
         setUserData(res.data.users);
         // 更新總頁數的狀態
         setTotalQty(res.data.user_qty);
@@ -136,12 +136,12 @@ const UserTable = () => {
 
   return (
     <div>
-      {userData.length > 0 ? (
+      {userData && (
         <>
           <Table
             rowKey="user_id"
             columns={columns}
-            dataSource={userData}
+            dataSource={userData.length !== 0 && userData}
             pagination={false}
           />
           <div className="m-3 d-flex justify-content-end">
@@ -153,8 +153,6 @@ const UserTable = () => {
             />
           </div>
         </>
-      ) : (
-        <></>
       )}
     </div>
   );

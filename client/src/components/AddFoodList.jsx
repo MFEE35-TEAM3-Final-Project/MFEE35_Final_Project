@@ -28,8 +28,8 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
         `${process.env.REACT_APP_API_URL}/api/product/getProducts?category=餐盒&page=1`,
         {
           headers: {
-            Authorization: token,
-          },
+            Authorization: token
+          }
         }
       )
       .then((res) => {
@@ -48,8 +48,8 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
             `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`,
             {
               headers: {
-                Authorization: token,
-              },
+                Authorization: token
+              }
             }
           )
         )
@@ -77,7 +77,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
     console.log(FoodIdNutrients);
     const combinedDatas = FoodIdNutrients.map((nutrient, index) => ({
       nutrient: nutrient,
-      product: FoodProductInfo[index],
+      product: FoodProductInfo[index]
     }));
     // setCombinedData(combinedDatas);
     const recommendCombinedData = combinedDatas.map((combinedData, index) => {
@@ -109,7 +109,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
                   <tbody>
                     <tr>
                       <td>
-                        <span>{combinedData.nutrient.Calories_adjusted}</span>
+                        <span>{combinedData.nutrient.calories_adjusted}</span>
                         <span> 卡路里</span>
                       </td>
                       <td>
@@ -152,7 +152,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
       //             <tbody>
       //               <tr>
       //                 <td>
-      //                   <span>{combinedData.nutrient.Calories_adjusted}</span>
+      //                   <span>{combinedData.nutrient.calories_adjusted}</span>
       //                   <span> 卡路里</span>
       //                 </td>
       //                 <td>
@@ -192,7 +192,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
       "星期三",
       "星期四",
       "星期五",
-      "星期六",
+      "星期六"
     ];
     return weekdays[weekday];
   };
@@ -210,7 +210,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
       "9月",
       "10月",
       "11月",
-      "12月",
+      "12月"
     ];
     return months[month];
   };
@@ -230,7 +230,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
     breakfast: "早餐",
     lunch: "午餐",
     dinner: "晚餐",
-    snack: "零食",
+    snack: "零食"
   };
 
   useEffect(() => {
@@ -262,8 +262,8 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
         `${process.env.REACT_APP_API_URL}/api/food/search?category=${category}&qty=${qty}&keyword=${keyword}`,
         {
           headers: {
-            Authorization: token,
-          },
+            Authorization: token
+          }
         }
       )
       .then((res) => {
@@ -283,8 +283,8 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/food/category=all`, {
         headers: {
-          Authorization: token,
-        },
+          Authorization: token
+        }
       })
       .then((res) => {
         // console.log("all categories", res.data.categories);
@@ -422,7 +422,7 @@ function AddFoodList({ onCancelButtonClick, foodSection }) {
                   <div>{suggestion.sample_name}</div>
                   <div>
                     <span>每{suggestion.unit}克 - </span>
-                    <span>{suggestion.Calories_adjusted}大卡</span>
+                    <span>{suggestion.calories_adjusted}大卡</span>
                   </div>
                   <hr />
                 </div>
