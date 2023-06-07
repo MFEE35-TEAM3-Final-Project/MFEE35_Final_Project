@@ -72,7 +72,7 @@ const GoodsPage = () => {
             )
             .then((res) => {
               const updatedFood = {
-                Calories_adjusted: res.data.Calories_adjusted
+                calories_adjusted: res.data.calories_adjusted
               };
               updatedData.push(updatedFood);
               console.log(updatedData);
@@ -90,7 +90,7 @@ const GoodsPage = () => {
             const myNewData = testGood.map((foodId, index) => {
               return {
                 ...foodId,
-                Calories_adjusted: updatedData[index].Calories_adjusted
+                calories_adjusted: updatedData[index].calories_adjusted
               };
             });
 
@@ -457,8 +457,8 @@ const GoodsPage = () => {
                     alt="推播圖1"
                   />
                   <p className="theCarolInPicture">
-                    卡路里:&nbsp;{promotionGood.Calories_adjusted}
-                    &nbsp;col
+                    卡路里:&nbsp;{promotionGood.calories_adjusted}
+                    &nbsp;Cal
                   </p>
                 </div>
                 <p className="fw-semibold cardTopic">{promotionGood.name}</p>
