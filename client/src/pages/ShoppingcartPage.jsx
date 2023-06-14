@@ -267,7 +267,7 @@ const ShoppingcartPage = () => {
                   </button>
                 </div>
                 <p className="bigPrice">
-                  NT$ &nbsp;
+                  NT$ &nbsp;－
                   <span id="addingGoodsPrice">
                     {couponInfo
                       ? Math.floor(
