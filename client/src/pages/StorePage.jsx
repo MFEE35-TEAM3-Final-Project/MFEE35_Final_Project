@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -31,6 +31,7 @@ const StorePage = () => {
   const [texts, setText] = useState("");
   // 設定商品陣列
   const [products, setProducts] = useState([]);
+  const [goodsOnPage, setGoodsOnPage] = useState(null);
   // 設定初始頁面
   const [currentPage, setCurrentPage] = useState(1);
   // 設定使用者選取的類別
@@ -40,7 +41,7 @@ const StorePage = () => {
   const onPageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-  // 捨
+
   // 設定初始類別
   const [currentCategory, setCurrentCategory] = useState("");
   // 設定初始活動
@@ -73,11 +74,78 @@ const StorePage = () => {
         setTotalPage(res.data.totalPages);
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
       });
   }, []);
 
-  // 環境重新渲染的function
+  useEffect(() => {
+    const storePageProduct = products.map((product, index) => {
+      return (
+        <Fragment key={index}>
+          <div className={columnClass}>
+            <Link
+              to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+              className="whereUsergo"
+            >
+              <div className="mycardIcon">
+                <img id="myCard" src={product.image[0]} alt="商品大圖" />
+                <span className="hiddenIcon">
+                  <div className="magnifierBlock">
+                    <img
+                      src={require("../image/store/magnifier.png")}
+                      alt="放大鏡"
+                    />
+                  </div>
+                </span>
+              </div>
+            </Link>
+
+            <br />
+            <Link
+              to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+              className="whereUsergo"
+            >
+           <p className="storePageSelectOne">
+              {product.activityId === "1" ? (
+                "活動商品:畢業歡送季節"
+              ) : (
+                ""
+              )}
+              {product.activityId === "2" ? (
+                "活動商品:買一送三"
+              ) : (
+                ""
+              )}
+              </p>
+              <div>
+                <p className="fw-semibold cardTopic">{product.name}</p>
+                <p className="cardText">{product.description}</p>
+              </div>
+            </Link>
+
+            <Link
+              to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+              className="whereUsergo"
+            >
+              {product.activityId !== "" ? (
+                <div className="storePriceStyle">
+                  <span className="cardSprice">NT$ {product.afterPrice}</span>
+                  <span className="cardPrice">NT$ {product.price}</span>
+                </div>
+              ) : (
+                <div className="storePriceStyle">
+                  <span className="cardSprice">NT$ {product.price}</span>
+                </div>
+              )}
+            </Link>
+          </div>
+        </Fragment>
+      );
+    });
+    setGoodsOnPage(storePageProduct);
+  }, [products,isCardColumn]);
+
+  // 更換輪播圖的function
   useEffect(() => {
     // -> 更新 numIds參數
     const intervalId = setInterval(() => {
@@ -292,7 +360,7 @@ const StorePage = () => {
             篩選條件:
             {userSelectWay}
           </h2>
-          {products.map((product) => (
+          {/* {products.map((product) => (
             <div key={product.productid} className={columnClass}>
               <Link
                 to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
@@ -348,7 +416,8 @@ const StorePage = () => {
                 )}
               </Link>
             </div>
-          ))}
+          ))} */}
+          {goodsOnPage}
         </div>
       </div>
       <br />

@@ -5,8 +5,7 @@ import "../styles/shoppingcart.css";
 import cityCountryData from "../json/CityCountyData.json";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-
-// import Nav from "../components/Nav";
+import Nav from "../components/Nav";
 import Cookies from "js-cookie";
 
 const ShoppingcartPage = () => {
@@ -190,6 +189,20 @@ const ShoppingcartPage = () => {
                 />
               </div>
 
+
+              {/* <div className="goodText">
+                  <br />
+                  <span className="goodInActivityTitleOne">
+                    活動商品:畢業歡送季節
+                  </span>
+                  <p className="goodName">{incomingData.name}</p>
+                  <br />
+                  <br />
+                  <span className="goodPrice">
+                    NT$ {incomingData.afterPrice}
+                  </span>
+                  <span className="goodSprice">NT$ {incomingData.price}</span>
+                </div> */}
               {incomingData.activityId === "1" ? (
                 <div className="goodText">
                   <br />
@@ -205,6 +218,7 @@ const ShoppingcartPage = () => {
                   <span className="goodSprice">NT$ {incomingData.price}</span>
                 </div>
               ) : (
+                // ""
                 <div className="goodText">
                   <br />
                   <span className="goodInActivityTitleTwo">
@@ -263,14 +277,15 @@ const ShoppingcartPage = () => {
                   </span>
                 </p>
                 {incomingData.activityId !== 0 ? (
-                  <span className="inActivity">
-                    {/* <span className="inActivityTitle"> */}
+                  <div className="inActivity">
+                    <span>
                     已折扣
+                    </span>
                     <span className="cartDiscount">
                       &nbsp; NT$&nbsp;
                       {checkDiscount}&nbsp;
                     </span>
-                  </span>
+                  </div>
                 ) : (
                   ""
                 )}
@@ -586,7 +601,7 @@ const ShoppingcartPage = () => {
 
   return (
     <div className="mybody">
-      {/* <Nav /> */}
+      <Nav />
       <Helmet>
         <link
           href="https://fonts.googleapis.com/css2?family=Allura&display=swap"

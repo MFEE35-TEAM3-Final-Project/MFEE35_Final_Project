@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment,useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -6,12 +6,14 @@ import DoughnutComponent from "../components/DoughnutChart";
 import Cookies from "js-cookie";
 import "../styles/goods.css";
 import "../styles/cartPromptBox.css";
-// import Nav from "../components/Nav";
+import Nav from "../components/Nav";
 import { ToastContainer, toast } from "react-toastify";
 import { FaHeart } from "react-icons/fa";
 
 const GoodsPage = () => {
+  // 會員驗證的TOKEN
   const token = Cookies.get("jwtToken");
+
   // 設定取得的商品ID、食物ID
   const { productid, foodId } = useParams();
   // 設定取得的商品
@@ -22,6 +24,8 @@ const GoodsPage = () => {
   const [ImageList, setImageList] = useState([]);
   // 設定圖片陣列的index
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  // 設定網頁上方區塊
+  const [goodArea, setGoodArea] = useState(null);
   // 設定加入購物車的數量
   const [quantity, setQuantity] = useState(1);
   // 設定推薦商品
@@ -29,7 +33,7 @@ const GoodsPage = () => {
   // 將推薦商品設定為亂數
   const shuffledGoods = promotionGoods.sort(() => Math.random() - 0.5); //亂數
   // 捨定cookie的值
-  const [cartData, setCartData] = useState([]);
+  const [cartData, setCartData] = useState([]); 
 
   useEffect(() => {
     axios
@@ -37,9 +41,10 @@ const GoodsPage = () => {
         `${process.env.REACT_APP_API_URL}/api/product/getProductsById?productId=${productid}`
       )
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         setOnlyOneProducts(res.data);
-        setImageList(res.data[0].image);
+        const newData = res.data;
+        setImageList(newData[0].image); // 有4個URL
       })
       .catch((err) => {
         console.error(err);
@@ -72,7 +77,7 @@ const GoodsPage = () => {
             )
             .then((res) => {
               const updatedFood = {
-                calories_adjusted: res.data.calories_adjusted
+                calories_adjusted: res.data.calories_adjusted,
               };
               updatedData.push(updatedFood);
               console.log(updatedData);
@@ -90,7 +95,7 @@ const GoodsPage = () => {
             const myNewData = testGood.map((foodId, index) => {
               return {
                 ...foodId,
-                calories_adjusted: updatedData[index].calories_adjusted
+                calories_adjusted: updatedData[index].calories_adjusted,
               };
             });
 
@@ -107,182 +112,10 @@ const GoodsPage = () => {
   }, []);
 
   useEffect(() => {
-    setQuantity(1);
-  }, [productid]);
-
-  const prevButtonHandler = () => {
-    setActiveImageIndex((prevIndex) => {
-      let newIndex = prevIndex - 1;
-      if (newIndex < 0) {
-        newIndex = ImageList.length - 1;
-      }
-      return newIndex;
-    });
-  };
-
-  const handleAddToCart = () => {
-    // const token =
-    //   "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
-    axios.defaults.headers.common["Authorization"] = `${token}`;
-    let x = axios.defaults.headers.common["Authorization"];
-    if (x) {
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
-          productid: productid,
-          quantity: quantity
-        })
-        .then(() => {
-          toast.success("已成功加入購物車");
-          // axios
-          //   .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
-          //   .then((res) => {
-          //     console.log(res);
-          //     const cartInfoElements = res.data.data.map((cartInfo, index) => (
-          //       <div key={index}>
-          //         <div>
-          //           <img
-          //             className="goodPic"
-          //             src={cartInfo.image[0]}
-          //             alt="第一個商品圖"
-          //           />
-          //         </div>
-          //         {cartInfo.activityId !== "0" ? (
-          //           <div className="goodText">
-          //             <br />
-          //             <span className="inActivityTitle">活動商品</span>
-          //             <p className="goodName">{cartInfo.name}</p>
-          //             <br />
-          //             <br />
-          //             <span className="goodPrice">
-          //               NT$ {cartInfo.afterPrice}
-          //             </span>
-          //             <span className="goodSprice">NT$ {cartInfo.price}</span>
-          //           </div>
-          //         ) : (
-          //           <div className="goodText">
-          //             <br />
-          //             <p className="goodName">{cartInfo.name}</p>
-          //             <br />
-          //             <br />
-          //             <p className="goodPrice">NT$ {cartInfo.price}</p>
-          //           </div>
-          //         )}
-          //         <Link to={`/store`}>點我進入商城</Link>
-          //       </div>
-          //     ));
-          //     toast.info(<React.Fragment>{cartInfoElements}</React.Fragment>);
-          //   })
-          //   .catch((err) => {
-          //     console.error(err);
-          //   });
-        })
-        .catch((err) => {
-          if (err.response.status === 400) {
-            toast.warning(err.response.data.message);
-          }
-        });
-    } else {
-      const expires = 7;
-
-      // 從 cookies 取得之前的購物車資料
-      const cartDataFromCookie = Cookies.get("cartData");
-      let existingCartData = [];
-      if (cartDataFromCookie) {
-        existingCartData = JSON.parse(cartDataFromCookie);
-      }
-
-      // 將新的資料加入進去
-      const addingCartData = {
-        productid: productid,
-        quantity: quantity
-      };
-      existingCartData.push(addingCartData);
-
-      // 將整個購物車資料更新回 cookies
-      Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
-      setCartData(existingCartData);
-    }
-  };
-  const handleAddToFavorite = () => {
-    // const token =
-    //   "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
-    axios.defaults.headers.common["Authorization"] = `${token}`;
-    let x = axios.defaults.headers.common["Authorization"];
-    if (x) {
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/api/user/favorite`, {
-          productid: productid
-        })
-        .then((res) => {
-          toast.success("已成功加入追蹤清單");
-        })
-        .catch((err) => {
-          if (err.response.status === 400) {
-            toast.warning("追蹤清單中已存在該商品");
-          }
-        });
-    } else {
-      alert("請先登入");
-    }
-  };
-
-  const nextButtonHandler = () => {
-    setActiveImageIndex((prevIndex) => {
-      let newIndex = prevIndex + 1;
-      if (newIndex > ImageList.length - 1) {
-        newIndex = 0;
-      }
-      return newIndex;
-    });
-  };
-  const handleImageClick = (index) => {
-    setActiveImageIndex(index);
-  };
-  const handleIncrease = () => {
-    setQuantity(quantity + 1);
-  };
-
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-
-  const handleChange = (event) => {
-    const value = parseInt(event.target.value);
-    if (!isNaN(value)) {
-      setQuantity(value);
-      // console.log(typeof value);
-    }
-  };
-
-  const handleButtonClick = () => {
-    toast.success("Hello, World!");
-  };
-  return (
-    <div>
-      {/* <Nav /> */}
-      <Helmet>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Allura&display=swap"
-          rel="stylesheet"
-        />
-      </Helmet>
-      <ToastContainer />
-      <div className="goodstype">
-        <div className="diet">
-          <a href="http://localhost:3000/store" className="myDiet">
-            增肌減脂餐盒
-          </a>
-        </div>
-        <div className="drink">
-          <a href="http://localhost:3000/store" className="myDrink">
-            乳清蛋白
-          </a>
-        </div>
-      </div>
-      {onlyOneProducts.map((onlyOneProduct, indexA) => (
-        <div key={indexA} className="goodsCard myGoodscontain">
+    const goodDetailInfo = onlyOneProducts.map((onlyOneProduct, index) => {
+      return (
+        <Fragment  key={index}>
+        <div className="goodsCard myGoodscontain">
           <div className="goodsImage">
             <div className="bigGroup">
               <button className="prevBtn" onClick={prevButtonHandler}>
@@ -298,10 +131,8 @@ const GoodsPage = () => {
               </button>
             </div>
             <div className="smallGroup">
-              {ImageList.filter(
-                (imageUrl) =>
-                  imageUrl !== onlyOneProduct.image[activeImageIndex]
-              ).map((imageUrl, index) => (
+              {ImageList
+              .map((imageUrl, index) => (
                 <img
                   key={index}
                   src={imageUrl}
@@ -392,7 +223,181 @@ const GoodsPage = () => {
             </button>
           </div>
         </div>
-      ))}
+        </Fragment>
+      );
+    });
+    setGoodArea(goodDetailInfo);
+  }, [ImageList, onlyOneProducts,activeImageIndex,quantity]);
+
+  useEffect(() => {
+    setQuantity(1);
+  }, [productid]);
+
+  const prevButtonHandler = () => {
+    setActiveImageIndex((prevIndex) => {
+      let newIndex = prevIndex - 1;
+      if (newIndex < 0) {
+        newIndex = ImageList.length - 1;
+      }
+      return newIndex;
+    });
+  };
+
+  const handleAddToCart = () => {
+    if (token) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
+          productid: productid,
+          quantity: quantity,
+        })
+        .then(() => {
+          toast.success("已成功加入購物車");
+          // axios
+          //   .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
+          //   .then((res) => {
+          //     console.log(res);
+          //     const cartInfoElements = res.data.data.map((cartInfo, index) => (
+          //       <div key={index}>
+          //         <div>
+          //           <img
+          //             className="goodPic"
+          //             src={cartInfo.image[0]}
+          //             alt="第一個商品圖"
+          //           />
+          //         </div>
+          //         {cartInfo.activityId !== "0" ? (
+          //           <div className="goodText">
+          //             <br />
+          //             <span className="inActivityTitle">活動商品</span>
+          //             <p className="goodName">{cartInfo.name}</p>
+          //             <br />
+          //             <br />
+          //             <span className="goodPrice">
+          //               NT$ {cartInfo.afterPrice}
+          //             </span>
+          //             <span className="goodSprice">NT$ {cartInfo.price}</span>
+          //           </div>
+          //         ) : (
+          //           <div className="goodText">
+          //             <br />
+          //             <p className="goodName">{cartInfo.name}</p>
+          //             <br />
+          //             <br />
+          //             <p className="goodPrice">NT$ {cartInfo.price}</p>
+          //           </div>
+          //         )}
+          //         <Link to={`/store`}>點我進入商城</Link>
+          //       </div>
+          //     ));
+          //     toast.info(<React.Fragment>{cartInfoElements}</React.Fragment>);
+          //   })
+          //   .catch((err) => {
+          //     console.error(err);
+          //   });
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            toast.warning(err.response.data.message);
+          }
+        });
+    } else {
+      const expires = 7;
+
+      // 從 cookies 取得之前的購物車資料
+      const cartDataFromCookie = Cookies.get("cartData");
+      let existingCartData = [];
+      if (cartDataFromCookie) {
+        existingCartData = JSON.parse(cartDataFromCookie);
+      }
+
+      // 將新的資料加入進去
+      const addingCartData = {
+        productid: productid,
+        quantity: quantity,
+      };
+      existingCartData.push(addingCartData);
+
+      // 將整個購物車資料更新回 cookies
+      Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
+      setCartData(existingCartData);
+      toast.success("已成功加入購物車");
+    }
+  };
+  const handleAddToFavorite = () => {
+    if (token) {
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/api/user/favorite`, {
+          productid: productid,
+        })
+        .then((res) => {
+          toast.success("已成功加入追蹤清單");
+        })
+        .catch((err) => {
+          if (err.response.status === 400) {
+            toast.warning("追蹤清單中已存在該商品");
+          }
+        });
+    } else {
+      alert("請先登入");
+    }
+  };
+
+  const nextButtonHandler = () => {
+    setActiveImageIndex((prevIndex) => {
+      let newIndex = prevIndex + 1;
+      if (newIndex > ImageList.length - 1) {
+        newIndex = 0;
+      }
+      return newIndex;
+    });
+  };
+  const handleImageClick = (index) => {
+    setActiveImageIndex(index);
+  };
+  const handleIncrease = () => {
+    setQuantity(quantity + 1);
+  };
+
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handleChange = (event) => {
+    const value = parseInt(event.target.value);
+    if (!isNaN(value)) {
+      setQuantity(value);
+      // console.log(typeof value);
+    }
+  };
+
+  const handleButtonClick = () => {
+    toast.success("Hello, World!");
+  };
+  return (
+    <div>
+      <Nav />
+      <Helmet>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Allura&display=swap"
+          rel="stylesheet"
+        />
+      </Helmet>
+      <ToastContainer />
+      <div className="goodstype">
+        <div className="diet">
+          <a href="http://localhost:3000/store" className="myDiet">
+            增肌減脂餐盒
+          </a>
+        </div>
+        <div className="drink">
+          <a href="http://localhost:3000/store" className="myDrink">
+            乳清蛋白
+          </a>
+        </div>
+      </div>
+      {goodArea}
       <br />
       <br />
       <br />
@@ -429,8 +434,8 @@ const GoodsPage = () => {
         <div className="gIntro">
           <p className="sTopic">保存方式</p>
         </div>
-        {onlyOneProducts.map((onlyOneProduct, indexC) => (
-          <div key={indexC}>
+        {onlyOneProducts.map((onlyOneProduct, index) => (
+          <div key={index}>
             <p className="sParagraph">{onlyOneProduct.storage_method}</p>
           </div>
         ))}
@@ -443,8 +448,8 @@ const GoodsPage = () => {
       <br />
       <div className="recommendBar">
         {shuffledGoods
-          .map((promotionGood, indexD) => (
-            <div key={indexD} className="myGoodscontain recomGoods">
+          .map((promotionGood, index) => (
+            <div key={index} className="myGoodscontain recomGoods">
               <Link
                 to={`http://localhost:3000/goods/${promotionGood.productid}/${promotionGood.activityId}/${promotionGood.food_id}`}
                 className="jumpPage"

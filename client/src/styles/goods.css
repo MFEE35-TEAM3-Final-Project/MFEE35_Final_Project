@@ -55,13 +55,20 @@
 .smallImage {
   width: 120px;
   height: 80px;
-  margin-right: 10px;
-  cursor: pointer;
+  padding: 0px 0.5vw;
+  /* cursor: pointer; */
   object-fit: cover;
 }
 
+.smallImage:hover{
+  filter: brightness(40%);
+  cursor: pointer;
+}
+
 .smallImage.active {
-  border: 2px solid #c5a188;
+  /* border: 2px solid #c5a188; */
+  filter: brightness(40%);
+
 }
 
 .increaseBtn,

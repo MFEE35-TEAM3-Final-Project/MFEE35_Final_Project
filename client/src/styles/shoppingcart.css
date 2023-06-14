@@ -789,11 +789,15 @@
 }
 
 .inActivity{
-    background-color: #e6c7c7;
     color: white;
     border-radius: 2px;
     padding: 1px;
 }
+
+.inActivity>span{
+    background-color: #e6c7c7;
+}
+
 .inActivityTitle{
     border: 1px solid burlywood;
     color: burlywood;
@@ -834,7 +838,7 @@
 
 .cartDiscount{
     font-family: 'Allura', cursive;
-    font-size: 1.2vw;
+    font-size: 1.5vw;
 }
 
 .cartCoupon{
