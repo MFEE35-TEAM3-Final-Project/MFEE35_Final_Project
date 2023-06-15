@@ -20,6 +20,36 @@ function MemberHomePage() {
   const [targetCal, setTargetCal] = useState();
   const [formattedDate] = useState();
 
+  // --------------GuaGua--------------
+  // const [currentWeek, setCurrentWeek] = useState([]);
+  // const getWeek = () => {
+  //   const today = new Date();
+  //   const cDay = today.getDay();
+  //   const nowTs = today.getTime();
+  //   const startTs = nowTs - 1000 * 60 * 60 * 24 * cDay;
+
+  //   const thisWeek = [];
+  //   for (let i = 0; i < 7; i++) {
+  //     const sDate = new Date(startTs + 1000 * 60 * 60 * 24 * i);
+  //     const month = sDate.getMonth() + 1; // 月份从0开始，加1以匹配实际月份
+  //     const date = sDate.getDate();
+  //     const day = sDate.getDay();
+
+  //     thisWeek.push({
+  //       monte: month,
+  //       date: date,
+  //       day: day
+  //     });
+  //   }
+  //   setCurrentWeek(thisWeek);
+  //   console.log(thisWeek);
+  // };
+
+  // useEffect(() => {
+  //   getWeek();
+  // }, []);
+  // --------------GuaGua--------------
+
   //取得會員資料
   useEffect(() => {
     const fetchMemberHomePage = async () => {
@@ -36,7 +66,7 @@ function MemberHomePage() {
           }
         );
 
-        console.log(response.data);
+        // console.log(response.data);
 
         if (response.data.success) {
           const userData = response.data.user;
@@ -51,7 +81,7 @@ function MemberHomePage() {
             }
           );
 
-          console.log(recordsResponse.data);
+          // console.log(recordsResponse.data);
           if (recordsResponse.data.success) {
             const records = recordsResponse.data.records;
             // 處理紀錄數據，例如：
@@ -99,19 +129,15 @@ function MemberHomePage() {
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
       const currentDate = new Date();
 
-      // 將日期設定為 06/03
-      currentDate.setDate(4); // 設定日期為 4
-      currentDate.setMonth(5); // 設定月份為 6 (從 0 開始計算，所以是 5)
-
       const month = currentDate.getMonth() + 1;
       const day = currentDate.getDate();
 
       const formattedMonth = month < 10 ? "0" + month : month;
       const formattedDay = day < 10 ? "0" + day : day;
 
-      const formattedDate = `星期${
+      const formattedDate = `${formattedMonth}月 ${formattedDay}日 星期${
         weekdays[currentDate.getDay()]
-      }, ${formattedMonth}月 ${formattedDay}日`;
+      }`;
 
       setCurrentDate(formattedDate);
     };
@@ -127,22 +153,32 @@ function MemberHomePage() {
   const [sodium, setSodium] = useState(0);
   useEffect(() => {
     const jwtToken = Cookies.get("jwtToken");
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    const todayFormattedDate = `${year}-${month}-${day}`;
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/user/meal_records`, {
-        headers: {
-          Authorization: jwtToken
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/user/meal_records?start_date=${todayFormattedDate}&end_date=${todayFormattedDate}`,
+        {
+          headers: {
+            Authorization: jwtToken
+          }
         }
-      })
+      )
       .then((res) => {
         console.log(res);
         if (res.data.groupedResults) {
+          const rLen = res.data.groupedResults.length;
           const {
             total_calories,
             total_carbohydrate,
             total_protein,
             total_saturated_fat,
             total_sodium
-          } = res.data.groupedResults[7];
+          } = res.data.groupedResults[rLen - 1];
 
           setCalories(total_calories);
           setCarbohydrate(total_carbohydrate);
@@ -150,17 +186,24 @@ function MemberHomePage() {
           setSaturatedFat(total_saturated_fat);
           setSodium(total_sodium);
 
-          console.log(
-            total_calories,
-            total_carbohydrate,
-            total_protein,
-            total_saturated_fat,
-            total_sodium
-          );
+          // console.log(
+          //   total_calories,
+          //   total_carbohydrate,
+          //   total_protein,
+          //   total_saturated_fat,
+          //   total_sodium
+          // );
         } else {
           // 處理 groupedResults 未定義的情況
-          console.log("groupedResults is undefined");
+          // console.log("groupedResults is undefined");
         }
+      })
+      .catch((err) => {
+        setCalories(0);
+        setCarbohydrate(0);
+        setProtein(0);
+        setSaturatedFat(0);
+        setSodium(0);
       });
   }, []);
 
@@ -192,21 +235,21 @@ function MemberHomePage() {
       exerciseRecords !== undefined &&
       exerciseRecords.data.records.length > 0
     ) {
-      console.log(exerciseRecords);
+      // console.log(exerciseRecords);
 
       const sortedRecords = exerciseRecords.data.records.sort(
         (a, b) => new Date(b.record_date) - new Date(a.record_date)
       );
       const { birthday, exercise_level, gender, height, weight, record_date } =
         sortedRecords[0];
-      console.log({
-        birthday,
-        exercise_level,
-        gender,
-        height,
-        weight,
-        record_date
-      });
+      // console.log({
+      //   birthday,
+      //   exercise_level,
+      //   gender,
+      //   height,
+      //   weight,
+      //   record_date
+      // });
 
       // 計算今年的年紀 age就是年紀
       const calculateAge = (birthday, gender) => {
@@ -292,7 +335,7 @@ function MemberHomePage() {
                     style={{ minWidth: "80px" }}
                     htmlFor="userNumber"
                   >
-                    會員編號：
+                    會員ID：
                   </p>
                   <p className="memberDataGroup" htmlFor="userName">
                     姓名：
@@ -348,7 +391,6 @@ function MemberHomePage() {
                 </div>
               </div>
             </form>
-
             {/* 數字圖表區 */}
             <div
               className="foodRecordBgDiv"
@@ -435,7 +477,6 @@ function MemberHomePage() {
                 </div>
               </div>
             </div>
-
             <div className="memberHomePageBtn">
               <Link to="/foodRecord">
                 <button className="foodRecordBtn" style={{ fontSize: "28px" }}>
@@ -443,7 +484,6 @@ function MemberHomePage() {
                 </button>
               </Link>
             </div>
-
             <BarChart />
 
             <div className="memberHomePageBtn">
