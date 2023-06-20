@@ -1,4 +1,4 @@
-import React, { Fragment,useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
@@ -33,7 +33,7 @@ const GoodsPage = () => {
   // 將推薦商品設定為亂數
   const shuffledGoods = promotionGoods.sort(() => Math.random() - 0.5); //亂數
   // 捨定cookie的值
-  const [cartData, setCartData] = useState([]); 
+  const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
     axios
@@ -114,120 +114,121 @@ const GoodsPage = () => {
   useEffect(() => {
     const goodDetailInfo = onlyOneProducts.map((onlyOneProduct, index) => {
       return (
-        <Fragment  key={index}>
-        <div className="goodsCard myGoodscontain">
-          <div className="goodsImage">
-            <div className="bigGroup">
-              <button className="prevBtn" onClick={prevButtonHandler}>
-                ＜
-              </button>
-              <img
-                src={onlyOneProduct.image[[activeImageIndex]]}
-                className="bigImage"
-                alt="大圖"
-              />
-              <button className="nextBtn" onClick={nextButtonHandler}>
-                ＞
-              </button>
-            </div>
-            <div className="smallGroup">
-              {ImageList
-              .map((imageUrl, index) => (
+        <Fragment key={index}>
+          <div className="goodsCard myGoodscontain">
+            <div className="goodsImage">
+              <div className="bigGroup">
+                <button className="prevBtn" onClick={prevButtonHandler}>
+                  ＜
+                </button>
                 <img
-                  key={index}
-                  src={imageUrl}
-                  className={`smallImage ${
-                    index === activeImageIndex && "active"
-                  }`}
-                  data-target={imageUrl}
-                  alt="小圖"
-                  onClick={() => handleImageClick(index)}
+                  src={onlyOneProduct.image[[activeImageIndex]]}
+                  className="bigImage"
+                  alt="大圖"
                 />
-              ))}
+                <button className="nextBtn" onClick={nextButtonHandler}>
+                  ＞
+                </button>
+              </div>
+              <div className="smallGroup">
+                {ImageList.map((imageUrl, index) => (
+                  <img
+                    key={index}
+                    src={imageUrl}
+                    className={`smallImage ${
+                      index === activeImageIndex && "active"
+                    }`}
+                    data-target={imageUrl}
+                    alt="小圖"
+                    onClick={() => handleImageClick(index)}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="goodsText">
+              <div className="gGroup">
+                {onlyOneProduct.activityId === "1" ? (
+                  <div>
+                    <div className="goodsTitle">
+                      <div>
+                        <p className="activityTitleOne">
+                          活動商品:畢業歡送季節
+                        </p>
+                        <p className="activityName">{onlyOneProduct.name}</p>
+                      </div>
+                    </div>
+                    <h2 className="goodsName">建議售價</h2>
+                    <span className="goodsPrice">
+                      NT$ {onlyOneProduct.afterPrice}
+                    </span>
+
+                    <span className="goodsSPrice">
+                      NT$ {onlyOneProduct.price}
+                    </span>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="goodsTitle">
+                      <div>
+                        <p className="activityTitleTwo">
+                          活動商品:買一送三買一送三
+                        </p>
+                        <p className="activityName">{onlyOneProduct.name}</p>
+                      </div>
+                    </div>
+                    <h2 className="goodsName">建議售價</h2>
+                    <span className="goodsPrice">
+                      NT$ {onlyOneProduct.afterPrice}
+                    </span>
+
+                    <span className="goodsSPrice">
+                      NT$ {onlyOneProduct.price}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div className="chooseTheGoodQuantity">
+                <button className="increaseBtn" onClick={handleDecrease}>
+                  一
+                </button>
+                <input
+                  className="addingQty"
+                  type="text"
+                  value={quantity}
+                  onChange={handleChange}
+                />
+                <button className="increaseBtn" onClick={handleIncrease}>
+                  十
+                </button>
+              </div>
+              <br />
+              <br />
+              <div className="addingGroup">
+                <button className="cartIn" onClick={handleAddToCart}>
+                  加入購物車
+                </button>
+                <Link
+                  to={"/cart"}
+                  rel="stylesheet"
+                  className="buyIn"
+                  onClick={handleAddToCart}
+                >
+                  立即購買
+                </Link>
+              </div>
+              <br />
+              <br />
+              <button className="joinFollow" onClick={handleAddToFavorite}>
+                <FaHeart className="heartIcon" />
+                &nbsp;&nbsp; 加入最愛
+              </button>
             </div>
           </div>
-          <div className="goodsText">
-            <div className="gGroup">
-              {onlyOneProduct.activityId === "1" ? (
-                <div>
-                  <div className="goodsTitle">
-                    <div>
-                      <p className="activityTitleOne">活動商品:畢業歡送季節</p>
-                      <p className="activityName">{onlyOneProduct.name}</p>
-                    </div>
-                  </div>
-                  <h2 className="goodsName">建議售價</h2>
-                  <span className="goodsPrice">
-                    NT$ {onlyOneProduct.afterPrice}
-                  </span>
-
-                  <span className="goodsSPrice">
-                    NT$ {onlyOneProduct.price}
-                  </span>
-                </div>
-              ) : (
-                <div>
-                  <div className="goodsTitle">
-                    <div>
-                      <p className="activityTitleTwo">
-                        活動商品:買一送三買一送三
-                      </p>
-                      <p className="activityName">{onlyOneProduct.name}</p>
-                    </div>
-                  </div>
-                  <h2 className="goodsName">建議售價</h2>
-                  <span className="goodsPrice">
-                    NT$ {onlyOneProduct.afterPrice}
-                  </span>
-
-                  <span className="goodsSPrice">
-                    NT$ {onlyOneProduct.price}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="chooseTheGoodQuantity">
-              <button className="increaseBtn" onClick={handleDecrease}>
-                一
-              </button>
-              <input
-                className="addingQty"
-                type="text"
-                value={quantity}
-                onChange={handleChange}
-              />
-              <button className="increaseBtn" onClick={handleIncrease}>
-                十
-              </button>
-            </div>
-            <br />
-            <br />
-            <div className="addingGroup">
-              <button className="cartIn" onClick={handleAddToCart}>
-                加入購物車
-              </button>
-              <Link
-                to={"/cart"}
-                rel="stylesheet"
-                className="buyIn"
-                onClick={handleAddToCart}
-              >
-                立即購買
-              </Link>
-            </div>
-            <br />
-            <br />
-            <button className="joinFollow" onClick={handleAddToFavorite}>
-              <FaHeart className="heartIcon" />
-              &nbsp;&nbsp; 加入最愛
-            </button>
-          </div>
-        </div>
         </Fragment>
       );
     });
     setGoodArea(goodDetailInfo);
-  }, [ImageList, onlyOneProducts,activeImageIndex,quantity]);
+  }, [ImageList, onlyOneProducts, activeImageIndex, quantity]);
 
   useEffect(() => {
     setQuantity(1);
@@ -245,6 +246,7 @@ const GoodsPage = () => {
 
   const handleAddToCart = () => {
     if (token) {
+      console.log("我要使用API囉");
       axios
         .post(`${process.env.REACT_APP_API_URL}/api/user/cart/add`, {
           productid: productid,
@@ -304,23 +306,61 @@ const GoodsPage = () => {
       const expires = 7;
 
       // 從 cookies 取得之前的購物車資料
+      // const cartDataFromCookie = Cookies.get("cartData");
+      //   let existingCartData = [];
+      //   if (cartDataFromCookie) {
+      //     existingCartData = JSON.parse(cartDataFromCookie);
+      //   }
+
+      //   // 將新的資料加入進去
+      //   const addingCartData = {
+      //     productid: productid,
+      //     quantity: quantity,
+      //   };
+      //   existingCartData.push(addingCartData);
+
+      //   // 將整個購物車資料更新回 cookies
+      //   Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
+      //   setCartData(existingCartData);
+      //   toast.success("已成功加入購物車");
+      //   console.log(existingCartData);
+      // }
       const cartDataFromCookie = Cookies.get("cartData");
       let existingCartData = [];
+
       if (cartDataFromCookie) {
         existingCartData = JSON.parse(cartDataFromCookie);
+
+        // 检查是否存在相同的 productId
+        const existingProductIndex = existingCartData.findIndex(
+          (item) => item.productid === productid
+        );
+
+        if (existingProductIndex !== -1) {
+          // 如果存在相同的 productId，只更新数量
+          existingCartData[existingProductIndex].quantity += quantity;
+        } else {
+          // 如果不存在相同的 productId，将新数据加入购物车
+          const addingCartData = {
+            productid: productid,
+            quantity: quantity,
+          };
+          existingCartData.push(addingCartData);
+        }
+      } else {
+        // 如果不存在购物车数据，直接将新数据加入购物车
+        const addingCartData = {
+          productid: productid,
+          quantity: quantity,
+        };
+        existingCartData.push(addingCartData);
       }
 
-      // 將新的資料加入進去
-      const addingCartData = {
-        productid: productid,
-        quantity: quantity,
-      };
-      existingCartData.push(addingCartData);
-
-      // 將整個購物車資料更新回 cookies
+      // 将整个购物车数据更新回 cookie
       Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
       setCartData(existingCartData);
       toast.success("已成功加入購物車");
+      console.log(existingCartData);
     }
   };
   const handleAddToFavorite = () => {

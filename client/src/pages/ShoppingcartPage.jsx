@@ -9,7 +9,10 @@ import Nav from "../components/Nav";
 import Cookies from "js-cookie";
 
 const ShoppingcartPage = () => {
+  // 會員驗證的TOKEN
   const token = Cookies.get("jwtToken");
+  const cartData = Cookies.get("cartData");
+  const [test, setTest] = useState(null);
   // const [cartData, setCartData] = useState(null);
   const [nothing, setNothing] = useState(true);
   const [isConvenient, setIsConvenient] = useState(true);
@@ -76,29 +79,63 @@ const ShoppingcartPage = () => {
   useEffect(() => {
     setCityList(cityCountryData);
     // const cookieCartData = Cookies.get("cartData");
-    // // 當使用者=非會員時 從cookie取得購物車資料
-    // if (cookieCartData) {
-    //   setCartData(JSON.parse(cookieCartData));
-    // }
-    // 當使用者=會員時 呼叫API傳入訂單資料
-    // const token =
-    //   "JWT  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI5NzMxMTAzMzMxIiwiZW1haWwiOiJBQUFBQUJCQkBnbWFpbC5jb20iLCJleHAiOjE2OTI4NDU5NTU2NzAsImlhdCI6MTY4NDIwNTk1NX0.Ya7Sg_71ioS9swW3C03OG82Xvci5NuSxp-0kNjRTG8g";
-    axios.defaults.headers.common["Authorization"] = `${token}`;
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
-      .then((res) => {
-        if (res.data.data.length !== 0) {
-          console.log(res);
-          setIncomingData(res.data.data); // 設定初始資料
-          // 設定訂單資料
-        } else {
-          toast.warning("購物車沒有資料");
-          setNothing(false);
+
+    if (token) {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/api/user/cart`)
+        .then((res) => {
+          if (res.data.data.length !== 0) {
+            // console.log(res);
+            // console.log(res.data.data);
+            setIncomingData(res.data.data);
+            // 设置订单数据
+          } else {
+            toast.warning("購物車沒有資料");
+            setNothing(false);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else if (cartData) {
+      // console.log(cartData);
+      const userCartData = JSON.parse(cartData);
+      // console.log(userCartData);
+      const fetchData = async () => {
+        const quantityTracker = {}; // 跟踪productid及其数量的对象
+        const promises = userCartData.map((cartData) => {
+          const cartProductId = cartData.productid;
+          quantityTracker[cartProductId] = cartData.quantity; // 设置初始数量为1
+          return axios.get(
+            `${process.env.REACT_APP_API_URL}/api/product/getProductsById?productId=${cartProductId}`
+          );
+        });
+        try {
+          const responses = await Promise.all(promises);
+          // console.log(responses);
+          const data = responses.reduce((accumulator, res, index) => {
+            if (res) {
+              // 如果res不为null，则表示对应的请求成功
+              const productData = res.data[0];
+              // console.log(productData);
+              productData.quantity =
+                quantityTracker[userCartData[index].productid]; // 添加quantity属性
+              accumulator.push(productData);
+            }
+            return accumulator;
+          }, []);
+          // console.log(data);
+          setIncomingData(data);
+        } catch (error) {
+          console.error(error);
         }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      };
+
+      fetchData();
+    } else {
+      toast.warning("購物車沒有資料");
+      setNothing(false);
+    }
   }, []);
 
   //  儲存get到的購物車物件 => map()
@@ -115,7 +152,7 @@ const ShoppingcartPage = () => {
   const [finalTotalDiscount, setFinalTotalDiscount] = useState(0);
 
   // 折扣後的商品價格 x 數量
-  const [checkingActivityPrice, setCheckingActivityPrice] = useState(0);
+  // const [checkingActivityPrice, setCheckingActivityPrice] = useState(0);
 
   useEffect(() => {
     // 測試
@@ -137,213 +174,194 @@ const ShoppingcartPage = () => {
     // 活動折價+優惠券合計
     let checkMapTotalDiscount = 0;
     let finalMapTotalDiscount = 0;
-    const meowmm = incomingDatas.map((incomingData, index) => {
-      if (incomingData.activityId !== 0) {
-        // 如果有活動 -> 計算有活動價格*數量
-        checkingActivityPrice = Math.floor(
-          incomingData.afterPrice * incomingData.quantity
-        );
-        checkDiscount = Math.floor(
-          // 計算活動折扣金額*數量
-          incomingData.discountedPrice * incomingData.quantity
-        );
-        checkOgPrice = Math.floor(incomingData.price * incomingData.quantity); // 計算原價
-      } else if (incomingData.activityId === 0) {
-        // 如果沒有活動->計算正常價格*數量
-        checkingActivityPrice = Math.floor(
-          parseInt(incomingData.price) * incomingData.quantity
-        );
-        checkOgPrice = Math.floor(incomingData.price * incomingData.quantity); // 計算原價
-      }
 
-      totalCheckingActivityPrice += checkingActivityPrice;
-      totalDiscount += checkDiscount;
-      totalOgPrice += checkOgPrice;
-      setUserAddingCartDiscount(totalDiscount); // 若是有活動的總折扣金額
-      setUserAddingCartPrice(totalCheckingActivityPrice); // 已判斷是否有活動的總金額
-      setUserAddingCartOgPrice(totalOgPrice); // 原始價格的總金額
+    if (incomingDatas !== null) {
+      const meowmm = incomingDatas.map((incomingData, index) => {
+        if (incomingData.activityId !== 0) {
+          // 如果有活動 -> 計算有活動價格*數量
+          checkingActivityPrice = Math.floor(
+            incomingData.afterPrice * incomingData.quantity
+          );
+          checkDiscount = Math.floor(
+            // 計算活動折扣金額*數量
+            incomingData.discountedPrice * incomingData.quantity
+          );
+          checkOgPrice = Math.floor(incomingData.price * incomingData.quantity); // 計算原價
+        } else if (incomingData.activityId === 0) {
+          // 如果沒有活動->計算正常價格*數量
+          checkingActivityPrice = Math.floor(
+            parseInt(incomingData.price) * incomingData.quantity
+          );
+          checkOgPrice = Math.floor(incomingData.price * incomingData.quantity); // 計算原價
+        }
 
-      if (couponInfo) {
-        checkMapCouponPrice =
-          checkingActivityPrice -
-          Math.floor(checkingActivityPrice * couponInfo.discount_rate);
-        checkMapTotalDiscount =
-          Math.floor(incomingData.discountedPrice * incomingData.quantity) +
-          checkingActivityPrice -
-          Math.floor(checkingActivityPrice * couponInfo.discount_rate);
-      }
-      totalMapCouponPrice += checkMapCouponPrice;
-      finalMapTotalDiscount += checkMapTotalDiscount;
-      setTotalCouponPrice(totalMapCouponPrice);
-      setFinalTotalDiscount(finalMapTotalDiscount);
+        totalCheckingActivityPrice += checkingActivityPrice;
+        totalDiscount += checkDiscount;
+        totalOgPrice += checkOgPrice;
+        setUserAddingCartDiscount(totalDiscount); // 若是有活動的總折扣金額
+        setUserAddingCartPrice(totalCheckingActivityPrice); // 已判斷是否有活動的總金額
+        setUserAddingCartOgPrice(totalOgPrice); // 原始價格的總金額
 
-      return (
-        <Fragment key={index}>
-          <div>
-            <div className="goodGroup">
-              <div>
-                <img
-                  className="goodPic"
-                  src={incomingData.image[0]}
-                  alt="第一個商品圖"
-                />
-              </div>
+        if (couponInfo) {
+          checkMapCouponPrice =
+            checkingActivityPrice -
+            Math.floor(checkingActivityPrice * couponInfo.discount_rate);
+          checkMapTotalDiscount =
+            Math.floor(incomingData.discountedPrice * incomingData.quantity) +
+            checkingActivityPrice -
+            Math.floor(checkingActivityPrice * couponInfo.discount_rate);
+        }
+        totalMapCouponPrice += checkMapCouponPrice;
+        finalMapTotalDiscount += checkMapTotalDiscount;
+        setTotalCouponPrice(totalMapCouponPrice);
+        setFinalTotalDiscount(finalMapTotalDiscount);
 
-
-              {/* <div className="goodText">
-                  <br />
-                  <span className="goodInActivityTitleOne">
-                    活動商品:畢業歡送季節
-                  </span>
-                  <p className="goodName">{incomingData.name}</p>
-                  <br />
-                  <br />
-                  <span className="goodPrice">
-                    NT$ {incomingData.afterPrice}
-                  </span>
-                  <span className="goodSprice">NT$ {incomingData.price}</span>
-                </div> */}
-              {incomingData.activityId === "1" ? (
-                <div className="goodText">
-                  <br />
-                  <span className="goodInActivityTitleOne">
-                    活動商品:畢業歡送季節
-                  </span>
-                  <p className="goodName">{incomingData.name}</p>
-                  <br />
-                  <br />
-                  <span className="goodPrice">
-                    NT$ {incomingData.afterPrice}
-                  </span>
-                  <span className="goodSprice">NT$ {incomingData.price}</span>
-                </div>
-              ) : (
-                // ""
-                <div className="goodText">
-                  <br />
-                  <span className="goodInActivityTitleTwo">
-                    活動商品:買一送三買一送三
-                  </span>
-                  <p className="goodName">{incomingData.name}</p>
-                  <br />
-                  <br />
-                  <span className="goodPrice">
-                    NT$ {incomingData.afterPrice}
-                  </span>
-                  <span className="goodSprice">NT$ {incomingData.price}</span>
-                </div>
-              )}
-
-              <div className="buttonGroup">
+        return (
+          <Fragment key={index}>
+            <div>
+              <div className="goodGroup">
                 <div>
-                  <button
-                    id="decreaseBtn"
-                    onClick={() =>
-                      handleQuantityChange(
-                        incomingData.cart_id,
-                        incomingData.quantity - 1
-                      )
-                    }
-                  >
-                    一
-                  </button>
-                  <input
-                    type="text"
-                    value={incomingData.quantity}
-                    // onChange={handleQuantityChange}
-                    readOnly
-                    id="addingGoods"
+                  <img
+                    className="goodPic"
+                    src={incomingData.image[0]}
+                    alt="第一個商品圖"
                   />
-                  <button
-                    id="increaseBtn"
-                    onClick={() =>
-                      handleQuantityChange(
-                        incomingData.cart_id,
-                        incomingData.quantity + 1
-                      )
-                    }
-                  >
-                    十
-                  </button>
                 </div>
-                <p className="bigPrice">
-                  NT$ &nbsp;－
-                  <span id="addingGoodsPrice">
-                    {couponInfo
-                      ? Math.floor(
-                          checkingActivityPrice * couponInfo.discount_rate
-                        )
-                      : checkingActivityPrice}
-                  </span>
-                </p>
-                {incomingData.activityId !== 0 ? (
-                  <div className="inActivity">
-                    <span>
-                    已折扣
+
+                {incomingData.activityId === "1" ? (
+                  <div className="goodText">
+                    <br />
+                    <span className="goodInActivityTitleOne">
+                      活動商品:畢業歡送季節
                     </span>
-                    <span className="cartDiscount">
-                      &nbsp; NT$&nbsp;
-                      {checkDiscount}&nbsp;
+                    <p className="goodName">{incomingData.name}</p>
+                    <br />
+                    <br />
+                    <span className="goodPrice">
+                      NT$ {incomingData.afterPrice}
                     </span>
+                    <span className="goodSprice">NT$ {incomingData.price}</span>
                   </div>
                 ) : (
-                  ""
-                )}
-                <br />
-                {couponInfo ? (
-                  <span className="inCouponTitle">
-                    已使用優惠券&nbsp;
-                    {couponInfo.code}
-                    &nbsp;已折扣&nbsp;
-                    <span className="cartCoupon">
-                      NT$&nbsp;
-                      {checkingActivityPrice -
-                        Math.floor(
-                          checkingActivityPrice * couponInfo.discount_rate
-                        )}
-                      &nbsp;
+                  // ""
+                  <div className="goodText">
+                    <br />
+                    <span className="goodInActivityTitleTwo">
+                      活動商品:買一送三買一送三
                     </span>
-                  </span>
-                ) : (
-                  ""
+                    <p className="goodName">{incomingData.name}</p>
+                    <br />
+                    <br />
+                    <span className="goodPrice">
+                      NT$ {incomingData.afterPrice}
+                    </span>
+                    <span className="goodSprice">NT$ {incomingData.price}</span>
+                  </div>
                 )}
+
+                <div className="buttonGroup">
+                  <div>
+                    <button
+                      id="decreaseBtn"
+                      onClick={() =>
+                        handleQuantityChange(
+                          incomingData.cart_id,
+                          incomingData.quantity - 1,
+                          incomingData.productid
+                        )
+                      }
+                    >
+                      一
+                    </button>
+                    <input
+                      type="text"
+                      value={incomingData.quantity}
+                      readOnly
+                      id="addingGoods"
+                    />
+                    <button
+                      id="increaseBtn"
+                      onClick={() =>
+                        handleQuantityChange(
+                          incomingData.cart_id,
+                          incomingData.quantity + 1,
+                          incomingData.productid
+                        )
+                      }
+                    >
+                      十
+                    </button>
+                  </div>
+                  <p className="bigPrice">
+                    NT$ &nbsp;
+                    <span id="addingGoodsPrice">
+                      {couponInfo
+                        ? Math.floor(
+                            checkingActivityPrice * couponInfo.discount_rate
+                          )
+                        : checkingActivityPrice}
+                    </span>
+                  </p>
+                  {incomingData.activityId !== 0 ? (
+                    <div className="inActivity">
+                      <span>已折扣</span>
+                      <span className="cartDiscount">
+                        &nbsp; NT$&nbsp;
+                        {checkDiscount}&nbsp;
+                      </span>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <br />
+                  {couponInfo ? (
+                    <span className="inCouponTitle">
+                      已使用優惠券&nbsp;
+                      {couponInfo.code}
+                      &nbsp;已折扣&nbsp;
+                      <span className="cartCoupon">
+                        NT$&nbsp;
+                        {checkingActivityPrice -
+                          Math.floor(
+                            checkingActivityPrice * couponInfo.discount_rate
+                          )}
+                        &nbsp;
+                      </span>
+                    </span>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div>
+                  <button
+                    className="deBtn"
+                    onClick={() => {
+                      handleDelete(incomingData.cart_id,incomingData.productid);
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
-              <div>
-                <button
-                  className="deBtn"
-                  onClick={() => {
-                    handleDelete(incomingData.cart_id);
-                  }}
-                >
-                  X
-                </button>
-              </div>
+              <hr className="myhr" />
             </div>
-            <hr className="myhr" />
-          </div>
-        </Fragment>
-      );
-    });
-    setUserAddingCartInformation(meowmm);
+          </Fragment>
+        );
+      });
+      setUserAddingCartInformation(meowmm);
+    } else {
+      setNothing(false);
+    }
   }, [incomingDatas, couponInfo]);
 
   // 當購物車更新時將訂單更新
   useEffect(() => {
-    // if (incomingDatas) {
-    // setEachData(
-    //   incomingDatas.map(({ productid, quantity, price }) => ({
-    //     productid,
-    //     quantity,
-    //     price: parseFloat(price),
-    //   }))
-    // );
-    // console.log(incomingDatas);
     setAllQuantity(
       incomingDatas.reduce((accumulator, currentItem) => {
         return accumulator + currentItem.quantity;
       }, 0)
     );
-    console.log("有計算ㄇ");
+    // console.log("有計算ㄇ");
     // }
     let extractedData = incomingDatas.map((incomingData, index) => {
       const { productid, quantity } = incomingData;
@@ -358,9 +376,8 @@ const ShoppingcartPage = () => {
       if (couponInfo) {
         price *= couponInfo.discount_rate;
         order.coupon_code = couponInfo.code;
-        console.log("我用優惠券後有好好更新訂單資料");
+        // console.log("我用優惠券後有好好更新訂單資料");
       }
-
       return {
         productid,
         quantity,
@@ -372,9 +389,9 @@ const ShoppingcartPage = () => {
     order.order_details = extractedData;
     order.total_quantity = allQuantity;
     order.total_price = userAddingCartPrice;
-    console.log(allQuantity);
-    console.log("我有好好更新訂單資料");
-    console.log(incomingDatas);
+    // console.log(allQuantity);
+    // console.log("我有好好更新訂單資料");
+    // console.log(incomingDatas);
   }, [incomingDatas, couponInfo, userAddingCartInformation]);
 
   useEffect(() => {
@@ -410,40 +427,74 @@ const ShoppingcartPage = () => {
     }
   }, [callCouponApi, couponApplied]);
 
-  const handleDelete = async (id) => {
-    try {
-      console.log(id);
-      const res = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`,
-        { cart_id: id }
+  const handleDelete = async (id, productid) => {
+    // console.log(id);
+    if (token) {
+      try {
+        // 发送删除请求
+        const res = await axios.delete(
+          `${process.env.REACT_APP_API_URL}/api/user/cart/${id}`
+        );
+        toast.warning("已刪除該商品");
+        const targetIndex = incomingDatas.findIndex(
+          (item) => item.cart_id === id
+        );
+        if (targetIndex !== -1) {
+          const updatedData = [...incomingDatas];
+          updatedData.splice(targetIndex, 1);
+          setIncomingData(updatedData);
+          if (updatedData.length === 0) {
+            setNothing(false);
+            setUserAddingCartPrice(0);
+            order.coupon_code = null;
+          }
+        }
+      } catch (error) {
+        console.log(id);
+        console.log(error);
+      }
+    } else if (cartData) {
+      // console.log(productid);
+      const expires = 7;
+      const userCartDatas = JSON.parse(cartData);
+      // console.log(userCartDatas);
+      const targetCookie = userCartDatas.findIndex(
+        (item) => item.productid === productid
       );
-      // alert("已刪除該商品");
-      toast.warning("已刪除該商品");
+      // console.log(targetCookie); 
 
-      // 找到目标项的索引
-      const targetIndex = incomingDatas.findIndex(
-        (item) => item.cart_id === id
-      );
+      // ===========================================================
 
-      if (targetIndex !== -1) {
-        // 创建incomingDatas的副本
-        const updatedData = [...incomingDatas];
-
-        // 从updatedData中删除目标项
-        updatedData.splice(targetIndex, 1);
-
-        // 更新状态值
-        setIncomingData(updatedData);
-        if (updatedData.length === 0) {
-          // alert("購物車無商品");
+      if (targetCookie !== -1) {
+        const updatedCookieData = [...userCartDatas];
+        updatedCookieData.splice(targetCookie, 1);
+        // console.log(updatedCookieData);
+        // setIncomingData(updatedCookieData);
+        if (updatedCookieData.length === 0) {
           setNothing(false);
           setUserAddingCartPrice(0);
           order.coupon_code = null;
         }
+        // 更新存在 cookie 的 cartData
+        const updatedCookie = JSON.stringify(updatedCookieData);
+        Cookies.set("cartData", updatedCookie, { expires });
+        // console.log(updatedCookie);
+        // console.log(cartData);
       }
-    } catch (error) {
-      console.log(id);
-      console.log(error);
+      // ===========================================================
+      toast.warning("已刪除該商品");
+        const targetIndex = incomingDatas.findIndex(
+          (item) => item.productid === productid
+        );
+        if (targetIndex !== -1) {
+          const updatedData = [...incomingDatas];
+          updatedData.splice(targetIndex, 1);
+          setIncomingData(updatedData);
+          if (updatedData.length === 0) {
+            setNothing(false);
+            setUserAddingCartPrice(0);
+            order.coupon_code = null;
+          }}
     }
   };
 
@@ -456,34 +507,60 @@ const ShoppingcartPage = () => {
     : null;
 
   //  card_id 為目標變更的cart_id 、newQuantity為已變更的數量了
-  const handleQuantityChange = (cart_id, newQuantity) => {
-    axios
-      .put(`${process.env.REACT_APP_API_URL}/api/user/cart/update`, {
-        cart_id: cart_id,
-        quantity: newQuantity,
-      })
-      .then((res) => {
-        // console.log(res);
-        // 先找到原始陣列裡的目標index列資料
-        const targetIndex = incomingDatas.findIndex(
-          (item) => item.cart_id === cart_id
-        );
-        // console.log(targetIndex);
-        if (targetIndex !== -1) {
-          // 複製 incomingDatas 陣列
-          const updatedData = [...incomingDatas];
-
-          // 更新目標項目的 quantity
-          updatedData[targetIndex].quantity = newQuantity;
-          // console.log(updatedData);
+  const handleQuantityChange = (cart_id, newQuantity, productid) => {
+    if (token) {
+      axios
+        .put(`${process.env.REACT_APP_API_URL}/api/user/cart/update`, {
+          cart_id: cart_id,
+          quantity: newQuantity,
+        })
+        .then((res) => {
+          const targetIndex = incomingDatas.findIndex(
+            (item) => item.cart_id === cart_id
+          );
+          // console.log(targetIndex);
+          if (targetIndex !== -1) {
+            const updatedData = [...incomingDatas];
+            updatedData[targetIndex].quantity = newQuantity;
+            // console.log(updatedData);
+            setIncomingData(updatedData);
+            // console.log("我做完put的請求了");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (cartData) {
+      // console.log(productid);
+      const expires = 7;
+      const targetIndex = incomingDatas.findIndex(
+        (item) => item.productid === productid
+      );
+      const userCartDatas = JSON.parse(cartData);
+      const targetCookie = userCartDatas.findIndex(
+        (item) => item.productid === productid
+      );
+      // console.log(targetIndex);
+      if (targetIndex !== -1) {
+        if (newQuantity !== 0) {
           // 更新狀態值
+          const updatedData = [...incomingDatas];
+          updatedData[targetIndex].quantity = newQuantity;
           setIncomingData(updatedData);
-          // console.log("我做完put的請求了");
+          // 更新存在cookie的cartData
+          const updatedCookieData = [...userCartDatas];
+          updatedCookieData[targetCookie].quantity = newQuantity;
+          const updatedCookie = JSON.stringify(updatedCookieData);
+          // console.log(updatedCookie);
+          // console.log(cartData);
+          // Cookies.set("cartData", updatedCookieData);
+          Cookies.set("cartData", updatedCookie, { expires });
+        } else {
+          toast.warning("購物車數量不得低於 1");
         }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      }
+    }
   };
 
   // 發送訂單詳情
@@ -533,10 +610,10 @@ const ShoppingcartPage = () => {
       } else {
         setCoupons([...coupons, res.data.message]); // 在以新贈的優惠券上繼續新增
         setCouponApplied(true);
-        console.log(res);
+        // console.log(res);
       }
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       setCouponApplied(false);
     }
   };
