@@ -12,7 +12,6 @@ const ShoppingcartPage = () => {
   // 會員驗證的TOKEN
   const token = Cookies.get("jwtToken");
   const cartData = Cookies.get("cartData");
-  const [test, setTest] = useState(null);
   // const [cartData, setCartData] = useState(null);
   const [nothing, setNothing] = useState(true);
   const [isConvenient, setIsConvenient] = useState(true);
@@ -336,7 +335,10 @@ const ShoppingcartPage = () => {
                   <button
                     className="deBtn"
                     onClick={() => {
-                      handleDelete(incomingData.cart_id,incomingData.productid);
+                      handleDelete(
+                        incomingData.cart_id,
+                        incomingData.productid
+                      );
                     }}
                   >
                     X
@@ -453,48 +455,62 @@ const ShoppingcartPage = () => {
         console.log(id);
         console.log(error);
       }
+      // } else if (cartData) {
+      //   // console.log(productid);
+      //   const expires = 7;
+      //   const userCartDatas = JSON.parse(cartData);
+      //   // console.log(userCartDatas);
+      //   const targetCookie = userCartDatas.findIndex(
+      //     (item) => item.productid === productid
+      //   );
+      //   // console.log(targetCookie);
+      //   if (targetCookie !== -1) {
+      //     const updatedCookieData = [...userCartDatas];
+      //     updatedCookieData.splice(targetCookie, 1);
+      //     // console.log(updatedCookieData);
+      //     // setIncomingData(updatedCookieData);
+      //     if (updatedCookieData.length === 0) {
+      //       setNothing(false);
+      //       setUserAddingCartPrice(0);
+      //       order.coupon_code = null;
+      //     }
+      //     // 更新存在 cookie 的 cartData
+      //     const updatedCookie = JSON.stringify(updatedCookieData);
+      //     Cookies.set("cartData", updatedCookie, { expires });
+      //   }
     } else if (cartData) {
-      // console.log(productid);
       const expires = 7;
       const userCartDatas = JSON.parse(cartData);
-      // console.log(userCartDatas);
       const targetCookie = userCartDatas.findIndex(
         (item) => item.productid === productid
       );
-      // console.log(targetCookie); 
-
-      // ===========================================================
 
       if (targetCookie !== -1) {
         const updatedCookieData = [...userCartDatas];
         updatedCookieData.splice(targetCookie, 1);
-        // console.log(updatedCookieData);
-        // setIncomingData(updatedCookieData);
+
         if (updatedCookieData.length === 0) {
+          // 如果 updatedCookieData 的长度为 0，则删除 cartData
+          Cookies.remove("cartData");
+        } else {
+          const updatedCookie = JSON.stringify(updatedCookieData);
+          Cookies.set("cartData", updatedCookie, { expires });
+        }
+      }
+      toast.warning("已刪除該商品");
+      const targetIndex = incomingDatas.findIndex(
+        (item) => item.productid === productid
+      );
+      if (targetIndex !== -1) {
+        const updatedData = [...incomingDatas];
+        updatedData.splice(targetIndex, 1);
+        setIncomingData(updatedData);
+        if (updatedData.length === 0) {
           setNothing(false);
           setUserAddingCartPrice(0);
           order.coupon_code = null;
         }
-        // 更新存在 cookie 的 cartData
-        const updatedCookie = JSON.stringify(updatedCookieData);
-        Cookies.set("cartData", updatedCookie, { expires });
-        // console.log(updatedCookie);
-        // console.log(cartData);
       }
-      // ===========================================================
-      toast.warning("已刪除該商品");
-        const targetIndex = incomingDatas.findIndex(
-          (item) => item.productid === productid
-        );
-        if (targetIndex !== -1) {
-          const updatedData = [...incomingDatas];
-          updatedData.splice(targetIndex, 1);
-          setIncomingData(updatedData);
-          if (updatedData.length === 0) {
-            setNothing(false);
-            setUserAddingCartPrice(0);
-            order.coupon_code = null;
-          }}
     }
   };
 

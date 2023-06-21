@@ -4,8 +4,13 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import "../styles/store.css";
 import Nav from "../components/Nav";
+import Cookies from "js-cookie";
 
 const StorePage = () => {
+  const category = Cookies.get("category");
+  // const userCategory = JSON.parse(category);
+  // console.log(userCategory);
+
   // 設定初始圖片狀態
   const [isCardColumn, setIsCardColumn] = useState(false);
 
@@ -63,19 +68,51 @@ const StorePage = () => {
       .catch((err) => {
         console.error(err);
       });
+    if (category) {
+      const userCategory = JSON.parse(category);
 
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
-      )
-      .then((res) => {
-        console.log(res);
-        setProducts(res.data.results);
-        setTotalPage(res.data.totalPages);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      axios
+        .get(
+          `${process.env.REACT_APP_API_URL}/api/product/getProducts?category=${userCategory}`
+        )
+        .then((res) => {
+          // console.log(res);
+          setProducts(res.data.results);
+          setTotalPage(res.data.totalPages);
+          if (userCategory === "乳清蛋白") {
+            setCurrentCategory("乳清蛋白");
+            setCurrentActivity("");
+            setUserSelectWay("乳清蛋白");
+          } else if (userCategory === "雞胸肉") {
+            setCurrentCategory("雞胸肉");
+            setCurrentActivity("");
+            setUserSelectWay("雞胸肉");
+          } else {
+            setCurrentCategory("");
+            setCurrentActivity("");
+            setUserSelectWay("全站商品");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          Cookies.remove("category");
+        });
+    } else {
+      axios
+        .get(
+          `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
+        )
+        .then((res) => {
+          console.log(res);
+          setProducts(res.data.results);
+          setTotalPage(res.data.totalPages);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -105,17 +142,9 @@ const StorePage = () => {
               to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
               className="whereUsergo"
             >
-           <p className="storePageSelectOne">
-              {product.activityId === "1" ? (
-                "活動商品:畢業歡送季節"
-              ) : (
-                ""
-              )}
-              {product.activityId === "2" ? (
-                "活動商品:買一送三"
-              ) : (
-                ""
-              )}
+              <p className="storePageSelectOne">
+                {product.activityId === "1" ? "活動商品:畢業歡送季節" : ""}
+                {product.activityId === "2" ? "活動商品:買一送三" : ""}
               </p>
               <div>
                 <p className="fw-semibold cardTopic">{product.name}</p>
@@ -143,7 +172,7 @@ const StorePage = () => {
       );
     });
     setGoodsOnPage(storePageProduct);
-  }, [products,isCardColumn]);
+  }, [products, isCardColumn]);
 
   // 更換輪播圖的function
   useEffect(() => {
@@ -204,16 +233,19 @@ const StorePage = () => {
     setCurrentCategory("");
     setCurrentActivity("");
     setUserSelectWay("全站商品");
+    setCurrentPage(1);
   };
   const wheyProteinCategory = () => {
     setCurrentCategory("乳清蛋白");
     setCurrentActivity("");
     setUserSelectWay("乳清蛋白");
+    setCurrentPage(1);
   };
   const gainMuscleCategory = () => {
     setCurrentCategory("雞胸肉");
     setCurrentActivity("");
-    setUserSelectWay("增肌減脂套餐");
+    setUserSelectWay("雞胸肉");
+    setCurrentPage(1);
   };
   const changeActivityID = () => {
     setCurrentActivity({ second }.second);
@@ -303,10 +335,7 @@ const StorePage = () => {
       <br />
       <div className="mycontain">
         <div className="selectS">
-          <span className="goodsQty">
-            共12件商品
-            {/* <p>共12件商品</p> */}
-          </span>
+          <span className="goodsQty">共{products.length}件商品</span>
           <span className="changegoodsWay">
             <button
               id="cardLn"
@@ -360,63 +389,7 @@ const StorePage = () => {
             篩選條件:
             {userSelectWay}
           </h2>
-          {/* {products.map((product) => (
-            <div key={product.productid} className={columnClass}>
-              <Link
-                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
-                className="whereUsergo"
-              >
-                <div className="mycardIcon">
-                  <img id="myCard" src={product.image[0]} alt="商品大圖" />
-                  <span className="hiddenIcon">
-                    <div className="magnifierBlock">
-                      <img
-                        src={require("../image/store/magnifier.png")}
-                        alt="放大鏡"
-                      />
-                    </div>
-                  </span>
-                </div>
-              </Link>
 
-              <br />
-              <Link
-                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
-                className="whereUsergo"
-              >
-                {product.activityId === "1" ? (
-                  <p className="storePageSelectOne">活動商品:畢業歡送季節</p>
-                ) : (
-                  ""
-                )}
-                {product.activityId === "2" ? (
-                  <p className="storePageSelectTwo">活動商品:買一送三</p>
-                ) : (
-                  ""
-                )}
-                <div>
-                  <p className="fw-semibold cardTopic">{product.name}</p>
-                  <p className="cardText">{product.description}</p>
-                </div>
-              </Link>
-
-              <Link
-                to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
-                className="whereUsergo"
-              >
-                {product.activityId !== "" ? (
-                  <div className="storePriceStyle">
-                    <span className="cardSprice">NT$ {product.afterPrice}</span>
-                    <span className="cardPrice">NT$ {product.price}</span>
-                  </div>
-                ) : (
-                  <div className="storePriceStyle">
-                    <span className="cardSprice">NT$ {product.price}</span>
-                  </div>
-                )}
-              </Link>
-            </div>
-          ))} */}
           {goodsOnPage}
         </div>
       </div>

@@ -41,7 +41,7 @@ const GoodsPage = () => {
         `${process.env.REACT_APP_API_URL}/api/product/getProductsById?productId=${productid}`
       )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setOnlyOneProducts(res.data);
         const newData = res.data;
         setImageList(newData[0].image); // 有4個URL
@@ -61,11 +61,11 @@ const GoodsPage = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/product/getProducts`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         // setPromotionGood(res.data.results);
         const testGood = res.data.results;
         const carolId = res.data.results.map((food_id) => food_id.food_id);
-        console.log(carolId);
+        // console.log(carolId);
 
         const updatedData = [];
         const promises = [];
@@ -76,11 +76,12 @@ const GoodsPage = () => {
               `${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`
             )
             .then((res) => {
+              // console.log(res);
               const updatedFood = {
-                calories_adjusted: res.data.calories_adjusted,
+                calories_adjusted: res.data.Calories_adjusted,
               };
               updatedData.push(updatedFood);
-              console.log(updatedData);
+              // console.log(updatedData);
             })
             .catch((err) => {
               console.error(err);
@@ -91,7 +92,7 @@ const GoodsPage = () => {
 
         Promise.all(promises)
           .then(() => {
-            console.log(testGood);
+            // console.log(testGood);
             const myNewData = testGood.map((foodId, index) => {
               return {
                 ...foodId,
@@ -99,7 +100,7 @@ const GoodsPage = () => {
               };
             });
 
-            console.log(myNewData);
+            // console.log(myNewData);
             setPromotionGood(myNewData);
           })
           .catch((err) => {
@@ -305,26 +306,6 @@ const GoodsPage = () => {
     } else {
       const expires = 7;
 
-      // 從 cookies 取得之前的購物車資料
-      // const cartDataFromCookie = Cookies.get("cartData");
-      //   let existingCartData = [];
-      //   if (cartDataFromCookie) {
-      //     existingCartData = JSON.parse(cartDataFromCookie);
-      //   }
-
-      //   // 將新的資料加入進去
-      //   const addingCartData = {
-      //     productid: productid,
-      //     quantity: quantity,
-      //   };
-      //   existingCartData.push(addingCartData);
-
-      //   // 將整個購物車資料更新回 cookies
-      //   Cookies.set("cartData", JSON.stringify(existingCartData), { expires });
-      //   setCartData(existingCartData);
-      //   toast.success("已成功加入購物車");
-      //   console.log(existingCartData);
-      // }
       const cartDataFromCookie = Cookies.get("cartData");
       let existingCartData = [];
 
@@ -408,12 +389,11 @@ const GoodsPage = () => {
     const value = parseInt(event.target.value);
     if (!isNaN(value)) {
       setQuantity(value);
-      // console.log(typeof value);
     }
   };
-
-  const handleButtonClick = () => {
-    toast.success("Hello, World!");
+  const doGoToHomepage = (category) => {
+    // console.log(category);
+    Cookies.set("category", JSON.stringify(category));
   };
   return (
     <div>
@@ -427,12 +407,32 @@ const GoodsPage = () => {
       <ToastContainer />
       <div className="goodstype">
         <div className="diet">
-          <a href="http://localhost:3000/store" className="myDiet">
-            增肌減脂餐盒
+          {/* <a  className="myDiet" onClick={()=>doGoToHomepage("餐盒")}> */}
+          <a
+            href="http://localhost:3000/store"
+            className="myDiet"
+            onClick={() => doGoToHomepage("全站商品")}
+          >
+            全站商品
+          </a>
+        </div>
+        <div className="diet">
+          {/* <a  className="myDiet" onClick={()=>doGoToHomepage("餐盒")}> */}
+          <a
+            href="http://localhost:3000/store"
+            className="myDiet"
+            onClick={() => doGoToHomepage("雞胸肉")}
+          >
+            雞胸肉
           </a>
         </div>
         <div className="drink">
-          <a href="http://localhost:3000/store" className="myDrink">
+          <a
+            href="http://localhost:3000/store"
+            className="myDrink"
+            onClick={() => doGoToHomepage("乳清蛋白")}
+          >
+            {/* <a href="http://localhost:3000/store" className="myDrink" onClick={()=>doGoToHomepage(2)}> */}
             乳清蛋白
           </a>
         </div>
