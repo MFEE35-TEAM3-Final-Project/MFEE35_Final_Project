@@ -157,18 +157,34 @@
   text-align: center;
   color: black;
   text-decoration: none;
-  padding-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.textingBox{
+  width: 50%;
+}
+
+.theDecoration{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.priceBox{
+  width: 20%;
 }
 
 .cardColumn {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .jumpPage {
   text-decoration: none;
 }
+
 
 .storePriceStyle {
   display: flex;
@@ -185,7 +201,7 @@
   color: black;
   font-family: "Allura", cursive;
   font-size: 2vw;
-  margin-right: 2vw;
+  padding-right: 0.5vw;
 }
 
 .squareBtn,
@@ -352,6 +368,7 @@
 .storePageSelectOne {
   color: burlywood;
   font-weight: bolder;
+  text-align: center;
 }
 
 .storePageSelectTwo {

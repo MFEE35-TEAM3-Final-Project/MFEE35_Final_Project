@@ -69,28 +69,38 @@
 }
 
 .smallTopic {
-    margin: 0px 0px 10px 0px;
     font-size: 2vw;
     color: #616161;
     display: flex;
-
 }
 
 .cartTotalQuantity{
     font-family: 'Allura', cursive;
     font-size: 2.4vw;
-
 }
 
 .cartTotalPrice{
     font-family: 'Allura', cursive;
     font-size: 3.4vw;
+}
+ 
+.cartSection{
+    display: flex;
+    justify-content: space-between;
+}
 
+.goodText{
+    margin-left: 100px;
 }
 
 .goodGroup {
     display: flex;
-    padding: 0 20px;
+    justify-content: flex-start;
+    width: 50%;
+}
+
+.goodGroupTwo {
+    display: flex;
     justify-content: space-between;
 }
 
@@ -150,6 +160,7 @@
 .buttonGroup {
     padding-top: 40px;
     margin-right: 1.5vw;
+    margin-right: 100px;
 }
 
 .buttonGroup>div{
@@ -159,13 +170,15 @@
 .deBtn {
     font-size: 35px;
     background-color:#656565;
-    /* background-color: #e8e8e8; */
+    border-radius: 10px;
     color: white;
     border: none;
 }
 
 .goodQtys {
-    padding-left: 1000px;
+    font-size: 2vw;
+    color: #616161;
+    text-align: end;
 }
 
 .member {
@@ -469,11 +482,18 @@
     font-size: 1.4vw;
 }
 
+.goods .goodQtys{
+    margin-right: 30px;
+}
+
+.goods .totalQty{
+    text-align: end;
+    margin-right: 30px;
+}
+
 .totalQty {
     color: #c10000;
-    text-align: right;
     font-size: 2.5vw;
-    display: flex;
 }
 
 .bigvIcon {
@@ -771,6 +791,7 @@
     font-size: 1.3vw;
     margin: 1vw 1vw;
 }
+
 
 .goodInActivityTitleOne{
     background-color: burlywood;

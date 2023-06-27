@@ -411,7 +411,7 @@ const GoodsPage = () => {
           <a
             href="http://localhost:3000/store"
             className="myDiet"
-            onClick={() => doGoToHomepage("全站商品")}
+            onClick={() => doGoToHomepage("")}
           >
             全站商品
           </a>

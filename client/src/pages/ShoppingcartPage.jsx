@@ -217,7 +217,7 @@ const ShoppingcartPage = () => {
 
         return (
           <Fragment key={index}>
-            <div>
+            <div className="cartSection">
               <div className="goodGroup">
                 <div>
                   <img
@@ -226,38 +226,28 @@ const ShoppingcartPage = () => {
                     alt="第一個商品圖"
                   />
                 </div>
-
-                {incomingData.activityId === "1" ? (
-                  <div className="goodText">
-                    <br />
+                <div className="goodText">
+                  <br />
+                  {incomingData.activityId === "1" ? (
                     <span className="goodInActivityTitleOne">
                       活動商品:畢業歡送季節
                     </span>
-                    <p className="goodName">{incomingData.name}</p>
-                    <br />
-                    <br />
-                    <span className="goodPrice">
-                      NT$ {incomingData.afterPrice}
-                    </span>
-                    <span className="goodSprice">NT$ {incomingData.price}</span>
-                  </div>
-                ) : (
-                  // ""
-                  <div className="goodText">
-                    <br />
+                  ) : (
                     <span className="goodInActivityTitleTwo">
-                      活動商品:買一送三買一送三
+                      活動商品:老闆生日大優惠
                     </span>
-                    <p className="goodName">{incomingData.name}</p>
-                    <br />
-                    <br />
-                    <span className="goodPrice">
-                      NT$ {incomingData.afterPrice}
-                    </span>
-                    <span className="goodSprice">NT$ {incomingData.price}</span>
-                  </div>
-                )}
+                  )}
+                  <p className="goodName">{incomingData.name}</p>
+                  <br />
+                  <br />
+                  <span className="goodPrice">
+                    NT$ {incomingData.afterPrice}
+                  </span>
+                  <span className="goodSprice">NT$ {incomingData.price}</span>
+                </div>
+              </div>
 
+              <div className="goodGroupTwo">
                 <div className="buttonGroup">
                   <div>
                     <button
@@ -455,29 +445,6 @@ const ShoppingcartPage = () => {
         console.log(id);
         console.log(error);
       }
-      // } else if (cartData) {
-      //   // console.log(productid);
-      //   const expires = 7;
-      //   const userCartDatas = JSON.parse(cartData);
-      //   // console.log(userCartDatas);
-      //   const targetCookie = userCartDatas.findIndex(
-      //     (item) => item.productid === productid
-      //   );
-      //   // console.log(targetCookie);
-      //   if (targetCookie !== -1) {
-      //     const updatedCookieData = [...userCartDatas];
-      //     updatedCookieData.splice(targetCookie, 1);
-      //     // console.log(updatedCookieData);
-      //     // setIncomingData(updatedCookieData);
-      //     if (updatedCookieData.length === 0) {
-      //       setNothing(false);
-      //       setUserAddingCartPrice(0);
-      //       order.coupon_code = null;
-      //     }
-      //     // 更新存在 cookie 的 cartData
-      //     const updatedCookie = JSON.stringify(updatedCookieData);
-      //     Cookies.set("cartData", updatedCookie, { expires });
-      //   }
     } else if (cartData) {
       const expires = 7;
       const userCartDatas = JSON.parse(cartData);
@@ -725,7 +692,7 @@ const ShoppingcartPage = () => {
         <div className="goods">
           <p className="smallTopic">商品明細</p>
           {userAddingCartInformation}
-          <p className="smallTopic goodQtys">
+          <div className="goodQtys">
             合計有&nbsp;
             <span className="cartTotalQuantity">
               {incomingDatas.reduce((accumulator, currentItem) => {
@@ -733,8 +700,8 @@ const ShoppingcartPage = () => {
               }, 0)}
             </span>
             &nbsp;項商品
-          </p>
-          <p className="smallTopic goodQtys totalQty">
+          </div>
+          <div className="totalQty">
             總計
             <span className="cartTotalPrice">
               &nbsp;NT$&nbsp;
@@ -742,7 +709,7 @@ const ShoppingcartPage = () => {
                 ? userAddingCartPrice - totalCouponPrice
                 : userAddingCartPrice}
             </span>
-          </p>
+          </div>
         </div>
       ) : (
         <div className="nothingBoxInCart goods">

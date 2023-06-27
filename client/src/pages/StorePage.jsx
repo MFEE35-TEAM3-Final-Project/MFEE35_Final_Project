@@ -1,19 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import Cookies from "js-cookie";
+import axios from "axios";
 import "../styles/store.css";
 import Nav from "../components/Nav";
-import Cookies from "js-cookie";
 
 const StorePage = () => {
   const category = Cookies.get("category");
-  // const userCategory = JSON.parse(category);
-  // console.log(userCategory);
-
-  // 設定初始圖片狀態
   const [isCardColumn, setIsCardColumn] = useState(false);
-
   const handleCardBlClick = () => {
     setIsCardColumn(true);
   };
@@ -21,237 +16,204 @@ const StorePage = () => {
     setIsCardColumn(false);
   };
   const columnClass = isCardColumn ? "col-md-12 cardColumn" : "col-md-3";
-
-  // 設定秒數方法
+  const [activityInfo, setActivityInfo] = useState([]);
   const [second, setSecond] = useState("1");
-  // 設定秒數變數
-  const [numIds, setNumIds] = useState();
-  // 設定圖片方法
-  const [caroesel, setCarousel] = useState("");
-  // 設定圖片變數
-  const [images, setImages] = useState("");
-  // 設定小標方法
+  const [numIds, setNumIds] = useState(0);
+  const [carousel, setCarousel] = useState("");
+  const [images, setImages] = useState([]);
   const [eventTitles, setEventTitle] = useState("");
-  // 設定小標變數
   const [texts, setText] = useState("");
-  // 設定商品陣列
   const [products, setProducts] = useState([]);
   const [goodsOnPage, setGoodsOnPage] = useState(null);
-  // 設定初始頁面
   const [currentPage, setCurrentPage] = useState(1);
-  // 設定使用者選取的類別
   const [userSelectWay, setUserSelectWay] = useState("全站商品");
-  // 設定總頁數
   const [totalPages, setTotalPage] = useState(1);
+  const [currentCategory, setCurrentCategory] = useState("");
+  const [currentActivity, setCurrentActivity] = useState("");
   const onPageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
-  // 設定初始類別
-  const [currentCategory, setCurrentCategory] = useState("");
-  // 設定初始活動
-  const [currentActivity, setCurrentActivity] = useState("");
-
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/activity/getActivity`)
-      .then((res) => {
-        // console.log(res);
-        // 從get的資料中選取活動圖片的Url陣列
-        setImages(res.data.map((image) => image.activityUrl));
-        // 從get的資料中選取活動標題陣列
-        setEventTitle(res.data.map((eventTitle) => eventTitle.activityName));
-        // 從get的資料中選取活動Id陣列
-        const ids = res.data.map((numId) => numId.activityId);
-        setNumIds(ids.length);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    if (category) {
-      const userCategory = JSON.parse(category);
+    const fetchData = async () => {
+      try {
+        const activityResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/activity/getActivity`
+        );
+        const activityData = activityResponse.data;
+        const activityUrls = activityData.map((image) => image.activityUrl);
+        const activityNames = activityData.map((event) => event.activityName);
 
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/product/getProducts?category=${userCategory}`
-        )
-        .then((res) => {
-          // console.log(res);
-          setProducts(res.data.results);
-          setTotalPage(res.data.totalPages);
+        console.log(activityData);
+        setActivityInfo(activityData);
+        setImages(activityUrls);
+        setEventTitle(activityNames);
+        setNumIds(activityData.length);
+
+        if (category) {
+          const userCategory = JSON.parse(category);
+          const productResponse = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/product/getProducts?category=${userCategory}`
+          );
+          const productData = productResponse.data;
+
+          setProducts(productData.results);
+          setTotalPage(productData.totalPages);
+
           if (userCategory === "乳清蛋白") {
             setCurrentCategory("乳清蛋白");
-            setCurrentActivity("");
             setUserSelectWay("乳清蛋白");
           } else if (userCategory === "雞胸肉") {
             setCurrentCategory("雞胸肉");
-            setCurrentActivity("");
             setUserSelectWay("雞胸肉");
           } else {
-            setCurrentCategory("");
-            setCurrentActivity("");
             setUserSelectWay("全站商品");
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          Cookies.remove("category");
-        });
-    } else {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
-        )
-        .then((res) => {
-          console.log(res);
-          setProducts(res.data.results);
-          setTotalPage(res.data.totalPages);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+          setCurrentActivity("");
+        } else {
+          const productResponse = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/product/getProducts`,
+            {
+              params: {
+                page: currentPage,
+                activityId: currentActivity,
+                category: currentCategory,
+              },
+            }
+          );
+          const productData = productResponse.data;
+          setProducts(productData.results);
+          setTotalPage(productData.totalPages);
+        }
+        Cookies.remove("category");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
   }, []);
+  const updatePageAndCategory = (page = 1, category = "", activity = "") => {
+    setCurrentPage(page);
+    setCurrentCategory(category);
+    setCurrentActivity(activity);
+  };
+
+  const allProductCategory = () => {
+    updatePageAndCategory(1, "", "");
+    setUserSelectWay("全站商品");
+  };
+
+  const wheyProteinCategory = () => {
+    updatePageAndCategory(1, "乳清蛋白", "");
+    setUserSelectWay("乳清蛋白");
+  };
+
+  const gainMuscleCategory = () => {
+    updatePageAndCategory(1, "雞胸肉", "");
+    setUserSelectWay("雞胸肉");
+  };
+
+  const changeActivityID = () => {
+    setCurrentActivity(second.toString());
+    setUserSelectWay(eventTitles[second - 1]);
+    setCurrentCategory("");
+  };
 
   useEffect(() => {
-    const storePageProduct = products.map((product, index) => {
-      return (
-        <Fragment key={index}>
-          <div className={columnClass}>
-            <Link
-              to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
-              className="whereUsergo"
-            >
-              <div className="mycardIcon">
-                <img id="myCard" src={product.image[0]} alt="商品大圖" />
-                <span className="hiddenIcon">
-                  <div className="magnifierBlock">
-                    <img
-                      src={require("../image/store/magnifier.png")}
-                      alt="放大鏡"
-                    />
-                  </div>
-                </span>
-              </div>
-            </Link>
-
-            <br />
-            <Link
-              to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
-              className="whereUsergo"
-            >
-              <p className="storePageSelectOne">
-                {product.activityId === "1" ? "活動商品:畢業歡送季節" : ""}
-                {product.activityId === "2" ? "活動商品:買一送三" : ""}
-              </p>
-              <div>
-                <p className="fw-semibold cardTopic">{product.name}</p>
-                <p className="cardText">{product.description}</p>
-              </div>
-            </Link>
-
-            <Link
-              to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
-              className="whereUsergo"
-            >
-              {product.activityId !== "" ? (
-                <div className="storePriceStyle">
-                  <span className="cardSprice">NT$ {product.afterPrice}</span>
-                  <span className="cardPrice">NT$ {product.price}</span>
-                </div>
-              ) : (
-                <div className="storePriceStyle">
-                  <span className="cardSprice">NT$ {product.price}</span>
-                </div>
-              )}
-            </Link>
-          </div>
-        </Fragment>
-      );
-    });
-    setGoodsOnPage(storePageProduct);
-  }, [products, isCardColumn]);
-
-  // 更換輪播圖的function
-  useEffect(() => {
-    // -> 更新 numIds參數
     const intervalId = setInterval(() => {
-      setSecond((prevCount) => (prevCount % numIds) + 1); // 取餘數
+      setSecond((prevCount) => (prevCount % numIds) + 1);
     }, 2000);
-    // -> 更新 images參數
+
     setCarousel(images[second - 1]);
-    // -> 更新 eventTitles參數
     setText(eventTitles[second - 1]);
 
     return () => clearInterval(intervalId);
   }, [second, numIds, eventTitles, images]);
 
   useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/product/getProducts?&activityId=${currentActivity}&category=${currentCategory}`
-        // 動態生成頁數
-      )
-      .then((res) => {
-        // console.log(res);
-        setProducts(res.data.results);
+    // console.log(products);
+    const storePageProduct = products.map((product, index) => (
+      <Fragment key={index}>
+        <div className={columnClass}>
+          <Link
+            to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+            className="whereUsergo"
+          >
+            <div className="mycardIcon">
+              <img id="myCard" src={product.image[0]} alt="商品大圖" />
+              <span className="hiddenIcon">
+                <div className="magnifierBlock">
+                  <img
+                    src={require("../image/store/magnifier.png")}
+                    alt="放大鏡"
+                  />
+                </div>
+              </span>
+            </div>
+            <br />
+          </Link>
+          <Link
+            to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+            className="whereUsergo textingBox"
+          >
+            {activityInfo.map((activity, index) => {
+              if (product.activityId === activity.activityId) {
+                return (
+                  <p key={index} className="storePageSelectOne">
+                    活動: {activity.activityName}
+                  </p>
+                );
+              }
+              return null;
+            })}
+            <div className="theDecoration">
+              <p className="fw-semibold cardTopic">{product.name}</p>
+              <p className="cardText">{product.description}</p>
+            </div>
+          </Link>
+          <Link
+            to={`/goods/${product.productid}/${product.activityId}/${product.food_id}`}
+            className="whereUsergo priceBox"
+          >
+            <div className="storePriceStyle">
+              {product.activityId !== "" && (
+                <>
+                  <span className="cardSprice">NT$ {product.afterPrice}</span>
+                  <span className="cardPrice">NT$ {product.price}</span>
+                </>
+              )}
+              {product.activityId === "" && (
+                <span className="cardSprice">NT$ {product.price}</span>
+              )}
+            </div>
+          </Link>
+        </div>
+      </Fragment>
+    ));
 
-        if (
-          (currentPage !== 1 &&
-            (currentActivity !== res.data.activityId ||
-              currentCategory !== res.data.category)) ||
-          (currentPage === 1 &&
-            currentActivity !== res.data.activityId &&
-            currentCategory !== res.data.category)
-        ) {
-          setCurrentPage(1);
-        }
-        setTotalPage(res.data.totalPages);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [currentActivity, currentCategory]);
+    setGoodsOnPage(storePageProduct);
+  }, [products, isCardColumn]);
+
   useEffect(() => {
     axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/product/getProducts?page=${currentPage}&activityId=${currentActivity}&category=${currentCategory}`
-        // 動態生成頁數
-      )
+      .get(`${process.env.REACT_APP_API_URL}/api/product/getProducts`, {
+        params: {
+          page: currentPage,
+          activityId: currentActivity,
+          category: currentCategory,
+        },
+      })
       .then((res) => {
-        // console.log(res);
+        if (res.data.results.length === 0) {
+          setCurrentPage(1);
+        }
         setProducts(res.data.results);
         setTotalPage(res.data.totalPages);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [currentPage]);
-  const allProductCategory = () => {
-    setCurrentCategory("");
-    setCurrentActivity("");
-    setUserSelectWay("全站商品");
-    setCurrentPage(1);
-  };
-  const wheyProteinCategory = () => {
-    setCurrentCategory("乳清蛋白");
-    setCurrentActivity("");
-    setUserSelectWay("乳清蛋白");
-    setCurrentPage(1);
-  };
-  const gainMuscleCategory = () => {
-    setCurrentCategory("雞胸肉");
-    setCurrentActivity("");
-    setUserSelectWay("雞胸肉");
-    setCurrentPage(1);
-  };
-  const changeActivityID = () => {
-    setCurrentActivity({ second }.second);
-    setUserSelectWay(eventTitles[second - 1]);
-    setCurrentCategory("");
-  };
+  }, [currentPage, currentActivity, currentCategory]);
 
   return (
     <div>
@@ -274,10 +236,11 @@ const StorePage = () => {
             to=""
             onClick={() => {
               changeActivityID();
+              window.scrollTo({ top: 1000, behavior: "smooth" });
             }}
           >
             <div className="changingImg">
-              <img className="chPic" src={caroesel} alt="輪播圖" />
+              <img className="chPic" src={carousel} alt="輪播圖" />
             </div>
           </Link>
           <Link
@@ -285,6 +248,7 @@ const StorePage = () => {
             className="event"
             onClick={() => {
               changeActivityID();
+              window.scrollTo({ top: 250, behavior: "smooth" });
             }}
           >
             {texts}
@@ -311,10 +275,10 @@ const StorePage = () => {
             to=""
             className="theGoodsSelectDetail"
             onClick={() => {
-              wheyProteinCategory();
+              gainMuscleCategory();
             }}
           >
-            乳清蛋白
+            雞胸肉
           </Link>
         </span>
         <span className="theGoodsSelectWay">
@@ -322,10 +286,10 @@ const StorePage = () => {
             to=""
             className="theGoodsSelectDetail"
             onClick={() => {
-              gainMuscleCategory();
+              wheyProteinCategory();
             }}
           >
-            增肌減脂套餐
+            乳清蛋白
           </Link>
         </span>
       </div>
