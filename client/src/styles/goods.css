@@ -70,7 +70,7 @@
   object-fit: cover;
 }
 
-.smallImage:hover{
+.smallImage:hover {
   filter: brightness(40%);
   cursor: pointer;
 }
@@ -78,7 +78,6 @@
 .smallImage.active {
   /* border: 2px solid #c5a188; */
   filter: brightness(40%);
-
 }
 
 .increaseBtn,
@@ -415,4 +414,19 @@
 
 .cardContainerInGoodPage:hover .theCarolInPicture {
   display: block;
+}
+
+.storePageSelectOne {
+  color: burlywood;
+}
+
+.storePageSelectOne,
+.storePageSelectTwo {
+  font-weight: bolder;
+  text-align: center;
+  margin: 16px 0px 0px 0px;
+}
+
+.storePageSelectTwo {
+  color: #5ba07a;
 }

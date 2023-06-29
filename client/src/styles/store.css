@@ -365,13 +365,8 @@
   transition: filter 0.3s ease;
 }
 
-.storePageSelectOne {
+.storePageSelect {
   color: burlywood;
   font-weight: bolder;
   text-align: center;
-}
-
-.storePageSelectTwo {
-  color: #5ba07a;
-  font-weight: bolder;
 }

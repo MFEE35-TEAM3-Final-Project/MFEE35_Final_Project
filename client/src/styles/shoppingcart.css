@@ -859,7 +859,7 @@
 
 .cartDiscount{
     font-family: 'Allura', cursive;
-    font-size: 1.5vw;
+    font-size: 1.2vw;
 }
 
 .cartCoupon{
@@ -875,4 +875,14 @@
 .theLastPartPrice{
     font-family: 'Allura', cursive;
 
+}
+
+.orderBox {
+    display: flex;
+    justify-content: center;
+    text-align: left; /* 讓開頭文字對齊 */
+  }
+
+.orderInfo{
+    font-size: 2vw;
 }

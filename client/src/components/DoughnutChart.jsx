@@ -3,24 +3,22 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
 ChartJS.register(ArcElement, Tooltip, Legend);
+
 const DoughnutChart = ({ mydata }) => {
+  const { carbohydrate, crude_fat, crude_protein, sodium } = mydata;
+
   const data = {
-    labels: ["碳水化合物", "脂肪", "蛋白質", "鈉含量"], // 設定圓餅圖的標籤
+    labels: ["碳水化合物", "脂肪", "蛋白質", "鈉含量"],
     datasets: [
       {
         label: "",
-        data: [
-          mydata.carbohydrate,
-          mydata.crude_fat,
-          mydata.crude_protein,
-          mydata.sodium / 1000
-        ], // 設定圓餅圖的數據
-        backgroundColor: ["#C5A188", "#F2F2F2", "#929292", "#707D90"], // 設定圓餅圖各區塊的顏色
-        hoverOffset: 4 // 設定游標移到圓餅圖上時的偏移量
+        data: [carbohydrate, crude_fat, crude_protein, sodium / 1000],
+        backgroundColor: ["#C5A188", "#F2F2F2", "#929292", "#707D90"],
+        hoverOffset: 4
       }
     ]
   };
-  // 納的單位為毫克 => /1000
+
   const options = {
     cutout: 180,
     responsive: true,
@@ -33,17 +31,17 @@ const DoughnutChart = ({ mydata }) => {
     plugins: {
       tooltip: {
         titleFont: {
-          size: 24 // 設定標題字體大小
+          fontSize: 24
         },
         bodyFont: {
-          size: 24 // 設定內容字體大小
+          fontSize: 24
         }
       },
       legend: {
         position: "bottom",
         labels: {
           font: {
-            size: 40 // 設定字體大小
+            fontSize: 40
           }
         }
       }
@@ -61,15 +59,20 @@ const DoughnutChart = ({ mydata }) => {
 
 const DoughnutComponent = ({ foodId }) => {
   const [chartData, setChartData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/api/food/search?food_id=${foodId}`)
       .then((res) => {
-        console.log();
         setChartData(res.data);
+        setIsLoading(false);
       });
-  }, []);
+  }, [foodId]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return <DoughnutChart mydata={chartData} />;
 };

@@ -43,7 +43,7 @@ const StorePage = () => {
         const activityUrls = activityData.map((image) => image.activityUrl);
         const activityNames = activityData.map((event) => event.activityName);
 
-        console.log(activityData);
+        // console.log(activityData);
         setActivityInfo(activityData);
         setImages(activityUrls);
         setEventTitle(activityNames);
@@ -159,7 +159,7 @@ const StorePage = () => {
             {activityInfo.map((activity, index) => {
               if (product.activityId === activity.activityId) {
                 return (
-                  <p key={index} className="storePageSelectOne">
+                  <p key={index} className="storePageSelect">
                     活動: {activity.activityName}
                   </p>
                 );
@@ -349,7 +349,7 @@ const StorePage = () => {
       <br />
       <div className="container">
         <div className="row">
-          <h2 className="storePageSelect">
+          <h2>
             篩選條件:
             {userSelectWay}
           </h2>
