@@ -1,9 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet";
 import "../styles/shoppingcart.css";
 import cityCountryData from "../json/CityCountyData.json";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import Nav from "../components/Nav";
 import Cookies from "js-cookie";
@@ -13,7 +13,7 @@ const ShoppingcartPage = () => {
   const token = Cookies.get("jwtToken");
   const cartData = Cookies.get("cartData");
 
-  const location = useLocation();
+  const [userInfo, setUserInfo] = useState(null);
   // -----------------------------------------------------
   const [incomingDatas, setIncomingData] = useState([]);
   const [activityInfo, setActivityInfo] = useState([]);
@@ -21,8 +21,6 @@ const ShoppingcartPage = () => {
   //  最初渲染網頁的function
   useEffect(() => {
     const fetchData = async () => {
-      const userEmail = Cookies.get("userEmail");
-      const userPhone = Cookies.get("userPhone");
       const orderId = Cookies.get("orderId");
       try {
         const res = await axios.get(
@@ -39,7 +37,14 @@ const ShoppingcartPage = () => {
           );
           if (res.data.data.length !== 0) {
             setIncomingData(res.data.data);
-            console.log(res.data.data);
+            const response = await axios.post(
+              `${process.env.REACT_APP_API_URL}/api/user/check`,
+              token
+            );
+            // console.log(response.data.user);
+            setUserInfo(response.data.user);
+          } else {
+            toast.warning("購物車沒有資料");
           }
         } catch (err) {
           console.error(err);
@@ -244,7 +249,7 @@ const ShoppingcartPage = () => {
   const [couponInfo, setCouponInfo] = useState(null);
 
   // -----------------------------------------------------
-
+  const [warning, setWarning] = useState(false);
   const [order, setOrder] = useState({
     phone: "",
     name: "",
@@ -257,13 +262,56 @@ const ShoppingcartPage = () => {
     ship_store: "導入超商介面",
     order_details: null,
   });
+
+  const [tempOrder, setTempOrder] = useState({ ...order }); // 创建临时状态来存储用户输入的临时值
+
   const updateOrder = (event) => {
     const { name, value } = event.target;
-    setOrder((prevOrder) => ({
-      ...prevOrder,
+    setTempOrder((prevTempOrder) => ({
+      ...prevTempOrder,
       [name]: value,
     }));
   };
+
+  const handleConfirm = () => {
+    setOrder(tempOrder);
+  };
+
+  useEffect(() => {
+    if (tempOrder.email || tempOrder.name || tempOrder.phone) {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const namePattern = /^[\u4E00-\u9FFFa-zA-Z]{1,10}$/;
+      const phonePattern = /^\d{10}$/;
+
+      if (!emailPattern.test(tempOrder.email)) {
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          email: "",
+        }));
+        setWarning(true);
+        return;
+      }
+      handleConfirm();
+      if (!namePattern.test(tempOrder.name) || tempOrder.name.length > 10) {
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          name: "",
+        }));
+        setWarning(true);
+        return;
+      }
+      handleConfirm();
+      if (!phonePattern.test(tempOrder.phone)) {
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          phone: "",
+        }));
+        setWarning(true);
+        return;
+      }
+      setWarning(false);
+    }
+  }, [tempOrder]);
 
   const userPushOrder = async () => {
     try {
@@ -305,7 +353,6 @@ const ShoppingcartPage = () => {
 
         setIncomingData([]);
         toast.success("已成功送出訂單");
-
       } else {
         toast.warning("資料尚未完整填入");
       }
@@ -713,9 +760,44 @@ const ShoppingcartPage = () => {
 
   const cartContent = renderCartContent(incomingDatas.length === 0);
   // -----------------------------------------------------
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    if (!isChecked) {
+      setTempOrder((prevOrder) => ({
+        ...prevOrder,
+        email: userInfo.email,
+        name: userInfo.username,
+        phone: userInfo.phone,
+      }));
+      setOrder((prevOrder) => ({
+        ...prevOrder,
+        email: userInfo.email,
+        name: userInfo.username,
+        phone: userInfo.phone,
+      }));
+    } else {
+      setTempOrder((prevOrder) => ({
+        ...prevOrder,
+        email: "",
+        name: "",
+        phone: "",
+      }));
+      setOrder((prevOrder) => ({
+        ...prevOrder,
+        email: "",
+        name: "",
+        phone: "",
+      }));
+    }
+    setIsChecked(!isChecked);
+  };
+  // -----------------------------------------------------
+
+  // 刪除存在cookie的訂單資料
 
   useEffect(() => {
-    const handleBeforeUnload = (event) => {
+    const handleBeforeUnload = () => {
       Cookies.remove("orderId");
       Cookies.remove("userPhone");
       Cookies.remove("userEmail");
@@ -726,13 +808,13 @@ const ShoppingcartPage = () => {
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("popstate", handleLocationChange); 
+    window.addEventListener("popstate", handleLocationChange);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("popstate", handleLocationChange);
     };
-  }, []); 
+  }, []);
 
   // -----------------------------------------------------
 
@@ -776,8 +858,14 @@ const ShoppingcartPage = () => {
 
           <div className="goods">
             <div className="memberBox">
-              <span className="member">會員登入</span>
-              <span className="remindText">登入會員管理訂單更加方便</span>
+              {token ? (
+                ""
+              ) : (
+                <Fragment>
+                  <span className="member">會員登入</span>
+                  <span className="remindText">登入會員管理訂單更加方便</span>
+                </Fragment>
+              )}
               <div>
                 <p className="fillRemind"> 購買人聯絡方式</p>
                 <input
@@ -785,13 +873,16 @@ const ShoppingcartPage = () => {
                   className="fillFrame"
                   placeholder="聯絡信箱"
                   name="email"
-                  value={order.email}
+                  value={tempOrder.email}
                   onChange={updateOrder}
                 />
               </div>
-              <span className="remindText">
+              <div className="warningMessage">
+                {warning && !order.email ? "email格式有誤，需包含@及." : ""}
+              </div>
+              <p className="remindText">
                 訂單通知會寄到此信箱, 請您務必填入正確的E-MAIL
-              </span>
+              </p>
             </div>
 
             <hr className="myhr" />
@@ -804,9 +895,14 @@ const ShoppingcartPage = () => {
                   className="fillFrame"
                   placeholder="購買人姓名"
                   name="name"
-                  value={order.name}
+                  value={tempOrder.name}
                   onChange={updateOrder}
                 />
+              </div>
+              <div className="warningMessage">
+                {warning && !order.name
+                  ? "姓名格式有誤，請輸入中/英文且不得超過10碼"
+                  : ""}
               </div>
               <span className="remindText">
                 *超商取貨時請使用本名, 並記得攜帶身分證前往取貨
@@ -819,26 +915,35 @@ const ShoppingcartPage = () => {
                   className="fillFrame"
                   placeholder="購買人聯絡電話,例: 0911222333"
                   name="phone"
-                  value={order.phone}
+                  value={tempOrder.phone}
                   onChange={updateOrder}
                 />
+              </div>
+              <div className="warningMessage">
+                {warning && !order.phone ? "電話格式有誤，請輸入10碼數字" : ""}
               </div>
               <span className="remindText">
                 *取貨通知將以此電話聯繫, 請勿加入任何空格或符號,
                 使用超商取貨誤請務必填寫10碼手機, 如: 0911222333
               </span>
-              <div>
-                <br />
-                <input
-                  type="checkbox"
-                  id="sameAsBuyer"
-                  className="radioFrame"
-                />
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <label htmlFor="sameAsBuyer">
-                  <span className="takingName sameBuyer">與購買人相同</span>
-                </label>
-              </div>
+              {!token ? (
+                ""
+              ) : (
+                <div>
+                  <br />
+                  <input
+                    type="checkbox"
+                    id="sameAsBuyer"
+                    className="radioFrame"
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                  />
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <label htmlFor="sameAsBuyer">
+                    <span className="takingName sameBuyer">與會員相同</span>
+                  </label>
+                </div>
+              )}
             </div>
             <hr className="myhr" />
 

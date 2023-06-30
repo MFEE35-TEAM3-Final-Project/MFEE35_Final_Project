@@ -13,7 +13,7 @@ function Nav() {
       axios
         .post(`${process.env.REACT_APP_API_URL}/api/user/check`)
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setIsAuthenticated(true);
           setUsername(res.data.user.username);
           localStorage.setItem("username", res.data.user.username);

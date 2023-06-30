@@ -886,3 +886,8 @@
 .orderInfo{
     font-size: 2vw;
 }
+
+.warningMessage{
+    color: red;
+    font-size: 1.2vw;
+}
