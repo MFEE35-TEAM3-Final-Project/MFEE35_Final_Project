@@ -25,6 +25,7 @@ import MemberRegister from "./pages/MemberRegister";
 import MemberHomePage from "./pages/user/MemberHomePage";
 import MemberChartList from "./pages/user/MemberChartList";
 import MemberData from "./pages/user/MemberData";
+import ImagePage from "./pages/admin/ImagePage";
 
 // SCSS生成的CSS
 import "./styles/all.css";
@@ -71,9 +72,11 @@ function App() {
           <Route path="/MemberFav" element={<Favorite />} />
           <Route path="/MemberOrders" element={<Orders />} />
 
-          {/* 不需要Nav */}
+          {/* for test */}
+          <Route path="/image" element={<ImagePage />} />
         </Routes>
       </div>
+      {/* 不需要Nav */}
       {isBack ? <Footer /> : <Footer />}
       <ScrollTop />
     </div>

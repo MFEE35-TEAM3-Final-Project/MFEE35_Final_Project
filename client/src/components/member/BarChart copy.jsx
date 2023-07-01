@@ -3,7 +3,7 @@ import axios from "axios";
 import { Bar } from "react-chartjs-2";
 import Cookies from "js-cookie";
 const jwtToken = Cookies.get("jwtToken");
-console.log("jjjjjjwt", jwtToken);
+
 const CalorieChart = () => {
   const [chartData, setChartData] = useState(null);
 

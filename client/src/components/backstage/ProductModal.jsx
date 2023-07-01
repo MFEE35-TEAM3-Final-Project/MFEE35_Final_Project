@@ -12,8 +12,11 @@ import {
   Row,
   Col,
   Collapse,
-  Space
+  Space,
+  Upload,
+  message
 } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 const { Panel } = Collapse;
 const { Option } = Select;
 
@@ -75,6 +78,7 @@ const ProductModal = ({
 
   // methods
   const imgArray = (method, arr, position) => {
+    console.log("imaArr", method, arr, position);
     if (method === "add") {
       console.log("addImg");
       setImgList([...imgList, ...arr]);
@@ -132,25 +136,28 @@ const ProductModal = ({
     } finally {
     }
   };
-  const openWidget = () => {
-    console.log("in widget");
+  const uploadImg = async (file) => {
     const imgArr = [];
-    const widget = window.cloudinary.openUploadWidget(
-      {
-        cloud_name: "ddh6e9dad",
-        upload_preset: "joold_test",
-        multiple: true,
-        resource_type: "image",
-        max_files: 5,
-        max_file_size: 5242880 // 5MB
-      },
-      (error, result) => {
-        if (!error && result && result.event === "success") {
-          imgArr.push(result.info.secure_url);
-          imgArray("add", imgArr);
+    const formData = new FormData();
+    formData.append("image", file);
+    console.log(file);
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/images`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
         }
-      }
-    );
+      );
+
+      imgArr.push(res.data.imgUrl);
+      imgArray("add", imgArr);
+    } catch (error) {
+      console.log(error);
+      message.error(error.response.data.error);
+    }
   };
 
   return (
@@ -474,13 +481,17 @@ const ProductModal = ({
           </Row>
 
           <Form.Item name="image" label="產品圖片">
-            <Button
-              onClick={() => {
-                openWidget();
+            <Upload
+              name="image"
+              action="your-upload-url"
+              showUploadList={false}
+              beforeUpload={(file) => {
+                uploadImg(file);
+                return false;
               }}
             >
-              上傳圖片
-            </Button>
+              <Button icon={<UploadOutlined />}>上傳圖片</Button>
+            </Upload>
           </Form.Item>
 
           <Form.Item>

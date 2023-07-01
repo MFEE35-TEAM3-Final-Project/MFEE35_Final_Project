@@ -1,3 +1,4 @@
 import { adminLogin, adminLogout } from "./adminAction";
+import { userLogin, userLogout } from "./userAction";
 
-export { adminLogin, adminLogout };
+export { adminLogin, adminLogout, userLogin, userLogout };
